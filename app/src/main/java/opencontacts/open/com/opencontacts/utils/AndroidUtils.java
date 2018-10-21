@@ -11,6 +11,7 @@ import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AlertDialog;
@@ -181,5 +182,49 @@ public class AndroidUtils {
                     }
                 })
                 .create();
+    }
+
+    public static void askForPermissionsIfNotGranted(final AppCompatActivity activity) {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if(!Settings.canDrawOverlays(activity)) {
+                new AlertDialog.Builder(activity)
+                        .setTitle("Enable draw over apps")
+                        .setMessage("This will allow app to show the calling person's name on screen during call")
+                        .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())));
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            if(activity.checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED){
+                new AlertDialog.Builder(activity)
+                        .setTitle("Grant phone permission")
+                        .setMessage("Grant manage phone permission to be able to read call log")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+            if(activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+                new AlertDialog.Builder(activity)
+                        .setTitle("Grant storage permission")
+                        .setMessage("Grant storage phone permission to be able to export and import contacts")
+                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
+                            }
+                        })
+                        .create()
+                        .show();
+            }
+        }
     }
 }

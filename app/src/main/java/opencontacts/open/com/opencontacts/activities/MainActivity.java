@@ -28,6 +28,7 @@ import opencontacts.open.com.opencontacts.fragments.CallLogFragment;
 import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -49,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        AndroidUtils.askForPermissionsIfNotGranted(this);
         setContentView(R.layout.activity_tabbed);
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));

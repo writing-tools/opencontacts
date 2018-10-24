@@ -1,17 +1,19 @@
 package opencontacts.open.com.opencontacts.broadcast_recievers;
 
+import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.graphics.Point;
 import android.os.Handler;
 import android.provider.CallLog;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
-import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
@@ -85,31 +87,60 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     }
 
     private void drawContactID(Context context, Contact callingContact) {
-        WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
-        LayoutInflater layoutinflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        final WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        LayoutInflater layoutinflater = LayoutInflater.from(context);
         drawOverIncomingCallLayout = layoutinflater.inflate(R.layout.draw_over_incoming_call, null);
         TextView contactName = (TextView) drawOverIncomingCallLayout.findViewById(R.id.name_of_contact);
         contactName.setText(callingContact.toString() + " calling...");
-        WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
+        final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY,
+                isLocked(context) ? WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
-                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON
-                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
                 PixelFormat.TRANSLUCENT);
 
-        layoutParams.gravity = Gravity.TOP | Gravity.LEFT;
-        layoutParams.x = 0;
-        layoutParams.y = 0;
+        Point callerIdLocationOnScreen = AndroidUtils.getCallerIdLocationOnScreen(context);
+        layoutParams.x = callerIdLocationOnScreen.x;
+        layoutParams.y = callerIdLocationOnScreen.y;
+        layoutParams.width = 100;
+        layoutParams.height = 50;
+        layoutParams.verticalWeight = 0;
+        layoutParams.horizontalWeight = 0;
+        layoutParams.horizontalMargin = 0;
+
+        drawOverIncomingCallLayout.setOnTouchListener(new View.OnTouchListener() {
+            private float historicalX = -1;
+            private float historicalY = -1;
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                    if(historicalX == -1){
+                        historicalX = event.getHistoricalX(0);
+                        historicalY = event.getHistoricalY(0);
+                    }
+                    layoutParams.x = (int) (layoutParams.x + (event.getX() - historicalX));
+                    layoutParams.y = (int) (layoutParams.y + (event.getY() - historicalY));
+                    windowManager.updateViewLayout(drawOverIncomingCallLayout, layoutParams);
+                    return true;
+                }
+                return false;
+            }
+        });
         windowManager.addView(drawOverIncomingCallLayout, layoutParams);
+    }
+
+    private boolean isLocked(Context context) {
+        return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
     }
 
     private void removeCallerIdDrawing(Context context) {
         if(drawOverIncomingCallLayout == null)
             return;
         WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
+        WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) drawOverIncomingCallLayout.getLayoutParams();
+        AndroidUtils.saveCallerIdLocationOnScreen(layoutParams.x, layoutParams.y, context);
         windowManager.removeView(drawOverIncomingCallLayout);
         drawOverIncomingCallLayout = null;
     }

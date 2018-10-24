@@ -8,6 +8,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
+import android.graphics.Point;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -226,5 +228,16 @@ public class AndroidUtils {
                         .show();
             }
         }
+    }
+
+    public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putInt("CALLER_ID_X_POSITION_ON_SCREEN", x)
+                .putInt("CALLER_ID_Y_POSITION_ON_SCREEN", y)
+                .apply();
+    }
+    public static Point getCallerIdLocationOnScreen(Context context) {
+        return new Point(getAppsSharedPreferences(context).getInt("CALLER_ID_X_POSITION_ON_SCREEN", 0), getAppsSharedPreferences(context).getInt("CALLER_ID_Y_POSITION_ON_SCREEN", 100));
     }
 }

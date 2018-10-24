@@ -98,14 +98,13 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 isLocked(context) ? WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE,
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
                 PixelFormat.TRANSLUCENT);
 
         Point callerIdLocationOnScreen = AndroidUtils.getCallerIdLocationOnScreen(context);
         layoutParams.x = callerIdLocationOnScreen.x;
         layoutParams.y = callerIdLocationOnScreen.y;
-        layoutParams.width = 100;
-        layoutParams.height = 50;
         layoutParams.verticalWeight = 0;
         layoutParams.horizontalWeight = 0;
         layoutParams.horizontalMargin = 0;

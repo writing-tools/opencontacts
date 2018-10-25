@@ -22,7 +22,7 @@
     <string name="create_new_contact">Create new contact</string>
     <string name="add_to_existing">Add to existing contact</string>
     <string name="about">About</string>
-    <string name="content_about">Brings privacy to your contacts information\n\n1.) No other app would be able to access contacts as it saves contacts in its own database seperate from default contacts.\n2.) Can be used in place of your default phone(dialer) app.\n3.) You can export / import contacts from Android contacts app into this app.\n4.) Maintains call log as well coz Android call log app would not be able to show name of contact.\n5.) Also shows the person name upon receiving call.\n6.) Caller id would show upon call and you can drag to position it.</string>
+    <string name="content_about">Brings privacy to your contacts information\n\n\n1.) No other app would be able to access contacts as it saves contacts in its own database seperate from default contacts.\n\n2.) Can be used in place of your default phone(dialer) app.\n\n3.) You can export / import contacts from Android contacts app into this app.\n\n4.) Maintains call log as well coz Android call log app would not be able to show name of contact.\n\n5.) Also shows the person name upon receiving call.\n\n6.) Caller id would show upon call and you can drag to position it.</string>
     <string name="author_label">Author</string>
     <string name="my_name">Sultan Ahamer</string>
     <string name="issues_label">Issues</string>

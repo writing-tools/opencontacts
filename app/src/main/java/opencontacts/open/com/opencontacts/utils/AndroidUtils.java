@@ -9,7 +9,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Build;
 import android.provider.ContactsContract;
@@ -192,9 +191,10 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Enable draw over apps")
                         .setMessage("This will allow app to show the calling person's name on screen during call")
-                        .setPositiveButton("Enable", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Okay", null)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onDismiss(DialogInterface dialog) {
                                 activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())));
                             }
                         })
@@ -205,9 +205,10 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Grant phone permission")
                         .setMessage("Grant manage phone permission to be able to read call log")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Okay", null)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onDismiss(DialogInterface dialog) {
                                 activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123);
                             }
                         })
@@ -218,9 +219,10 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Grant storage permission")
                         .setMessage("Grant storage phone permission to be able to export and import contacts")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                        .setNeutralButton("Okay", null)
+                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
-                            public void onClick(DialogInterface dialog, int which) {
+                            public void onDismiss(DialogInterface dialog) {
                                 activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
                             }
                         })

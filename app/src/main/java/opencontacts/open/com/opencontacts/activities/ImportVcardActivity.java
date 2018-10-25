@@ -1,10 +1,14 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import android.Manifest;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -26,6 +30,31 @@ import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 public class ImportVcardActivity extends AppCompatActivity {
+
+    private VCardParser parser;
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(permissionGranted()) {
+            Uri uri = getIntent().getData();
+            parser.execute(uri, this);
+        }
+        else
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setTitle("Error")
+                    .setMessage("Can not process this import without storage permission, please retry")
+                    .setNeutralButton("Okay", null)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            finish();
+                        }
+                    })
+                    .create()
+                    .show();
+    }
+
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
     private final String PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW = "number_of_vcards_imported_until_now";
     private final String PROGRESS_FINAL_RESULT_OF_IMPORT = "final_result_of_import";
@@ -41,11 +70,37 @@ public class ImportVcardActivity extends AppCompatActivity {
         progressBarComponent.setIndeterminate(false);
         progressBarComponent.setProgress(0);
         progressBarComponent.setVisibility(View.VISIBLE);
-        Intent intent = getIntent();
-        Uri uri = intent.getData();
-        VCardParser parser = new VCardParser();
-        parser.execute(uri, this);
+        Uri uri = getIntent().getData();
+        parser = new VCardParser();
+        if(permissionGranted())
+            parser.execute(uri, this);
+        else
+            requestPermission();
     }
+
+    private void requestPermission() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            new android.support.v7.app.AlertDialog.Builder(this)
+                    .setTitle("Grant storage permission")
+                    .setMessage("Grant storage phone permission to be able to export and import contacts")
+                    .setNeutralButton("Okay", null)
+                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
+                        @Override
+                        public void onDismiss(DialogInterface dialog) {
+                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
+                        }
+                    })
+                    .create()
+                    .show();
+        }
+    }
+
+    private boolean permissionGranted() {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return true;
+        return checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
     private class VCardParser  extends AsyncTask {
         Context context;
         @Override

@@ -108,6 +108,13 @@ public class MainActivity extends AppCompatActivity {
         });
 
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
+        menu.findItem(R.id.action_about).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(MainActivity.this, AboutActivity.class));
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
     private void refresh() {

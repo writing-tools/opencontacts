@@ -15,6 +15,11 @@
     <item
         android:id="@+id/action_export"
         android:icon="@android:drawable/ic_menu_directions"
-        android:title="Export"
+        android:title="@string/export"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_about"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:title="@string/about"
         app:showAsAction="ifRoom" />
 </menu>

@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:fitsSystemWindows="true"
     android:id="@+id/activity_tabbed"
     tools:context="opencontacts.open.com.opencontacts.activities.MainActivity">
@@ -10,7 +11,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:title="@string/app_name"
+        app:title="@string/app_name"
         android:minHeight="?attr/actionBarSize"/>
     <View
         android:id="@+id/divider"

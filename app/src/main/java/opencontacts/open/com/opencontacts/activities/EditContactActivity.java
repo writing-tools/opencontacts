@@ -50,12 +50,12 @@ public class EditContactActivity extends AppCompatActivity {
         }
         else{
             contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
-            if(contact.getId() == -1){
+            if(contact.id == -1){
                 Toast.makeText(this, R.string.error_while_loading_contact, Toast.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
                 finish();
             }
-            toolbar.setTitle(contact.getFirstName());
+            toolbar.setTitle(contact.firstName);
             fillFieldsFromContactDetails();
         }
         setSupportActionBar(toolbar);
@@ -63,10 +63,10 @@ public class EditContactActivity extends AppCompatActivity {
     }
 
     private void fillFieldsFromContactDetails() {
-        editText_firstName.setText(contact.getFirstName());
-        editText_lastName.setText(contact.getLastName());
-        editText_mobileNumber.setText(contact.getPhoneNumber());
-        List<String> phoneNumbers = contact.getPhoneNumbers();
+        editText_firstName.setText(contact.firstName);
+        editText_lastName.setText(contact.lastName);
+        editText_mobileNumber.setText(contact.phoneNumbers.get(0));
+        List<String> phoneNumbers = contact.phoneNumbers;
         if(phoneNumbers.size() > 1)
             for(int i = 1, totalNumbers = phoneNumbers.size(); i < totalNumbers; i++){
                 addOneMorePhoneNumberView(null).setText(phoneNumbers.get(i));
@@ -88,8 +88,11 @@ public class EditContactActivity extends AppCompatActivity {
 
         if(addingNewContact)
             ContactsDataStore.addContact(firstName, lastName, getPhoneNumbersFromView());
-        else
-            ContactsDataStore.updateContact(new Contact(contact.getId(), firstName, lastName, getPhoneNumbersFromView()));
+        else{
+            Contact updatedContact = new Contact(this.contact.id, firstName, lastName, getPhoneNumbersFromView());
+            updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
+            ContactsDataStore.updateContact(updatedContact);
+        }
         Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         finish();
     }

@@ -115,14 +115,14 @@ public class AndroidUtils {
         Intent exportToContactsAppIntent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
 
         ArrayList<ContentValues> data = new ArrayList<>();
-        for(String phoneNumber : contact.getPhoneNumbers()){
+        for(String phoneNumber : contact.phoneNumbers){
             ContentValues row = new ContentValues();
             row.put(ContactsContract.Contacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
             row.put(ContactsContract.CommonDataKinds.Phone.NUMBER, phoneNumber);
             data.add(row);
         }
         exportToContactsAppIntent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, data)
-                .putExtra(ContactsContract.Intents.Insert.NAME, contact.getName());
+                .putExtra(ContactsContract.Intents.Insert.NAME, contact.name);
         return exportToContactsAppIntent;
     }
 

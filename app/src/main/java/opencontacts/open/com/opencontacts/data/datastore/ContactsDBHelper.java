@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
@@ -39,54 +40,53 @@ class ContactsDBHelper {
         List<PhoneNumber> phoneNumbers = PhoneNumber.find(PhoneNumber.class, "phone_Number like ?", "%" + phoneNumberToSearch);
         if(phoneNumbers.size() == 0)
             return null;
-        return phoneNumbers.get(0).getContact();
+        return phoneNumbers.get(0).contact;
     }
 
-    static void replacePhoneNumbersInDB(Contact dbContact, List<String> phoneNumbers) {
+    static void replacePhoneNumbersInDB(Contact dbContact, List<String> phoneNumbers, String primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         for(String phoneNumber : phoneNumbers){
-            new PhoneNumber(phoneNumber, dbContact).save();
+            new PhoneNumber(phoneNumber, dbContact, primaryPhoneNumber.equals(phoneNumber)).save();
         }
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }
 
-    static void updateContactInDB(opencontacts.open.com.opencontacts.domain.Contact contact){
-        opencontacts.open.com.opencontacts.orm.Contact dbContact = ContactsDBHelper.getDBContactWithId(contact.getId());
-        dbContact.firstName = contact.getFirstName();
-        dbContact.lastName = contact.getLastName();
+    static void updateContactInDBWith(opencontacts.open.com.opencontacts.domain.Contact contact){
+        opencontacts.open.com.opencontacts.orm.Contact dbContact = ContactsDBHelper.getDBContactWithId(contact.id);
+        dbContact.firstName = contact.firstName;
+        dbContact.lastName = contact.lastName;
         dbContact.save();
-        replacePhoneNumbersInDB(dbContact, contact.getPhoneNumbers());
-    }
-
-    private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(PhoneNumber dbPhoneNumber){
-        opencontacts.open.com.opencontacts.orm.Contact dbContact = dbPhoneNumber.getContact();
-        ArrayList<String> phoneNumbers = new ArrayList<>(3);
-        phoneNumbers.add(dbPhoneNumber.getPhoneNumber());
-        return new opencontacts.open.com.opencontacts.domain.Contact(dbContact.getId(), dbContact.firstName, dbContact.lastName, phoneNumbers, dbContact.lastAccessed);
+        replacePhoneNumbersInDB(dbContact, contact.phoneNumbers, contact.primaryPhoneNumber);
     }
 
     static List<opencontacts.open.com.opencontacts.domain.Contact> getAllContactsFromDB(){
         List<PhoneNumber> dbPhoneNumbers = PhoneNumber.listAll(PhoneNumber.class);
-        HashMap<Long, opencontacts.open.com.opencontacts.domain.Contact> contactsMap= new HashMap<Long, opencontacts.open.com.opencontacts.domain.Contact>();
+        HashMap<Long, opencontacts.open.com.opencontacts.domain.Contact> contactsMap= new HashMap<>();
         opencontacts.open.com.opencontacts.domain.Contact tempContact;
         for(PhoneNumber dbPhoneNumber: dbPhoneNumbers){
-            tempContact = contactsMap.get(dbPhoneNumber.getContact().getId());
+            tempContact = contactsMap.get(dbPhoneNumber.contact.getId());
             if(tempContact == null)
-                tempContact = createNewDomainContact(dbPhoneNumber);
-            else
-                tempContact.getPhoneNumbers().add(dbPhoneNumber.getPhoneNumber());
-            contactsMap.put(tempContact.getId(), tempContact);
+                tempContact = createNewDomainContact(dbPhoneNumber.contact, Collections.singletonList(dbPhoneNumber));
+            else{
+                tempContact.phoneNumbers.add(dbPhoneNumber.phoneNumber);
+                if(dbPhoneNumber.isPrimaryNumber)
+                    tempContact.primaryPhoneNumber = dbPhoneNumber.phoneNumber;
+            }
+
+            contactsMap.put(tempContact.id, tempContact);
         }
         return new ArrayList<>(contactsMap.values());
     }
 
-    private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact){
-        List<PhoneNumber> dbPhoneNumbers = contact.getAllPhoneNumbers();
-        List<String> phoneNumbers = new ArrayList<String>(3);
+    private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact, List<PhoneNumber> dbPhoneNumbers){
+        List<String> phoneNumbers = new ArrayList<>(dbPhoneNumbers.size());
+        String primaryPhoneNumber = dbPhoneNumbers.get(0).phoneNumber;
         for(PhoneNumber dbPhoneNumber : dbPhoneNumbers){
-            phoneNumbers.add(dbPhoneNumber.getPhoneNumber());
+            if(dbPhoneNumber.isPrimaryNumber)
+                primaryPhoneNumber = dbPhoneNumber.phoneNumber;
+            phoneNumbers.add(dbPhoneNumber.phoneNumber);
         }
-        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, phoneNumbers, contact.lastAccessed);
+        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, phoneNumbers, contact.lastAccessed, primaryPhoneNumber);
     }
 
     static opencontacts.open.com.opencontacts.domain.Contact getContact(long id){
@@ -95,6 +95,20 @@ class ContactsDBHelper {
         opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDBHelper.getDBContactWithId(id);
         if(contact == null)
             return null;
-        return createNewDomainContact(contact);
+        return createNewDomainContact(contact, contact.getAllPhoneNumbers());
+    }
+
+    static void togglePrimaryNumber(String mobileNumber, opencontacts.open.com.opencontacts.domain.Contact contact) {
+        List<PhoneNumber> allDbPhoneNumbersOfContact = PhoneNumber.find(PhoneNumber.class, "contact = ?", contact.id + "");
+        if(allDbPhoneNumbersOfContact == null)
+            return;
+        for(PhoneNumber dbPhoneNumber : allDbPhoneNumbersOfContact){
+            if(dbPhoneNumber.phoneNumber.equals(mobileNumber)){
+                dbPhoneNumber.isPrimaryNumber = !dbPhoneNumber.isPrimaryNumber;
+            }
+            else
+                dbPhoneNumber.isPrimaryNumber = false;
+        }
+        PhoneNumber.saveInTx(allDbPhoneNumbersOfContact);
     }
 }

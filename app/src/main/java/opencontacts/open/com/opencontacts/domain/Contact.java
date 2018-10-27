@@ -10,13 +10,14 @@ import opencontacts.open.com.opencontacts.utils.Common;
  */
 
 public class Contact implements Serializable{
-    private final long id;
-    private String firstName;
-    private String lastName;
-    private List<String> phoneNumbers;
-    private String name;
+    public final long id;
+    public String firstName;
+    public String lastName;
+    public List<String> phoneNumbers;
+    public String name;
+    public String primaryPhoneNumber;
 
-    private String lastAccessed;
+    public String lastAccessed;
 
     public Contact(long id) {
         this.id = id;
@@ -27,13 +28,7 @@ public class Contact implements Serializable{
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumbers = phoneNumbers;
-    }
-
-    public Contact(String firstName, String lastName, List<String> phoneNumbers) {
-        this.id = -1;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumbers = phoneNumbers;
+        this.primaryPhoneNumber = phoneNumbers.get(0);
     }
 
     public Contact(long id, String firstName, String lastName, List<String> phoneNumbers, String lastAccessed) {
@@ -41,17 +36,18 @@ public class Contact implements Serializable{
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumbers = phoneNumbers;
-        this.name = firstName + " " + lastName;
         this.lastAccessed = lastAccessed;
+        this.primaryPhoneNumber = phoneNumbers.get(0);
     }
 
-    public Contact(Long id, String firstName, String lastName, List<String> phoneNumbers, String lastAccessed) {
+    public Contact(long id, String firstName, String lastName, List<String> phoneNumbers, String lastAccessed, String primaryPhoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumbers = phoneNumbers;
         this.name = firstName + " " + lastName;
         this.lastAccessed = lastAccessed;
+        this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
     @Override
@@ -64,54 +60,10 @@ public class Contact implements Serializable{
         return searchStringBuffer.toString();
     }
 
-    public String getLastAccessed() {
-        return lastAccessed;
-    }
-    public void setLastAccessed(String lastAccessed) {
-        this.lastAccessed = lastAccessed;
-    }
-    public String getPhoneNumber(){
-        return phoneNumbers.get(0);
-    }
-    public String getName(){
-        return name;
-    }
-    public Long getId() {
-        return id;
-    }
-
-    public String getFirstName() {
-        return firstName;
-    }
-
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
-
-    public String getLastName() {
-        return lastName;
-    }
-
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
-
-    public List<String> getPhoneNumbers() {
-        return phoneNumbers;
-    }
-
-    public void addPhoneNumber(String phoneNumber){
-        phoneNumbers.add(phoneNumber);
-    }
-
-    public void setPhoneNumbers(List<String> phoneNumbers) {
-        this.phoneNumbers = phoneNumbers;
-    }
-
     @Override
     public boolean equals(Object obj) {
         if(obj == null || !(obj instanceof Contact))
             return false;
-        return getId().equals(((Contact) obj).getId());
+        return id == ((Contact)obj).id;
     }
 }

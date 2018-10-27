@@ -58,7 +58,7 @@ public class AddToContactActivity extends AppCompatActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 convertView = super.getView(position, convertView, parent);
-                ((TextView)(convertView.findViewById(android.R.id.text1))).setText(getItem(position).getName());
+                ((TextView)(convertView.findViewById(android.R.id.text1))).setText(getItem(position).name);
                 return convertView;
             }
         };
@@ -67,7 +67,7 @@ public class AddToContactActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Contact tempContact = DomainUtils.getACopyOf(adapter.getItem(position));
-                tempContact.getPhoneNumbers().add(phoneNumber);
+                tempContact.phoneNumbers.add(phoneNumber);
                 Intent editContact = new Intent(AddToContactActivity.this, EditContactActivity.class);
                 editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, tempContact);
                 AddToContactActivity.this.startActivity(editContact);

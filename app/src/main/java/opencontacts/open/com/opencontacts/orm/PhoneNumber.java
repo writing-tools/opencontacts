@@ -7,31 +7,16 @@ import com.orm.SugarRecord;
  */
 
 public class PhoneNumber extends SugarRecord{
-    String phoneNumber;
-    Contact contact;
+    public String phoneNumber;
+    public Contact contact;
+    public boolean isPrimaryNumber = false;
 
     public PhoneNumber(){
 
     }
-    public PhoneNumber(String mobileNumber, Contact contact) {
+    public PhoneNumber(String mobileNumber, Contact contact, boolean isPrimaryNumber) {
         this.phoneNumber = mobileNumber;
         this.contact = contact;
+        this.isPrimaryNumber = isPrimaryNumber;
     }
-
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
-
-    public Contact getContact() {
-        return contact;
-    }
-
-    public void setContact(Contact contact) {
-        this.contact = contact;
-    }
-
 }

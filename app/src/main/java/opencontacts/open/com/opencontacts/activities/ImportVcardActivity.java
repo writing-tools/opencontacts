@@ -149,7 +149,7 @@ public class ImportVcardActivity extends AppCompatActivity {
             Contact contact = new Contact(firstName, "");
             contact.save();
             for(Telephone telephoneNumber : telephoneNumbers){
-                new PhoneNumber(telephoneNumber.getText(), contact).save();
+                new PhoneNumber(telephoneNumber.getText(), contact, false).save();
             }
         }
 
@@ -165,7 +165,7 @@ public class ImportVcardActivity extends AppCompatActivity {
             Contact contact = new Contact(structuredName.getGiven(), lastName);
             contact.save();
             for(Telephone telephoneNumber : telephoneNumbers){
-                new PhoneNumber(telephoneNumber.getText(), contact).save();
+                new PhoneNumber(telephoneNumber.getText(), contact, false).save();
             }
 
         }

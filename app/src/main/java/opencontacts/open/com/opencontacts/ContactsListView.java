@@ -31,7 +31,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         Collections.sort(contacts, new Comparator<Contact>() {
             @Override
             public int compare(Contact contact1, Contact contact2) {
-                return contact1.getName().compareToIgnoreCase(contact2.getName());
+                return contact1.name.compareToIgnoreCase(contact2.name);
             }
         });
         adapter = new ContactsListViewAdapter(context, R.layout.contact, contacts);
@@ -90,16 +90,16 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onCallClicked(Contact contact) {
-        AndroidUtils.call(contact.getPhoneNumber(), context);
+        AndroidUtils.call(contact.primaryPhoneNumber, context);
     }
 
     @Override
     public void onMessageClicked(Contact contact) {
-        AndroidUtils.message(contact.getPhoneNumber(), context);
+        AndroidUtils.message(contact.primaryPhoneNumber, context);
     }
 
     @Override
     public void onShowDetails(Contact contact) {
-        context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.getId(), context));
+        context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.id, context));
     }
 }

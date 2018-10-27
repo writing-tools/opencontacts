@@ -45,10 +45,10 @@ public class DomainUtils {
 
             for( Contact contact : allContacts){
                 VCard vcard = new VCard();
-                structuredName.setGiven(contact.getFirstName());
-                structuredName.setFamily(contact.getLastName());
+                structuredName.setGiven(contact.firstName);
+                structuredName.setFamily(contact.lastName);
                 vcard.setStructuredName(structuredName);
-                for(String phoneNumber : contact.getPhoneNumbers())
+                for(String phoneNumber : contact.phoneNumbers)
                     vcard.addTelephoneNumber(phoneNumber, TelephoneType.CELL);
                 vCardWriter.write(vcard);
             }
@@ -61,7 +61,7 @@ public class DomainUtils {
     }
 
     public static Contact getACopyOf(Contact contact){
-        return new Contact(contact.getId(), contact.getFirstName(), contact.getLastName(), new ArrayList<>(contact.getPhoneNumbers()));
+        return new Contact(contact.id, contact.firstName, contact.lastName, new ArrayList<>(contact.phoneNumbers));
     }
 
     public static List<Contact> filter(CharSequence constraint, List<Contact> contacts){
@@ -78,8 +78,8 @@ public class DomainUtils {
         Collections.sort(filteredContacts, new Comparator<Contact>() {
             @Override
             public int compare(Contact contact1, Contact contact2) {
-                String lastAccessedDate1 = contact1.getLastAccessed();
-                String lastAccessedDate2 = contact2.getLastAccessed();
+                String lastAccessedDate1 = contact1.lastAccessed;
+                String lastAccessedDate2 = contact2.lastAccessed;
                 if(lastAccessedDate1 == null && lastAccessedDate2 == null)
                     return 0;
                 else if(lastAccessedDate1 == null)

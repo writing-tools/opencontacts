@@ -1,0 +1,1 @@
+update phone_number set is_primary_number = 0;

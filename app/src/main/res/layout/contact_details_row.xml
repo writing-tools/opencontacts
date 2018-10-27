@@ -20,8 +20,8 @@
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_call_black_24dp"
-        android:id="@+id/button_call"
+        android:src="@drawable/ic_star_empty_24dp"
+        android:id="@+id/button_primary_number"
         android:layout_alignParentLeft="true"
         />
 </RelativeLayout>

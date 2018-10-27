@@ -1,28 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/activity_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="opencontacts.open.com.opencontacts.activities.ContactDetailsActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context="opencontacts.open.com.opencontacts.activities.ContactDetailsActivity">
 
     <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:minHeight="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        android:id="@+id/toolbar" />
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
     <View
         android:id="@+id/divider"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?colorPrimaryDark"
-        />
+        android:background="?colorPrimaryDark" />
+    <Button android:layout_width="match_parent"
+        android:id="@+id/about_star"
+        android:gravity="center"
+        android:layout_height="wrap_content"
+        android:text="@string/learn_more_about_star" />
 
     <ListView
         android:id="@+id/listview_phone_numbers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
 </LinearLayout>

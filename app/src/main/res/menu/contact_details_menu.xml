@@ -2,11 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/image_button_export_to_contacts_app"
-        android:icon="@drawable/import_export"
-        android:title="@string/export"
-        app:showAsAction="always" />
-    <item
         android:id="@+id/image_button_edit_contact"
         android:icon="@drawable/edit"
         android:title="@string/edit_contact"
@@ -15,5 +10,10 @@
         android:id="@+id/image_button_delete_contact"
         android:icon="@drawable/delete"
         android:title="@string/delete"
-        app:showAsAction="always" />
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/image_button_export_to_contacts_app"
+        android:icon="@drawable/import_export"
+        android:title="@string/export"
+        app:showAsAction="ifRoom" />
 </menu>

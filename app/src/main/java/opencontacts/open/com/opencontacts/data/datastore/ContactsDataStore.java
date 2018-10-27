@@ -23,7 +23,7 @@ public class ContactsDataStore {
     public static void addContact(String firstName, String lastName, List<String> phoneNumbers) {
         opencontacts.open.com.opencontacts.orm.Contact dbContact = new opencontacts.open.com.opencontacts.orm.Contact(firstName, lastName);
         dbContact.save();
-        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers);
+        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, phoneNumbers.get(0));
         Contact newContactWithDatabaseId = ContactsDBHelper.getContact(dbContact.getId());
         contacts.add(newContactWithDatabaseId);
         for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
@@ -32,7 +32,7 @@ public class ContactsDataStore {
 
     public static void removeContact(Contact contact) {
         if (contacts.remove(contact)) {
-            ContactsDBHelper.deleteContactInDB(contact.getId());
+            ContactsDBHelper.deleteContactInDB(contact.id);
             for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
                 contactsDataChangeListener.onRemove(contact);
         }
@@ -42,11 +42,18 @@ public class ContactsDataStore {
         int indexOfContact = contacts.indexOf(contact);
         if (indexOfContact == -1)
             return;
-        ContactsDBHelper.updateContactInDB(contact);
-        Contact updatedContact = ContactsDBHelper.getContact(contact.getId());
-        contacts.set(indexOfContact, updatedContact);
+        ContactsDBHelper.updateContactInDBWith(contact);
+        reloadContact(contact.id);
+    }
+
+    private static void reloadContact(long contactId) {
+        int indexOfContact = contacts.indexOf(new Contact(contactId));
+        if (indexOfContact == -1)
+            return;
+        Contact contactFromDB = ContactsDBHelper.getContact(contactId);
+        contacts.set(indexOfContact, contactFromDB);
         for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
-            contactsDataChangeListener.onUpdate(updatedContact);
+            contactsDataChangeListener.onUpdate(contactFromDB);
     }
 
     public static void addDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
@@ -92,5 +99,10 @@ public class ContactsDataStore {
                 return null;
             }
         }.execute();
+    }
+
+    public static void togglePrimaryNumber(String mobileNumber, long contactId) {
+        ContactsDBHelper.togglePrimaryNumber(mobileNumber, getContactWithId(contactId));
+        reloadContact(contactId);
     }
 }

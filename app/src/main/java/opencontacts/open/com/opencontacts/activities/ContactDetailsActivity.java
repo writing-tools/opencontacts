@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -29,11 +30,22 @@ public class ContactDetailsActivity extends AppCompatActivity {
     private long contactId;
     private Contact contact;
     private Toolbar toolbar;
+    private ArrayAdapter<String> phoneNumbersListArrayAdapter;
 
     private View.OnClickListener callContact = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            AndroidUtils.call(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
+            AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
+        }
+    };
+    private View.OnClickListener togglePrimaryNumber = new View.OnClickListener(){
+        @Override
+        public void onClick(View v) {
+            ContactsDataStore.togglePrimaryNumber(getSelectedMobileNumber((View)v.getParent()), contactId);
+            contact = ContactsDataStore.getContactWithId(contactId);
+            phoneNumbersListArrayAdapter.clear();
+            phoneNumbersListArrayAdapter.addAll(contact.phoneNumbers);
+            phoneNumbersListArrayAdapter.notifyDataSetChanged();
         }
     };
     private View.OnClickListener messageContact = new View.OnClickListener() {
@@ -62,6 +74,15 @@ public class ContactDetailsActivity extends AppCompatActivity {
         toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
         setSupportActionBar(toolbar);
         AndroidUtils.setBackButtonInToolBar(toolbar, this);
+        findViewById(R.id.about_star).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new AlertDialog.Builder(ContactDetailsActivity.this)
+                        .setTitle("Filled Star")
+                        .setMessage(R.string.about_primary_number)
+                        .show();
+            }
+        });
         Intent intent = getIntent();
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
         if(contactId == -1)
@@ -84,25 +105,31 @@ public class ContactDetailsActivity extends AppCompatActivity {
     }
 
     private void setUpUI() {
-        toolbar.setTitle(contact.getName());
-        ListView listView = (ListView) findViewById(R.id.listview_phone_numbers);
-        final List<String> mobileNumbers = contact.getPhoneNumbers();
-        listView.setAdapter(new ArrayAdapter<String>(this, R.layout.contact_details_row, mobileNumbers){
+        toolbar.setTitle(contact.firstName);
+        toolbar.setSubtitle(contact.name);
+        ListView phoneNumbersListView = (ListView) findViewById(R.id.listview_phone_numbers);
+        final List<String> mobileNumbers = contact.phoneNumbers;
+        phoneNumbersListArrayAdapter = new ArrayAdapter<String>(this, R.layout.contact_details_row, mobileNumbers) {
             private LayoutInflater layoutInflater = LayoutInflater.from(getContext());
+
             @NonNull
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
-                if(convertView == null)
+                if (convertView == null)
                     convertView = layoutInflater.inflate(R.layout.contact_details_row, parent, false);
                 String mobileNumber = mobileNumbers.get(position);
                 ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(mobileNumber);
-                convertView.findViewById(R.id.button_call).setOnClickListener(callContact);
+                AppCompatImageButton primaryNumberToggleButton = (AppCompatImageButton) convertView.findViewById(R.id.button_primary_number);
+                primaryNumberToggleButton.setImageResource(mobileNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
+                primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
                 convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
+                convertView.setOnClickListener(callContact);
                 convertView.setOnLongClickListener(copyPhoneNumberToClipboard);
                 convertView.setTag(mobileNumber);
                 return convertView;
             }
-        });
+        };
+        phoneNumbersListView.setAdapter(phoneNumbersListArrayAdapter);
     }
 
     private void exportToContactsApp() {

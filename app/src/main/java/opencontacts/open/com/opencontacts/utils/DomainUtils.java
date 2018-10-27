@@ -32,9 +32,8 @@ public class DomainUtils {
             AndroidUtils.showAlert(context, "Error", "Storage is not mounted");
             return;
         }
-        File path = Environment.getExternalStorageDirectory();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
-        File file = new File(path, "Contacts_" + simpleDateFormat.format(new Date()) + " .vcf");
+        File file = new File(Environment.getExternalStorageDirectory(), "Contacts_" + simpleDateFormat.format(new Date()) + " .vcf");
         file.createNewFile();
         List<Contact> allContacts = ContactsDataStore.getAllContacts();
         VCardWriter vCardWriter = null;

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,23 +39,39 @@ public class DialerFragment extends Fragment implements SelectableTab {
         view.findViewById(R.id.button_call).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AndroidUtils.call(dialPadEditText.getText().toString(), context);
+                String phoneNumber = dialPadEditText.getText().toString();
+                if(isInvalid(phoneNumber))
+                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                else
+                    AndroidUtils.call(phoneNumber, context);
             }
         });
 
         view.findViewById(R.id.button_message).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                AndroidUtils.message(dialPadEditText.getText().toString(), context);
+                String phoneNumber = dialPadEditText.getText().toString();
+                if(isInvalid(phoneNumber))
+                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                else
+                    AndroidUtils.message(dialPadEditText.getText().toString(), context);
             }
         });
 
         view.findViewById(R.id.button_add_contact).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                String phoneNumber = dialPadEditText.getText().toString();
+                if(isInvalid(phoneNumber))
+                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                else
                 AndroidUtils.getAlertDialogToAddContact(dialPadEditText.getText().toString(), context).show();
             }
         });
+    }
+
+    private boolean isInvalid(String phoneNumber) {
+        return TextUtils.isEmpty(phoneNumber) || TextUtils.getTrimmedLength(phoneNumber) == 0;
     }
 
 

@@ -41,7 +41,7 @@ public class DialerFragment extends Fragment implements SelectableTab {
             public void onClick(View v) {
                 String phoneNumber = dialPadEditText.getText().toString();
                 if(isInvalid(phoneNumber))
-                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                    dialPadEditText.setError(getString(R.string.invalid_number));
                 else
                     AndroidUtils.call(phoneNumber, context);
             }
@@ -52,7 +52,7 @@ public class DialerFragment extends Fragment implements SelectableTab {
             public void onClick(View v) {
                 String phoneNumber = dialPadEditText.getText().toString();
                 if(isInvalid(phoneNumber))
-                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                    dialPadEditText.setError(getString(R.string.invalid_number));
                 else
                     AndroidUtils.message(dialPadEditText.getText().toString(), context);
             }
@@ -63,7 +63,7 @@ public class DialerFragment extends Fragment implements SelectableTab {
             public void onClick(View v) {
                 String phoneNumber = dialPadEditText.getText().toString();
                 if(isInvalid(phoneNumber))
-                    AndroidUtils.showAlert(context, getString(R.string.invalid_number), getString(R.string.input_valid_number_to_call));
+                    dialPadEditText.setError(getString(R.string.invalid_number));
                 else
                 AndroidUtils.getAlertDialogToAddContact(dialPadEditText.getText().toString(), context).show();
             }

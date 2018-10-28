@@ -32,5 +32,4 @@
     <string name="about_primary_number">Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.\n\nBy default first number in list would be primary</string>
     <string name="learn_more_about_star">Tap to learn more about the star.</string>
     <string name="invalid_number">Invalid number</string>
-    <string name="input_valid_number_to_call">Please input a valid number to place a call</string>
 </resources>

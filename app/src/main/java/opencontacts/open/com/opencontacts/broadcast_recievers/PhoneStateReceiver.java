@@ -62,8 +62,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                     try{
                         if(isCallRecieved)
                             return;
-                        CallLogEntry callLogEntry = CallLogDataStore.loadRecentCallLogEntries(context).get(0);
-                        if(!callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
+                        CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
+                        if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
                             return;
                     }
                     catch (Exception e){}

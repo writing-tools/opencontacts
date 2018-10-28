@@ -37,7 +37,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         super(context);
         this.context = context;
 
-        List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries();
+        List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
 
         final OnClickListener callContact = new OnClickListener() {
             @Override
@@ -155,7 +155,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     }
 
     public void reload(){
-        final List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries();
+        final List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
         this.post(new Runnable() {
             @Override
             public void run() {

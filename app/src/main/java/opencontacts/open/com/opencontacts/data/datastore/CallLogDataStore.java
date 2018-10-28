@@ -13,16 +13,15 @@ public class CallLogDataStore {
     private static List<CallLogEntry> callLogEntries = new ArrayList<>(1);
     private static List<DataStoreChangeListener<CallLogEntry>> dataChangeListeners = new ArrayList<>(3);
 
-    public static synchronized List<CallLogEntry> loadRecentCallLogEntries(Context context) {
+    public static synchronized void loadRecentCallLogEntries(Context context) {
         final List<CallLogEntry> recentCallLogEntries = callLogDBHelper.loadRecentCallLogEntriesIntoDB(context);
         if(recentCallLogEntries.size() == 0)
-            return recentCallLogEntries;
+            return;
         ContactsDataStore.updateContactsAccessedDateAsync(recentCallLogEntries);
-        updateStoreAsync(recentCallLogEntries);
-        return recentCallLogEntries;
+        addRecentCallLogEntriesToStore(recentCallLogEntries);
     }
 
-    private static void updateStoreAsync(final List<CallLogEntry> recentCallLogEntries) {
+    private static void addRecentCallLogEntriesToStore(final List<CallLogEntry> recentCallLogEntries) {
         new Thread() {
             @Override
             public void run() {
@@ -49,11 +48,26 @@ public class CallLogDataStore {
         }
     }
 
-    public static List<CallLogEntry> getRecent100CallLogEntries(){
-        if(callLogEntries.size() > 0)
-            return callLogEntries;
+    public static CallLogEntry getMostRecentCallLogEntry(Context context) {
+        if (callLogEntries.size() > 0)
+            callLogEntries.get(0);
         callLogEntries = CallLogDBHelper.getRecent100CallLogEntriesFromDB();
-        return new ArrayList<>(callLogEntries);
+        if (callLogEntries.size() > 0)
+            return callLogEntries.get(0);
+        List<CallLogEntry> callLogEntriesFromDB = callLogDBHelper.loadRecentCallLogEntriesIntoDB(context);
+        if (callLogEntriesFromDB.size() > 0) {
+            return callLogEntriesFromDB.get(0);
+        }
+        return null;
+    }
+    public static List<CallLogEntry> getRecent100CallLogEntries(Context context){
+        if(callLogEntries.size() > 0)
+            new ArrayList<>(callLogEntries);
+        callLogEntries = CallLogDBHelper.getRecent100CallLogEntriesFromDB();
+        if(callLogEntries.size() > 0)
+            return new ArrayList<>(callLogEntries);
+        loadRecentCallLogEntries(context);
+        return new ArrayList<>(0);
     }
 
     public static void addDataChangeListener(DataStoreChangeListener<CallLogEntry> changeListener) {

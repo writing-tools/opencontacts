@@ -11,3 +11,10 @@ This app saves contacts in its own database seperate from android contacts. This
 We can export / import contacts from Android contacts app into this app.
 Maintains call log as well coz Android call log app would not be able to show name of contact
 Also shows the person name upon recieving call
+
+# Issues management
+
+I am using this app in day to day life and I usually raise issues and fix them as I feel the priority. If anyone feels that an issue needs to be fixed soon,
+do comment on it saying this should be prioritized and fixed soon.
+
+In case you find a new issue / improvement / suggestion. Please do not hesitate to raise issue and we can together make our experience with this app great.

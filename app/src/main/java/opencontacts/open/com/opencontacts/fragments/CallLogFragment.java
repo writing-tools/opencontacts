@@ -33,7 +33,7 @@ public class CallLogFragment extends Fragment implements SelectableTab {
         return linearLayout;
     }
 
-    public void addCallLog(CallLogListView callLogListView){//TODO: too bad accepting a view into a fragment. Get list instead and handle it internally.
+    public void addCallLog(final CallLogListView callLogListView){//TODO: too bad accepting a view into a fragment. Get list instead and handle it internally.
         this.callLogListView = callLogListView;
         if(linearLayout == null)
             return;
@@ -45,7 +45,10 @@ public class CallLogFragment extends Fragment implements SelectableTab {
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                CallLogDataStore.loadRecentCallLogEntries(context);
+                if(callLogListView.getCount() == 0)
+                    callLogListView.reload();
+                else
+                    CallLogDataStore.loadRecentCallLogEntries(context);
                 swipeRefreshLayout.setRefreshing(false);
             }
         });

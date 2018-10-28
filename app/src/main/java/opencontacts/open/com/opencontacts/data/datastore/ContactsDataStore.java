@@ -3,11 +3,17 @@ package opencontacts.open.com.opencontacts.data.datastore;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
 
 public class ContactsDataStore {
     private static List<Contact> contacts = new ArrayList<>(1);
@@ -26,15 +32,13 @@ public class ContactsDataStore {
         ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, phoneNumbers.get(0));
         Contact newContactWithDatabaseId = ContactsDBHelper.getContact(dbContact.getId());
         contacts.add(newContactWithDatabaseId);
-        for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
-            contactsDataChangeListener.onAdd(newContactWithDatabaseId);
+        notifyListenersAsync(ADDITION, newContactWithDatabaseId);
     }
 
     public static void removeContact(Contact contact) {
         if (contacts.remove(contact)) {
             ContactsDBHelper.deleteContactInDB(contact.id);
-            for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
-                contactsDataChangeListener.onRemove(contact);
+            notifyListenersAsync(DELETION, contact);
         }
     }
 
@@ -52,8 +56,7 @@ public class ContactsDataStore {
             return;
         Contact contactFromDB = ContactsDBHelper.getContact(contactId);
         contacts.set(indexOfContact, contactFromDB);
-        for (DataStoreChangeListener<Contact> contactsDataChangeListener : dataChangeListeners)
-            contactsDataChangeListener.onUpdate(contactFromDB);
+        notifyListenersAsync(UPDATION, contactFromDB);
     }
 
     public static void addDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
@@ -77,25 +80,17 @@ public class ContactsDataStore {
         return contacts.get(indexOfContact);
     }
 
-    private static void updateLastAccessed(long contactId, String callTimeStamp) {
-        opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDBHelper.getDBContactWithId(contactId);
-        if (callTimeStamp.equals(contact.lastAccessed))
-            return;
-        contact.lastAccessed = callTimeStamp;
-        contact.save();
-    }
-
     public static void updateContactsAccessedDateAsync(final List<CallLogEntry> newCallLogEntries) {
         new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 for (CallLogEntry callLogEntry : newCallLogEntries) {
                     long contactId = callLogEntry.getContactId();
-                    if (contactId != -1) {
-                        contacts.indexOf(new Contact(contactId));
-                        ContactsDataStore.updateLastAccessed(contactId, callLogEntry.getDate());
-                    }
+                    if(getContactWithId(contactId) == null)
+                        continue;
+                    ContactsDBHelper.updateLastAccessed(contactId, callLogEntry.getDate());
                 }
+                refreshStoreAsync();
                 return null;
             }
         }.execute();
@@ -104,5 +99,38 @@ public class ContactsDataStore {
     public static void togglePrimaryNumber(String mobileNumber, long contactId) {
         ContactsDBHelper.togglePrimaryNumber(mobileNumber, getContactWithId(contactId));
         reloadContact(contactId);
+    }
+
+    public static void refreshStoreAsync() {
+        new Thread(){
+            @Override
+            public void run() {
+                contacts = ContactsDBHelper.getAllContactsFromDB();
+                notifyListenersAsync(REFRESH, null);
+            }
+        }.start();
+    }
+
+    private static void notifyListenersAsync(final int type, final Contact contact){
+        if(dataChangeListeners.isEmpty())
+            return;
+        new Thread(){
+            @Override
+            public void run() {
+                Iterator<DataStoreChangeListener<Contact>> iterator = dataChangeListeners.iterator();
+                if(type == ADDITION)
+                    while(iterator.hasNext())
+                        iterator.next().onAdd(contact);
+                else if(type == DELETION)
+                    while(iterator.hasNext())
+                        iterator.next().onRemove(contact);
+                else if(type == UPDATION)
+                    while(iterator.hasNext())
+                        iterator.next().onUpdate(contact);
+                else if (type == REFRESH)
+                    while(iterator.hasNext())
+                        iterator.next().onStoreRefreshed();
+            }
+        }.start();
     }
 }

@@ -151,6 +151,10 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
     @Override
     public void onStoreRefreshed() {
+        reload();
+    }
+
+    public void reload(){
         final List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries();
         this.post(new Runnable() {
             @Override

@@ -40,7 +40,7 @@ public class CallLogDataStore {
         }.start();
     }
 
-    private static void refreshStore() {
+    private synchronized static void refreshStore() {
         if(callLogEntries.size() == 0)
             return;
         callLogEntries = CallLogDBHelper.getRecent100CallLogEntriesFromDB();

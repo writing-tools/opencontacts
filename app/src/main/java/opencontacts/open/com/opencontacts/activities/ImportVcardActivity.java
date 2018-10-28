@@ -26,6 +26,7 @@ import ezvcard.property.FormattedName;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
@@ -194,6 +195,7 @@ public class ImportVcardActivity extends AppCompatActivity {
                     progressBarComponent.setProgress(progressBarComponent.getMax());
                     textView_vCardsImported.setText("Total cards imported: " + values[1]);
                     textView_vCardsIgnored.setText("Total cards ignored: " + values[2]);
+                    ContactsDataStore.refreshStoreAsync();
                     break;
                 case PROGRESS_TOTAL_NUMBER_OF_VCARDS:
                     progressBarComponent.setMax((Integer) values[1]);

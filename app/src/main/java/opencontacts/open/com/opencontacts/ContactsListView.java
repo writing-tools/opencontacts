@@ -17,7 +17,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
  */
 
 public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>, ContactsListViewAdapter.ContactsListActionsListener {
-    private final List <Contact> contacts;
+    private List <Contact> contacts;
     private Context context;
     private ContactsListViewAdapter adapter;
 
@@ -28,16 +28,30 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         setTextFilterEnabled(true);
         contacts = ContactsDataStore.getAllContacts();
         ContactsDataStore.addDataChangeListener(this);
+        sortContacts();
+        adapter = new ContactsListViewAdapter(context, R.layout.contact, contacts);
+        adapter.setContactsListActionsListener(ContactsListView.this);
+        setAdapter(adapter);
+    }
+
+    private void sortContacts() {
         Collections.sort(contacts, new Comparator<Contact>() {
             @Override
             public int compare(Contact contact1, Contact contact2) {
                 return contact1.name.compareToIgnoreCase(contact2.name);
             }
         });
-        adapter = new ContactsListViewAdapter(context, R.layout.contact, contacts);
-        adapter.setContactsListActionsListener(this);
+    }
 
-        this.setAdapter(adapter);
+    private void addContactsToAdapter() {
+        post(new Runnable() {
+            @Override
+            public void run() {
+                adapter.clear();
+                adapter.addAll(contacts);
+                adapter.notifyDataSetChanged();
+            }
+        });
     }
 
     @Override
@@ -82,6 +96,9 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onStoreRefreshed() {
+        contacts = ContactsDataStore.getAllContacts();
+        sortContacts();
+        addContactsToAdapter();
     }
 
     public void onDestroy(){

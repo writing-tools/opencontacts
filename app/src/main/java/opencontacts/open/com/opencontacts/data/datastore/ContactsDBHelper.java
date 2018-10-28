@@ -111,4 +111,12 @@ class ContactsDBHelper {
         }
         PhoneNumber.saveInTx(allDbPhoneNumbersOfContact);
     }
+
+    static void updateLastAccessed(long contactId, String callTimeStamp) {
+        opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDBHelper.getDBContactWithId(contactId);
+        if (callTimeStamp.equals(contact.lastAccessed))
+            return;
+        contact.lastAccessed = callTimeStamp;
+        contact.save();
+    }
 }

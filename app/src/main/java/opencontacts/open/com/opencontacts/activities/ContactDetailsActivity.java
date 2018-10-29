@@ -5,9 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,10 +24,9 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 
-public class ContactDetailsActivity extends AppCompatActivity {
+public class ContactDetailsActivity extends AppBaseActivity {
     private long contactId;
     private Contact contact;
-    private Toolbar toolbar;
     private ArrayAdapter<String> phoneNumbersListArrayAdapter;
 
     private View.OnClickListener callContact = new View.OnClickListener() {
@@ -68,12 +65,8 @@ public class ContactDetailsActivity extends AppCompatActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_contact_details);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
-        setSupportActionBar(toolbar);
-        AndroidUtils.setBackButtonInToolBar(toolbar, this);
+        super.onCreate(savedInstanceState);
         findViewById(R.id.about_star).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

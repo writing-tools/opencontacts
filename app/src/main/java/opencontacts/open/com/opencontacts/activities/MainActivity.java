@@ -8,9 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,10 +29,9 @@ import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppBaseActivity {
     public static final int CONTACTS_TAB_INDEX = 1;
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
-    private Toolbar toolbar;
     private ContactsListView contactsListView;//TODO: get rid of both these listviews here.
     private CallLogListView callLogListView;
     private ViewPager viewPager;
@@ -49,12 +46,9 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        setContentView(R.layout.activity_tabbed);
         super.onCreate(savedInstanceState);
         AndroidUtils.askForPermissionsIfNotGranted(this);
-        setContentView(R.layout.activity_tabbed);
-        toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
-        setSupportActionBar(toolbar);
         setupTabs();
     }
 

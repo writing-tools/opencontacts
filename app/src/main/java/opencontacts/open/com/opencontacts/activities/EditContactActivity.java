@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.view.View;
 import android.widget.EditText;
@@ -19,11 +17,10 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.view.ViewGroup.LayoutParams.*;
 
-public class EditContactActivity extends AppCompatActivity {
+public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
     public static final String INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT = "add_new_contact";
     public static final String INTENT_EXTRA_CONTACT_CONTACT_DETAILS = "contact_details";
@@ -34,9 +31,8 @@ public class EditContactActivity extends AppCompatActivity {
     private boolean addingNewContact = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_contact);
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        super.onCreate(savedInstanceState);
         editText_firstName = (EditText) findViewById(R.id.editFirstName);
         editText_lastName = (EditText) findViewById(R.id.editLastName);
         editText_mobileNumber = (EditText) findViewById(R.id.editPhoneNumber);
@@ -46,7 +42,6 @@ public class EditContactActivity extends AppCompatActivity {
             addingNewContact = true;
             editText_mobileNumber.setText(intent.getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER));
             toolbar.setTitle("New Contact");
-            toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
         }
         else{
             contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
@@ -58,8 +53,6 @@ public class EditContactActivity extends AppCompatActivity {
             toolbar.setTitle(contact.firstName);
             fillFieldsFromContactDetails();
         }
-        setSupportActionBar(toolbar);
-        AndroidUtils.setBackButtonInToolBar(toolbar, this);
     }
 
     private void fillFieldsFromContactDetails() {

@@ -42,6 +42,7 @@
         <activity android:name=".activities.EditContactActivity" />
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.AddToContactActivity" />
+        <activity android:name=".activities.HelpActivity" />
         <activity
             android:name=".activities.ContactDetailsActivity"
             android:label="@string/title_activity_contact_details" />
@@ -49,7 +50,7 @@
         <activity
             android:name=".activities.ImportVcardActivity"
             android:screenOrientation="portrait"
-            android:label="@string/import_activity">
+            android:label="@string/import_contacts">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 

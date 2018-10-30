@@ -109,6 +109,13 @@ public class MainActivity extends AppBaseActivity {
                 return true;
             }
         });
+        menu.findItem(R.id.action_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                startActivity(new Intent(MainActivity.this, HelpActivity.class));
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
     private void refresh() {

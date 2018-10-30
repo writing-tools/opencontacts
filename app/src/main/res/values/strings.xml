@@ -1,7 +1,6 @@
 <resources>
     <string name="app_name">OpenContacts</string>
     <string name="title_activity_main">Open Contacts</string>
-    <string name="import_activity">Import Contacts</string>
     <string name="button_new">+</string>
     <string name="error_while_saving_contact">Error occured while saving contact</string>
     <string name="error_while_loading_contact">Error occured while loading contact</string>
@@ -32,4 +31,10 @@
     <string name="about_primary_number">Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.\n\nBy default first number in list would be primary</string>
     <string name="learn_more_about_star">Tap to learn more about the star.</string>
     <string name="invalid_number">Invalid number</string>
+    <string name="import_contacts">Import contacts</string>
+    <string name="import_contacts_help_text">To import contacts into this app, goto default contacts app, export contacts. Try opening a file explorer and tap on exported file. In the list of open with apps, tap on open contacts, Open contacts would import all the contacts</string>
+    <string name="search_contacts_help_text">Tap on search icon in the menu. T9 Keyboard would pop out with only numbers but small letters three on each would be present and covers all the alphabets. Use the numeric keys to input name.\nExample: To search for contact \'john\', type 5646 because letter j is present on number 5, o is on 6 and so on. It might look a bit new but would be better than normal full keyboard search.\nYou could also search for phone number by entering the required number with the help of same keyboard.</string>
+    <string name="search_contacts">Search contacts</string>
+    <string name="help">Help</string>
+    <string name="export_contacts_help_text">On the main screen, click the top right menu and then select export. It would export all the contacts to file and will tell the location of export</string>
 </resources>

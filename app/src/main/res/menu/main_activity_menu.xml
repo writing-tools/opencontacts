@@ -22,4 +22,9 @@
         android:icon="@android:drawable/ic_menu_directions"
         android:title="@string/about"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_help"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:title="@string/help"
+        app:showAsAction="ifRoom" />
 </menu>

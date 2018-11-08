@@ -1,35 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:padding="10dp"
+    android:paddingTop="10dp"
+    android:paddingBottom="10dp"
     android:layout_height="match_parent">
 
 
     <ImageButton
+        android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_info_black_24dp"
         android:id="@+id/button_info"
-        android:layout_marginRight="15dp"
-        android:layout_marginBottom="5dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/button_message"
-        android:layout_toStartOf="@+id/button_message" />
+         />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textview_full_name"
+        android:textAppearance="?android:textAppearanceListItem"
         android:text="name"
         android:layout_alignParentTop="true"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toRightOf="@id/button_info"
+         />
 
     <ImageButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_chat_black_24dp"
         android:id="@+id/button_message"
+        android:layout_marginRight="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
@@ -40,6 +42,6 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_phone_number"
         android:layout_alignBottom="@+id/button_message"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_toRightOf="@id/button_info"
+         />
 </RelativeLayout>

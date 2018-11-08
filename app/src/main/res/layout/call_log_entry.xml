@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_full_name"
         android:text="name"
+        android:textAppearance="?android:textAppearanceListItem"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_alignParentTop="true"

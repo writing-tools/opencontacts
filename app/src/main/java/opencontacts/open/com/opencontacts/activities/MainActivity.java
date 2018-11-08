@@ -130,7 +130,7 @@ public class MainActivity extends AppBaseActivity {
     private void setupTabs() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
 
-        final List<SelectableTab> tabs= new ArrayList<>();
+        final List<SelectableTab> tabs = new ArrayList<>();
         tabs.add(new CallLogFragment());
         tabs.add(new ContactsFragment());
         tabs.add(new DialerFragment());

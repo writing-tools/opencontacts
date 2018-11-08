@@ -5,6 +5,7 @@ import android.content.Context;
 import java.util.ArrayList;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 
@@ -76,5 +77,62 @@ public class CallLogDataStore {
 
     public static void removeDataChangeListener(DataStoreChangeListener<CallLogEntry> changeListener) {
         dataChangeListeners.remove(changeListener);
+    }
+
+    public static void updateCallLogAsyncForNewContact(final Contact newContact, final Context context){
+        new Thread(){
+            @Override
+            public void run() {
+                if(callLogEntries == null)
+                    callLogEntries = getRecent100CallLogEntries(context);
+                int numberOfEntriesUpdated = 0;
+                for(CallLogEntry callLogEntry : callLogEntries){
+                    if(callLogEntry.getContactId() != -1)
+                        continue;
+                    for(String phoneNumber : newContact.phoneNumbers){
+                        if(phoneNumber.equals(callLogEntry.getPhoneNumber())){
+                            callLogEntry.setContactId(newContact.id);
+                            callLogEntry.setName(newContact.name);
+                            callLogEntry.save();
+                            numberOfEntriesUpdated ++;
+                            break;
+                        }
+                    }
+                }
+                if(numberOfEntriesUpdated == 0)
+                    return;
+                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                    dataStoreChangeListener.onStoreRefreshed();
+                }
+
+            }
+        }.start();
+    }
+
+    public static void updateCallLogAsyncForAllContacts(final Context context){
+        new Thread(){
+            @Override
+            public void run() {
+                if(callLogEntries == null)
+                    callLogEntries = getRecent100CallLogEntries(context);
+                int numberOfEntriesUpdated = 0;
+                for(CallLogEntry callLogEntry : callLogEntries){
+                    if(callLogEntry.getContactId() != -1)
+                        continue;
+                    opencontacts.open.com.opencontacts.orm.Contact contactFromDB = ContactsDBHelper.getContactFromDB(callLogEntry.getPhoneNumber());
+                    if(contactFromDB == null)
+                        continue;
+                    callLogEntry.setName(contactFromDB.firstName + " " + contactFromDB.lastName);
+                    callLogEntry.setContactId(contactFromDB.getId());
+                    numberOfEntriesUpdated ++;
+                }
+                if(numberOfEntriesUpdated == 0)
+                    return;
+                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                    dataStoreChangeListener.onStoreRefreshed();
+                }
+
+            }
+        }.start();
     }
 }

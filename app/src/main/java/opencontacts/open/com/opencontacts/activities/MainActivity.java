@@ -116,6 +116,13 @@ public class MainActivity extends AppBaseActivity {
                 return true;
             }
         });
+        menu.findItem(R.id.action_resync).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem item) {
+                CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
+                return true;
+            }
+        });
         return super.onCreateOptionsMenu(menu);
     }
     private void refresh() {

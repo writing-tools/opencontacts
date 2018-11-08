@@ -80,7 +80,7 @@ public class EditContactActivity extends AppBaseActivity {
         }
 
         if(addingNewContact)
-            ContactsDataStore.addContact(firstName, lastName, getPhoneNumbersFromView());
+            ContactsDataStore.addContact(firstName, lastName, getPhoneNumbersFromView(), EditContactActivity.this);
         else{
             Contact updatedContact = new Contact(this.contact.id, firstName, lastName, getPhoneNumbersFromView());
             updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;

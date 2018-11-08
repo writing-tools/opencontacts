@@ -37,4 +37,5 @@
     <string name="search_contacts">Search contacts</string>
     <string name="help">Help</string>
     <string name="export_contacts_help_text">On the main screen, click the top right menu and then select export. It would export all the contacts to file and will tell the location of export</string>
+    <string name="resync_call_log_with_contacts">Resync call log with contacts</string>
 </resources>

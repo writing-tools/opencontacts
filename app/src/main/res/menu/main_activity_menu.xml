@@ -17,6 +17,13 @@
         android:icon="@android:drawable/ic_menu_directions"
         android:title="@string/export"
         app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_resync"
+        android:icon="@drawable/ic_sync_24dp"
+        android:title="@string/resync_call_log_with_contacts"
+        app:showAsAction="ifRoom" />
+
     <item
         android:id="@+id/action_about"
         android:icon="@android:drawable/ic_menu_directions"

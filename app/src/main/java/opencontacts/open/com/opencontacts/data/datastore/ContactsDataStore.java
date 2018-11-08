@@ -1,5 +1,6 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
 import java.util.ArrayList;
@@ -26,13 +27,14 @@ public class ContactsDataStore {
         return new ArrayList<>(contacts);
     }
 
-    public static void addContact(String firstName, String lastName, List<String> phoneNumbers) {
+    public static void addContact(String firstName, String lastName, List<String> phoneNumbers, Context context) {
         opencontacts.open.com.opencontacts.orm.Contact dbContact = new opencontacts.open.com.opencontacts.orm.Contact(firstName, lastName);
         dbContact.save();
         ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, phoneNumbers.get(0));
         Contact newContactWithDatabaseId = ContactsDBHelper.getContact(dbContact.getId());
         contacts.add(newContactWithDatabaseId);
         notifyListenersAsync(ADDITION, newContactWithDatabaseId);
+        CallLogDataStore.updateCallLogAsyncForNewContact(newContactWithDatabaseId, context);
     }
 
     public static void removeContact(Contact contact) {

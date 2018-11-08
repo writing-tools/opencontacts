@@ -26,6 +26,7 @@ import ezvcard.property.FormattedName;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
@@ -129,7 +130,6 @@ public class ImportVcardActivity extends AppCompatActivity {
                         save(structuredName, vcard.getTelephoneNumbers());
                     numberOfvCardsImported++;
                     publishProgress(PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW, numberOfvCardsImported, numberOfCardsIgnored);
-                    Thread.sleep(20);
                 }
                 publishProgress(PROGRESS_FINAL_RESULT_OF_IMPORT, numberOfvCardsImported, numberOfCardsIgnored);
             } catch (FileNotFoundException e) {
@@ -196,6 +196,7 @@ public class ImportVcardActivity extends AppCompatActivity {
                     textView_vCardsImported.setText("Total cards imported: " + values[1]);
                     textView_vCardsIgnored.setText("Total cards ignored: " + values[2]);
                     ContactsDataStore.refreshStoreAsync();
+                    CallLogDataStore.updateCallLogAsyncForAllContacts(ImportVcardActivity.this);
                     break;
                 case PROGRESS_TOTAL_NUMBER_OF_VCARDS:
                     progressBarComponent.setMax((Integer) values[1]);

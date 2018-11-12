@@ -50,6 +50,8 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
                 adapter.clear();
                 adapter.addAll(contacts);
                 adapter.notifyDataSetChanged();
+                if(isInFilterMode())
+                    setFilterText(getTextFilter().toString());
             }
         });
     }

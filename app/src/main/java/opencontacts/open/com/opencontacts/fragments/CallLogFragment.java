@@ -9,7 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 
 
 import opencontacts.open.com.opencontacts.CallLogListView;
@@ -17,43 +16,39 @@ import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
 public class CallLogFragment extends Fragment implements SelectableTab {
-
-    private LinearLayout linearLayout;
     private CallLogListView callLogListView;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        callLogListView = new CallLogListView(getContext());
+        super.onCreate(savedInstanceState);
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        linearLayout = new LinearLayout(getContext());
-        ProgressBar progressBar = new ProgressBar(getContext());
-        progressBar.setIndeterminate(true);
-        linearLayout.addView(progressBar);
-        if(callLogListView != null)
-            addCallLog(callLogListView);
-        return linearLayout;
-    }
-
-    public void addCallLog(final CallLogListView callLogListView){//TODO: too bad accepting a view into a fragment. Get list instead and handle it internally.
-        this.callLogListView = callLogListView;
-        if(linearLayout == null)
-            return;
-        linearLayout.removeAllViews();
         final Context context = getContext();
+        LinearLayout linearLayout = new LinearLayout(context);
         final SwipeRefreshLayout swipeRefreshLayout = new SwipeRefreshLayout(context);
         callLogListView.setId(android.R.id.list);
         swipeRefreshLayout.addView(callLogListView);
-        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                if(callLogListView.getCount() == 0)
-                    callLogListView.reload();
-                else
-                    CallLogDataStore.loadRecentCallLogEntries(context);
-                swipeRefreshLayout.setRefreshing(false);
-            }
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if(callLogListView.getCount() == 0)
+                callLogListView.reload();
+            else
+                CallLogDataStore.loadRecentCallLogEntriesAsync(context);
+            swipeRefreshLayout.setRefreshing(false);
         });
         linearLayout.addView(swipeRefreshLayout);
+        return linearLayout;
     }
+
+    @Override
+    public void onDestroy() {
+        callLogListView.onDestroy();
+        super.onDestroy();
+    }
+
     @Override
     public void onSelect() {}
 

@@ -10,14 +10,13 @@ import android.widget.Filter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
 
 public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
-    private final List<Contact> contacts;
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
+    private ContactsListFilter.AllContactsHolder allContactsHolder;
 
     private final View.OnClickListener callContact = new View.OnClickListener() {
         @Override
@@ -65,13 +64,13 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
     @NonNull
     @Override
     public Filter getFilter() {
-        return new ContactsListFilter(contacts, this);
+        return new ContactsListFilter(this, allContactsHolder);
     }
 
-    ContactsListViewAdapter(@NonNull Context context, int resource, @NonNull List<Contact> contacts) {
-        super(context, resource, new ArrayList<>(contacts));
-        this.contacts = contacts;
+    ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
+        super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
         layoutInflater = LayoutInflater.from(context);
+        this.allContactsHolder = allContactsHolder;
     }
 
     public void setContactsListActionsListener(ContactsListActionsListener contactsListActionsListener){

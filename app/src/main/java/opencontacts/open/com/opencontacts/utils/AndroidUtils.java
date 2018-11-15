@@ -37,10 +37,21 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 
 public class AndroidUtils {
 
+    public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
+
     public static float dpToPixels(int dp) {
         return Resources.getSystem().getDisplayMetrics().density * dp;
     }
 
+    public static void processAsync(final Runnable someRunnable){
+        new Thread(){
+            @Override
+            public void run() {
+                someRunnable.run();
+            }
+        }.start();
+    }
+    
     public static void showSoftKeyboard(View view, Context context) {
         if (view.requestFocus()) {
             InputMethodManager imm = (InputMethodManager)

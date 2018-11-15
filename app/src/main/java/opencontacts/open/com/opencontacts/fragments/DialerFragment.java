@@ -22,51 +22,41 @@ public class DialerFragment extends Fragment implements SelectableTab {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View inflatedView = inflater.inflate(R.layout.dialer, container, false);
-        return inflatedView;
+        return inflater.inflate(R.layout.dialer, container, false);
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
         this.context = getContext();
         this.view = view;
         linkDialerButtonsToHandlers();
+        super.onViewCreated(view, savedInstanceState);
     }
 
     private void linkDialerButtonsToHandlers() {
         dialPadEditText = (EditText) view.findViewById(R.id.editText_dialpad_number);
-        view.findViewById(R.id.button_call).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = dialPadEditText.getText().toString();
-                if(isInvalid(phoneNumber))
-                    dialPadEditText.setError(getString(R.string.invalid_number));
-                else
-                    AndroidUtils.call(phoneNumber, context);
-            }
+        view.findViewById(R.id.button_call).setOnClickListener(v -> {
+            String phoneNumber = dialPadEditText.getText().toString();
+            if(isInvalid(phoneNumber))
+                dialPadEditText.setError(getString(R.string.invalid_number));
+            else
+                AndroidUtils.call(phoneNumber, context);
         });
 
-        view.findViewById(R.id.button_message).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = dialPadEditText.getText().toString();
-                if(isInvalid(phoneNumber))
-                    dialPadEditText.setError(getString(R.string.invalid_number));
-                else
-                    AndroidUtils.message(dialPadEditText.getText().toString(), context);
-            }
+        view.findViewById(R.id.button_message).setOnClickListener(v -> {
+            String phoneNumber = dialPadEditText.getText().toString();
+            if(isInvalid(phoneNumber))
+                dialPadEditText.setError(getString(R.string.invalid_number));
+            else
+                AndroidUtils.message(dialPadEditText.getText().toString(), context);
         });
 
-        view.findViewById(R.id.button_add_contact).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String phoneNumber = dialPadEditText.getText().toString();
-                if(isInvalid(phoneNumber))
-                    dialPadEditText.setError(getString(R.string.invalid_number));
-                else
-                AndroidUtils.getAlertDialogToAddContact(dialPadEditText.getText().toString(), context).show();
-            }
+        view.findViewById(R.id.button_add_contact).setOnClickListener(v -> {
+            String phoneNumber = dialPadEditText.getText().toString();
+            if(isInvalid(phoneNumber))
+                dialPadEditText.setError(getString(R.string.invalid_number));
+            else
+            AndroidUtils.getAlertDialogToAddContact(dialPadEditText.getText().toString(), context).show();
         });
     }
 

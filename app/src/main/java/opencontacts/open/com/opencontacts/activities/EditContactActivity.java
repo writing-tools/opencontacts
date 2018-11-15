@@ -84,7 +84,7 @@ public class EditContactActivity extends AppBaseActivity {
         else{
             Contact updatedContact = new Contact(this.contact.id, firstName, lastName, getPhoneNumbersFromView());
             updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
-            ContactsDataStore.updateContact(updatedContact);
+            ContactsDataStore.updateContact(updatedContact, this);
         }
         Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
         finish();

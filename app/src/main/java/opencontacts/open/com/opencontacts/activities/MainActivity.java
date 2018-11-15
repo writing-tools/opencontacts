@@ -1,7 +1,6 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -9,16 +8,13 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.CallLogListView;
-import opencontacts.open.com.opencontacts.ContactsListView;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -32,31 +28,26 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 public class MainActivity extends AppBaseActivity {
     public static final int CONTACTS_TAB_INDEX = 1;
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
-    private ContactsListView contactsListView;//TODO: get rid of both these listviews here.
-    private CallLogListView callLogListView;
+    public static final String TAB_TITLE_CALL_LOG = "Call Log";
+    public static final String TAB_TITLE_CONTACTS = "Contacts";
     private ViewPager viewPager;
     private SearchView searchView;
+    private CallLogFragment callLogFragment;
+    private ContactsFragment contactsFragment;
+    private DialerFragment dialerFragment;
 
     @Override
     protected void onResume() {
         super.onResume();
-        if(callLogListView != null)
-            refresh();
+        refresh();
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         setContentView(R.layout.activity_tabbed);
-        super.onCreate(savedInstanceState);
         AndroidUtils.askForPermissionsIfNotGranted(this);
+        super.onCreate(savedInstanceState);
         setupTabs();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        contactsListView.onDestroy();
-        callLogListView.onDestroy();
     }
 
     @Override
@@ -73,77 +64,39 @@ public class MainActivity extends AppBaseActivity {
         });
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
-        searchView.setOnSearchClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
-                searchView.requestFocus();
-            }
+        searchView.setOnSearchClickListener(v -> {
+            viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
+            searchView.requestFocus();
         });
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                contactsListView.clearTextFilter();
-                return false;
-            }
-        });
-        searchView.setInputType(InputType.TYPE_CLASS_PHONE);
-        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
-            @Override
-            public boolean onQueryTextSubmit(String query) {
-                return false;
-            }
-
-            @Override
-            public boolean onQueryTextChange(String newText) {
-                contactsListView.setFilterText(newText);
-                return true;
-            }
-        });
-
+        contactsFragment.configureSearchInMenu(searchView);
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
-        menu.findItem(R.id.action_about).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(MainActivity.this, AboutActivity.class));
-                return true;
-            }
+        menu.findItem(R.id.action_about).setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(MainActivity.this, AboutActivity.class));
+            return true;
         });
-        menu.findItem(R.id.action_help).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivity(new Intent(MainActivity.this, HelpActivity.class));
-                return true;
-            }
+        menu.findItem(R.id.action_help).setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(MainActivity.this, HelpActivity.class));
+            return true;
         });
-        menu.findItem(R.id.action_resync).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
-                return true;
-            }
+        menu.findItem(R.id.action_resync).setOnMenuItemClickListener(item -> {
+            CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
+            return true;
         });
         return super.onCreateOptionsMenu(menu);
     }
     private void refresh() {
-        new Thread(){
-            @Override
-            public void run() {
-                CallLogDataStore.loadRecentCallLogEntries(MainActivity.this);
-            }
-        }.start();
+        CallLogDataStore.loadRecentCallLogEntriesAsync(MainActivity.this);
     }
 
     private void setupTabs() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
+        callLogFragment = new CallLogFragment();
+        contactsFragment = new ContactsFragment();
+        dialerFragment = new DialerFragment();
+        final List<SelectableTab> tabs = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
+        final List<String> tabTitles = Arrays.asList(TAB_TITLE_CALL_LOG, TAB_TITLE_CONTACTS, "");
 
-        final List<SelectableTab> tabs = new ArrayList<>();
-        tabs.add(new CallLogFragment());
-        tabs.add(new ContactsFragment());
-        tabs.add(new DialerFragment());
-        final String[] tabTitles = new String[]{"Call Log", "Contacts", ""};
-
-        FragmentPagerAdapter fragmentStatePagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
+        FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override
             public int getCount() {
                 return 3;
@@ -151,7 +104,7 @@ public class MainActivity extends AppBaseActivity {
 
             @Override
             public CharSequence getPageTitle(int position) {
-                return tabTitles[position];
+                return tabTitles.get(position);
             }
 
             @Override
@@ -159,7 +112,7 @@ public class MainActivity extends AppBaseActivity {
                 return (Fragment) tabs.get(position);
             }
         };
-        viewPager.setAdapter(fragmentStatePagerAdapter);
+        viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3); //crazy shit with viewPager in case used with tablayout
 
         TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
@@ -181,34 +134,6 @@ public class MainActivity extends AppBaseActivity {
 
             }
         });
-
-        new AsyncTask<Void, String, Void>() {
-            String CALL_LOG_LOADED = "call log loaded";
-            String CONTACTS_LOADED = "contacts loaded";
-
-            @Override
-            protected Void doInBackground(Void... params) {
-                CallLogDataStore.loadRecentCallLogEntries(MainActivity.this);
-                callLogListView = new CallLogListView(MainActivity.this);
-                publishProgress(CALL_LOG_LOADED);
-                if(contactsListView == null)
-                    contactsListView = new ContactsListView(MainActivity.this);
-                publishProgress(CONTACTS_LOADED);
-                return null;
-            }
-
-            @Override
-            protected void onProgressUpdate(String... progress) {
-                super.onProgressUpdate(progress);
-                if(CALL_LOG_LOADED.equals(progress[0])){
-                    ((CallLogFragment)tabs.get(0)).addCallLog(callLogListView);
-                }
-
-                if(CONTACTS_LOADED.equals(progress[0])) {
-                    ((ContactsFragment)tabs.get(1)).addContactsList(contactsListView);
-                }
-            }
-        }.execute();
     }
 
     public void collapseSearchView(){

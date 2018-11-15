@@ -46,7 +46,7 @@ public class AddToContactActivity extends AppBaseActivity {
             @NonNull
             @Override
             public Filter getFilter() {
-                return new ContactsListFilter(contacts, this);
+                return new ContactsListFilter(this, () -> contacts);
             }
 
             @NonNull
@@ -84,12 +84,9 @@ public class AddToContactActivity extends AppBaseActivity {
     private void bindSearchViewToContacts(SearchView searchView) {
         searchView.setInputType(InputType.TYPE_CLASS_PHONE);
 
-        searchView.setOnCloseListener(new SearchView.OnCloseListener() {
-            @Override
-            public boolean onClose() {
-                contactsListView.clearTextFilter();
-                return false;
-            }
+        searchView.setOnCloseListener(() -> {
+            contactsListView.clearTextFilter();
+            return false;
         });
 
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {

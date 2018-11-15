@@ -4,7 +4,6 @@ import android.content.Context;
 import android.widget.ListView;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -26,73 +25,58 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         super(context);
         this.context = context;
         setTextFilterEnabled(true);
-        contacts = ContactsDataStore.getAllContacts();
         ContactsDataStore.addDataChangeListener(this);
+        contacts = ContactsDataStore.getAllContacts();
         sortContacts();
-        adapter = new ContactsListViewAdapter(context, R.layout.contact, contacts);
+        adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
         adapter.setContactsListActionsListener(ContactsListView.this);
         setAdapter(adapter);
     }
 
     private void sortContacts() {
-        Collections.sort(contacts, new Comparator<Contact>() {
-            @Override
-            public int compare(Contact contact1, Contact contact2) {
-                return contact1.name.compareToIgnoreCase(contact2.name);
-            }
-        });
+        Collections.sort(contacts,
+                (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.name));
     }
 
     private void addContactsToAdapter() {
-        post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.clear();
-                adapter.addAll(contacts);
-                adapter.notifyDataSetChanged();
-                if(isInFilterMode())
-                    setFilterText(getTextFilter().toString());
-            }
+        post(() -> {
+            adapter.clear();
+            adapter.addAll(contacts);
+            adapter.notifyDataSetChanged();
+            if (isInFilterMode())
+                setFilterText(getTextFilter().toString());
+
         });
     }
 
     @Override
     public void onUpdate(final Contact contact) {
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                contacts.remove(contact);
-                contacts.add(contact);
+        this.post(() -> {
+            contacts.remove(contact);
+            contacts.add(contact);
 
-                adapter.remove(contact);
-                adapter.add(contact);
-                adapter.notifyDataSetChanged();
-            }
+            adapter.remove(contact);
+            adapter.add(contact);
+            adapter.notifyDataSetChanged();
         });
 
     }
 
     @Override
     public void onRemove(final Contact contact) {
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                contacts.remove(contact);
-                adapter.remove(contact);
-                adapter.notifyDataSetChanged();
-            }
+        this.post(() -> {
+            contacts.remove(contact);
+            adapter.remove(contact);
+            adapter.notifyDataSetChanged();
         });
     }
 
     @Override
     public void onAdd(final Contact contact) {
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                contacts.add(contact);
-                adapter.add(contact);
-                adapter.notifyDataSetChanged();
-            }
+        this.post(() -> {
+            contacts.add(contact);
+            adapter.add(contact);
+            adapter.notifyDataSetChanged();
         });
     }
 

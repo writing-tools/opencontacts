@@ -40,50 +40,35 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
         List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
 
-        final OnClickListener callContact = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
-                AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
-            }
+        final OnClickListener callContact = v -> {
+            CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
+            AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
         };
-        final OnClickListener messageContact = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
-                AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
-            }
+        final OnClickListener messageContact = v -> {
+            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
         };
-        final OnClickListener addContact = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                final CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
-                AndroidUtils.getAlertDialogToAddContact(callLogEntry.getPhoneNumber(), context).show();
-            }
+        final OnClickListener addContact = v -> {
+            final CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            AndroidUtils.getAlertDialogToAddContact(callLogEntry.getPhoneNumber(), context).show();
         };
-        final OnClickListener showContactDetails = new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
-                long contactId = callLogEntry.getContactId();
-                if(contactId == -1)
-                    return;
-                Contact contact = ContactsDataStore.getContactWithId(contactId);
-                if(contact == null)
-                    return;
-                Intent showContactDetails = AndroidUtils.getIntentToShowContactDetails(contactId, CallLogListView.this.context);
-                context.startActivity(showContactDetails);
-            }
+        final OnClickListener showContactDetails = v -> {
+            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            long contactId = callLogEntry.getContactId();
+            if(contactId == -1)
+                return;
+            Contact contact = ContactsDataStore.getContactWithId(contactId);
+            if(contact == null)
+                return;
+            Intent showContactDetails1 = AndroidUtils.getIntentToShowContactDetails(contactId, CallLogListView.this.context);
+            context.startActivity(showContactDetails1);
         };
 
-        final OnLongClickListener copyPhoneNumberToClipboard = new OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
-                AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);
-                Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
-                return true;
-            }
+        final OnLongClickListener copyPhoneNumberToClipboard = v -> {
+            CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
+            AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);
+            Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
+            return true;
         };
 
         adapter = new ArrayAdapter<CallLogEntry>(CallLogListView.this.context, R.layout.call_log_entry, callLogEntries){
@@ -140,12 +125,9 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
     @Override
     public void onAdd(final CallLogEntry callLogEntry) {
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.insert(callLogEntry, 0);
-                adapter.notifyDataSetChanged();
-            }
+        this.post(() -> {
+            adapter.insert(callLogEntry, 0);
+            adapter.notifyDataSetChanged();
         });
 
     }
@@ -157,13 +139,10 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
     public void reload(){
         final List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
-        this.post(new Runnable() {
-            @Override
-            public void run() {
-                adapter.clear();
-                adapter.addAll(callLogEntries);
-                adapter.notifyDataSetChanged();
-            }
+        this.post(() -> {
+            adapter.clear();
+            adapter.addAll(callLogEntries);
+            adapter.notifyDataSetChanged();
         });
     }
 

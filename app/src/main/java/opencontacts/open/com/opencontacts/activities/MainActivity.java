@@ -82,6 +82,10 @@ public class MainActivity extends AppBaseActivity {
             CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
             return true;
         });
+        menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(item -> {
+            AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this);
+           return true;
+        });
         return super.onCreateOptionsMenu(menu);
     }
     private void refresh() {

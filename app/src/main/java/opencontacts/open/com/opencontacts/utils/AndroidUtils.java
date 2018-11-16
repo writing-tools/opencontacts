@@ -253,4 +253,9 @@ public class AndroidUtils {
     public static Point getCallerIdLocationOnScreen(Context context) {
         return new Point(getAppsSharedPreferences(context).getInt("CALLER_ID_X_POSITION_ON_SCREEN", 0), getAppsSharedPreferences(context).getInt("CALLER_ID_Y_POSITION_ON_SCREEN", 100));
     }
+
+    public static void goToUrl (String url, Context context) {
+        Uri uri = Uri.parse(url);
+        context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
 }

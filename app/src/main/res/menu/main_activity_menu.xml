@@ -34,4 +34,9 @@
         android:icon="@android:drawable/ic_menu_directions"
         android:title="@string/help"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_whats_new"
+        android:icon="@drawable/ic_change_log_24dp"
+        android:title="@string/whats_new"
+        app:showAsAction="ifRoom" />
 </menu>

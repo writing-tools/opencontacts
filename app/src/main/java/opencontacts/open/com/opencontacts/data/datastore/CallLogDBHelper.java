@@ -59,11 +59,7 @@ class CallLogDBHelper {
             // for ActivityCompat#requestPermissions for more details.
             Handler mainHandler = new Handler(context.getMainLooper());
 
-            Runnable myRunnable = new Runnable() {
-                @Override
-                public void run() {Toast.makeText(context, R.string.grant_read_call_logs_permission, Toast.LENGTH_LONG).show();} // This is your code
-            };
-            mainHandler.post(myRunnable);
+            mainHandler.post(() -> Toast.makeText(context, R.string.grant_read_call_logs_permission, Toast.LENGTH_LONG).show());
             return new ArrayList<>(0);
         }
         Cursor c;

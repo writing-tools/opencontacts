@@ -35,9 +35,11 @@ public class CallLogDataStore {
         else if(recentCallLogEntries.size() == 1){
             CallLogEntry callLogEntry = recentCallLogEntries.get(0);
             callLogEntries.add(0, callLogEntry);
-            for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
-                dataStoreChangeListener.onAdd(callLogEntry);
-            }
+            processAsync(() -> {
+                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                    dataStoreChangeListener.onAdd(callLogEntry);
+                }
+            });
         }
     }
 
@@ -50,16 +52,8 @@ public class CallLogDataStore {
     }
 
     public static CallLogEntry getMostRecentCallLogEntry(Context context) {
-        if (callLogEntries.size() > 0)
-            return callLogEntries.get(0);
-        callLogEntries = CallLogDBHelper.getRecent100CallLogEntriesFromDB();
-        if (callLogEntries.size() > 0)
-            return callLogEntries.get(0);
-        List<CallLogEntry> callLogEntriesFromDB = callLogDBHelper.loadRecentCallLogEntriesIntoDB(context);
-        if (callLogEntriesFromDB.size() > 0) {
-            return callLogEntriesFromDB.get(0);
-        }
-        return null;
+        loadRecentCallLogEntries(context);
+        return callLogEntries.isEmpty() ? null : callLogEntries.get(0);
     }
 
     public static List<CallLogEntry> getRecent100CallLogEntries(Context context){

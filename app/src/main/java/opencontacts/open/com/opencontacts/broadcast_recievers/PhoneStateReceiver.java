@@ -56,32 +56,30 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
         else if(state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
             removeCallerIdDrawing(context);
-            new Handler().postDelayed(new Runnable() {// give android some time to write call log
-                @Override
-                public void run() {
-                    try{
-                        if(isCallRecieved)
-                            return;
-                        CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
-                        if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
-                            return;
-                    }
-                    catch (Exception e){}
-                    PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
-                    PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
-                    NotificationCompat.Builder mBuilder =
-                            new NotificationCompat.Builder(context)
-                                    .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
-                                    .setContentTitle("Missed Call")
-                                    .setTicker("missed call from " + callingContact.firstName + " " + callingContact.lastName)
-                                    .setContentText(callingContact.firstName + " " + callingContact.lastName)
-                                    .addAction(R.drawable.ic_call_black_24dp, "Call", pendingIntentToCall)
-                                    .addAction(R.drawable.ic_chat_black_24dp, "Message", pendingIntentToMessage)
-                                    .setContentIntent(pendingIntentToLaunchApp);
-                    NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                    notificationManager.notify(new Random().nextInt(), mBuilder.build());
+            // give android some time to write call log
+            new Handler().postDelayed(() -> {
+                try{
+                    if(isCallRecieved)
+                        return;
+                    CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
+                    if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
+                        return;
                 }
+                catch (Exception e){}
+                PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
+                PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
+                NotificationCompat.Builder mBuilder =
+                        new NotificationCompat.Builder(context)
+                                .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
+                                .setContentTitle("Missed Call")
+                                .setTicker("missed call from " + callingContact.firstName + " " + callingContact.lastName)
+                                .setContentText(callingContact.firstName + " " + callingContact.lastName)
+                                .addAction(R.drawable.ic_call_black_24dp, "Call", pendingIntentToCall)
+                                .addAction(R.drawable.ic_chat_black_24dp, "Message", pendingIntentToMessage)
+                                .setContentIntent(pendingIntentToLaunchApp);
+                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+                notificationManager.notify(new Random().nextInt(), mBuilder.build());
             }, 3000);
         }
     }

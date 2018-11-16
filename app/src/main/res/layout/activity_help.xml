@@ -70,6 +70,21 @@
                 android:layout_marginTop="10dp"
                 android:text="@string/export_contacts_help_text" />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/callerid"
+                android:textAppearance="?android:textAppearanceSearchResultTitle"
+                android:textColor="?colorPrimaryDark" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/callerid_help_text" />
+
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

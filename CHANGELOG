@@ -1,0 +1,38 @@
+v7.0 
+Fixed app crash in lineage os
+
+Added help text for caller id
+
+Fixed no notification coming up for missed call
+
+Added whats new in main activity menu
+
+
+v6.0
+Contact names are now bit bolder and significant both in call log and contacts
+
+Contacts follow similar structure to call log with actions either side of contact
+
+Call log now updates contacts names as soon as contact is added rather than ignoring existing calls in log
+
+v5.0
+Made call log entry look more consistent by placing icons to either side
+Added help activity
+All activities now will be portrait
+Invalid number error in Dialer is shown as inline error than a alert
+
+v4.0
+App will ask for read storage permission while trying to import contacts
+App is now 1MB less in size(enabled progaurd)
+User would now be able to set a primary number for a given contact
+Export now also notifies user the location of export
+
+v3
+Ability to move contact id which comes during call
+Added 'About' page in app
+
+v2
+Added checking for run time permissions 
+
+v1
+Add license

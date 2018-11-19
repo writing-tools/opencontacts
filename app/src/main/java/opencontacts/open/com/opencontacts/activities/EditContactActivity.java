@@ -18,6 +18,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
+import static android.text.TextUtils.isEmpty;
 import static android.view.ViewGroup.LayoutParams.*;
 
 public class EditContactActivity extends AppBaseActivity {
@@ -69,12 +70,11 @@ public class EditContactActivity extends AppBaseActivity {
     public void saveContact(View view) {
         String firstName = String.valueOf(editText_firstName.getText());
         String lastName = String.valueOf(editText_lastName.getText());
-        String phoneNumber = String.valueOf(editText_mobileNumber.getText());
         if("".equals(firstName) && "".equals(lastName)){
             editText_firstName.setError("Required FirstName or LastName");
             return;
         }
-        if("".equals(phoneNumber)){
+        if(phoneNumbersNotEntered()){
             editText_mobileNumber.setError("Required");
             return;
         }
@@ -90,14 +90,18 @@ public class EditContactActivity extends AppBaseActivity {
         finish();
     }
 
+    private boolean phoneNumbersNotEntered() {
+        return getPhoneNumbersFromView().isEmpty();
+    }
+
     private List<String> getPhoneNumbersFromView() {
         LinearLayout phoneNumbersContainer = (LinearLayout) findViewById(R.id.phonenumbers);
         int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
         String extraPhoneNumber;
-        ArrayList<String> phoneNumbers = new ArrayList(numberOfPhoneNumbers);
+        ArrayList<String> phoneNumbers = new ArrayList<>(numberOfPhoneNumbers);
         for(int i=0; i<numberOfPhoneNumbers; i++){
-            extraPhoneNumber = String.valueOf(((EditText) phoneNumbersContainer.getChildAt(i)).getText());
-            if("".equals(extraPhoneNumber))
+            extraPhoneNumber = String.valueOf(((EditText) phoneNumbersContainer.getChildAt(i)).getText()).trim();
+            if(isEmpty(extraPhoneNumber))
                 continue;
             phoneNumbers.add(extraPhoneNumber);
         }

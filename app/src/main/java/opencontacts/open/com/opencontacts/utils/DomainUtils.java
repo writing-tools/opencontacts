@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.Nullable;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -29,6 +30,8 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 public class DomainUtils {
     public static final String EMPTY_STRING = "";
     public static final Pattern NON_NUMERIC_MATCHING_PATTERN = Pattern.compile("[^0-9]");
+    public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
+    public static final int NUMBER_9 = 9;
 
     public static void exportAllContacts(Context context) throws IOException {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -98,4 +101,13 @@ public class DomainUtils {
     public static String getAllNumericPhoneNumber(String phoneNumber) {
         return NON_NUMERIC_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
+
+    @Nullable
+    public static String getSearchablePhoneNumber(String phoneNumber) {
+        String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
+        if(allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
+            return null;
+        return allNumericPhoneNumber.length() > NUMBER_9 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_9) : allNumericPhoneNumber;
+    }
+
 }

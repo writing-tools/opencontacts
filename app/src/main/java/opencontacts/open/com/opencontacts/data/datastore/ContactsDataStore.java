@@ -22,11 +22,11 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThrea
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 
 public class ContactsDataStore {
-    private static List<Contact> contacts = new ArrayList<>(0);
+    private static List<Contact> contacts = null;
     private static List<DataStoreChangeListener<Contact>> dataChangeListeners = new ArrayList<>(3);
 
     public static List<Contact> getAllContacts() {
-        if (contacts.isEmpty()) {
+        if (contacts == null) {
             refreshStoreAsync();
             return new ArrayList<>(0);
         }

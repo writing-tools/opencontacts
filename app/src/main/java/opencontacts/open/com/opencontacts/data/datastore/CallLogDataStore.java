@@ -10,6 +10,8 @@ import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
 public class CallLogDataStore {
     private static CallLogDBHelper callLogDBHelper = new CallLogDBHelper();
@@ -80,11 +82,15 @@ public class CallLogDataStore {
                 if(callLogEntriesToWorkWith.isEmpty())
                     return;
                 int numberOfEntriesUpdated = 0;
-                for(CallLogEntry callLogEntry : callLogEntriesToWorkWith){
-                    if(callLogEntry.getContactId() != -1)
+                for(String phoneNumber : newContact.phoneNumbers) {
+                    String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
+                    if (searchablePhoneNumber == null)
                         continue;
-                    for(String phoneNumber : newContact.phoneNumbers){
-                        if(phoneNumber.equals(callLogEntry.getPhoneNumber())){
+                    for (CallLogEntry callLogEntry : callLogEntriesToWorkWith) {
+                        if (callLogEntry.getContactId() != -1)
+                            continue;
+                        String allNumericPhoneNumberOfCallLogEntry = getAllNumericPhoneNumber(callLogEntry.getPhoneNumber());
+                        if(allNumericPhoneNumberOfCallLogEntry.contains(searchablePhoneNumber)){
                             callLogEntry.setContactId(newContact.id);
                             callLogEntry.setName(newContact.name);
                             callLogEntry.save();

@@ -9,16 +9,13 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
 /**
  * Created by sultanm on 7/17/17.
  */
 
 class ContactsDBHelper {
-
-    public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
-    public static final int NUMBER_9 = 9;
 
     static Contact getDBContactWithId(Long id){
         return Contact.findById(Contact.class, id);
@@ -40,14 +37,12 @@ class ContactsDBHelper {
     }
 
     static Contact getContactFromDB(String phoneNumber) {
-        String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
-        if(allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
+        String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
+        if (searchablePhoneNumber == null) return null;
+        List<PhoneNumber> matchingPhoneNumbers = PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + searchablePhoneNumber);
+        if(matchingPhoneNumbers.size() == 0)
             return null;
-        String phoneNumberToSearch = allNumericPhoneNumber.length() > NUMBER_9 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_9) : allNumericPhoneNumber;
-        List<PhoneNumber> phoneNumbers = PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + phoneNumberToSearch);
-        if(phoneNumbers.size() == 0)
-            return null;
-        return phoneNumbers.get(0).contact;
+        return matchingPhoneNumbers.get(0).contact;
     }
 
     static void replacePhoneNumbersInDB(Contact dbContact, List<String> phoneNumbers, String primaryPhoneNumber) {

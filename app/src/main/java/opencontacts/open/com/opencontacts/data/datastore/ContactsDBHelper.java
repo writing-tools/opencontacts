@@ -9,11 +9,17 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
+
 /**
  * Created by sultanm on 7/17/17.
  */
 
 class ContactsDBHelper {
+
+    public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
+    public static final int NUMBER_9 = 9;
+
     static Contact getDBContactWithId(Long id){
         return Contact.findById(Contact.class, id);
     }
@@ -34,10 +40,11 @@ class ContactsDBHelper {
     }
 
     static Contact getContactFromDB(String phoneNumber) {
-        if(phoneNumber.length() < 8)
-            return null; //TODO: find a better logic to determine how to compare mobile number excluding code.
-        String phoneNumberToSearch = phoneNumber.length() > 10 ? phoneNumber.substring(phoneNumber.length() - 10) : phoneNumber;
-        List<PhoneNumber> phoneNumbers = PhoneNumber.find(PhoneNumber.class, "phone_Number like ?", "%" + phoneNumberToSearch);
+        String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
+        if(allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
+            return null;
+        String phoneNumberToSearch = allNumericPhoneNumber.length() > NUMBER_9 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_9) : allNumericPhoneNumber;
+        List<PhoneNumber> phoneNumbers = PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + phoneNumberToSearch);
         if(phoneNumbers.size() == 0)
             return null;
         return phoneNumbers.get(0).contact;

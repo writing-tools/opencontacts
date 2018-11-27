@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
@@ -26,6 +27,8 @@ import opencontacts.open.com.opencontacts.domain.Contact;
  */
 
 public class DomainUtils {
+    public static final String EMPTY_STRING = "";
+    public static final Pattern NON_NUMERIC_MATCHING_PATTERN = Pattern.compile("[^0-9]");
 
     public static void exportAllContacts(Context context) throws IOException {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -90,5 +93,9 @@ public class DomainUtils {
             }
         });
         return filteredContacts;
+    }
+
+    public static String getAllNumericPhoneNumber(String phoneNumber) {
+        return NON_NUMERIC_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 }

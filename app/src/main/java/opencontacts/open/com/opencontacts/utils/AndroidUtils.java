@@ -217,12 +217,7 @@ public class AndroidUtils {
                         .setTitle("Grant phone permission")
                         .setMessage("Grant manage phone permission to be able to read call log")
                         .setNeutralButton("Okay", null)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123);
-                            }
-                        })
+                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123))
                         .create()
                         .show();
             }
@@ -231,12 +226,7 @@ public class AndroidUtils {
                         .setTitle("Grant storage permission")
                         .setMessage("Grant storage phone permission to be able to export and import contacts")
                         .setNeutralButton("Okay", null)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123);
-                            }
-                        })
+                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123))
                         .create()
                         .show();
             }

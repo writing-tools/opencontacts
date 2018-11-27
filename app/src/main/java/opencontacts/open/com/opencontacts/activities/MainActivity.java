@@ -18,6 +18,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.fragments.CallLogFragment;
 import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
@@ -53,6 +54,11 @@ public class MainActivity extends AppBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.main_activity_menu, menu);
+        setMenuItemsListeners(menu);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void setMenuItemsListeners(Menu menu) {
         menu.findItem(R.id.button_new).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem item) {
@@ -86,8 +92,12 @@ public class MainActivity extends AppBaseActivity {
             AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this);
            return true;
         });
-        return super.onCreateOptionsMenu(menu);
+        menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(item -> {
+            ContactsDataStore.deleteAllContacts(this);
+            return true;
+        });
     }
+
     private void refresh() {
         CallLogDataStore.loadRecentCallLogEntriesAsync(MainActivity.this);
     }

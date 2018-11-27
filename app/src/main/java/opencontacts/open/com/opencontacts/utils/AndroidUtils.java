@@ -11,6 +11,8 @@ import android.content.res.Resources;
 import android.graphics.Point;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
@@ -38,6 +40,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 public class AndroidUtils {
 
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
+    private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
         return Resources.getSystem().getDisplayMetrics().density * dp;
@@ -247,5 +250,11 @@ public class AndroidUtils {
     public static void goToUrl (String url, Context context) {
         Uri uri = Uri.parse(url);
         context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+    }
+
+    public static Handler getMainThreadHandler(){
+        if(mainThreadHandler == null)
+            mainThreadHandler = new Handler(Looper.getMainLooper());
+        return mainThreadHandler;
     }
 }

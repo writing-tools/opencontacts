@@ -2,19 +2,23 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 
 public class ContactsDataStore {
@@ -107,10 +111,12 @@ public class ContactsDataStore {
     }
 
     public static void refreshStoreAsync() {
-        processAsync(() -> {
-            contacts = ContactsDBHelper.getAllContactsFromDB();
-            notifyListeners(REFRESH, null);
-        });
+        processAsync(() -> refreshStore());
+    }
+
+    private static void refreshStore() {
+        contacts = ContactsDBHelper.getAllContactsFromDB();
+        notifyListeners(REFRESH, null);
     }
 
     private static void notifyListenersAsync(final int type, final Contact contact){
@@ -133,5 +139,14 @@ public class ContactsDataStore {
         else if (type == REFRESH)
             while(iterator.hasNext())
                 iterator.next().onStoreRefreshed();
+    }
+
+    public static void deleteAllContacts(Context context) {
+        processAsync(() -> {
+            opencontacts.open.com.opencontacts.orm.Contact.deleteAll(opencontacts.open.com.opencontacts.orm.Contact.class);
+            PhoneNumber.deleteAll(PhoneNumber.class);
+            refreshStore();
+            getMainThreadHandler().post(() -> Toast.makeText(context, R.string.deleted_all_contacts, Toast.LENGTH_LONG).show());
+        });
     }
 }

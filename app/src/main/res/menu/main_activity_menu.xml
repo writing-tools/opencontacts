@@ -39,4 +39,9 @@
         android:icon="@drawable/ic_change_log_24dp"
         android:title="@string/whats_new"
         app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/action_delete_all_contacts"
+        android:icon="@drawable/delete"
+        android:title="@string/delete_all_contacts"
+        app:showAsAction="ifRoom" />
 </menu>

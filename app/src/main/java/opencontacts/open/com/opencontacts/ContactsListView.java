@@ -1,6 +1,8 @@
 package opencontacts.open.com.opencontacts;
 
 import android.content.Context;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
 import android.widget.ListView;
 
 import java.util.Collections;
@@ -19,6 +21,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     private List <Contact> contacts;
     private Context context;
     private ContactsListViewAdapter adapter;
+    private final AppCompatTextView totalContactsTextView;
 
 
     public ContactsListView(final Context context) {
@@ -31,6 +34,14 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
         adapter.setContactsListActionsListener(ContactsListView.this);
         setAdapter(adapter);
+        View headerView = inflate(context, R.layout.contacts_list_header, null);
+        addHeaderView(headerView);
+        totalContactsTextView = (AppCompatTextView) headerView.findViewById(R.id.total_contacts);
+        updateHeaderWithContactsCount();
+    }
+
+    private void updateHeaderWithContactsCount() {
+        totalContactsTextView.setText(String.valueOf(contacts.size()));
     }
 
     private void sortContacts() {
@@ -39,14 +50,11 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     }
 
     private void addContactsToAdapter() {
-        post(() -> {
-            adapter.clear();
-            adapter.addAll(contacts);
-            adapter.notifyDataSetChanged();
-            if (isInFilterMode())
-                setFilterText(getTextFilter().toString());
-
-        });
+        adapter.clear();
+        adapter.addAll(contacts);
+        adapter.notifyDataSetChanged();
+        if (isInFilterMode())
+            setFilterText(getTextFilter().toString());
     }
 
     @Override
@@ -58,6 +66,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
             adapter.remove(contact);
             adapter.add(contact);
             adapter.notifyDataSetChanged();
+            updateHeaderWithContactsCount();
         });
 
     }
@@ -68,6 +77,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
             contacts.remove(contact);
             adapter.remove(contact);
             adapter.notifyDataSetChanged();
+            updateHeaderWithContactsCount();
         });
     }
 
@@ -77,6 +87,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
             contacts.add(contact);
             adapter.add(contact);
             adapter.notifyDataSetChanged();
+            updateHeaderWithContactsCount();
         });
     }
 
@@ -84,7 +95,10 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     public void onStoreRefreshed() {
         contacts = ContactsDataStore.getAllContacts();
         sortContacts();
-        addContactsToAdapter();
+        post(() -> {
+            addContactsToAdapter();
+            updateHeaderWithContactsCount();
+        });
     }
 
     public void onDestroy(){

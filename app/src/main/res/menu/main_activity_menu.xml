@@ -4,13 +4,13 @@
     <item
         android:id="@+id/action_search"
         android:icon="@android:drawable/ic_menu_search"
-        android:title="Search"
+        android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
         app:showAsAction="always" />
     <item
         android:id="@+id/button_new"
         android:icon="@drawable/ic_add_circle_outline_24dp"
-        android:title="Add contact"
+        android:title="@string/add_contact"
         app:showAsAction="always" />
     <item
         android:id="@+id/action_export"
@@ -22,6 +22,12 @@
         android:id="@+id/action_resync"
         android:icon="@drawable/ic_sync_24dp"
         android:title="@string/resync_call_log_with_contacts"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_switch_theme"
+        android:icon="@drawable/ic_invert_colors_black_24dp"
+        android:title="@string/switch_theme"
         app:showAsAction="ifRoom" />
 
     <item

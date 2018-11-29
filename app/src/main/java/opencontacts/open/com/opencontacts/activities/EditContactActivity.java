@@ -32,7 +32,6 @@ public class EditContactActivity extends AppBaseActivity {
     private boolean addingNewContact = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_edit_contact);
         super.onCreate(savedInstanceState);
         editText_firstName = (EditText) findViewById(R.id.editFirstName);
         editText_lastName = (EditText) findViewById(R.id.editLastName);
@@ -54,6 +53,11 @@ public class EditContactActivity extends AppBaseActivity {
             toolbar.setTitle(contact.firstName);
             fillFieldsFromContactDetails();
         }
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_edit_contact;
     }
 
     private void fillFieldsFromContactDetails() {

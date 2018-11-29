@@ -45,4 +45,5 @@
     <string name="delete_all_contacts">Delete all contacts</string>
     <string name="deleted_all_contacts">Deleted all contacts</string>
     <string name="total">Total :</string>
+    <string name="switch_theme">Switch theme</string>
 </resources>

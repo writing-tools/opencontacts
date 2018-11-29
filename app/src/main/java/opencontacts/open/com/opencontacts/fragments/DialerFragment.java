@@ -3,7 +3,6 @@ package opencontacts.open.com.opencontacts.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,7 +13,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
-public class DialerFragment extends Fragment implements SelectableTab {
+public class DialerFragment extends AppBaseFragment implements SelectableTab {
     private Context context;
     private View view;
     private EditText dialPadEditText;

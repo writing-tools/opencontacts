@@ -81,7 +81,7 @@ public class ContactsDataStore {
     }
 
     public static Contact getContactWithId(long contactId) {
-        if (contactId == -1)
+        if (contactId == -1 || contacts == null)
             return null;
         int indexOfContact = contacts.indexOf(new Contact(contactId));
         if (indexOfContact == -1)

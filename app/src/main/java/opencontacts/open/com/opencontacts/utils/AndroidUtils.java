@@ -42,6 +42,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumeric
 public class AndroidUtils {
 
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
+    public static final String IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY = "IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -253,5 +254,24 @@ public class AndroidUtils {
         if(mainThreadHandler == null)
             mainThreadHandler = new Handler(Looper.getMainLooper());
         return mainThreadHandler;
+    }
+
+    public static void switchActiveThemeInPreferences(Context context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, !isLightThemeActive(context))
+                .apply();
+    }
+
+    public static int getCurrentTheme(Context context) {
+        return isLightThemeActive(context) ? R.style.Theme_AppCompat_Light_NoActionBar : R.style.Theme_AppCompat_NoActionBar;
+    }
+
+    private static boolean isLightThemeActive(Context context) {
+        return getAppsSharedPreferences(context).getBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, true);
+    }
+
+    public static void applyOptedTheme(Context context) {
+        context.getTheme().applyStyle(AndroidUtils.getCurrentTheme(context), true);
     }
 }

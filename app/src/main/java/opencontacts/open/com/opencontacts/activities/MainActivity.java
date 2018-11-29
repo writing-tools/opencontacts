@@ -45,10 +45,14 @@ public class MainActivity extends AppBaseActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_tabbed);
-        AndroidUtils.askForPermissionsIfNotGranted(this);
         super.onCreate(savedInstanceState);
+        AndroidUtils.askForPermissionsIfNotGranted(this);
         setupTabs();
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_tabbed;
     }
 
     @Override
@@ -59,14 +63,11 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void setMenuItemsListeners(Menu menu) {
-        menu.findItem(R.id.button_new).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent addContact = new Intent(MainActivity.this, EditContactActivity.class);
-                addContact.putExtra(EditContactActivity.INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, true);
-                startActivity(addContact);
-                return false;
-            }
+        menu.findItem(R.id.button_new).setOnMenuItemClickListener(item -> {
+            Intent addContact = new Intent(MainActivity.this, EditContactActivity.class);
+            addContact.putExtra(EditContactActivity.INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, true);
+            startActivity(addContact);
+            return false;
         });
         MenuItem searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
@@ -96,6 +97,11 @@ public class MainActivity extends AppBaseActivity {
             ContactsDataStore.deleteAllContacts(this);
             return true;
         });
+        menu.findItem(R.id.action_switch_theme).setOnMenuItemClickListener(item -> {
+            AndroidUtils.switchActiveThemeInPreferences(this);
+            recreate();
+            return true;
+        });
     }
 
     private void refresh() {
@@ -104,9 +110,17 @@ public class MainActivity extends AppBaseActivity {
 
     private void setupTabs() {
         viewPager = (ViewPager) findViewById(R.id.view_pager);
-        callLogFragment = new CallLogFragment();
-        contactsFragment = new ContactsFragment();
-        dialerFragment = new DialerFragment();
+        List<Fragment> fragmentsList = getSupportFragmentManager().getFragments();
+        if(!fragmentsList.isEmpty()){
+            callLogFragment = (CallLogFragment) fragmentsList.get(0);
+            contactsFragment = (ContactsFragment) fragmentsList.get(1);
+            dialerFragment = (DialerFragment) fragmentsList.get(2);
+        }
+        else{
+            callLogFragment = new CallLogFragment();
+            contactsFragment = new ContactsFragment();
+            dialerFragment = new DialerFragment();
+        }
         final List<SelectableTab> tabs = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
         final List<String> tabTitles = Arrays.asList(TAB_TITLE_CALL_LOG, TAB_TITLE_CONTACTS, "");
 

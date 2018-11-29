@@ -2,7 +2,6 @@ package opencontacts.open.com.opencontacts.fragments;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.SearchView;
 import android.text.InputType;
 import android.view.LayoutInflater;
@@ -14,15 +13,15 @@ import opencontacts.open.com.opencontacts.ContactsListView;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
-public class ContactsFragment extends Fragment implements SelectableTab {
+public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     private LinearLayout linearLayout;
     private ContactsListView contactsListView;
     private MainActivity mainActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        contactsListView = new ContactsListView(getContext());
         super.onCreate(savedInstanceState);
+        contactsListView = new ContactsListView(getContext());
     }
 
     @Nullable
@@ -30,18 +29,13 @@ public class ContactsFragment extends Fragment implements SelectableTab {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         linearLayout = new LinearLayout(getContext());
         mainActivity = (MainActivity) getActivity();
-        if(contactsListView != null)
-            addContactsList(contactsListView);
+        if(contactsListView != null) {
+            linearLayout.removeAllViews();
+            linearLayout.addView(contactsListView);
+        }
         return linearLayout;
     }
 
-    public void addContactsList(ContactsListView contactsListView){
-        this.contactsListView = contactsListView;
-        if(linearLayout == null)
-            return;
-        linearLayout.removeAllViews();
-        linearLayout.addView(contactsListView);
-    }
     @Override
     public void onSelect() {}
 

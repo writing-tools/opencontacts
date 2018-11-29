@@ -3,7 +3,6 @@ package opencontacts.open.com.opencontacts.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,13 +14,13 @@ import opencontacts.open.com.opencontacts.CallLogListView;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
-public class CallLogFragment extends Fragment implements SelectableTab {
+public class CallLogFragment extends AppBaseFragment implements SelectableTab {
     private CallLogListView callLogListView;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        callLogListView = new CallLogListView(getContext());
         super.onCreate(savedInstanceState);
+        callLogListView = new CallLogListView(getContext());
     }
 
     @Nullable

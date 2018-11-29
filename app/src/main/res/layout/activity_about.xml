@@ -42,8 +42,9 @@
                     <TextView
                         android:padding="3dp"
                         android:text="@string/author_label"
-                        android:textColor="?colorPrimaryDark"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:textAppearanceSearchResultTitle"
+                        android:textSize="18sp"
+                        />
 
                     <TextView
                         android:padding="3dp"
@@ -55,8 +56,9 @@
                     <TextView
                         android:padding="3dp"
                         android:text="@string/issues_label"
-                        android:textColor="?colorPrimaryDark"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:textAppearanceSearchResultTitle"
+                        android:textSize="18sp"
+                        />
 
                     <TextView
                         android:autoLink="web"
@@ -69,8 +71,9 @@
                     <TextView
                         android:padding="3dp"
                         android:text="@string/more_apps"
-                        android:textColor="?colorPrimaryDark"
-                        android:textStyle="bold" />
+                        android:textAppearance="?android:textAppearanceSearchResultTitle"
+                        android:textSize="18sp"
+                        />
 
                     <TextView
                         android:autoLink="web"

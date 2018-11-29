@@ -34,7 +34,6 @@ public class AddToContactActivity extends AppBaseActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        setContentView(R.layout.activity_add_to_contact);
         super.onCreate(savedInstanceState);
         final String phoneNumber = getIntent().getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER);
         if(phoneNumber == null)
@@ -69,6 +68,11 @@ public class AddToContactActivity extends AppBaseActivity {
             }
         });
         ((LinearLayout)findViewById(R.id.parent_linear_layout)).addView(contactsListView);
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_add_to_contact;
     }
 
     @Override

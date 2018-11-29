@@ -65,21 +65,20 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        setContentView(R.layout.activity_contact_details);
         super.onCreate(savedInstanceState);
-        findViewById(R.id.about_star).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                new AlertDialog.Builder(ContactDetailsActivity.this)
-                        .setTitle("Filled Star")
-                        .setMessage(R.string.about_primary_number)
-                        .show();
-            }
-        });
+        findViewById(R.id.about_star).setOnClickListener(v -> new AlertDialog.Builder(ContactDetailsActivity.this)
+                .setTitle("Filled Star")
+                .setMessage(R.string.about_primary_number)
+                .show());
         Intent intent = getIntent();
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
         if(contactId == -1)
             showInvalidContactErrorAndExit();
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_contact_details;
     }
 
     @Override

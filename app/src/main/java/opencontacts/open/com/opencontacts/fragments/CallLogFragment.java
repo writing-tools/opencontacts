@@ -12,15 +12,17 @@ import android.widget.LinearLayout;
 
 import opencontacts.open.com.opencontacts.CallLogListView;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
+import opencontacts.open.com.opencontacts.interfaces.EditNumberBeforeCallHandler;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
 public class CallLogFragment extends AppBaseFragment implements SelectableTab {
     private CallLogListView callLogListView;
+    private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        callLogListView = new CallLogListView(getContext());
+        callLogListView = new CallLogListView(getContext(), editNumberBeforeCallHandler);
     }
 
     @Nullable
@@ -54,5 +56,9 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
     @Override
     public void onUnSelect() {
 
+    }
+
+    public void setEditNumberBeforeCallHandler(EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
+        this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
     }
 }

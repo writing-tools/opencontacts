@@ -4,11 +4,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -22,6 +22,7 @@ import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
+import opencontacts.open.com.opencontacts.interfaces.EditNumberBeforeCallHandler;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.Common;
@@ -33,10 +34,12 @@ import opencontacts.open.com.opencontacts.utils.Common;
 public class CallLogListView extends ListView implements DataStoreChangeListener<CallLogEntry> {
     public static final String UNKNOWN = "Unknown";
     Context context;
+    private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
     ArrayAdapter<CallLogEntry> adapter;
-    public CallLogListView(final Context context) {
+    public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
         super(context);
         this.context = context;
+        this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
 
         List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
 
@@ -64,10 +67,23 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
             context.startActivity(showContactDetails1);
         };
 
-        final OnLongClickListener copyPhoneNumberToClipboard = v -> {
+        final OnLongClickListener callLogEntryLongClickListener = v -> {
             CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
-            AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);
-            Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
+            new AlertDialog.Builder(context)
+                    .setItems(new String[]{"Copy to clipboard", "Edit before call", "Delete"}, (dialog, which) -> {
+                        switch(which){
+                            case 0:
+                                AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);
+                                Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
+                                break;
+                            case 1:
+                                editNumberBeforeCallHandler.setNumber(callLogEntry.getPhoneNumber());
+                                break;
+                            case 2:
+                                CallLogDataStore.delete(callLogEntry.getId());
+                        }
+                    }).show();
+
             return true;
         };
 
@@ -107,7 +123,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 }
                 reusableView.setTag(callLogEntry);
                 reusableView.setOnClickListener(callContact);
-                reusableView.setOnLongClickListener(copyPhoneNumberToClipboard);
+                reusableView.setOnLongClickListener(callLogEntryLongClickListener);
                 return reusableView;
             }
         };
@@ -121,6 +137,10 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
     @Override
     public void onRemove(CallLogEntry callLogEntry) {
+        this.post(() -> {
+            adapter.remove(callLogEntry);
+            adapter.notifyDataSetChanged();
+        });
     }
 
     @Override

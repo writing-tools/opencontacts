@@ -134,4 +134,8 @@ class CallLogDBHelper {
     public static List<CallLogEntry> getRecent100CallLogEntriesFromDB(){
         return CallLogEntry.find(CallLogEntry.class, null, null, null, "date desc", "100");
     }
+
+    public static boolean delete(Long id) {
+        return CallLogEntry.findById(CallLogEntry.class, id).delete();
+    }
 }

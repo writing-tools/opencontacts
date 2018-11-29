@@ -32,6 +32,10 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         super.onViewCreated(view, savedInstanceState);
     }
 
+    public void setNumber(String number){
+        dialPadEditText.setText(number);
+    }
+
     private void linkDialerButtonsToHandlers() {
         dialPadEditText = (EditText) view.findViewById(R.id.editText_dialpad_number);
         view.findViewById(R.id.button_call).setOnClickListener(v -> {

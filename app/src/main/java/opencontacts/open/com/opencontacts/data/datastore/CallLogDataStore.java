@@ -137,4 +137,20 @@ public class CallLogDataStore {
             dataStoreChangeListener.onStoreRefreshed();
         }
     }
+
+    public static void delete(Long id) {
+        boolean hasBeenDeleted = CallLogDBHelper.delete(id);
+        if(!hasBeenDeleted)
+            return;
+        int indexOfDeletedCallLogEntry = callLogEntries.indexOf(new CallLogEntry(id));
+        if(indexOfDeletedCallLogEntry == -1)
+            return;
+        CallLogEntry deletedCallLogEntry = callLogEntries.get(indexOfDeletedCallLogEntry);
+        callLogEntries.remove(deletedCallLogEntry);
+        processAsync(() -> {
+            for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                dataStoreChangeListener.onRemove(deletedCallLogEntry);
+            }
+        });
+    }
 }

@@ -36,6 +36,10 @@ public class CallLogEntry extends SugarRecord {
     public CallLogEntry(){
         super();
     }
+    public CallLogEntry(long id){
+        super();
+        setId(id);
+    }
 
     public CallLogEntry(String name, long contactId, String phoneNumber, String duration, String callType, String date, int simId) {
         this.name = name;
@@ -90,4 +94,14 @@ public class CallLogEntry extends SugarRecord {
     public static List<CallLogEntry> getCallLogEntriesFor(long contactId){
         return find(CallLogEntry.class, "contact_Id = ?", "" + contactId);
     }
+
+    @Override
+    public boolean equals(Object anotherCallLogEntry) {
+        if (this == anotherCallLogEntry)
+            return true;
+        if (anotherCallLogEntry == null || getClass() != anotherCallLogEntry.getClass())
+            return false;
+        return getId().equals(((CallLogEntry) anotherCallLogEntry).getId());
+    }
+
 }

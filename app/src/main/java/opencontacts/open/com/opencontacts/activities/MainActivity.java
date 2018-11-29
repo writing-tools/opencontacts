@@ -31,6 +31,7 @@ public class MainActivity extends AppBaseActivity {
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
     public static final String TAB_TITLE_CALL_LOG = "Call Log";
     public static final String TAB_TITLE_CONTACTS = "Contacts";
+    public static final int DIALER_TAB_INDEX = 2;
     private ViewPager viewPager;
     private SearchView searchView;
     private CallLogFragment callLogFragment;
@@ -121,6 +122,10 @@ public class MainActivity extends AppBaseActivity {
             contactsFragment = new ContactsFragment();
             dialerFragment = new DialerFragment();
         }
+        callLogFragment.setEditNumberBeforeCallHandler(number -> {
+            dialerFragment.setNumber(number);
+            viewPager.setCurrentItem(DIALER_TAB_INDEX);
+        });
         final List<SelectableTab> tabs = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
         final List<String> tabTitles = Arrays.asList(TAB_TITLE_CALL_LOG, TAB_TITLE_CONTACTS, "");
 

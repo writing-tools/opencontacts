@@ -136,6 +136,7 @@ class CallLogDBHelper {
     }
 
     public static boolean delete(Long id) {
-        return CallLogEntry.findById(CallLogEntry.class, id).delete();
+        CallLogEntry callLogEntryToBeDeleted = CallLogEntry.findById(CallLogEntry.class, id);
+        return callLogEntryToBeDeleted != null && callLogEntryToBeDeleted.delete();
     }
 }

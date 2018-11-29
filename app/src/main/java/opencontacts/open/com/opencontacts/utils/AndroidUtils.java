@@ -33,8 +33,6 @@ import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
-
 /**
  * Created by sultanm on 7/17/17.
  */
@@ -73,13 +71,13 @@ public class AndroidUtils {
     }
 
     public static void call(String number, Context context) {
-        Intent callIntent = getCallIntent(getAllNumericPhoneNumber(number), context);
+        Intent callIntent = getCallIntent(number, context);
         context.startActivity(callIntent);
     }
 
     @NonNull
     public static Intent getCallIntent(String number, Context context) {
-        Uri numberUri = Uri.parse("tel:" + getAllNumericPhoneNumber(number));
+        Uri numberUri = Uri.parse("tel:" + number);
         Intent callIntent;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
@@ -100,11 +98,11 @@ public class AndroidUtils {
     }
 
     public static void message(String number, Context context){
-        context.startActivity(getMessageIntent(getAllNumericPhoneNumber(number)));
+        context.startActivity(getMessageIntent(number));
     }
 
     public static Intent getMessageIntent(String number) {
-        return new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + getAllNumericPhoneNumber(number))).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + number)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public static Intent getIntentToShowContactDetails(long contactId, Context context){

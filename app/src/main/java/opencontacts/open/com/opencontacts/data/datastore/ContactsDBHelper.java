@@ -40,7 +40,7 @@ class ContactsDBHelper {
         String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
         if (searchablePhoneNumber == null) return null;
         List<PhoneNumber> matchingPhoneNumbers = PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + searchablePhoneNumber);
-        if(matchingPhoneNumbers.size() == 0)
+        if(matchingPhoneNumbers.isEmpty())
             return null;
         return matchingPhoneNumbers.get(0).contact;
     }

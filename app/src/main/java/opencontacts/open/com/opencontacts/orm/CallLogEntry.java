@@ -95,13 +95,4 @@ public class CallLogEntry extends SugarRecord {
         return find(CallLogEntry.class, "contact_Id = ?", "" + contactId);
     }
 
-    @Override
-    public boolean equals(Object anotherCallLogEntry) {
-        if (this == anotherCallLogEntry)
-            return true;
-        if (anotherCallLogEntry == null || getClass() != anotherCallLogEntry.getClass())
-            return false;
-        return getId().equals(((CallLogEntry) anotherCallLogEntry).getId());
-    }
-
 }

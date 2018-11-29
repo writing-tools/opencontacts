@@ -142,14 +142,16 @@ public class CallLogDataStore {
         boolean hasBeenDeleted = CallLogDBHelper.delete(id);
         if(!hasBeenDeleted)
             return;
-        CallLogEntry callLogEntryToRemove = new CallLogEntry(id);
-        boolean didRemove = callLogEntries.remove(callLogEntryToRemove);
-        if(!didRemove)
-            return;
-        processAsync(() -> {
-            for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
-                dataStoreChangeListener.onRemove(callLogEntryToRemove);
-            }
-        });
+        for(CallLogEntry callLogEntryToBeRemoved : callLogEntries){
+            if(!callLogEntryToBeRemoved.getId().equals(id))
+                continue;
+            callLogEntries.remove(callLogEntryToBeRemoved);
+            processAsync(() -> {
+                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                    dataStoreChangeListener.onRemove(callLogEntryToBeRemoved);
+                }
+            });
+            break;
+        }
     }
 }

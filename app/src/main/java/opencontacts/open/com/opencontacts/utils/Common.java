@@ -1,14 +1,17 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import java.text.Normalizer;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 /**
  * Created by sultanm on 7/30/17.
  */
 
 public class Common {
+    public static final Pattern NON_ASCII_REGEX_MATCHER = Pattern.compile("[^\\p{ASCII}]");
     static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
     static {
         characterToIntegerMappingForKeyboardLayout = new HashMap();
@@ -18,8 +21,9 @@ public class Common {
         }
     }
     public static String getNumericKeyPadNumberForString(String string){
+        String nonAccentedText = replaceAccentedCharactersWithEnglish(string);
         StringBuffer numericString = new StringBuffer();
-        for(char c: string.toCharArray()){
+        for(char c: nonAccentedText.toCharArray()){
             if(Character.isSpaceChar(c)){
                 numericString.append(" ");
                 continue;
@@ -31,6 +35,11 @@ public class Common {
                 numericString.append(characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c)));
         }
         return numericString.toString();
+    }
+
+    private static String replaceAccentedCharactersWithEnglish(String string) {
+        String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
+        return NON_ASCII_REGEX_MATCHER.matcher(normalizedString).replaceAll("");
     }
 
     public static String getDurationInMinsAndSecs(int duration){

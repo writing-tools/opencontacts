@@ -16,7 +16,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
-    private ContactsListFilter.AllContactsHolder allContactsHolder;
+    public ContactsListFilter contactsListFilter;
 
     private final View.OnClickListener callContact = new View.OnClickListener() {
         @Override
@@ -64,13 +64,13 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
     @NonNull
     @Override
     public Filter getFilter() {
-        return new ContactsListFilter(this, allContactsHolder);
+        return contactsListFilter;
     }
 
     ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
         super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
         layoutInflater = LayoutInflater.from(context);
-        this.allContactsHolder = allContactsHolder;
+        contactsListFilter = new ContactsListFilter(this, allContactsHolder);
     }
 
     public void setContactsListActionsListener(ContactsListActionsListener contactsListActionsListener){

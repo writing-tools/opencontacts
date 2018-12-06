@@ -69,35 +69,6 @@ public class DomainUtils {
         return new Contact(contact.id, contact.firstName, contact.lastName, new ArrayList<>(contact.phoneNumbers));
     }
 
-    public static List<Contact> filter(CharSequence constraint, List<Contact> contacts){
-        if(constraint == null || constraint.length() == 0){
-            return contacts;
-        }
-
-        ArrayList<Contact> filteredContacts = new ArrayList<>();
-        for (Contact c : contacts) {
-            if (c.toString().toUpperCase().contains( constraint.toString().toUpperCase() )) {
-                filteredContacts.add(c);
-            }
-        }
-        Collections.sort(filteredContacts, new Comparator<Contact>() {
-            @Override
-            public int compare(Contact contact1, Contact contact2) {
-                String lastAccessedDate1 = contact1.lastAccessed;
-                String lastAccessedDate2 = contact2.lastAccessed;
-                if(lastAccessedDate1 == null && lastAccessedDate2 == null)
-                    return 0;
-                else if(lastAccessedDate1 == null)
-                    return 1;
-                else if (lastAccessedDate2 == null)
-                    return -1;
-                else
-                    return lastAccessedDate2.compareTo(lastAccessedDate1);
-            }
-        });
-        return filteredContacts;
-    }
-
     public static String getAllNumericPhoneNumber(String phoneNumber) {
         return NON_NUMERIC_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }

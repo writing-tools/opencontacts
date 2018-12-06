@@ -8,6 +8,7 @@ import android.widget.ListView;
 import java.util.Collections;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.ContactsListViewAdapter.ContactsListActionsListener;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
@@ -17,7 +18,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
  * Created by sultanm on 3/25/17.
  */
 
-public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>, ContactsListViewAdapter.ContactsListActionsListener {
+public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>, ContactsListActionsListener {
     private List <Contact> contacts;
     private Context context;
     private ContactsListViewAdapter adapter;
@@ -67,6 +68,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
             adapter.add(contact);
             adapter.notifyDataSetChanged();
             updateHeaderWithContactsCount();
+            adapter.contactsListFilter.updateMap(contact);
         });
 
     }
@@ -98,6 +100,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         post(() -> {
             addContactsToAdapter();
             updateHeaderWithContactsCount();
+            adapter.contactsListFilter.mapAsync(contacts);
         });
     }
 

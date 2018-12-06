@@ -111,7 +111,7 @@ public class ContactsDataStore {
     }
 
     public static void refreshStoreAsync() {
-        processAsync(() -> refreshStore());
+        processAsync(ContactsDataStore::refreshStore);
     }
 
     private static void refreshStore() {
@@ -126,6 +126,8 @@ public class ContactsDataStore {
     }
 
     private static void notifyListeners(int type, Contact contact) {
+        if(dataChangeListeners.isEmpty())
+            return;
         Iterator<DataStoreChangeListener<Contact>> iterator = dataChangeListeners.iterator();
         if(type == ADDITION)
             while(iterator.hasNext())

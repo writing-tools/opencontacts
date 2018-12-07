@@ -5,9 +5,7 @@ import android.widget.Filter;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
 
@@ -16,12 +14,10 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync
 public class ContactsListFilter extends Filter{
     private ArrayAdapter<Contact> adapter;
     private AllContactsHolder allContactsHolder;
-    private Map<Long, String> t9Map;
 
     public ContactsListFilter(ArrayAdapter<Contact> adapter, AllContactsHolder allContactsHolder){
         this.adapter = adapter;
         this.allContactsHolder = allContactsHolder;
-        t9Map = new HashMap<>();
         mapAsync(allContactsHolder.getContacts());
     }
     @Override
@@ -45,7 +41,7 @@ public class ContactsListFilter extends Filter{
     }
 
     public void updateMap(Contact contact) {
-        t9Map.put(contact.id, contact.toString());
+        contact.t9Text = contact.toString();
     }
 
     public interface AllContactsHolder{
@@ -56,28 +52,24 @@ public class ContactsListFilter extends Filter{
     public void mapAsync(List<Contact> contacts) {
         processAsync(() -> {
             for(Contact contact : contacts){
-                t9Map.put(contact.id, contact.toString());
+                contact.t9Text = contact.toString();
             }
         });
     }
 
-    private List<Contact> getMatchingContacts(CharSequence constraint){
+    private List<Contact> getMatchingContacts(CharSequence searchText){
         List<Contact> contacts = allContactsHolder.getContacts();
-        if(constraint == null || constraint.length() == 0){
+        if(searchText == null || searchText.length() == 0){
             return contacts;
         }
 
         ArrayList<Contact> filteredContacts = new ArrayList<>();
-        String t9Text;
-        for (Contact c : contacts) {
-            t9Text = t9Map.get(c.id);
-
-            if(t9Text == null){
-                t9Text = c.toString().toUpperCase();
-                t9Map.put(c.id, t9Text);
+        for (Contact contact : contacts) {
+            if(contact.t9Text == null){
+                contact.t9Text = contact.toString().toUpperCase();
             }
-            if (t9Text.contains( constraint.toString().toUpperCase() )) {
-                filteredContacts.add(c);
+            if (contact.t9Text.contains(searchText.toString().toUpperCase())) {
+                filteredContacts.add(contact);
             }
         }
         sortFilteredContacts(filteredContacts);

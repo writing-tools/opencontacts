@@ -18,6 +18,7 @@ public class Contact implements Serializable{
     public String primaryPhoneNumber;
 
     public String lastAccessed;
+    public String t9Text;
 
     public Contact(long id) {
         this.id = id;

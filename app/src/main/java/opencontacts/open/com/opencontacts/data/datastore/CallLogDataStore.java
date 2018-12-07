@@ -154,4 +154,11 @@ public class CallLogDataStore {
             break;
         }
     }
+
+    public static void init(Context context) {
+        processAsync(() -> {
+            refreshStore();
+            loadRecentCallLogEntries(context);
+        });
+    }
 }

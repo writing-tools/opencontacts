@@ -5,6 +5,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.ListView;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,8 +31,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         this.context = context;
         setTextFilterEnabled(true);
         ContactsDataStore.addDataChangeListener(this);
-        contacts = ContactsDataStore.getAllContacts();
-        sortContacts();
+        contacts = new ArrayList<>();
         adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
         adapter.setContactsListActionsListener(ContactsListView.this);
         setAdapter(adapter);
@@ -39,6 +39,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         addHeaderView(headerView);
         totalContactsTextView = (AppCompatTextView) headerView.findViewById(R.id.total_contacts);
         updateHeaderWithContactsCount();
+        onStoreRefreshed();
     }
 
     private void updateHeaderWithContactsCount() {

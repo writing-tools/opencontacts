@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -41,7 +42,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.context = context;
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
 
-        List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
+        List<CallLogEntry> callLogEntries = new ArrayList<>();
 
         final OnClickListener callContact = v -> {
             CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
@@ -83,7 +84,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                                 Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
                                 break;
                             case 1:
-                                editNumberBeforeCallHandler.setNumber(callLogEntry.getPhoneNumber());
+                                this.editNumberBeforeCallHandler.setNumber(callLogEntry.getPhoneNumber());
                                 break;
                             case 2:
                                 CallLogDataStore.delete(callLogEntry.getId());
@@ -136,6 +137,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         };
         this.setAdapter(adapter);
         CallLogDataStore.addDataChangeListener(this);
+        reload();
     }
 
     @Override

@@ -151,4 +151,8 @@ public class ContactsDataStore {
             getMainThreadHandler().post(() -> Toast.makeText(context, R.string.deleted_all_contacts, Toast.LENGTH_LONG).show());
         });
     }
+
+    public static void init() {
+        refreshStoreAsync();
+    }
 }

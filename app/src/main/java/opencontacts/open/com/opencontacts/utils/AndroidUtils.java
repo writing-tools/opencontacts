@@ -44,6 +44,7 @@ public class AndroidUtils {
 
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
     public static final String IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY = "IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY";
+    public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -90,9 +91,16 @@ public class AndroidUtils {
 
     @NonNull
     private static Intent getWhatsappIntent(String number, Context context) {
+        String numberWithCountryCode = number.contains("+") ? number : getDefaultWhatsAppCountryCode(context) + number;
         return new Intent(ACTION_VIEW, Uri.parse(
-                context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, number)
+                context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, numberWithCountryCode)
         ));
+    }
+
+    private static String getDefaultWhatsAppCountryCode(Context context) {
+        return getAppsSharedPreferences(context)
+                .getString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, "");
+
     }
 
     @NonNull
@@ -291,5 +299,12 @@ public class AndroidUtils {
 
     public static void applyOptedTheme(Context context) {
         context.getTheme().applyStyle(AndroidUtils.getCurrentTheme(context), true);
+    }
+
+    public static void saveDefaultWhatsAppCountryCode(String selectedCountryCodeWithPlus, Context context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
+                .apply();
     }
 }

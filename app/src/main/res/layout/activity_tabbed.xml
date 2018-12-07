@@ -39,4 +39,11 @@
         android:layout_gravity="bottom"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
+
+    <com.hbb20.CountryCodePicker
+        android:id="@+id/country_code_picker"
+        app:ccpDialog_textColor="?android:textColorPrimary"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

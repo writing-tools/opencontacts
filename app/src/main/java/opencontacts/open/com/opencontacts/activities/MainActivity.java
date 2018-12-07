@@ -1,6 +1,5 @@
 package opencontacts.open.com.opencontacts.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -12,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.hbb20.CountryCodePicker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -109,6 +110,14 @@ public class MainActivity extends AppBaseActivity {
             recreate();
             return true;
         });
+        menu.findItem(R.id.action_whatsapp_country_code).setOnMenuItemClickListener(item -> {
+            CountryCodePicker countryCodePicker = findViewById(R.id.country_code_picker);
+            countryCodePicker.setOnCountryChangeListener(() ->
+                    AndroidUtils.saveDefaultWhatsAppCountryCode(countryCodePicker.getSelectedCountryCodeWithPlus(), MainActivity.this)
+            );
+            countryCodePicker.launchCountrySelectionDialog();
+            return true;
+        });
     }
 
     private void refresh() {
@@ -116,7 +125,7 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void setupTabs() {
-        viewPager = (ViewPager) findViewById(R.id.view_pager);
+        viewPager = findViewById(R.id.view_pager);
         List<Fragment> fragmentsList = getSupportFragmentManager().getFragments();
         if(!fragmentsList.isEmpty()){
             callLogFragment = (CallLogFragment) fragmentsList.get(0);

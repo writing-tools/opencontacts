@@ -1,11 +1,11 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 25
+    compileSdkVersion 27
     defaultConfig {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 14
-        targetSdkVersion 25
+        targetSdkVersion 27
         versionCode 8
         versionName "8.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
@@ -32,8 +32,9 @@ dependencies {
     testImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:25.4.0'
-    implementation 'com.android.support:design:25.4.0'
+    implementation 'com.hbb20:ccp:2.2.3'
+    implementation 'com.android.support:appcompat-v7:27.1.1'
+    implementation 'com.android.support:design:27.1.1'
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.10.2'
     implementation 'com.github.satyan:sugar:1.5'
     testImplementation 'junit:junit:4.12'

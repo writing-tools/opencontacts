@@ -46,6 +46,14 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
                 AndroidUtils.call(phoneNumber, context);
         });
 
+        view.findViewById(R.id.button_whatsapp).setOnClickListener(v -> {
+            String phoneNumber = dialPadEditText.getText().toString();
+            if(isInvalid(phoneNumber))
+                dialPadEditText.setError(getString(R.string.invalid_number));
+            else
+                AndroidUtils.whatsapp(phoneNumber, context);
+        });
+
         view.findViewById(R.id.button_message).setOnClickListener(v -> {
             String phoneNumber = dialPadEditText.getText().toString();
             if(isInvalid(phoneNumber))

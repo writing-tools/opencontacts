@@ -45,6 +45,15 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
             contactsListActionsListener.onShowDetails(contact);
         }
     };
+    private final View.OnClickListener whatsappContact = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            if(contactsListActionsListener == null)
+                return;
+            Contact contact = (Contact) ((View)v.getParent()).getTag();
+            contactsListActionsListener.onWhatsappClicked(contact);
+        }
+    };
 
     @NonNull
     @Override
@@ -56,6 +65,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(contact.primaryPhoneNumber);
         convertView.findViewById(R.id.button_info).setOnClickListener(showContactDetails);
         convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
+        convertView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
         convertView.setTag(contact);
         convertView.setOnClickListener(callContact);
         return convertView;
@@ -81,5 +91,6 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         void onCallClicked(Contact contact);
         void onMessageClicked(Contact contact);
         void onShowDetails(Contact contact);
+        void onWhatsappClicked(Contact contact);
     }
 }

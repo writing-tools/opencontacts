@@ -47,6 +47,12 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
             CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
             AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
         };
+
+        final OnClickListener whatsappContact = v -> {
+            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            AndroidUtils.whatsapp(callLogEntry.getPhoneNumber(), context);
+        };
+
         final OnClickListener messageContact = v -> {
             CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
             AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
@@ -98,6 +104,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 ((TextView) reusableView.findViewById(R.id.textview_full_name)).setText(callLogEntry.getContactId() == -1 ? UNKNOWN : callLogEntry.getName());
                 ((TextView) reusableView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
                 (reusableView.findViewById(R.id.button_message)).setOnClickListener(messageContact);
+                (reusableView.findViewById(R.id.button_whatsapp)).setOnClickListener(whatsappContact);
                 if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
                     ((ImageView)reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
                 else if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))

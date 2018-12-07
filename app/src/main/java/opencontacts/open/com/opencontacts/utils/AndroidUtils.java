@@ -22,6 +22,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Toast;
 
 
 import java.util.ArrayList;
@@ -32,6 +33,8 @@ import opencontacts.open.com.opencontacts.activities.EditContactActivity;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
+
+import static android.content.Intent.ACTION_VIEW;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -75,6 +78,23 @@ public class AndroidUtils {
         context.startActivity(callIntent);
     }
 
+    public static void whatsapp(String number, Context context) {
+        try{
+            context.startActivity(getWhatsappIntent(number, context));
+        }
+        catch (Exception e){
+            Toast.makeText(context, context.getString(R.string.could_not_open_whatsapp), Toast.LENGTH_LONG)
+                    .show();
+        }
+    }
+
+    @NonNull
+    private static Intent getWhatsappIntent(String number, Context context) {
+        return new Intent(ACTION_VIEW, Uri.parse(
+                context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, number)
+        ));
+    }
+
     @NonNull
     public static Intent getCallIntent(String number, Context context) {
         Uri numberUri = Uri.parse("tel:" + number);
@@ -102,7 +122,7 @@ public class AndroidUtils {
     }
 
     public static Intent getMessageIntent(String number) {
-        return new Intent(Intent.ACTION_VIEW, Uri.parse("sms:" + number)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        return new Intent(ACTION_VIEW, Uri.parse("sms:" + number)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public static Intent getIntentToShowContactDetails(long contactId, Context context){
@@ -245,7 +265,7 @@ public class AndroidUtils {
 
     public static void goToUrl (String url, Context context) {
         Uri uri = Uri.parse(url);
-        context.startActivity(new Intent(Intent.ACTION_VIEW, uri));
+        context.startActivity(new Intent(ACTION_VIEW, uri));
     }
 
     public static Handler getMainThreadHandler(){

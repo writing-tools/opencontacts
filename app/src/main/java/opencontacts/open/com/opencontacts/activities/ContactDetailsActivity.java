@@ -29,28 +29,19 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private Contact contact;
     private ArrayAdapter<String> phoneNumbersListArrayAdapter;
 
-    private View.OnClickListener callContact = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
-        }
+    private View.OnClickListener callContact = v -> AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
+
+    private View.OnClickListener togglePrimaryNumber = v -> {
+        ContactsDataStore.togglePrimaryNumber(getSelectedMobileNumber((View)v.getParent()), contactId);
+        contact = ContactsDataStore.getContactWithId(contactId);
+        phoneNumbersListArrayAdapter.clear();
+        phoneNumbersListArrayAdapter.addAll(contact.phoneNumbers);
+        phoneNumbersListArrayAdapter.notifyDataSetChanged();
     };
-    private View.OnClickListener togglePrimaryNumber = new View.OnClickListener(){
-        @Override
-        public void onClick(View v) {
-            ContactsDataStore.togglePrimaryNumber(getSelectedMobileNumber((View)v.getParent()), contactId);
-            contact = ContactsDataStore.getContactWithId(contactId);
-            phoneNumbersListArrayAdapter.clear();
-            phoneNumbersListArrayAdapter.addAll(contact.phoneNumbers);
-            phoneNumbersListArrayAdapter.notifyDataSetChanged();
-        }
-    };
-    private View.OnClickListener messageContact = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            AndroidUtils.message(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
-        }
-    };
+
+    private View.OnClickListener messageContact = v -> AndroidUtils.message(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
+
+    private View.OnClickListener whatsappContact = v -> AndroidUtils.whatsapp(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
 
     private View.OnLongClickListener copyPhoneNumberToClipboard = new View.OnLongClickListener(){
         @Override
@@ -115,6 +106,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
                 primaryNumberToggleButton.setImageResource(mobileNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
                 primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
                 convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
+                convertView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
                 convertView.setOnClickListener(callContact);
                 convertView.setOnLongClickListener(copyPhoneNumberToClipboard);
                 convertView.setTag(mobileNumber);

@@ -122,4 +122,9 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     public void onShowDetails(Contact contact) {
         context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.id, context));
     }
+
+    @Override
+    public void onWhatsappClicked(Contact contact) {
+        AndroidUtils.whatsapp(contact.primaryPhoneNumber, context);
+    }
 }

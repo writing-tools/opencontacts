@@ -36,6 +36,17 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
+    <ImageButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/whatsapp"
+        android:id="@+id/button_whatsapp"
+        android:layout_marginRight="10dp"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/button_message"
+        android:layout_toStartOf="@id/button_message"
+        />
+
     <TextView
         android:text="phone_number"
         android:layout_width="wrap_content"

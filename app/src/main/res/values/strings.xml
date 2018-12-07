@@ -44,6 +44,7 @@
     <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Delete all contacts</string>
+    <string name="delete_all_contacts_question">Delete all contacts?</string>
     <string name="deleted_all_contacts">Deleted all contacts</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Switch theme</string>

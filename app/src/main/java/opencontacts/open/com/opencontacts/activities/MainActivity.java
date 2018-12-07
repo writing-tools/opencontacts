@@ -1,5 +1,6 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -7,6 +8,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -95,7 +97,11 @@ public class MainActivity extends AppBaseActivity {
            return true;
         });
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(item -> {
-            ContactsDataStore.deleteAllContacts(this);
+            new AlertDialog.Builder(this)
+                    .setMessage(R.string.delete_all_contacts_question)
+                    .setPositiveButton("Okay",
+                            (dialogInterface, i) -> ContactsDataStore.deleteAllContacts(MainActivity.this))
+                    .show();
             return true;
         });
         menu.findItem(R.id.action_switch_theme).setOnMenuItemClickListener(item -> {

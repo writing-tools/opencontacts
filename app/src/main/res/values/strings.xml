@@ -50,4 +50,7 @@
     <string name="switch_theme">Switch theme</string>
     <string name="could_not_open_whatsapp">Could not open whatsapp</string>
     <string name="default_whatsapp_country_code">Default whatsapp country code</string>
+    <string name="input_country_calling_code_title">Input country calling code</string>
+    <string name="input_country_calling_code_description">Example: +91 for India. Do not forget to input + in front</string>
+    <string name="okay">Okay</string>
 </resources>

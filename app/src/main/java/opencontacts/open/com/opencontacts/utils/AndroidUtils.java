@@ -97,7 +97,7 @@ public class AndroidUtils {
         ));
     }
 
-    private static String getDefaultWhatsAppCountryCode(Context context) {
+    public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
                 .getString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, "");
 
@@ -179,7 +179,7 @@ public class AndroidUtils {
         }
         builder.setTitle(title)
                 .setMessage(message)
-                .setPositiveButton("Okay", null)
+                .setPositiveButton(R.string.okay, null)
                 .setIcon(android.R.drawable.ic_dialog_alert)
                 .show();
     }
@@ -229,7 +229,7 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Enable draw over apps")
                         .setMessage("This will allow app to show the calling person's name on screen during call")
-                        .setNeutralButton("Okay", null)
+                        .setNeutralButton(R.string.okay, null)
                         .setOnDismissListener(new DialogInterface.OnDismissListener() {
                             @Override
                             public void onDismiss(DialogInterface dialog) {
@@ -243,7 +243,7 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Grant phone permission")
                         .setMessage("Grant manage phone permission to be able to read call log")
-                        .setNeutralButton("Okay", null)
+                        .setNeutralButton(R.string.okay, null)
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123))
                         .create()
                         .show();
@@ -252,7 +252,7 @@ public class AndroidUtils {
                 new AlertDialog.Builder(activity)
                         .setTitle("Grant storage permission")
                         .setMessage("Grant storage phone permission to be able to export and import contacts")
-                        .setNeutralButton("Okay", null)
+                        .setNeutralButton(R.string.okay, null)
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123))
                         .create()
                         .show();

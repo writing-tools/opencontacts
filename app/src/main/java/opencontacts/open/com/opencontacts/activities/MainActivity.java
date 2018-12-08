@@ -8,11 +8,11 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
-
-import com.hbb20.CountryCodePicker;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -110,12 +110,16 @@ public class MainActivity extends AppBaseActivity {
             recreate();
             return true;
         });
-        menu.findItem(R.id.action_whatsapp_country_code).setOnMenuItemClickListener(item -> {
-            CountryCodePicker countryCodePicker = findViewById(R.id.country_code_picker);
-            countryCodePicker.setOnCountryChangeListener(() ->
-                    AndroidUtils.saveDefaultWhatsAppCountryCode(countryCodePicker.getSelectedCountryCodeWithPlus(), MainActivity.this)
-            );
-            countryCodePicker.launchCountrySelectionDialog();
+        menu.findItem(R.id.action_whatsapp_country_code).setOnMenuItemClickListener((MenuItem item) -> {
+            AppCompatEditText countryCodeEditText = new AppCompatEditText(MainActivity.this);
+            countryCodeEditText.setText(AndroidUtils.getDefaultWhatsAppCountryCode(MainActivity.this));
+            countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
+            new AlertDialog.Builder(MainActivity.this)
+                    .setView(countryCodeEditText)
+                    .setTitle(R.string.input_country_calling_code_title)
+                    .setMessage(R.string.input_country_calling_code_description)
+                    .setPositiveButton(R.string.okay, (dialogInterface, i) -> AndroidUtils.saveDefaultWhatsAppCountryCode(countryCodeEditText.getText().toString(), MainActivity.this))
+                    .show();
             return true;
         });
     }
@@ -163,7 +167,7 @@ public class MainActivity extends AppBaseActivity {
         viewPager.setAdapter(fragmentPagerAdapter);
         viewPager.setOffscreenPageLimit(3); //crazy shit with viewPager in case used with tablayout
 
-        TabLayout tabLayout = (TabLayout) findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
         tabLayout.getTabAt(2).setIcon(R.drawable.dial_pad);
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {

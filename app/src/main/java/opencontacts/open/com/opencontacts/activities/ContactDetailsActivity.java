@@ -102,7 +102,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
                     convertView = layoutInflater.inflate(R.layout.contact_details_row, parent, false);
                 String mobileNumber = mobileNumbers.get(position);
                 ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(mobileNumber);
-                AppCompatImageButton primaryNumberToggleButton = (AppCompatImageButton) convertView.findViewById(R.id.button_primary_number);
+                AppCompatImageButton primaryNumberToggleButton = convertView.findViewById(R.id.button_primary_number);
                 primaryNumberToggleButton.setImageResource(mobileNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
                 primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
                 convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);

@@ -2,7 +2,6 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.Manifest;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -46,13 +45,8 @@ public class ImportVcardActivity extends AppCompatActivity {
             new android.support.v7.app.AlertDialog.Builder(this)
                     .setTitle("Error")
                     .setMessage("Can not process this import without storage permission, please retry")
-                    .setNeutralButton("Okay", null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            finish();
-                        }
-                    })
+                    .setNeutralButton(R.string.okay, null)
+                    .setOnDismissListener(dialog -> finish())
                     .create()
                     .show();
     }
@@ -85,13 +79,8 @@ public class ImportVcardActivity extends AppCompatActivity {
             new android.support.v7.app.AlertDialog.Builder(this)
                     .setTitle("Grant storage permission")
                     .setMessage("Grant storage phone permission to be able to export and import contacts")
-                    .setNeutralButton("Okay", null)
-                    .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                        @Override
-                        public void onDismiss(DialogInterface dialog) {
-                            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123);
-                        }
-                    })
+                    .setNeutralButton(R.string.okay, null)
+                    .setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123))
                     .create()
                     .show();
         }

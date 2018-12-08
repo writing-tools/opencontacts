@@ -33,15 +33,15 @@ public class EditContactActivity extends AppBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        editText_firstName = (EditText) findViewById(R.id.editFirstName);
-        editText_lastName = (EditText) findViewById(R.id.editLastName);
-        editText_mobileNumber = (EditText) findViewById(R.id.editPhoneNumber);
+        editText_firstName = findViewById(R.id.editFirstName);
+        editText_lastName = findViewById(R.id.editLastName);
+        editText_mobileNumber = findViewById(R.id.editPhoneNumber);
 
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
             addingNewContact = true;
             editText_mobileNumber.setText(intent.getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER));
-            toolbar.setTitle("New Contact");
+            toolbar.setTitle(R.string.new_contact);
         }
         else{
             contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
@@ -74,12 +74,12 @@ public class EditContactActivity extends AppBaseActivity {
     public void saveContact(View view) {
         String firstName = String.valueOf(editText_firstName.getText());
         String lastName = String.valueOf(editText_lastName.getText());
-        if("".equals(firstName) && "".equals(lastName)){
-            editText_firstName.setError("Required FirstName or LastName");
+        if(isEmpty(firstName) && isEmpty(lastName)){
+            editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
             return;
         }
         if(phoneNumbersNotEntered()){
-            editText_mobileNumber.setError("Required");
+            editText_mobileNumber.setError(getString(R.string.required));
             return;
         }
 
@@ -90,7 +90,7 @@ public class EditContactActivity extends AppBaseActivity {
             updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
             ContactsDataStore.updateContact(updatedContact, this);
         }
-        Toast.makeText(this, "Saved", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();
     }
 
@@ -99,7 +99,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private List<String> getPhoneNumbersFromView() {
-        LinearLayout phoneNumbersContainer = (LinearLayout) findViewById(R.id.phonenumbers);
+        LinearLayout phoneNumbersContainer = findViewById(R.id.phonenumbers);
         int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
         String extraPhoneNumber;
         ArrayList<String> phoneNumbers = new ArrayList<>(numberOfPhoneNumbers);
@@ -113,7 +113,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     public EditText addOneMorePhoneNumberView(View view){
-        LinearLayout phoneNumbers_linearLayout = (LinearLayout) findViewById(R.id.phonenumbers);
+        LinearLayout phoneNumbers_linearLayout = findViewById(R.id.phonenumbers);
         EditText oneMorePhoneNumberField = new EditText(this);
         oneMorePhoneNumberField.setLayoutParams(new ActionBar.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
         oneMorePhoneNumberField.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -122,7 +122,7 @@ public class EditContactActivity extends AppBaseActivity {
         }
         else
             oneMorePhoneNumberField.setBackgroundDrawable((findViewById(R.id.editPhoneNumber)).getBackground());
-        oneMorePhoneNumberField.setHint("Phone Number");
+        oneMorePhoneNumberField.setHint(R.string.phone_number);
         phoneNumbers_linearLayout.addView(oneMorePhoneNumberField);
         return oneMorePhoneNumberField;
     }

@@ -9,8 +9,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -20,6 +18,7 @@ import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.StructuredName;
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
@@ -35,11 +34,11 @@ public class DomainUtils {
 
     public static void exportAllContacts(Context context) throws IOException {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-            AndroidUtils.showAlert(context, "Error", "Storage is not mounted");
+            AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
             return;
         }
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
-        File file = new File(Environment.getExternalStorageDirectory(), "Contacts_" + simpleDateFormat.format(new Date()) + " .vcf");
+        File file = new File(Environment.getExternalStorageDirectory(), "Contacts_" + simpleDateFormat.format(new Date()) + ".vcf");
         file.createNewFile();
         List<Contact> allContacts = ContactsDataStore.getAllContacts();
         VCardWriter vCardWriter = null;

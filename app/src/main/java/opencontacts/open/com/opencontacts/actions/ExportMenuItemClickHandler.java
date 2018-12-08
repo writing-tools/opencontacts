@@ -27,33 +27,30 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
     @Override
     public boolean onMenuItemClick(MenuItem item) {
         new AlertDialog.Builder(context)
-                .setMessage("Do you want to export?")
-                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        Toast.makeText(context, R.string.exporting_contacts_started, Toast.LENGTH_SHORT).show();
-                        new AsyncTask<Void, Void, Boolean>() {
-                            @Override
-                            protected Boolean doInBackground(Void... params) {
-                                try {
-                                    DomainUtils.exportAllContacts(context);
-                                } catch (IOException e) {
-                                    return false;
-                                }
-                                return true;
+                .setMessage(R.string.do_you_want_to_export)
+                .setPositiveButton(R.string.yes, (dialog, which) -> {
+                    Toast.makeText(context, R.string.exporting_contacts_started, Toast.LENGTH_SHORT).show();
+                    new AsyncTask<Void, Void, Boolean>() {
+                        @Override
+                        protected Boolean doInBackground(Void... params) {
+                            try {
+                                DomainUtils.exportAllContacts(context);
+                            } catch (IOException e) {
+                                return false;
                             }
+                            return true;
+                        }
 
-                            @Override
-                            protected void onPostExecute(Boolean success) {
-                                if (Boolean.FALSE.equals(success))
-                                    AndroidUtils.showAlert(context, "Failed", "Failed exporting contacts");
-                                else
-                                    Toast.makeText(context, R.string.exporting_contacts_complete, Toast.LENGTH_LONG).show();
+                        @Override
+                        protected void onPostExecute(Boolean success) {
+                            if (Boolean.FALSE.equals(success))
+                                AndroidUtils.showAlert(context, context.getString(R.string.failed), context.getString(R.string.failed_extracting_contacts));
+                            else
+                                Toast.makeText(context, R.string.exporting_contacts_complete, Toast.LENGTH_LONG).show();
 
-                            }
-                        }.execute();
-                    }
-                }).setNegativeButton("No", null).show();
+                        }
+                    }.execute();
+                }).setNegativeButton(R.string.no, null).show();
         return true;
     }
 }

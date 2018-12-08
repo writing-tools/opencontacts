@@ -36,7 +36,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     private static boolean isCallRecieved;
     private static Contact callingContact;
     private static String incomingNumber;
-    public static String unknown = "Unknown";
 
 
     @Override
@@ -47,7 +46,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
             callingContact = ContactsDataStore.getContact(incomingNumber);
             if(callingContact == null)
-                callingContact = new Contact(unknown, incomingNumber);
+                callingContact = new Contact(context.getString(R.string.unknown), incomingNumber);
             drawContactID(context, callingContact);
         }
         else if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
@@ -72,11 +71,11 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 NotificationCompat.Builder mBuilder =
                         new NotificationCompat.Builder(context)
                                 .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
-                                .setContentTitle("Missed Call")
-                                .setTicker("missed call from " + callingContact.firstName + " " + callingContact.lastName)
+                                .setContentTitle(context.getString(R.string.missed_call))
+                                .setTicker(context.getString(R.string.missed_call_from, callingContact.firstName, callingContact.lastName))
                                 .setContentText(callingContact.firstName + " " + callingContact.lastName)
-                                .addAction(R.drawable.ic_call_black_24dp, "Call", pendingIntentToCall)
-                                .addAction(R.drawable.ic_chat_black_24dp, "Message", pendingIntentToMessage)
+                                .addAction(R.drawable.ic_call_black_24dp, context.getString(R.string.call), pendingIntentToCall)
+                                .addAction(R.drawable.ic_chat_black_24dp, context.getString(R.string.message), pendingIntentToMessage)
                                 .setContentIntent(pendingIntentToLaunchApp);
                 NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
                 notificationManager.notify(new Random().nextInt(), mBuilder.build());
@@ -88,8 +87,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         final WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         LayoutInflater layoutinflater = LayoutInflater.from(context);
         drawOverIncomingCallLayout = layoutinflater.inflate(R.layout.draw_over_incoming_call, null);
-        TextView contactName = (TextView) drawOverIncomingCallLayout.findViewById(R.id.name_of_contact);
-        contactName.setText(callingContact.toString() + " calling...");
+        TextView contactName = drawOverIncomingCallLayout.findViewById(R.id.name_of_contact);
+        contactName.setText(context.getString(R.string.caller_id_text, callingContact.toString()));
         final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,

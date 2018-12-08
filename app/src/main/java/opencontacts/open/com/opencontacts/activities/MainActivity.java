@@ -32,8 +32,6 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 public class MainActivity extends AppBaseActivity {
     public static final int CONTACTS_TAB_INDEX = 1;
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
-    public static final String TAB_TITLE_CALL_LOG = "Call Log";
-    public static final String TAB_TITLE_CONTACTS = "Contacts";
     public static final int DIALER_TAB_INDEX = 2;
     private ViewPager viewPager;
     private SearchView searchView;
@@ -100,7 +98,7 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(item -> {
             new AlertDialog.Builder(this)
                     .setMessage(R.string.delete_all_contacts_question)
-                    .setPositiveButton("Okay",
+                    .setPositiveButton(R.string.okay,
                             (dialogInterface, i) -> ContactsDataStore.deleteAllContacts(MainActivity.this))
                     .show();
             return true;
@@ -146,7 +144,7 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(DIALER_TAB_INDEX);
         });
         final List<SelectableTab> tabs = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
-        final List<String> tabTitles = Arrays.asList(TAB_TITLE_CALL_LOG, TAB_TITLE_CONTACTS, "");
+        final List<String> tabTitles = Arrays.asList(getString(R.string.calllog), getString(R.string.contacts), "");
 
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
             @Override

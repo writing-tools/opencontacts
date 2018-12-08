@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.ProgressBar;
@@ -42,9 +43,9 @@ public class ImportVcardActivity extends AppCompatActivity {
             parser.execute(uri, this);
         }
         else
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle("Error")
-                    .setMessage("Can not process this import without storage permission, please retry")
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.error)
+                    .setMessage(R.string.could_not_process_import_without_storage_permission)
                     .setNeutralButton(R.string.okay, null)
                     .setOnDismissListener(dialog -> finish())
                     .create()
@@ -76,9 +77,9 @@ public class ImportVcardActivity extends AppCompatActivity {
 
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            new android.support.v7.app.AlertDialog.Builder(this)
-                    .setTitle("Grant storage permission")
-                    .setMessage("Grant storage phone permission to be able to export and import contacts")
+            new AlertDialog.Builder(this)
+                    .setTitle(R.string.grant_storage_permission)
+                    .setMessage(R.string.grant_storage_permisson_detail)
                     .setNeutralButton(R.string.okay, null)
                     .setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123))
                     .create()
@@ -167,23 +168,27 @@ public class ImportVcardActivity extends AppCompatActivity {
 
         @Override
         protected void onPostExecute(Object o) {
-            Toast.makeText(context, "Imported Successfully", Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.imported_successfully, Toast.LENGTH_LONG).show();
         }
 
         @Override
         protected void onProgressUpdate(Object[] values) {
             super.onProgressUpdate(values);
+            int imported, ignored;
             switch((String)values[0]) {
                 case PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW:
-                    int imported = (Integer) values[1], ignored = (Integer) values[2];
+                    imported = (Integer) values[1];
+                    ignored = (Integer) values[2];
                     progressBarComponent.setProgress(imported + ignored);
-                    textView_vCardsImported.setText("Total cards imported: " + imported);
-                    textView_vCardsIgnored.setText("Total cards ignored: " + ignored);
+                    textView_vCardsImported.setText(getString(R.string.total_cards_imported, imported));
+                    textView_vCardsIgnored.setText(getString(R.string.total_cards_ignored, ignored));
                     break;
                 case PROGRESS_FINAL_RESULT_OF_IMPORT:
+                    imported = (Integer) values[1];
+                    ignored = (Integer) values[2];
                     progressBarComponent.setProgress(progressBarComponent.getMax());
-                    textView_vCardsImported.setText("Total cards imported: " + values[1]);
-                    textView_vCardsIgnored.setText("Total cards ignored: " + values[2]);
+                    textView_vCardsImported.setText(getString(R.string.total_cards_imported, imported));
+                    textView_vCardsIgnored.setText(getString(R.string.total_cards_ignored, ignored));
                     ContactsDataStore.refreshStoreAsync();
                     CallLogDataStore.updateCallLogAsyncForAllContacts(ImportVcardActivity.this);
                     break;

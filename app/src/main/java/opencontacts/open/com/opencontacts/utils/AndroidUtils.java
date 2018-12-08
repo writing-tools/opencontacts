@@ -45,6 +45,8 @@ public class AndroidUtils {
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
     public static final String IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY = "IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY";
     public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
+    public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
+    public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -227,22 +229,17 @@ public class AndroidUtils {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if(!Settings.canDrawOverlays(activity)) {
                 new AlertDialog.Builder(activity)
-                        .setTitle("Enable draw over apps")
-                        .setMessage("This will allow app to show the calling person's name on screen during call")
+                        .setTitle(R.string.enable_draw_over_apps)
+                        .setMessage(R.string.enable_draw_over_apps_detail)
                         .setNeutralButton(R.string.okay, null)
-                        .setOnDismissListener(new DialogInterface.OnDismissListener() {
-                            @Override
-                            public void onDismiss(DialogInterface dialog) {
-                                activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())));
-                            }
-                        })
+                        .setOnDismissListener(dialog -> activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName()))))
                         .create()
                         .show();
             }
             if(activity.checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
-                        .setTitle("Grant phone permission")
-                        .setMessage("Grant manage phone permission to be able to read call log")
+                        .setTitle(R.string.grant_phone_permission)
+                        .setMessage(R.string.grant_phone_permission_detail)
                         .setNeutralButton(R.string.okay, null)
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123))
                         .create()
@@ -250,8 +247,8 @@ public class AndroidUtils {
             }
             if(activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
-                        .setTitle("Grant storage permission")
-                        .setMessage("Grant storage phone permission to be able to export and import contacts")
+                        .setTitle(R.string.grant_storage_permission)
+                        .setMessage(R.string.grant_storage_permisson_detail)
                         .setNeutralButton(R.string.okay, null)
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123))
                         .create()
@@ -263,12 +260,12 @@ public class AndroidUtils {
     public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {
         getAppsSharedPreferences(context)
                 .edit()
-                .putInt("CALLER_ID_X_POSITION_ON_SCREEN", x)
-                .putInt("CALLER_ID_Y_POSITION_ON_SCREEN", y)
+                .putInt(CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY, x)
+                .putInt(CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY, y)
                 .apply();
     }
     public static Point getCallerIdLocationOnScreen(Context context) {
-        return new Point(getAppsSharedPreferences(context).getInt("CALLER_ID_X_POSITION_ON_SCREEN", 0), getAppsSharedPreferences(context).getInt("CALLER_ID_Y_POSITION_ON_SCREEN", 100));
+        return new Point(getAppsSharedPreferences(context).getInt(CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY, 0), getAppsSharedPreferences(context).getInt(CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY, 100));
     }
 
     public static void goToUrl (String url, Context context) {

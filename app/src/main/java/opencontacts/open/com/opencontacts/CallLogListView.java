@@ -33,13 +33,14 @@ import opencontacts.open.com.opencontacts.utils.Common;
  */
 
 public class CallLogListView extends ListView implements DataStoreChangeListener<CallLogEntry> {
-    public static final String UNKNOWN = "Unknown";
+    private String UNKNOWN;
     Context context;
     private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
     ArrayAdapter<CallLogEntry> adapter;
     public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
         super(context);
         this.context = context;
+        this.UNKNOWN = context.getString(R.string.unknown);
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
 
         List<CallLogEntry> callLogEntries = new ArrayList<>();
@@ -77,7 +78,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         final OnLongClickListener callLogEntryLongClickListener = v -> {
             CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
             new AlertDialog.Builder(context)
-                    .setItems(new String[]{"Copy to clipboard", "Edit before call", "Delete"}, (dialog, which) -> {
+                    .setItems(new String[]{context.getString(R.string.copy_to_clipboard), context.getString(R.string.edit_before_call), context.getString(R.string.delete)}, (dialog, which) -> {
                         switch(which){
                             case 0:
                                 AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);

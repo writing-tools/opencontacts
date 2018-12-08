@@ -58,7 +58,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         findViewById(R.id.about_star).setOnClickListener(v -> new AlertDialog.Builder(ContactDetailsActivity.this)
-                .setTitle("Filled Star")
+                .setTitle(R.string.filled_star)
                 .setMessage(R.string.about_primary_number)
                 .show());
         Intent intent = getIntent();
@@ -90,7 +90,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private void setUpUI() {
         toolbar.setTitle(contact.firstName);
         toolbar.setSubtitle(contact.name);
-        ListView phoneNumbersListView = (ListView) findViewById(R.id.listview_phone_numbers);
+        ListView phoneNumbersListView = findViewById(R.id.listview_phone_numbers);
         final List<String> mobileNumbers = contact.phoneNumbers;
         phoneNumbersListArrayAdapter = new ArrayAdapter<String>(this, R.layout.contact_details_row, mobileNumbers) {
             private LayoutInflater layoutInflater = LayoutInflater.from(getContext());
@@ -140,22 +140,16 @@ public class ContactDetailsActivity extends AppBaseActivity {
                 return true;
             }
         });
-        menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                new AlertDialog.Builder(ContactDetailsActivity.this)
-                        .setMessage("Do you want to delete?")
-                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                ContactsDataStore.removeContact(contact);
-                                Toast.makeText(ContactDetailsActivity.this, "Deleted", Toast.LENGTH_SHORT).show();
-                                finish();
-                            }
-                        })
-                        .setNegativeButton("No", null).show();
-                return true;
-            }
+        menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(item -> {
+            new AlertDialog.Builder(ContactDetailsActivity.this)
+                    .setMessage(R.string.do_you_want_to_delete)
+                    .setPositiveButton(R.string.yes, (dialog, which) -> {
+                        ContactsDataStore.removeContact(contact);
+                        Toast.makeText(ContactDetailsActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
+                        finish();
+                    })
+                    .setNegativeButton(R.string.no, null).show();
+            return true;
         });
         return super.onCreateOptionsMenu(menu);
     }

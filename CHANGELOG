@@ -1,4 +1,21 @@
-v7.0 
+v8.0
+Phone numbers with symbols are supported now
+
+Can now delete all contacts
+
+Contacts list now shows total number of contacts at the top
+
+Redesigned call log entry to take less space per entry
+
+Added T9 search help graphic
+
+Added dark theme and toggle in the menu to access the same
+
+Call log entry can be copied, deleted, edited before dialed
+
+Can now search accented names
+
+v7.0
 Fixed app crash in lineage os
 
 Added help text for caller id

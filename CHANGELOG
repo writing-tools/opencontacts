@@ -1,4 +1,6 @@
 v8.0
+Please export and reimport contacts for search to work. Its a one time thing
+
 Phone numbers with symbols are supported now
 
 Can now delete all contacts

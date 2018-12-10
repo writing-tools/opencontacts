@@ -2,10 +2,10 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
-import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
@@ -28,6 +28,9 @@ import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
+
 
 public class MainActivity extends AppBaseActivity {
     public static final int CONTACTS_TAB_INDEX = 1;
@@ -40,6 +43,19 @@ public class MainActivity extends AppBaseActivity {
     private DialerFragment dialerFragment;
 
     @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode == DRAW_OVERLAY_PERMISSION_RESULT)//granting permission very fast is resulting in false positive hence delaying this check
+            getMainThreadHandler().postDelayed(this::recreate, 1000);
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        recreate();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         refresh();
@@ -48,8 +64,11 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        AndroidUtils.askForPermissionsIfNotGranted(this);
-        setupTabs();
+        if(AndroidUtils.doesNotHaveAllPermissions(this)){
+            AndroidUtils.askForPermissionsIfNotGranted(this);
+        }
+        else
+            setupTabs();
     }
 
     @Override
@@ -72,12 +91,13 @@ public class MainActivity extends AppBaseActivity {
             return false;
         });
         MenuItem searchItem = menu.findItem(R.id.action_search);
-        searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+        searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(v -> {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
-        contactsFragment.configureSearchInMenu(searchView);
+        if(contactsFragment != null)
+            contactsFragment.configureSearchInMenu(searchView);
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
         menu.findItem(R.id.action_about).setOnMenuItemClickListener(item -> {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));

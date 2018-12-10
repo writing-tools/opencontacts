@@ -1,6 +1,5 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
-import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -20,6 +19,9 @@ import java.util.Map;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+
+import static android.Manifest.permission.READ_CALL_LOG;
+import static android.Manifest.permission.READ_PHONE_STATE;
 
 
 /**
@@ -49,10 +51,10 @@ class CallLogDBHelper {
     }
 
     private List<CallLogEntry> getRecentCallLogEntries(final Context context){
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             Handler mainHandler = new Handler(context.getMainLooper());
 
-            mainHandler.post(() -> Toast.makeText(context, R.string.grant_read_call_logs_permission, Toast.LENGTH_LONG).show());
+            mainHandler.post(() -> Toast.makeText(context, R.string.grant_read_call_logs_permission, Toast.LENGTH_SHORT).show());
             return new ArrayList<>(0);
         }
         Cursor c;

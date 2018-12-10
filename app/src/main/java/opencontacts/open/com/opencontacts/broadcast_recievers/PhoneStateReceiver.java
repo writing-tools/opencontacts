@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.graphics.Point;
+import android.os.Build;
 import android.os.Handler;
 import android.provider.CallLog;
 import android.support.v4.app.NotificationCompat;
@@ -27,6 +28,9 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+
+import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
+import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
 
 /**
  * Created by sultanm on 7/30/17.
@@ -89,10 +93,16 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         drawOverIncomingCallLayout = layoutinflater.inflate(R.layout.draw_over_incoming_call, null);
         TextView contactName = drawOverIncomingCallLayout.findViewById(R.id.name_of_contact);
         contactName.setText(context.getString(R.string.caller_id_text, callingContact.toString()));
+        int typeOfWindow;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+            typeOfWindow = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
+        else
+            typeOfWindow = isLocked(context) ? TYPE_SYSTEM_OVERLAY : TYPE_PHONE;
+
         final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
-                isLocked(context) ? WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY : WindowManager.LayoutParams.TYPE_PHONE,
+                typeOfWindow,
                 WindowManager.LayoutParams.FLAG_SHOW_WHEN_LOCKED
                         | WindowManager.LayoutParams.FLAG_DISMISS_KEYGUARD
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE

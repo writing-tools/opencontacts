@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.net.Uri;
@@ -17,6 +16,7 @@ import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -34,7 +34,12 @@ import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
+import static android.Manifest.permission.CALL_PHONE;
+import static android.Manifest.permission.READ_CALL_LOG;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.Intent.ACTION_VIEW;
+import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -47,6 +52,7 @@ public class AndroidUtils {
     public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
+    public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -109,7 +115,7 @@ public class AndroidUtils {
     public static Intent getCallIntent(String number, Context context) {
         Uri numberUri = Uri.parse("tel:" + number);
         Intent callIntent;
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -232,29 +238,42 @@ public class AndroidUtils {
                         .setTitle(R.string.enable_draw_over_apps)
                         .setMessage(R.string.enable_draw_over_apps_detail)
                         .setNeutralButton(R.string.okay, null)
-                        .setOnDismissListener(dialog -> activity.startActivity(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName()))))
+                        .setOnDismissListener(dialog -> activity.startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())), DRAW_OVERLAY_PERMISSION_RESULT))
                         .create()
                         .show();
+                return;
             }
-            if(activity.checkSelfPermission(Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED){
+            if(activity.checkSelfPermission(READ_CALL_LOG) != PERMISSION_GRANTED || activity.checkSelfPermission(READ_PHONE_STATE) != PERMISSION_GRANTED || activity.checkSelfPermission(CALL_PHONE) != PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
                         .setTitle(R.string.grant_phone_permission)
                         .setMessage(R.string.grant_phone_permission_detail)
                         .setNeutralButton(R.string.okay, null)
-                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.READ_CALL_LOG}, 123))
+                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{READ_CALL_LOG, READ_PHONE_STATE, CALL_PHONE}, 123))
                         .create()
                         .show();
+                return;
             }
-            if(activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
+            if(activity.checkSelfPermission(WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
                         .setTitle(R.string.grant_storage_permission)
                         .setMessage(R.string.grant_storage_permisson_detail)
                         .setNeutralButton(R.string.okay, null)
-                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 123))
+                        .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 123))
                         .create()
                         .show();
+                return;
             }
         }
+    }
+
+    public static boolean doesNotHaveAllPermissions(Context context) {
+        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+            return false;
+        return ContextCompat.checkSelfPermission(context, WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(context, READ_CALL_LOG) != PERMISSION_GRANTED
+                || ContextCompat.checkSelfPermission(context, READ_PHONE_STATE) != PERMISSION_GRANTED
+                || !Settings.canDrawOverlays(context);
+
     }
 
     public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {

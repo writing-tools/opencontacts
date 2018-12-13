@@ -30,6 +30,8 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -163,7 +165,7 @@ public class MainActivity extends AppBaseActivity {
             dialerFragment.setNumber(number);
             viewPager.setCurrentItem(DIALER_TAB_INDEX);
         });
-        final List<SelectableTab> tabs = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
+        final List<SelectableTab> fragments = new ArrayList<>(Arrays.asList(callLogFragment, contactsFragment, dialerFragment));
         final List<String> tabTitles = Arrays.asList(getString(R.string.calllog), getString(R.string.contacts), "");
 
         FragmentPagerAdapter fragmentPagerAdapter = new FragmentPagerAdapter(getSupportFragmentManager()) {
@@ -179,7 +181,7 @@ public class MainActivity extends AppBaseActivity {
 
             @Override
             public Fragment getItem(int position) {
-                return (Fragment) tabs.get(position);
+                return (Fragment) fragments.get(position);
             }
         };
         viewPager.setAdapter(fragmentPagerAdapter);
@@ -187,16 +189,28 @@ public class MainActivity extends AppBaseActivity {
 
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
-        tabLayout.getTabAt(2).setIcon(R.drawable.dial_pad);
+
+        tabLayout.getTabAt(DIALER_TAB_INDEX).setIcon(R.drawable.dial_pad);
+
+        int tabSelectedColor = getThemeAttributeColor(android.R.attr.textColorPrimary, MainActivity.this);
+        int tabUnSelectedColor = getThemeAttributeColor(android.R.attr.textColorSecondary, MainActivity.this);
+        setColorFilterUsingColor(tabLayout.getTabAt(DIALER_TAB_INDEX).getIcon(), tabUnSelectedColor);
+
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                tabs.get(tab.getPosition()).onSelect();
+                fragments.get(tab.getPosition()).onSelect();
+                if(tab.getPosition() == DIALER_TAB_INDEX){
+                    setColorFilterUsingColor(tab.getIcon(), tabSelectedColor);
+                }
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-                tabs.get(tab.getPosition()).onUnSelect();
+                fragments.get(tab.getPosition()).onUnSelect();
+                if(tab.getPosition() == DIALER_TAB_INDEX){
+                    setColorFilterUsingColor(tab.getIcon(), tabUnSelectedColor);
+                }
             }
 
             @Override

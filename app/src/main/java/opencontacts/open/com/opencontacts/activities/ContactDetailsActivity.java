@@ -1,6 +1,5 @@
 package opencontacts.open.com.opencontacts.activities;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -8,7 +7,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageButton;
 import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
@@ -124,21 +122,15 @@ public class ContactDetailsActivity extends AppBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.contact_details_menu, menu);
-        menu.findItem(R.id.image_button_export_to_contacts_app).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                exportToContactsApp();
-                return true;
-            }
+        menu.findItem(R.id.image_button_export_to_contacts_app).setOnMenuItemClickListener(item -> {
+            exportToContactsApp();
+            return true;
         });
-        menu.findItem(R.id.image_button_edit_contact).setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                Intent editContact = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
-                editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, contact);
-                ContactDetailsActivity.this.startActivity(editContact);
-                return true;
-            }
+        menu.findItem(R.id.image_button_edit_contact).setOnMenuItemClickListener(item -> {
+            Intent editContact = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
+            editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, contact);
+            ContactDetailsActivity.this.startActivity(editContact);
+            return true;
         });
         menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(item -> {
             new AlertDialog.Builder(ContactDetailsActivity.this)

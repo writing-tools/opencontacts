@@ -3,11 +3,12 @@ package opencontacts.open.com.opencontacts.utils;
 import android.Manifest;
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Point;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Handler;
@@ -20,6 +21,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -211,21 +213,22 @@ public class AndroidUtils {
 
     public static void setBackButtonInToolBar(Toolbar toolBar, final AppCompatActivity appCompatActivity){
         toolBar.setNavigationOnClickListener(v -> appCompatActivity.onBackPressed());
+        Drawable navigationIcon = toolBar.getNavigationIcon();
+        if(navigationIcon == null)
+            return;
+        setColorFilterUsingColorAttribute(navigationIcon, android.R.attr.textColorPrimary, appCompatActivity);
     }
 
     public static android.app.AlertDialog getAlertDialogToAddContact(final String phoneNumber, final Context context){
         return new android.app.AlertDialog.Builder(context)
-                .setItems(new CharSequence[]{context.getString(R.string.create_new_contact), context.getString(R.string.add_to_existing)}, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        switch (which){
-                            case 0:
-                                context.startActivity(AndroidUtils.getIntentToAddContact(phoneNumber, context));
-                                break;
-                            case 1:
-                                context.startActivity(AndroidUtils.getIntentToLaunchAddToContactActivity(phoneNumber, context));
-                                break;
-                        }
+                .setItems(new CharSequence[]{context.getString(R.string.create_new_contact), context.getString(R.string.add_to_existing)}, (dialog, which) -> {
+                    switch (which){
+                        case 0:
+                            context.startActivity(AndroidUtils.getIntentToAddContact(phoneNumber, context));
+                            break;
+                        case 1:
+                            context.startActivity(AndroidUtils.getIntentToLaunchAddToContactActivity(phoneNumber, context));
+                            break;
                     }
                 })
                 .create();
@@ -322,5 +325,21 @@ public class AndroidUtils {
                 .edit()
                 .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
                 .apply();
+    }
+
+    public static int getThemeAttributeColor(int attribute, Context context){
+        TypedValue typedValue = new TypedValue();
+        context.getTheme().resolveAttribute(attribute, typedValue, true);
+        if(typedValue.resourceId == 0)
+            return typedValue.data;
+        return ContextCompat.getColor(context, typedValue.resourceId);
+    }
+
+    public static void setColorFilterUsingColorAttribute(Drawable drawable, int attribute, Context context){
+        drawable.setColorFilter(getThemeAttributeColor(attribute, context), PorterDuff.Mode.SRC_IN);
+    }
+
+    public static void setColorFilterUsingColor(Drawable drawable, int color){
+        drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }
 }

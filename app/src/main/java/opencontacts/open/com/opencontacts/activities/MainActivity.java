@@ -1,11 +1,14 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatEditText;
@@ -190,18 +193,15 @@ public class MainActivity extends AppBaseActivity {
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         tabLayout.setupWithViewPager(viewPager);
 
-        tabLayout.getTabAt(DIALER_TAB_INDEX).setIcon(R.drawable.dial_pad);
-
-        int tabSelectedColor = getThemeAttributeColor(android.R.attr.textColorPrimary, MainActivity.this);
-        int tabUnSelectedColor = getThemeAttributeColor(android.R.attr.textColorSecondary, MainActivity.this);
-        setColorFilterUsingColor(tabLayout.getTabAt(DIALER_TAB_INDEX).getIcon(), tabUnSelectedColor);
+        Pair<Drawable, Drawable> dialerTabDrawables = getDialerTabDrawables();
+        tabLayout.getTabAt(DIALER_TAB_INDEX).setIcon(dialerTabDrawables.first);
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 fragments.get(tab.getPosition()).onSelect();
                 if(tab.getPosition() == DIALER_TAB_INDEX){
-                    setColorFilterUsingColor(tab.getIcon(), tabSelectedColor);
+                    tab.setIcon(dialerTabDrawables.second);
                 }
             }
 
@@ -209,7 +209,7 @@ public class MainActivity extends AppBaseActivity {
             public void onTabUnselected(TabLayout.Tab tab) {
                 fragments.get(tab.getPosition()).onUnSelect();
                 if(tab.getPosition() == DIALER_TAB_INDEX){
-                    setColorFilterUsingColor(tab.getIcon(), tabUnSelectedColor);
+                    tab.setIcon(dialerTabDrawables.first);
                 }
             }
 
@@ -220,6 +220,15 @@ public class MainActivity extends AppBaseActivity {
         });
     }
 
+    private Pair<Drawable, Drawable> getDialerTabDrawables(){
+        int tabSelectedColor = getThemeAttributeColor(android.R.attr.textColorPrimary, MainActivity.this);
+        int tabUnSelectedColor = getThemeAttributeColor(android.R.attr.textColorSecondary, MainActivity.this);
+        Drawable dialpadIconOnUnSelect = ContextCompat.getDrawable(this, R.drawable.dial_pad).mutate();
+        Drawable dialpadIconOnSelect = ContextCompat.getDrawable(this, R.drawable.dial_pad).mutate();
+        setColorFilterUsingColor(dialpadIconOnSelect, tabSelectedColor);
+        setColorFilterUsingColor(dialpadIconOnUnSelect, tabUnSelectedColor);
+        return Pair.create(dialpadIconOnUnSelect, dialpadIconOnSelect);
+    }
     public void collapseSearchView(){
         searchView.onActionViewCollapsed();
     }

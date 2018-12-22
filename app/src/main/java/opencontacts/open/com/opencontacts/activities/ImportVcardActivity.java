@@ -78,7 +78,7 @@ public class ImportVcardActivity extends AppCompatActivity {
                     else
                         requestPermission();
                 })
-                .setOnDismissListener(dialog -> finish())
+                .setOnCancelListener(x -> finish())
                 .show();
     }
 

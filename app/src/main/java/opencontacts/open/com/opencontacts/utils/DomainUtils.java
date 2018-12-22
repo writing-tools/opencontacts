@@ -10,7 +10,9 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 import ezvcard.VCard;
@@ -22,6 +24,8 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
+import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
+
 /**
  * Created by sultanm on 7/22/17.
  */
@@ -31,6 +35,15 @@ public class DomainUtils {
     public static final Pattern NON_NUMERIC_MATCHING_PATTERN = Pattern.compile("[^0-9]");
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
     public static final int NUMBER_9 = 9;
+
+    static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
+    static {
+        characterToIntegerMappingForKeyboardLayout = new HashMap();
+        int[] numericsMappingForAlphabetsInNumberKeypad = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
+        for(int i=0, charCodeForA = 65; i<26; i++){
+            characterToIntegerMappingForKeyboardLayout.put((char) (charCodeForA + i), numericsMappingForAlphabetsInNumberKeypad[i]);
+        }
+    }
 
     public static void exportAllContacts(Context context) throws IOException {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
@@ -80,4 +93,18 @@ public class DomainUtils {
         return allNumericPhoneNumber.length() > NUMBER_9 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_9) : allNumericPhoneNumber;
     }
 
+    public static String getNumericKeyPadNumberForString(String string){
+        String nonAccentedText = replaceAccentedCharactersWithEnglish(string);
+        StringBuffer numericString = new StringBuffer();
+        for(char c: nonAccentedText.toCharArray()){
+            if(Character.isSpaceChar(c)){
+                numericString.append(" ");
+                continue;
+            }
+            Integer numericCode = characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c));
+            if(numericCode != null)
+                numericString.append(characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c)));
+        }
+        return numericString.toString();
+    }
 }

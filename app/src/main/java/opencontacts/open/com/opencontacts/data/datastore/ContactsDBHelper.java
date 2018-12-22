@@ -5,9 +5,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import ezvcard.parameter.TelephoneType;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
+import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
@@ -48,7 +50,7 @@ class ContactsDBHelper {
     static void replacePhoneNumbersInDB(Contact dbContact, List<String> phoneNumbers, String primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         for(String phoneNumber : phoneNumbers){
-            new PhoneNumber(phoneNumber, dbContact, primaryPhoneNumber.equals(phoneNumber)).save();
+            new PhoneNumber(phoneNumber, dbContact, primaryPhoneNumber.equals(phoneNumber), VCardUtils.telephoneTypeToIntMap.get(TelephoneType.CELL)).save();
         }
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }

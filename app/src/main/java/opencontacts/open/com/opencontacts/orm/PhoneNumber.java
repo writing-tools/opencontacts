@@ -13,14 +13,15 @@ public class PhoneNumber extends SugarRecord{
     public Contact contact;
     public boolean isPrimaryNumber = false;
     public String numericPhoneNumber; // for comparision during calls
-
+    public int type;
     public PhoneNumber(){
 
     }
-    public PhoneNumber(String mobileNumber, Contact contact, boolean isPrimaryNumber) {
+    public PhoneNumber(String mobileNumber, Contact contact, boolean isPrimaryNumber, int type) {
         this.phoneNumber = mobileNumber;
         this.contact = contact;
         this.isPrimaryNumber = isPrimaryNumber;
         this.numericPhoneNumber = DomainUtils.getAllNumericPhoneNumber(mobileNumber);
+        this.type = type;
     }
 }

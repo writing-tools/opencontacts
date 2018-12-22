@@ -5,6 +5,8 @@ import java.util.List;
 
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
+
 /**
  * Created by sultanm on 7/22/17.
  */
@@ -57,7 +59,7 @@ public class Contact implements Serializable{
         searchStringBuffer.append(name).append(' ');
         for(String phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber).append(' ');
-        searchStringBuffer.append(Common.getNumericKeyPadNumberForString(name));
+        searchStringBuffer.append(getNumericKeyPadNumberForString(name));
         return searchStringBuffer.toString();
     }
 

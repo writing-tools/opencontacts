@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
@@ -28,6 +29,8 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+
 /**
  * Created by sultanm on 7/31/17.
  */
@@ -37,11 +40,16 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     Context context;
     private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
     ArrayAdapter<CallLogEntry> adapter;
+    private boolean isWhatsappIntegrationEnabled;
+    //android has weakref to this listener and gets garbage collected hence we should have it here.
+    private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
+
     public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
         super(context);
         this.context = context;
         this.UNKNOWN = context.getString(R.string.unknown);
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
+        isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
 
         List<CallLogEntry> callLogEntries = new ArrayList<>();
 
@@ -106,7 +114,12 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 ((TextView) reusableView.findViewById(R.id.textview_full_name)).setText(callLogEntry.getContactId() == -1 ? UNKNOWN : callLogEntry.getName());
                 ((TextView) reusableView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
                 (reusableView.findViewById(R.id.button_message)).setOnClickListener(messageContact);
-                (reusableView.findViewById(R.id.button_whatsapp)).setOnClickListener(whatsappContact);
+                View whatsappIcon = reusableView.findViewById(R.id.button_whatsapp);
+                if(isWhatsappIntegrationEnabled){
+                    whatsappIcon.setOnClickListener(whatsappContact);
+                    whatsappIcon.setVisibility(VISIBLE);
+                }
+                else whatsappIcon.setVisibility(INVISIBLE);
                 if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
                     ((ImageView)reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
                 else if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))
@@ -139,6 +152,13 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.setAdapter(adapter);
         CallLogDataStore.addDataChangeListener(this);
         reload();
+        //android has weakref to this listener and gets garbage collected hence we should have it here.
+        sharedPreferenceChangeListener = (sharedPreferences, key) -> {
+            if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)) return;
+            isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+            adapter.notifyDataSetChanged();
+        };
+        AndroidUtils.setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
     }
 
     @Override

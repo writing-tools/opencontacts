@@ -51,7 +51,7 @@
         android:title="@string/delete_all_contacts"
         app:showAsAction="ifRoom" />
     <item
-        android:id="@+id/action_whatsapp_country_code"
-        android:title="@string/default_whatsapp_country_code"
+        android:id="@+id/action_whatsapp_preferences"
+        android:title="@string/whatsapp_preferences"
         app:showAsAction="never" />
 </menu>

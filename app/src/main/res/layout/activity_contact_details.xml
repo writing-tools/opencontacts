@@ -24,7 +24,7 @@
         android:id="@+id/about_star"
         android:gravity="center"
         android:layout_height="wrap_content"
-        android:text="@string/learn_more_about_star" />
+        android:text="@string/enable_whatsapp_integration" />
 
     <ListView
         android:id="@+id/listview_phone_numbers"

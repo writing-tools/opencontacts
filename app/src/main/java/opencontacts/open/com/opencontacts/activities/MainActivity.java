@@ -133,7 +133,7 @@ public class MainActivity extends AppBaseActivity {
             recreate();
             return true;
         });
-        menu.findItem(R.id.action_whatsapp_country_code).setOnMenuItemClickListener((MenuItem item) -> {
+        menu.findItem(R.id.action_whatsapp_preferences).setOnMenuItemClickListener((MenuItem item) -> {
             AppCompatEditText countryCodeEditText = new AppCompatEditText(MainActivity.this);
             countryCodeEditText.setText(AndroidUtils.getDefaultWhatsAppCountryCode(MainActivity.this));
             countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
@@ -141,7 +141,8 @@ public class MainActivity extends AppBaseActivity {
                     .setView(countryCodeEditText)
                     .setTitle(R.string.input_country_calling_code_title)
                     .setMessage(R.string.input_country_calling_code_description)
-                    .setPositiveButton(R.string.okay, (dialogInterface, i) -> AndroidUtils.saveDefaultWhatsAppCountryCode(countryCodeEditText.getText().toString(), MainActivity.this))
+                    .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> AndroidUtils.saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(countryCodeEditText.getText().toString(), MainActivity.this))
+                    .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> AndroidUtils.disableWhatsappIntegration(MainActivity.this))
                     .show();
             return true;
         });

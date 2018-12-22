@@ -29,7 +29,6 @@
     <string name="more_apps">Find more apps</string>
     <string name="more_apps_link">https://gitlab.com/sultanahamer https://github.com/sultanahamer/</string>
     <string name="about_primary_number">Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.\n\nBy default first number in list would be primary</string>
-    <string name="learn_more_about_star">Tap to learn more about the star.</string>
     <string name="invalid_number">Invalid number</string>
     <string name="import_contacts">Import contacts</string>
     <string name="import_contacts_help_text">To import contacts into this app, goto default contacts app, export contacts. Try opening a file explorer and tap on exported file. In the list of open with apps, tap on open contacts, Open contacts would import all the contacts</string>
@@ -88,6 +87,9 @@
     <string name="calllog">Call log</string>
     <string name="contacts">Contacts</string>
     <string name="storage_not_mounted">Storage is not mounted</string>
-    <string name="whatsapp">Whatsapp</string>
+    <string name="whatsapp_integration">Whatsapp Integration</string>
     <string name="whatsapp_help_text">Whatsapp requires mobile number including country code having \'+\' in it. In case your whatsapp number is 9876543210, you need to add your country code before it so that whatsapp can recognize it while trying to open conversation from OpenContacts. In case your country code is +91, then the complete number should look like +919876543210.\n\nIn menu of OpenContacts, there is a new entry to enter default whatsapp country code. While entering country code, do not forget to enter + in it. In case any of numbers present in OpenContacts is not having country code, this country code would be appended by default. In case of international whatsapp contacts, you would need to manually edit that number to include the correct country code</string>
+    <string name="enable_whatsapp_integration">Enable Whatsapp Integration</string>
+    <string name="disable_whatsapp_integration">Disable whatsapp integration</string>
+    <string name="whatsapp_preferences">Whatsapp Preferences</string>
 </resources>

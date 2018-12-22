@@ -54,6 +54,7 @@ public class AndroidUtils {
     public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
+    public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     private static Handler mainThreadHandler;
 
@@ -320,10 +321,11 @@ public class AndroidUtils {
         context.getTheme().applyStyle(AndroidUtils.getCurrentTheme(context), true);
     }
 
-    public static void saveDefaultWhatsAppCountryCode(String selectedCountryCodeWithPlus, Context context) {
+    public static void saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(String selectedCountryCodeWithPlus, Context context) {
         getAppsSharedPreferences(context)
                 .edit()
                 .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
+                .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, true)
                 .apply();
     }
 
@@ -341,5 +343,22 @@ public class AndroidUtils {
 
     public static void setColorFilterUsingColor(Drawable drawable, int color){
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
+    }
+
+    public static void disableWhatsappIntegration(Context  context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
+                .apply();
+    }
+
+    public static boolean isWhatsappIntegrationEnabled(Context  context) {
+        return getAppsSharedPreferences(context)
+                .getBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false);
+
+    }
+
+    public static void setSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener, Context context) {
+        getAppsSharedPreferences(context).registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
 }

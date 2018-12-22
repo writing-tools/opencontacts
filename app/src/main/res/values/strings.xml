@@ -29,6 +29,7 @@
     <string name="more_apps">Find more apps</string>
     <string name="more_apps_link">https://gitlab.com/sultanahamer https://github.com/sultanahamer/</string>
     <string name="about_primary_number">Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.\n\nBy default first number in list would be primary</string>
+    <string name="learn_more_about_star">Tap to learn more about the star.</string>
     <string name="invalid_number">Invalid number</string>
     <string name="import_contacts">Import contacts</string>
     <string name="import_contacts_help_text">To import contacts into this app, goto default contacts app, export contacts. Try opening a file explorer and tap on exported file. In the list of open with apps, tap on open contacts, Open contacts would import all the contacts</string>

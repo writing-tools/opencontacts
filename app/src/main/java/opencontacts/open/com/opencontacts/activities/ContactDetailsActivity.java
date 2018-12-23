@@ -18,24 +18,22 @@ import android.widget.Toast;
 import com.github.underscore.U;
 
 import java.util.List;
-import java.util.Map;
 
-import ezvcard.parameter.TelephoneType;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
-import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeToTranslatedTextMap;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 
 
 public class ContactDetailsActivity extends AppBaseActivity {
     private long contactId;
     private Contact contact;
+    private VCardData vcardData;
+
     private ArrayAdapter<String> phoneNumbersListArrayAdapter;
 
     private View.OnClickListener callContact = v -> AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
@@ -58,8 +56,6 @@ public class ContactDetailsActivity extends AppBaseActivity {
         Toast.makeText(ContactDetailsActivity.this, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     };
-    private VCardData vcardData;
-
     private String getSelectedMobileNumber(View v){
         return v.getTag().toString();
     }
@@ -99,26 +95,24 @@ public class ContactDetailsActivity extends AppBaseActivity {
         ListView phoneNumbersListView = findViewById(R.id.listview_phone_numbers);
         final List<PhoneNumber> mobileNumbers = contact.phoneNumbers;
 
-        String defaultPhoneNumberType = getMobileNumberTypeToTranslatedTextMap(ContactDetailsActivity.this).get(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.CELL));
         phoneNumbersListArrayAdapter = new ArrayAdapter<String>(this, R.layout.contact_details_row, U.map(mobileNumbers, arg -> arg.phoneNumber)) {
             private LayoutInflater layoutInflater = LayoutInflater.from(getContext());
-            private Map<Integer, String> mobileNumberTypeToTranslatedTextMap = getMobileNumberTypeToTranslatedTextMap(getContext());
             @NonNull
             @Override
             public View getView(int position, View convertView, ViewGroup parent) {
                 if (convertView == null)
                     convertView = layoutInflater.inflate(R.layout.contact_details_row, parent, false);
-                String mobileNumber = mobileNumbers.get(position).phoneNumber;
-                ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(mobileNumber);
+                PhoneNumber phoneNumber = mobileNumbers.get(position);
+                ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(phoneNumber.phoneNumber);
                 AppCompatImageButton primaryNumberToggleButton = convertView.findViewById(R.id.button_primary_number);
-                primaryNumberToggleButton.setImageResource(mobileNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
+                primaryNumberToggleButton.setImageResource(phoneNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
                 primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
                 convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
                 convertView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
-                ((AppCompatTextView)convertView.findViewById(R.id.phone_number_type)).setText(getOrDefault(mobileNumberTypeToTranslatedTextMap, mobileNumbers.get(position).type, defaultPhoneNumberType));
+                ((AppCompatTextView)convertView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(mobileNumbers.get(position).type,ContactDetailsActivity.this));
                 convertView.setOnClickListener(callContact);
                 convertView.setOnLongClickListener(copyPhoneNumberToClipboard);
-                convertView.setTag(mobileNumber);
+                convertView.setTag(phoneNumber.phoneNumber);
                 return convertView;
             }
         };

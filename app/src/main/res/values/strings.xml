@@ -99,4 +99,10 @@
     <string name="work">Work</string>
     <string name="fax">Fax</string>
     <string name="home">Home</string>
+    <string-array name="phone_number_types">
+        <item>Mobile</item>
+        <item>Work</item>
+        <item>Home</item>
+        <item>Fax</item>
+    </string-array>
 </resources>

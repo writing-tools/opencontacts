@@ -1,10 +1,9 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
-import android.support.v7.app.ActionBar;
-import android.text.InputType;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -13,16 +12,16 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
-import static android.view.ViewGroup.LayoutParams.*;
+import static opencontacts.open.com.opencontacts.utils.Common.times;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
@@ -33,13 +32,15 @@ public class EditContactActivity extends AppBaseActivity {
     EditText editText_lastName;
     EditText editText_mobileNumber;
     private boolean addingNewContact = false;
+    private String[] phoneNumberTypesInSpinner;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         editText_firstName = findViewById(R.id.editFirstName);
         editText_lastName = findViewById(R.id.editLastName);
         editText_mobileNumber = findViewById(R.id.editPhoneNumber);
-
+        phoneNumberTypesInSpinner = getResources().getStringArray(R.array.phone_number_types);
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
             addingNewContact = true;
@@ -66,12 +67,21 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillFieldsFromContactDetails() {
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
-        editText_mobileNumber.setText(contact.phoneNumbers.get(0).phoneNumber);
-        List<String> phoneNumbers = U.map(contact.phoneNumbers, arg -> arg.phoneNumber);
-        if(phoneNumbers.size() > 1)
-            for(int i = 1, totalNumbers = phoneNumbers.size(); i < totalNumbers; i++){
-                addOneMorePhoneNumberView(null).setText(phoneNumbers.get(i));
-            }
+        PhoneNumber firstPhoneNumber = contact.phoneNumbers.get(0);
+        editText_mobileNumber.setText(firstPhoneNumber.phoneNumber);
+        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(firstPhoneNumber.type, EditContactActivity.this);
+        int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
+        ((AppCompatSpinner)findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
+
+        U.forEach(U.rest(contact.phoneNumbers), this::addPhoneNumberViewFor);
+    }
+
+    private void addPhoneNumberViewFor(PhoneNumber phoneNumber) {
+        LinearLayout linearLayout = addOneMorePhoneNumberView(null);
+        ((AppCompatEditText)linearLayout.findViewById(R.id.editPhoneNumber)).setText(phoneNumber.phoneNumber);
+        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(phoneNumber.type, EditContactActivity.this);
+        int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
+        ((AppCompatSpinner)linearLayout.findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
     }
 
     public void saveContact(View view) {
@@ -104,29 +114,21 @@ public class EditContactActivity extends AppBaseActivity {
     private List<PhoneNumber> getPhoneNumbersFromView() {
         LinearLayout phoneNumbersContainer = findViewById(R.id.phonenumbers);
         int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
-        String extraPhoneNumber;
-        ArrayList<String> phoneNumbers = new ArrayList<>(numberOfPhoneNumbers);
-        for(int i=0; i<numberOfPhoneNumbers; i++){
-            extraPhoneNumber = String.valueOf(((EditText) phoneNumbersContainer.getChildAt(i)).getText()).trim();
-            if(isEmpty(extraPhoneNumber))
-                continue;
-            phoneNumbers.add(extraPhoneNumber);
-        }
-        return U.map(phoneNumbers, PhoneNumber::new);
+        return U.chain(times(numberOfPhoneNumbers, phoneNumbersContainer::getChildAt))
+                .map(this::createPhoneNumber)
+                .value();
     }
 
-    public EditText addOneMorePhoneNumberView(View view){
+    private PhoneNumber createPhoneNumber(View phoneNumberHolder) {
+        String phoneNumber = ((AppCompatEditText) (phoneNumberHolder.findViewById(R.id.editPhoneNumber))).getText().toString();
+        String selectedPhoneNumberTypeInSpinner = (String) ((AppCompatSpinner) phoneNumberHolder.findViewById(R.id.phone_number_type)).getSelectedItem();
+        return new PhoneNumber(phoneNumber, DomainUtils.getMobileNumberType(selectedPhoneNumberTypeInSpinner, this));
+    }
+
+    public LinearLayout addOneMorePhoneNumberView(View view){
         LinearLayout phoneNumbers_linearLayout = findViewById(R.id.phonenumbers);
-        EditText oneMorePhoneNumberField = new EditText(this);
-        oneMorePhoneNumberField.setLayoutParams(new ActionBar.LayoutParams(WRAP_CONTENT, WRAP_CONTENT));
-        oneMorePhoneNumberField.setInputType(InputType.TYPE_CLASS_PHONE);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-            oneMorePhoneNumberField.setBackground((findViewById(R.id.editPhoneNumber)).getBackground());
-        }
-        else
-            oneMorePhoneNumberField.setBackgroundDrawable((findViewById(R.id.editPhoneNumber)).getBackground());
-        oneMorePhoneNumberField.setHint(R.string.phone_number);
-        phoneNumbers_linearLayout.addView(oneMorePhoneNumberField);
-        return oneMorePhoneNumberField;
+        LinearLayout inflatedLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_edit_phone_number_and_type, phoneNumbers_linearLayout, false);
+        phoneNumbers_linearLayout.addView(inflatedLayout);
+        return inflatedLayout;
     }
 }

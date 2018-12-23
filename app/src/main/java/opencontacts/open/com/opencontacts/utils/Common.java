@@ -2,6 +2,8 @@ package opencontacts.open.com.opencontacts.utils;
 
 import java.text.Normalizer;
 import java.text.NumberFormat;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -27,4 +29,17 @@ public class Common {
         V v = map.get(key);
         return (v == null)? defaultValue : v;
     }
+
+    public static <T> List<T> times(int count, TimesFunction<T> timesFunction){
+        ArrayList<T> list = new ArrayList<>(count);
+        for(int i=0; i<count; i++){
+            list.add(timesFunction.apply(i));
+        }
+        return list;
+    }
+
+    public interface TimesFunction<T>{
+        T apply(int count);
+    }
+
 }

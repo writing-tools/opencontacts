@@ -63,12 +63,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:orientation="vertical">
-                <EditText
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:inputType="phone"
-                    android:id="@+id/editPhoneNumber"
-                    android:hint="Phone Number" />
+                <include layout="@layout/layout_edit_phone_number_and_type" />
             </LinearLayout>
 
             <Button

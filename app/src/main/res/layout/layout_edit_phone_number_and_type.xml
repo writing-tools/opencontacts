@@ -1,0 +1,18 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent">
+    <android.support.v7.widget.AppCompatEditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:inputType="phone"
+        android:id="@+id/editPhoneNumber"
+        android:hint="Phone Number" />
+
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/phone_number_type"
+        android:entries="@array/phone_number_types"
+        android:spinnerMode="dropdown"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"></android.support.v7.widget.AppCompatSpinner>
+</LinearLayout>

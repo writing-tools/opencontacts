@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.Environment;
 import android.support.annotation.Nullable;
 
+import com.github.underscore.U;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -25,6 +27,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
+import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.intToTelephoneTypeMap;
 
@@ -40,6 +43,9 @@ public class DomainUtils {
 
     static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
     static Map<Integer, String> mobileNumberTypeToTranslatedText;
+    static Map<String, Integer> translatedTextToMobileNumberType;
+    private static String defaultPhoneNumberType;
+
     static {
         characterToIntegerMappingForKeyboardLayout = new HashMap();
         int[] numericsMappingForAlphabetsInNumberKeypad = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
@@ -120,5 +126,15 @@ public class DomainUtils {
         mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.FAX), context.getString(R.string.fax));
         mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.HOME), context.getString(R.string.home));
         return mobileNumberTypeToTranslatedText;
+    }
+
+    public static String getMobileNumberTypeTranslatedText(int type, Context context){
+        if(defaultPhoneNumberType == null) defaultPhoneNumberType = getMobileNumberTypeToTranslatedTextMap(context).get(VCardUtils.defaultPhoneNumberType);
+        return getOrDefault(getMobileNumberTypeToTranslatedTextMap(context), type, defaultPhoneNumberType);
+    }
+
+    public static int getMobileNumberType(String translatedText, Context context){
+        if(translatedTextToMobileNumberType == null) translatedTextToMobileNumberType = U.toMap(U.invert(getMobileNumberTypeToTranslatedTextMap(context)));
+        return getOrDefault(translatedTextToMobileNumberType, translatedText, VCardUtils.defaultPhoneNumberType);
     }
 }

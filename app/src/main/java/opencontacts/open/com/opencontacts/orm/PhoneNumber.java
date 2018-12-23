@@ -5,6 +5,7 @@ import com.orm.SugarRecord;
 import java.io.Serializable;
 
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -29,5 +30,10 @@ public class PhoneNumber extends SugarRecord implements Serializable {
 
     public PhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
+        this.type = VCardUtils.defaultPhoneNumberType;
+    }
+    public PhoneNumber(String phoneNumber, int type){
+        this.phoneNumber = phoneNumber;
+        this.type = type;
     }
 }

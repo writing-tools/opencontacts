@@ -95,4 +95,8 @@
     <string name="whatsapp_preferences">Whatsapp Preferences</string>
     <string name="do_you_want_to_import">Do you want to import</string>
     <string name="R.string.noname">NONAME</string>
+    <string name="cell">Mobile</string>
+    <string name="work">Work</string>
+    <string name="fax">Fax</string>
+    <string name="home">Home</string>
 </resources>

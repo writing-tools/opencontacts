@@ -111,12 +111,12 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onCallClicked(Contact contact) {
-        AndroidUtils.call(contact.primaryPhoneNumber, context);
+        AndroidUtils.call(contact.primaryPhoneNumber.phoneNumber, context);
     }
 
     @Override
     public void onMessageClicked(Contact contact) {
-        AndroidUtils.message(contact.primaryPhoneNumber, context);
+        AndroidUtils.message(contact.primaryPhoneNumber.phoneNumber, context);
     }
 
     @Override
@@ -126,6 +126,6 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onWhatsappClicked(Contact contact) {
-        AndroidUtils.whatsapp(contact.primaryPhoneNumber, context);
+        AndroidUtils.whatsapp(contact.primaryPhoneNumber.phoneNumber, context);
     }
 }

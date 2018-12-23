@@ -24,6 +24,7 @@ import opencontacts.open.com.opencontacts.ContactsListFilter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.activities.EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER;
@@ -57,15 +58,12 @@ public class AddToContactActivity extends AppBaseActivity {
             }
         };
         contactsListView.setAdapter(adapter);
-        contactsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Contact tempContact = DomainUtils.getACopyOf(adapter.getItem(position));
-                tempContact.phoneNumbers.add(phoneNumber);
-                Intent editContact = new Intent(AddToContactActivity.this, EditContactActivity.class);
-                editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, tempContact);
-                AddToContactActivity.this.startActivity(editContact);
-            }
+        contactsListView.setOnItemClickListener((parent, view, position, id) -> {
+            Contact tempContact = DomainUtils.getACopyOf(adapter.getItem(position));
+            tempContact.phoneNumbers.add(new PhoneNumber(phoneNumber));
+            Intent editContact = new Intent(AddToContactActivity.this, EditContactActivity.class);
+            editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, tempContact);
+            AddToContactActivity.this.startActivity(editContact);
         });
         ((LinearLayout)findViewById(R.id.parent_linear_layout)).addView(contactsListView);
     }

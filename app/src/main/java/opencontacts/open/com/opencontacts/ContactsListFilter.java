@@ -66,7 +66,7 @@ public class ContactsListFilter extends Filter{
         ArrayList<Contact> filteredContacts = new ArrayList<>();
         for (Contact contact : contacts) {
             if(contact.t9Text == null){
-                contact.t9Text = contact.toString().toUpperCase();
+                contact.getT9Text();
             }
             if (contact.t9Text.contains(searchText.toString().toUpperCase())) {
                 filteredContacts.add(contact);

@@ -13,6 +13,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
+import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
@@ -33,7 +34,7 @@ public class ContactsDataStore {
         return new ArrayList<>(contacts);
     }
 
-    public static void addContact(String firstName, String lastName, List<String> phoneNumbers, Context context) {
+    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, Context context) {
         opencontacts.open.com.opencontacts.orm.Contact dbContact = new opencontacts.open.com.opencontacts.orm.Contact(firstName, lastName);
         dbContact.save();
         ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, phoneNumbers.get(0));
@@ -150,6 +151,10 @@ public class ContactsDataStore {
             refreshStore();
             getMainThreadHandler().post(() -> Toast.makeText(context, R.string.deleted_all_contacts, Toast.LENGTH_LONG).show());
         });
+    }
+
+    public static VCardData getVCardData(long contactId){
+        return ContactsDBHelper.getVCard(contactId);
     }
 
     public static void init() {

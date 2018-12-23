@@ -11,12 +11,15 @@ import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static android.text.TextUtils.isEmpty;
 import static android.view.ViewGroup.LayoutParams.*;
@@ -63,8 +66,8 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillFieldsFromContactDetails() {
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
-        editText_mobileNumber.setText(contact.phoneNumbers.get(0));
-        List<String> phoneNumbers = contact.phoneNumbers;
+        editText_mobileNumber.setText(contact.phoneNumbers.get(0).phoneNumber);
+        List<String> phoneNumbers = U.map(contact.phoneNumbers, arg -> arg.phoneNumber);
         if(phoneNumbers.size() > 1)
             for(int i = 1, totalNumbers = phoneNumbers.size(); i < totalNumbers; i++){
                 addOneMorePhoneNumberView(null).setText(phoneNumbers.get(i));
@@ -98,7 +101,7 @@ public class EditContactActivity extends AppBaseActivity {
         return getPhoneNumbersFromView().isEmpty();
     }
 
-    private List<String> getPhoneNumbersFromView() {
+    private List<PhoneNumber> getPhoneNumbersFromView() {
         LinearLayout phoneNumbersContainer = findViewById(R.id.phonenumbers);
         int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
         String extraPhoneNumber;
@@ -109,7 +112,7 @@ public class EditContactActivity extends AppBaseActivity {
                 continue;
             phoneNumbers.add(extraPhoneNumber);
         }
-        return phoneNumbers;
+        return U.map(phoneNumbers, PhoneNumber::new);
     }
 
     public EditText addOneMorePhoneNumberView(View view){

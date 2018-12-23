@@ -8,6 +8,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
@@ -82,8 +83,8 @@ public class CallLogDataStore {
                 if(callLogEntriesToWorkWith.isEmpty())
                     return;
                 int numberOfEntriesUpdated = 0;
-                for(String phoneNumber : newContact.phoneNumbers) {
-                    String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
+                for(PhoneNumber phoneNumber : newContact.phoneNumbers) {
+                    String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber.phoneNumber);
                     if (searchablePhoneNumber == null)
                         continue;
                     for (CallLogEntry callLogEntry : callLogEntriesToWorkWith) {

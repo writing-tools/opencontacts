@@ -72,7 +72,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         if(convertView == null)
             convertView = layoutInflater.inflate(R.layout.contact, parent, false);
         ((TextView) convertView.findViewById(R.id.textview_full_name)).setText(contact.name);
-        ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(contact.primaryPhoneNumber);
+        ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(contact.primaryPhoneNumber.phoneNumber);
         convertView.findViewById(R.id.button_info).setOnClickListener(showContactDetails);
         convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
         View whatsappIcon = convertView.findViewById(R.id.button_whatsapp);

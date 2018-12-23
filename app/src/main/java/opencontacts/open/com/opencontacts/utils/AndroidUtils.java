@@ -35,6 +35,7 @@ import opencontacts.open.com.opencontacts.activities.EditContactActivity;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.READ_CALL_LOG;
@@ -169,10 +170,10 @@ public class AndroidUtils {
         Intent exportToContactsAppIntent = new Intent(Intent.ACTION_INSERT, ContactsContract.Contacts.CONTENT_URI);
 
         ArrayList<ContentValues> data = new ArrayList<>();
-        for(String phoneNumber : contact.phoneNumbers){
+        for(PhoneNumber phoneNumber : contact.phoneNumbers){
             ContentValues row = new ContentValues();
             row.put(ContactsContract.Contacts.Data.MIMETYPE, ContactsContract.CommonDataKinds.Phone.CONTENT_ITEM_TYPE);
-            row.put(ContactsContract.CommonDataKinds.Phone.NUMBER, phoneNumber);
+            row.put(ContactsContract.CommonDataKinds.Phone.NUMBER, phoneNumber.phoneNumber);
             data.add(row);
         }
         exportToContactsAppIntent.putParcelableArrayListExtra(ContactsContract.Intents.Insert.DATA, data)

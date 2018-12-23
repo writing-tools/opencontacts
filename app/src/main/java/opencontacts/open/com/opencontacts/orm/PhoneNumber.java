@@ -2,13 +2,15 @@ package opencontacts.open.com.opencontacts.orm;
 
 import com.orm.SugarRecord;
 
+import java.io.Serializable;
+
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 /**
  * Created by sultanm on 7/22/17.
  */
 
-public class PhoneNumber extends SugarRecord{
+public class PhoneNumber extends SugarRecord implements Serializable {
     public String phoneNumber;
     public Contact contact;
     public boolean isPrimaryNumber = false;
@@ -23,5 +25,9 @@ public class PhoneNumber extends SugarRecord{
         this.isPrimaryNumber = isPrimaryNumber;
         this.numericPhoneNumber = DomainUtils.getAllNumericPhoneNumber(mobileNumber);
         this.type = type;
+    }
+
+    public PhoneNumber(String phoneNumber){
+        this.phoneNumber = phoneNumber;
     }
 }

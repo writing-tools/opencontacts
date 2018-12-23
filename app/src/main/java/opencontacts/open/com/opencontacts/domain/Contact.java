@@ -3,7 +3,7 @@ package opencontacts.open.com.opencontacts.domain;
 import java.io.Serializable;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.utils.Common;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
 
@@ -15,9 +15,9 @@ public class Contact implements Serializable{
     public final long id;
     public String firstName;
     public String lastName;
-    public List<String> phoneNumbers;
+    public List<PhoneNumber> phoneNumbers;
     public String name;
-    public String primaryPhoneNumber;
+    public PhoneNumber primaryPhoneNumber;
 
     public String lastAccessed;
     public String t9Text;
@@ -26,7 +26,7 @@ public class Contact implements Serializable{
         this.id = id;
     }
 
-    public Contact(long id, String firstName, String lastName, List<String> phoneNumbers) {
+    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -34,7 +34,7 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = phoneNumbers.get(0);
     }
 
-    public Contact(long id, String firstName, String lastName, List<String> phoneNumbers, String lastAccessed) {
+    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -43,7 +43,7 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = phoneNumbers.get(0);
     }
 
-    public Contact(long id, String firstName, String lastName, List<String> phoneNumbers, String lastAccessed, String primaryPhoneNumber) {
+    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed, PhoneNumber primaryPhoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -53,19 +53,19 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
-    @Override
-    public String toString() {
+    public String getT9Text() {
         StringBuffer searchStringBuffer = new StringBuffer();
         searchStringBuffer.append(name).append(' ');
-        for(String phoneNumber : phoneNumbers)
-            searchStringBuffer.append(phoneNumber).append(' ');
+        for(PhoneNumber phoneNumber : phoneNumbers)
+            searchStringBuffer.append(phoneNumber.phoneNumber).append(' ');
         searchStringBuffer.append(getNumericKeyPadNumberForString(name));
-        return searchStringBuffer.toString();
+        t9Text = searchStringBuffer.toString().toUpperCase();
+        return t9Text;
     }
 
     @Override
     public boolean equals(Object obj) {
-        if(obj == null || !(obj instanceof Contact))
+        if(!(obj instanceof Contact))
             return false;
         return id == ((Contact)obj).id;
     }

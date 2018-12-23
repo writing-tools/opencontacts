@@ -20,12 +20,6 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="?colorPrimaryDark" />
-    <Button android:layout_width="match_parent"
-        android:id="@+id/about_star"
-        android:gravity="center"
-        android:layout_height="wrap_content"
-        android:text="@string/learn_more_about_star" />
-
     <ListView
         android:id="@+id/listview_phone_numbers"
         android:layout_width="match_parent"

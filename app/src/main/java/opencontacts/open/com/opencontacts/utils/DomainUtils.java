@@ -23,8 +23,10 @@ import ezvcard.property.StructuredName;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.intToTelephoneTypeMap;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -37,6 +39,7 @@ public class DomainUtils {
     public static final int NUMBER_9 = 9;
 
     static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
+    static Map<Integer, String> mobileNumberTypeToTranslatedText;
     static {
         characterToIntegerMappingForKeyboardLayout = new HashMap();
         int[] numericsMappingForAlphabetsInNumberKeypad = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
@@ -65,8 +68,8 @@ public class DomainUtils {
                 structuredName.setGiven(contact.firstName);
                 structuredName.setFamily(contact.lastName);
                 vcard.setStructuredName(structuredName);
-                for(String phoneNumber : contact.phoneNumbers)
-                    vcard.addTelephoneNumber(phoneNumber, TelephoneType.CELL);
+                for(PhoneNumber phoneNumber : contact.phoneNumbers)
+                    vcard.addTelephoneNumber(phoneNumber.phoneNumber, intToTelephoneTypeMap.get(phoneNumber.type));
                 vCardWriter.write(vcard);
             }
         }
@@ -106,5 +109,16 @@ public class DomainUtils {
                 numericString.append(characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c)));
         }
         return numericString.toString();
+    }
+
+    public static Map<Integer, String> getMobileNumberTypeToTranslatedTextMap(Context context){
+        if(mobileNumberTypeToTranslatedText != null)
+            return mobileNumberTypeToTranslatedText;
+        mobileNumberTypeToTranslatedText = new HashMap<>(4);
+        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.CELL), context.getString(R.string.cell));
+        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.WORK), context.getString(R.string.work));
+        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.FAX), context.getString(R.string.fax));
+        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.HOME), context.getString(R.string.home));
+        return mobileNumberTypeToTranslatedText;
     }
 }

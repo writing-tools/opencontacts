@@ -1,15 +1,16 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-import ezvcard.parameter.TelephoneType;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
-import opencontacts.open.com.opencontacts.utils.VCardUtils;
+import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
@@ -47,10 +48,10 @@ class ContactsDBHelper {
         return matchingPhoneNumbers.get(0).contact;
     }
 
-    static void replacePhoneNumbersInDB(Contact dbContact, List<String> phoneNumbers, String primaryPhoneNumber) {
+    static void replacePhoneNumbersInDB(Contact dbContact, List<PhoneNumber> phoneNumbers, PhoneNumber primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
-        for(String phoneNumber : phoneNumbers){
-            new PhoneNumber(phoneNumber, dbContact, primaryPhoneNumber.equals(phoneNumber), VCardUtils.telephoneTypeToIntMap.get(TelephoneType.CELL)).save();
+        for(PhoneNumber phoneNumber : phoneNumbers){
+            new PhoneNumber(phoneNumber.phoneNumber, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumber.phoneNumber), phoneNumber.type).save();
         }
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }
@@ -69,28 +70,28 @@ class ContactsDBHelper {
         opencontacts.open.com.opencontacts.domain.Contact tempContact;
         for(PhoneNumber dbPhoneNumber: dbPhoneNumbers){
             tempContact = contactsMap.get(dbPhoneNumber.contact.getId());
-            if(tempContact == null)
+            if(tempContact == null){
                 tempContact = createNewDomainContact(dbPhoneNumber.contact, Collections.singletonList(dbPhoneNumber));
+                contactsMap.put(tempContact.id, tempContact);
+            }
             else{
-                tempContact.phoneNumbers.add(dbPhoneNumber.phoneNumber);
+                tempContact.phoneNumbers = U.concat(tempContact.phoneNumbers, Collections.singletonList(dbPhoneNumber));
                 if(dbPhoneNumber.isPrimaryNumber)
-                    tempContact.primaryPhoneNumber = dbPhoneNumber.phoneNumber;
+                    tempContact.primaryPhoneNumber = dbPhoneNumber;
             }
 
-            contactsMap.put(tempContact.id, tempContact);
         }
         return new ArrayList<>(contactsMap.values());
     }
 
     private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact, List<PhoneNumber> dbPhoneNumbers){
-        List<String> phoneNumbers = new ArrayList<>(dbPhoneNumbers.size());
-        String primaryPhoneNumber = dbPhoneNumbers.get(0).phoneNumber;
-        for(PhoneNumber dbPhoneNumber : dbPhoneNumbers){
-            if(dbPhoneNumber.isPrimaryNumber)
-                primaryPhoneNumber = dbPhoneNumber.phoneNumber;
-            phoneNumbers.add(dbPhoneNumber.phoneNumber);
-        }
-        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, phoneNumbers, contact.lastAccessed, primaryPhoneNumber);
+        PhoneNumber primaryPhoneNumber = U.chain(dbPhoneNumbers)
+                .filter(arg -> arg.isPrimaryNumber)
+                .firstOrNull()
+                .item();
+        primaryPhoneNumber = primaryPhoneNumber == null ? dbPhoneNumbers.get(0) : primaryPhoneNumber;
+
+        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, dbPhoneNumbers, contact.lastAccessed, primaryPhoneNumber);
     }
 
     static opencontacts.open.com.opencontacts.domain.Contact getContact(long id){
@@ -122,5 +123,9 @@ class ContactsDBHelper {
             return;
         contact.lastAccessed = callTimeStamp;
         contact.save();
+    }
+
+    public static VCardData getVCard(long contactId) {
+        return VCardData.getVCardData(contactId);
     }
 }

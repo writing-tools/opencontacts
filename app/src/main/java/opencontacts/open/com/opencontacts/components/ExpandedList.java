@@ -1,0 +1,84 @@
+package opencontacts.open.com.opencontacts.components;
+
+import android.content.Context;
+import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
+import android.support.v7.widget.AppCompatTextView;
+import android.util.AttributeSet;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.LinearLayout;
+
+
+import com.github.underscore.U;
+
+import java.util.List;
+
+import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.utils.Common;
+
+public class ExpandedList extends LinearLayout {
+    private Context context;
+    private LayoutInflater layoutInflater;
+    private AdapterView.OnItemClickListener onItemClickListener;
+
+    public ExpandedList(Context context) {
+        this(context, null);
+    }
+
+    public ExpandedList(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
+
+    public ExpandedList(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        this.context = context;
+        layoutInflater = LayoutInflater.from(context);
+        setOrientation(LinearLayout.VERTICAL);
+    }
+
+    private void onClick(View v){
+        onItemClickListener.onItemClick(null, v, (int)v.getTag(), -1);
+    }
+
+    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+        if(getChildCount() == 0)
+            return;
+        Common.forEachIndex(getChildCount(), index -> {
+           getChildAt(index).setOnClickListener(this::onClick);
+        });
+    }
+
+    public void setItems(List<Pair<String, String>> items){
+        removeAllViews();
+        U.forEachIndexed(items, (index, item) -> {
+            View inflatedView = layoutInflater.inflate(R.layout.layout_item_title_and_type, this, false);
+            ((AppCompatTextView)inflatedView.findViewById(R.id.textview_content)).setText(item.first);
+            ((AppCompatTextView)inflatedView.findViewById(R.id.textview_type)).setText(item.second);
+            inflatedView.setTag(index);
+            if(onItemClickListener != null)
+                inflatedView.setOnClickListener(this::onClick);
+            addView(inflatedView);
+        });
+    }
+
+    public static class Builder {
+        private ExpandedList expandedList;
+        public Builder(Context context){
+            expandedList = new ExpandedList(context);
+        }
+        public Builder withItems(List<Pair<String, String>> items){
+            expandedList.setItems(items);
+            return this;
+        }
+        public Builder withOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+            expandedList.setOnItemClickListener(onItemClickListener);
+            return this;
+        }
+        public ExpandedList build(){
+            return expandedList;
+        }
+    }
+}

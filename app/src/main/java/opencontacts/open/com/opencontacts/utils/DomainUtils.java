@@ -20,6 +20,8 @@ import java.util.regex.Pattern;
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
 import ezvcard.io.text.VCardWriter;
+import ezvcard.parameter.AddressType;
+import ezvcard.parameter.EmailType;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.StructuredName;
 import opencontacts.open.com.opencontacts.R;
@@ -29,7 +31,6 @@ import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.intToTelephoneTypeMap;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -42,9 +43,18 @@ public class DomainUtils {
     public static final int NUMBER_9 = 9;
 
     static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
-    static Map<Integer, String> mobileNumberTypeToTranslatedText;
-    static Map<String, Integer> translatedTextToMobileNumberType;
-    private static String defaultPhoneNumberType;
+    static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
+    static Map<String, TelephoneType> translatedTextToMobileNumberType;
+    static Map<AddressType, String> addressTypeToTranslatedText;
+    static Map<String, AddressType> translatedTextToAddressType;
+    static Map<EmailType, String> emailTypeToTranslatedText;
+    static Map<String, EmailType> translatedTextToEmailType;
+    private static String defaultPhoneNumberTypeTranslatedText;
+    private static String defaultAddressTypeTranslatedText;
+    private static String defaultEmailTypeTranslatedText;
+    public static TelephoneType defaultPhoneNumberType = TelephoneType.CELL;
+    public static AddressType defaultAddressType = AddressType.HOME;
+    public static EmailType defaultEmailType = EmailType.HOME;
 
     static {
         characterToIntegerMappingForKeyboardLayout = new HashMap();
@@ -75,7 +85,7 @@ public class DomainUtils {
                 structuredName.setFamily(contact.lastName);
                 vcard.setStructuredName(structuredName);
                 for(PhoneNumber phoneNumber : contact.phoneNumbers)
-                    vcard.addTelephoneNumber(phoneNumber.phoneNumber, intToTelephoneTypeMap.get(phoneNumber.type));
+                    vcard.addTelephoneNumber(phoneNumber.phoneNumber, TelephoneType.CELL);
                 vCardWriter.write(vcard);
             }
         }
@@ -117,24 +127,54 @@ public class DomainUtils {
         return numericString.toString();
     }
 
-    public static Map<Integer, String> getMobileNumberTypeToTranslatedTextMap(Context context){
+    private static Map<TelephoneType, String> getMobileNumberTypeToTranslatedTextMap(Context context){
         if(mobileNumberTypeToTranslatedText != null)
             return mobileNumberTypeToTranslatedText;
         mobileNumberTypeToTranslatedText = new HashMap<>(4);
-        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.CELL), context.getString(R.string.cell));
-        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.WORK), context.getString(R.string.work));
-        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.FAX), context.getString(R.string.fax));
-        mobileNumberTypeToTranslatedText.put(VCardUtils.telephoneTypeToIntMap.get(TelephoneType.HOME), context.getString(R.string.home));
+        mobileNumberTypeToTranslatedText.put(TelephoneType.CELL, context.getString(R.string.cell));
+        mobileNumberTypeToTranslatedText.put(TelephoneType.WORK, context.getString(R.string.work));
+        mobileNumberTypeToTranslatedText.put(TelephoneType.FAX, context.getString(R.string.fax));
+        mobileNumberTypeToTranslatedText.put(TelephoneType.HOME, context.getString(R.string.home));
         return mobileNumberTypeToTranslatedText;
     }
 
-    public static String getMobileNumberTypeTranslatedText(int type, Context context){
-        if(defaultPhoneNumberType == null) defaultPhoneNumberType = getMobileNumberTypeToTranslatedTextMap(context).get(VCardUtils.defaultPhoneNumberType);
-        return getOrDefault(getMobileNumberTypeToTranslatedTextMap(context), type, defaultPhoneNumberType);
+    public static String getMobileNumberTypeTranslatedText(List<TelephoneType> telephoneTypes, Context context){
+        if(defaultPhoneNumberTypeTranslatedText == null) defaultPhoneNumberTypeTranslatedText = getMobileNumberTypeToTranslatedTextMap(context).get(defaultPhoneNumberType);
+        Map<TelephoneType, String> mobileNumberTypeToTranslatedTextMap = getMobileNumberTypeToTranslatedTextMap(context);
+        if(telephoneTypes.contains(TelephoneType.FAX)) {
+            return mobileNumberTypeToTranslatedTextMap.get(TelephoneType.FAX);
+        }
+        return getOrDefault(mobileNumberTypeToTranslatedTextMap, U.first(telephoneTypes), defaultPhoneNumberTypeTranslatedText);
     }
 
-    public static int getMobileNumberType(String translatedText, Context context){
+    public static TelephoneType getMobileNumberType(String translatedText, Context context){
         if(translatedTextToMobileNumberType == null) translatedTextToMobileNumberType = U.toMap(U.invert(getMobileNumberTypeToTranslatedTextMap(context)));
-        return getOrDefault(translatedTextToMobileNumberType, translatedText, VCardUtils.defaultPhoneNumberType);
+        return getOrDefault(translatedTextToMobileNumberType, translatedText, defaultPhoneNumberType);
+    }
+
+    private static Map<AddressType, String> getAddressTypeToTranslatedTextMap(Context context){
+        if(addressTypeToTranslatedText != null)
+            return addressTypeToTranslatedText;
+        addressTypeToTranslatedText = new HashMap<>(2);
+        addressTypeToTranslatedText.put(AddressType.HOME, context.getString(R.string.home));
+        addressTypeToTranslatedText.put(AddressType.WORK, context.getString(R.string.work));
+        return addressTypeToTranslatedText;
+    }
+    public static String getAddressTypeTranslatedText(List<AddressType> types, Context context){
+        if(defaultAddressTypeTranslatedText == null) defaultAddressTypeTranslatedText = getAddressTypeToTranslatedTextMap(context).get(defaultAddressType);
+        return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), defaultAddressTypeTranslatedText);
+    }
+
+    private static Map<EmailType, String> getEmailTypeToTranslatedTextMap(Context context){
+        if(emailTypeToTranslatedText != null)
+            return emailTypeToTranslatedText;
+        emailTypeToTranslatedText = new HashMap<>(2);
+        emailTypeToTranslatedText.put(EmailType.HOME, context.getString(R.string.home));
+        emailTypeToTranslatedText.put(EmailType.WORK, context.getString(R.string.work));
+        return emailTypeToTranslatedText;
+    }
+    public static String getEmailTypeTranslatedText(List<EmailType> types, Context context){
+        if(defaultEmailType == null) defaultEmailTypeTranslatedText = getEmailTypeToTranslatedTextMap(context).get(defaultEmailType);
+        return getOrDefault(getEmailTypeToTranslatedTextMap(context), U.first(types), defaultEmailTypeTranslatedText);
     }
 }

@@ -30,16 +30,26 @@ public class Common {
         return (v == null)? defaultValue : v;
     }
 
-    public static <T> List<T> times(int count, TimesFunction<T> timesFunction){
+    public static <T> List<T> mapIndexes(int count, TimesFunction<T> timesFunction){
         ArrayList<T> list = new ArrayList<>(count);
-        for(int i=0; i<count; i++){
+        for(int i=0; i < count; i++){
             list.add(timesFunction.apply(i));
         }
         return list;
     }
 
+    public static void forEachIndex(int count, ForEachIndexFunction function){
+        for(int i=0; i < count; i++){
+            function.apply(i);
+        }
+    }
+
     public interface TimesFunction<T>{
         T apply(int count);
+    }
+
+    public interface ForEachIndexFunction{
+        void apply(int count);
     }
 
 }

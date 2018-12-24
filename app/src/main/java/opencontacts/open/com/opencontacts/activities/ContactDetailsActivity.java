@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -14,11 +15,20 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.io.IOException;
+import java.util.List;
+
+import ezvcard.VCard;
+import ezvcard.io.text.VCardReader;
+import ezvcard.property.Address;
+import ezvcard.property.Email;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.ExpandedList;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 
@@ -26,7 +36,11 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumb
 public class ContactDetailsActivity extends AppBaseActivity {
     private long contactId;
     private Contact contact;
-    private VCardData vcardData;
+    private VCard vcard;
+    private LayoutInflater layoutInflater;
+    private LinearLayout phoneNumbersLinearLayout;
+    private LinearLayout emailAddressLinearLayout;
+    private LinearLayout addressLinearLayout;
 
     private View.OnClickListener callContact = v -> AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
 
@@ -45,8 +59,6 @@ public class ContactDetailsActivity extends AppBaseActivity {
         Toast.makeText(ContactDetailsActivity.this, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     };
-    private LinearLayout phoneNumbersLinearLayout;
-    private LayoutInflater layoutInflater;
 
     private String getSelectedMobileNumber(View v){
         return v.getTag().toString();
@@ -69,9 +81,17 @@ public class ContactDetailsActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         contact = ContactsDataStore.getContactWithId(contactId);
-        vcardData = ContactsDataStore.getVCardData(contactId);
+        VCardData vcardData = ContactsDataStore.getVCardData(contactId);
         if(contact == null)
             showInvalidContactErrorAndExit();
+        if(vcardData != null){
+            try {
+                vcard = new VCardReader(vcardData.vcardDataAsString).readNext();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(this, R.string.error_while_parsing_contact_details, Toast.LENGTH_SHORT).show();
+            }
+        }
         setUpUI();
     }
 
@@ -85,24 +105,50 @@ public class ContactDetailsActivity extends AppBaseActivity {
         toolbar.setTitle(contact.firstName);
         toolbar.setSubtitle(contact.name);
         phoneNumbersLinearLayout = findViewById(R.id.phone_numbers_list);
+        emailAddressLinearLayout = findViewById(R.id.email_address_list);
+        addressLinearLayout = findViewById(R.id.address_list);
         layoutInflater = getLayoutInflater();
+        if(vcard == null) return;
         fillPhoneNumbers();
+        fillEmailAddress();
+        fillAddress();
+    }
+
+    private void fillAddress() {
+        addressLinearLayout.removeAllViews();
+        List<Address> addresses = vcard.getAddresses();
+        ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
+                .withOnItemClickListener((parent, view, index, id) -> {
+                })
+                .withItems(U.map(addresses, address -> new Pair<>(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), this))))
+                .build();
+        addressLinearLayout.addView(addressesExpandedListView);
+    }
+
+    private void fillEmailAddress() {
+        emailAddressLinearLayout.removeAllViews();
+        List<Email> emails = vcard.getEmails();
+        ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
+                .withOnItemClickListener((parent, view, index, id) -> { })
+                .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
+                .build();
+        emailAddressLinearLayout.addView(emailsExpandedListView);
     }
 
     private void fillPhoneNumbers() {
         phoneNumbersLinearLayout.removeAllViews();
-        U.forEach(contact.phoneNumbers, phoneNumber -> {
+        U.forEach(vcard.getTelephoneNumbers(), telephone -> {
             View inflatedView = layoutInflater.inflate(R.layout.contact_details_row, phoneNumbersLinearLayout, false);
-            ((TextView) inflatedView.findViewById(R.id.textview_phone_number)).setText(phoneNumber.phoneNumber);
+            ((TextView) inflatedView.findViewById(R.id.textview_phone_number)).setText(telephone.getText());
             AppCompatImageButton primaryNumberToggleButton = inflatedView.findViewById(R.id.button_primary_number);
-            primaryNumberToggleButton.setImageResource(phoneNumber.equals(contact.primaryPhoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
+            primaryNumberToggleButton.setImageResource(telephone.getText().equals(contact.primaryPhoneNumber.phoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
             primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
             inflatedView.findViewById(R.id.button_message).setOnClickListener(messageContact);
             inflatedView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
-            ((AppCompatTextView)inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(phoneNumber.type,this));
+            ((AppCompatTextView)inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(),this));
             inflatedView.setOnClickListener(callContact);
             inflatedView.setOnLongClickListener(copyPhoneNumberToClipboard);
-            inflatedView.setTag(phoneNumber.phoneNumber);
+            inflatedView.setTag(telephone.getText());
             phoneNumbersLinearLayout.addView(inflatedView);
         });
     }

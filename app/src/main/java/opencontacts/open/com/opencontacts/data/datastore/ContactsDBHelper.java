@@ -7,6 +7,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
+import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
@@ -36,6 +37,7 @@ class ContactsDBHelper {
             callLogEntry.setId((long) -1);
             callLogEntry.save();
         }
+        VCardData.getVCardData(contactId).delete();
         dbContact.delete();
     }
 
@@ -51,17 +53,18 @@ class ContactsDBHelper {
     static void replacePhoneNumbersInDB(Contact dbContact, List<PhoneNumber> phoneNumbers, PhoneNumber primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         for(PhoneNumber phoneNumber : phoneNumbers){
-            new PhoneNumber(phoneNumber.phoneNumber, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumber.phoneNumber), phoneNumber.type).save();
+            new PhoneNumber(phoneNumber.phoneNumber, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumber.phoneNumber)).save();
         }
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }
 
-    static void updateContactInDBWith(opencontacts.open.com.opencontacts.domain.Contact contact){
+    static void updateContactInDBWith(opencontacts.open.com.opencontacts.domain.Contact contact, VCard vCard){
         opencontacts.open.com.opencontacts.orm.Contact dbContact = ContactsDBHelper.getDBContactWithId(contact.id);
         dbContact.firstName = contact.firstName;
         dbContact.lastName = contact.lastName;
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, contact.phoneNumbers, contact.primaryPhoneNumber);
+        updateVCardInDBWith(vCard, dbContact.getId());
     }
 
     static List<opencontacts.open.com.opencontacts.domain.Contact> getAllContactsFromDB(){
@@ -127,5 +130,11 @@ class ContactsDBHelper {
 
     public static VCardData getVCard(long contactId) {
         return VCardData.getVCardData(contactId);
+    }
+
+    public static void updateVCardInDBWith(VCard vCard, long contactId) {
+        VCardData vCardDataInDB = VCardData.getVCardData(contactId);
+        vCardDataInDB.vcardDataAsString = vCard.write();
+        vCardDataInDB.save();
     }
 }

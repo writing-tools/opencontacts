@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.util.Pair;
 import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
@@ -12,8 +13,17 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import ezvcard.VCard;
+import ezvcard.io.text.VCardReader;
+import ezvcard.parameter.TelephoneType;
+import ezvcard.property.Address;
+import ezvcard.property.Email;
+import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
@@ -21,7 +31,7 @@ import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.utils.Common.times;
+import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
@@ -33,6 +43,7 @@ public class EditContactActivity extends AppBaseActivity {
     EditText editText_mobileNumber;
     private boolean addingNewContact = false;
     private String[] phoneNumberTypesInSpinner;
+    private VCard vcardBeforeEdit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +66,11 @@ public class EditContactActivity extends AppBaseActivity {
                 finish();
             }
             toolbar.setTitle(contact.firstName);
+            try {
+                vcardBeforeEdit = new VCardReader(ContactsDataStore.getVCardData(contact.id).vcardDataAsString).readNext();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             fillFieldsFromContactDetails();
         }
     }
@@ -67,19 +83,22 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillFieldsFromContactDetails() {
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
-        PhoneNumber firstPhoneNumber = contact.phoneNumbers.get(0);
-        editText_mobileNumber.setText(firstPhoneNumber.phoneNumber);
-        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(firstPhoneNumber.type, EditContactActivity.this);
+        if(vcardBeforeEdit == null)
+            return;
+        List<Telephone> telephoneNumbers = vcardBeforeEdit.getTelephoneNumbers();
+        Telephone telephone = U.first(telephoneNumbers);
+        editText_mobileNumber.setText(telephone.getText());
+        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(telephone.getTypes(), EditContactActivity.this);
         int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
         ((AppCompatSpinner)findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
 
-        U.forEach(U.rest(contact.phoneNumbers), this::addPhoneNumberViewFor);
+        U.forEach(U.rest(telephoneNumbers), this::addPhoneNumberViewFor);
     }
 
-    private void addPhoneNumberViewFor(PhoneNumber phoneNumber) {
+    private void addPhoneNumberViewFor(Telephone telephone) {
         LinearLayout linearLayout = addOneMorePhoneNumberView(null);
-        ((AppCompatEditText)linearLayout.findViewById(R.id.editPhoneNumber)).setText(phoneNumber.phoneNumber);
-        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(phoneNumber.type, EditContactActivity.this);
+        ((AppCompatEditText)linearLayout.findViewById(R.id.editPhoneNumber)).setText(telephone.getText());
+        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(telephone.getTypes(), EditContactActivity.this);
         int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
         ((AppCompatSpinner)linearLayout.findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
     }
@@ -95,34 +114,55 @@ public class EditContactActivity extends AppBaseActivity {
             editText_mobileNumber.setError(getString(R.string.required));
             return;
         }
-
+        List<Pair<PhoneNumber, TelephoneType>> phoneNumbersAndTypeList = getPhoneNumbersAndTelephoneTypesFromView();
+        VCard newVCardData = createVCard(firstName, lastName, phoneNumbersAndTypeList);
         if(addingNewContact)
-            ContactsDataStore.addContact(firstName, lastName, getPhoneNumbersFromView(), EditContactActivity.this);
+            ContactsDataStore.addContact(firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first), newVCardData, EditContactActivity.this);
         else{
-            Contact updatedContact = new Contact(this.contact.id, firstName, lastName, getPhoneNumbersFromView());
+            Contact updatedContact = new Contact(this.contact.id, firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first));
             updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
-            ContactsDataStore.updateContact(updatedContact, this);
+            ContactsDataStore.updateContact(updatedContact, newVCardData, this);
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    private boolean phoneNumbersNotEntered() {
-        return getPhoneNumbersFromView().isEmpty();
+    private VCard createVCard(String firstName, String lastName, List<Pair<PhoneNumber, TelephoneType>> phoneNumbersAndTypeList) {
+        VCard newVCard = new VCard();
+        StructuredName structuredName = new StructuredName();
+        structuredName.setGiven(firstName);
+        structuredName.setFamily(lastName);
+        newVCard.setStructuredName(structuredName);
+        U.forEach(phoneNumbersAndTypeList, pair -> newVCard.addTelephoneNumber(pair.first.phoneNumber, pair.second));
+        U.forEach(getEmailFromView(), newVCard::addEmail);
+        U.forEach(getAddressFromView(), newVCard::addAddress);
+        return newVCard;
     }
 
-    private List<PhoneNumber> getPhoneNumbersFromView() {
+    private List<Address> getAddressFromView() {
+        return new ArrayList<>();
+    }
+
+    private List<Email> getEmailFromView() {
+        return new ArrayList<>();
+    }
+
+    private boolean phoneNumbersNotEntered() {
+        return getPhoneNumbersAndTelephoneTypesFromView().isEmpty();
+    }
+
+    private List<Pair<PhoneNumber, TelephoneType>> getPhoneNumbersAndTelephoneTypesFromView() {
         LinearLayout phoneNumbersContainer = findViewById(R.id.phonenumbers);
         int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
-        return U.chain(times(numberOfPhoneNumbers, phoneNumbersContainer::getChildAt))
-                .map(this::createPhoneNumber)
+        return U.chain(mapIndexes(numberOfPhoneNumbers, phoneNumbersContainer::getChildAt))
+                .map(this::createPhoneNumberAndTypePair)
                 .value();
     }
 
-    private PhoneNumber createPhoneNumber(View phoneNumberHolder) {
+    private Pair<PhoneNumber, TelephoneType> createPhoneNumberAndTypePair(View phoneNumberHolder) {
         String phoneNumber = ((AppCompatEditText) (phoneNumberHolder.findViewById(R.id.editPhoneNumber))).getText().toString();
         String selectedPhoneNumberTypeInSpinner = (String) ((AppCompatSpinner) phoneNumberHolder.findViewById(R.id.phone_number_type)).getSelectedItem();
-        return new PhoneNumber(phoneNumber, DomainUtils.getMobileNumberType(selectedPhoneNumberTypeInSpinner, this));
+        return new Pair<>(new PhoneNumber(phoneNumber), DomainUtils.getMobileNumberType(selectedPhoneNumberTypeInSpinner, this));
     }
 
     public LinearLayout addOneMorePhoneNumberView(View view){

@@ -4,10 +4,13 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
@@ -34,11 +37,13 @@ public class ContactsDataStore {
         return new ArrayList<>(contacts);
     }
 
-    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, Context context) {
+    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, VCard vCard, Context context) {
         opencontacts.open.com.opencontacts.orm.Contact dbContact = new opencontacts.open.com.opencontacts.orm.Contact(firstName, lastName);
         dbContact.save();
-        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, phoneNumbers.get(0));
+        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, U.first(phoneNumbers));
         Contact newContactWithDatabaseId = ContactsDBHelper.getContact(dbContact.getId());
+        VCardData newVCardData = new VCardData(dbContact, vCard.write());
+        newVCardData.save();
         contacts.add(newContactWithDatabaseId);
         notifyListenersAsync(ADDITION, newContactWithDatabaseId);
         CallLogDataStore.updateCallLogAsyncForNewContact(newContactWithDatabaseId, context);
@@ -51,11 +56,11 @@ public class ContactsDataStore {
         }
     }
 
-    public static void updateContact(Contact contact, Context context) {
+    public static void updateContact(Contact contact, VCard vCard, Context context) {
         int indexOfContact = contacts.indexOf(contact);
         if (indexOfContact == -1)
             return;
-        ContactsDBHelper.updateContactInDBWith(contact);
+        ContactsDBHelper.updateContactInDBWith(contact, vCard);
         reloadContact(contact.id);
         CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contact.id), context);
     }

@@ -2,9 +2,10 @@
     <string name="app_name">OpenContacts</string>
     <string name="title_activity_main">Open Contacts</string>
     <string name="button_new">+</string>
-    <string name="error_while_saving_contact">Error occured while saving contact</string>
-    <string name="error_while_loading_contact">Error occured while loading contact</string>
-    <string name="error_while_parsing_vcard_file">Error occured while parsing vcard file</string>
+    <string name="error_while_saving_contact">Error occurred while saving contact</string>
+    <string name="error_while_loading_contact">Error occurred while loading contact</string>
+    <string name="error_while_parsing_vcard_file">Error occurred while parsing vcard file</string>
+    <string name="error_while_parsing_contact_details">Error occurred while parsing contact details</string>
     <string name="copied_phonenumber_to_clipboard">Copied phone number to clipboard</string>
     <string name="unexpected_error_happened">Unexpected error happened</string>
     <string name="title_activity_contact_details">ContactDetailsActivity</string>
@@ -94,7 +95,7 @@
     <string name="disable_whatsapp_integration">Disable whatsapp integration</string>
     <string name="whatsapp_preferences">Whatsapp Preferences</string>
     <string name="do_you_want_to_import">Do you want to import</string>
-    <string name="R.string.noname">NONAME</string>
+    <string name="noname">NONAME</string>
     <string name="cell">Mobile</string>
     <string name="work">Work</string>
     <string name="fax">Fax</string>

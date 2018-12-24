@@ -27,9 +27,21 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:text="Phone"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/phone_numbers_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:text="Email"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
             <LinearLayout
@@ -37,11 +49,18 @@
                 android:id="@+id/email_address_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
+            <android.support.v7.widget.AppCompatTextView
+                android:text="Address"
+                android:textAppearance="@style/Base.TextAppearance.AppCompat.Title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
             <LinearLayout
                 android:orientation="vertical"
                 android:id="@+id/address_list"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" />
+
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

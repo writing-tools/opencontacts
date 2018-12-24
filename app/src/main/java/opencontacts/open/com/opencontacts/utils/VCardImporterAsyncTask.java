@@ -22,8 +22,6 @@ import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.getTypeOfPhoneNumber;
-
 public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
     private final String PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW = "number_of_vcards_imported_until_now";
@@ -37,7 +35,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
         this.fileUri = fileUri;
         this.importProgressListener = importProgressListener;
         this.context = context;
-        noNameString = context.getString(R.string.R_string_noname);
+        noNameString = context.getString(R.string.noname);
     }
 
     @Override
@@ -79,7 +77,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
 
     private void createMobileNumbersAndSaveInDB(VCard vcard, Contact contact) {
         for (Telephone telephoneNumber : vcard.getTelephoneNumbers()) {
-            new PhoneNumber(telephoneNumber.getText(), contact, false, getTypeOfPhoneNumber(telephoneNumber.getTypes())).save();
+            new PhoneNumber(telephoneNumber.getText(), contact, false).save();
         }
     }
 

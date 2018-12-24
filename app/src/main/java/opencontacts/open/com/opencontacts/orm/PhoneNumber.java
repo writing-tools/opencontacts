@@ -16,24 +16,17 @@ public class PhoneNumber extends SugarRecord implements Serializable {
     public Contact contact;
     public boolean isPrimaryNumber = false;
     public String numericPhoneNumber; // for comparision during calls
-    public int type;
     public PhoneNumber(){
 
     }
-    public PhoneNumber(String mobileNumber, Contact contact, boolean isPrimaryNumber, int type) {
+    public PhoneNumber(String mobileNumber, Contact contact, boolean isPrimaryNumber) {
         this.phoneNumber = mobileNumber;
         this.contact = contact;
         this.isPrimaryNumber = isPrimaryNumber;
         this.numericPhoneNumber = DomainUtils.getAllNumericPhoneNumber(mobileNumber);
-        this.type = type;
     }
 
     public PhoneNumber(String phoneNumber){
         this.phoneNumber = phoneNumber;
-        this.type = VCardUtils.defaultPhoneNumberType;
-    }
-    public PhoneNumber(String phoneNumber, int type){
-        this.phoneNumber = phoneNumber;
-        this.type = type;
     }
 }

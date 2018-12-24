@@ -213,6 +213,11 @@ public class AndroidUtils {
 
     }
 
+    public static void copyToClipboard(String text, boolean shouldShowToast, Context context){
+        copyToClipboard(text, context);
+        if(shouldShowToast) Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
+    }
+
     public static void setBackButtonInToolBar(Toolbar toolBar, final AppCompatActivity appCompatActivity){
         toolBar.setNavigationOnClickListener(v -> appCompatActivity.onBackPressed());
         Drawable navigationIcon = toolBar.getNavigationIcon();

@@ -125,9 +125,9 @@ public class ContactDetailsActivity extends AppBaseActivity {
         addressLinearLayout.removeAllViews();
         List<Address> addresses = vcard.getAddresses();
         ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener((parent, view, index, id) -> {
-                })
+                .withOnItemClickListener(index -> { })
                 .withItems(U.map(addresses, address -> new Pair<>(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), this))))
+                .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(addresses.get(index).getStreetAddress(), true, this))
                 .build();
         addressLinearLayout.addView(addressesExpandedListView);
     }
@@ -141,8 +141,9 @@ public class ContactDetailsActivity extends AppBaseActivity {
         emailAddressLinearLayout.removeAllViews();
         List<Email> emails = vcard.getEmails();
         ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener((parent, view, index, id) -> { })
+                .withOnItemClickListener(index -> { })
                 .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
+                .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(emails.get(index).getValue(),  true, this))
                 .build();
         emailAddressLinearLayout.addView(emailsExpandedListView);
     }

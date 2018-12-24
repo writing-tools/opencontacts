@@ -7,7 +7,6 @@ import android.support.v7.widget.AppCompatTextView;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.LinearLayout;
 
 
@@ -20,7 +19,8 @@ import opencontacts.open.com.opencontacts.utils.Common;
 
 public class ExpandedList extends LinearLayout {
     private LayoutInflater layoutInflater;
-    private AdapterView.OnItemClickListener onItemClickListener;
+    private EventListener onItemClickListener;
+    private EventListener onItemLongClickListener;
 
     public ExpandedList(Context context) {
         this(context, null);
@@ -37,16 +37,26 @@ public class ExpandedList extends LinearLayout {
     }
 
     private void onClick(View v){
-        onItemClickListener.onItemClick(null, v, (int)v.getTag(), -1);
+        onItemClickListener.eventOnItem((int)v.getTag());
     }
 
-    public void setOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener) {
+    public void setOnItemClickListener(EventListener onItemClickListener) {
         this.onItemClickListener = onItemClickListener;
         if(getChildCount() == 0)
             return;
-        Common.forEachIndex(getChildCount(), index -> {
-           getChildAt(index).setOnClickListener(this::onClick);
-        });
+        Common.forEachIndex(getChildCount(), index -> getChildAt(index).setOnClickListener(this::onClick));
+    }
+
+    public void setOnItemLongClickListener(EventListener onItemLongClickListener) {
+        this.onItemLongClickListener = onItemLongClickListener;
+        if(getChildCount() == 0)
+            return;
+        Common.forEachIndex(getChildCount(), index -> getChildAt(index).setOnLongClickListener(this::onLongClick));
+    }
+
+    private boolean onLongClick(View view) {
+        onItemLongClickListener.eventOnItem((int)view.getTag());
+        return true;
     }
 
     public void setItems(List<Pair<String, String>> items){
@@ -71,12 +81,21 @@ public class ExpandedList extends LinearLayout {
             expandedList.setItems(items);
             return this;
         }
-        public Builder withOnItemClickListener(AdapterView.OnItemClickListener onItemClickListener){
+        public Builder withOnItemClickListener(EventListener onItemClickListener){
             expandedList.setOnItemClickListener(onItemClickListener);
+            return this;
+        }
+        public Builder withOnItemLongClickListener(EventListener onItemLongClickListener){
+            expandedList.setOnItemLongClickListener(onItemLongClickListener);
             return this;
         }
         public ExpandedList build(){
             return expandedList;
         }
     }
+
+    public interface EventListener {
+        void eventOnItem(int index);
+    }
+
 }

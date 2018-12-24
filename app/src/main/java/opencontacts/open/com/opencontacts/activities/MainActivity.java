@@ -30,6 +30,7 @@ import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
@@ -63,6 +64,9 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        if(DomainUtils.isStillOnOldDB()){ //TODO: remove this after 1 more version upgrade
+            AndroidUtils.showAlert(this, R.string.warning, R.string.still_on_old_db_resolution);
+        }
         refresh();
     }
 

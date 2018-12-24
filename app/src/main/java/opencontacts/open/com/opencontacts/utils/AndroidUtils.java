@@ -362,4 +362,8 @@ public class AndroidUtils {
     public static void setSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener, Context context) {
         getAppsSharedPreferences(context).registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }
+
+    public static void showAlert(Context context, int titleRes, int messageRes) {
+        showAlert(context, context.getString(titleRes), context.getString(messageRes));
+    }
 }

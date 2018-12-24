@@ -30,6 +30,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 
 
@@ -115,6 +116,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillAddress() {
+        if(U.isEmpty(vcard.getAddresses())) return;
+        findViewById(R.id.address_card).setVisibility(VISIBLE);
         addressLinearLayout.removeAllViews();
         List<Address> addresses = vcard.getAddresses();
         ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
@@ -126,6 +129,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillEmailAddress() {
+        if(U.isEmpty(vcard.getEmails())) return;
+        findViewById(R.id.email_card).setVisibility(VISIBLE);
         emailAddressLinearLayout.removeAllViews();
         List<Email> emails = vcard.getEmails();
         ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
@@ -136,6 +141,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillPhoneNumbers() {
+        if(U.isEmpty(vcard.getTelephoneNumbers())) return;
+        findViewById(R.id.phone_card).setVisibility(VISIBLE);
         phoneNumbersLinearLayout.removeAllViews();
         U.forEach(vcard.getTelephoneNumbers(), telephone -> {
             View inflatedView = layoutInflater.inflate(R.layout.contact_details_row, phoneNumbersLinearLayout, false);

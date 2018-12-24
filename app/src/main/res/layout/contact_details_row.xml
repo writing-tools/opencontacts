@@ -26,18 +26,24 @@
 
 
     <android.support.v7.widget.AppCompatTextView
+        android:layout_marginLeft="4dp"
         android:textColor="?android:textColorPrimary"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/textview_phone_number" />
+        android:layout_toRightOf="@id/button_primary_number"
+        android:id="@+id/textview_phone_number"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/button_primary_number" />
     <android.support.v7.widget.AppCompatTextView
+        android:layout_marginLeft="4dp"
         android:textColor="?android:textColorSecondary"
         android:id="@+id/phone_number_type"
         android:layout_below="@id/textview_phone_number"
-        android:layout_centerHorizontal="true"
+        android:layout_toRightOf="@id/button_primary_number"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@id/button_primary_number"
+        android:layout_marginStart="4dp" />
 
     <android.support.v7.widget.AppCompatImageButton
         android:layout_width="wrap_content"

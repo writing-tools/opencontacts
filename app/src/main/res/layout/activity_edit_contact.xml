@@ -78,7 +78,7 @@
                 android:id="@+id/addresses"
                 android:entries="@array/address_types"
                 android:hint="@string/address"
-                android:inputType="text"
+                android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/emails" />

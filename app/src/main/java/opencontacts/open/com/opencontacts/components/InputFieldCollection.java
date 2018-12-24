@@ -13,6 +13,8 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -92,7 +94,9 @@ public class InputFieldCollection extends LinearLayout {
     public List<Pair<String, String>> getValuesAndTypes() {
         int childCount = fieldViewHoldersList.size();
         if(childCount == 0) return null;
-        return mapIndexes(childCount, index -> fieldViewHoldersList.get(index).getValueAndType());
+        return U.chain(mapIndexes(childCount, index -> fieldViewHoldersList.get(index).getValueAndTypeAsPair()))
+                .reject(valueAndTypePair -> TextUtils.isEmpty(valueAndTypePair.first))
+                .value();
     }
 
     public class FieldViewHolder {
@@ -118,7 +122,7 @@ public class InputFieldCollection extends LinearLayout {
             return editText.getText().toString();
         }
 
-        public Pair<String, String> getValueAndType() {
+        public Pair<String, String> getValueAndTypeAsPair() {
             return new Pair<>(getValue(), types.get(spinner.getSelectedItemPosition()));
         }
     }

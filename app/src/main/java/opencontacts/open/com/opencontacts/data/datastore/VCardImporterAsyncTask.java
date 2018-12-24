@@ -55,9 +55,8 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
     }
 
     private boolean processVCard(VCard vcard) {
-        return ContactsDBHelper.addContact(vcard, context) == null;
+        return ContactsDBHelper.addContact(vcard, context) != null;
     }
-
 
     @Override
     protected void onPreExecute() {

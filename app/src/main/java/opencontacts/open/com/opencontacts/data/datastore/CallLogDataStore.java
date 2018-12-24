@@ -162,4 +162,13 @@ public class CallLogDataStore {
             loadRecentCallLogEntries(context);
         });
     }
+
+    public static void removeAllContactsLinking() {
+        CallLogDBHelper.removeAllContactsLinking();
+        CallLogDataStore.refreshStoreAsync();
+    }
+
+    private static void refreshStoreAsync() {
+        processAsync(CallLogDataStore::refreshStore);
+    }
 }

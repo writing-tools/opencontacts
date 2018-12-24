@@ -10,8 +10,8 @@ import java.util.List;
 
 public class CallLogEntry extends SugarRecord {
     int simId;
-    String name;
-    long contactId;
+    public String name;
+    public long contactId;
     String phoneNumber;
     String duration;
     String callType;

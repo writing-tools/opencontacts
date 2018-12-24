@@ -18,6 +18,7 @@ import java.util.regex.Pattern;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
+import ezvcard.io.text.VCardReader;
 import ezvcard.io.text.VCardWriter;
 import ezvcard.parameter.AddressType;
 import ezvcard.parameter.EmailType;
@@ -27,6 +28,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
+import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
@@ -56,7 +58,7 @@ public class DomainUtils {
     public static EmailType defaultEmailType = EmailType.HOME;
 
     static {
-        characterToIntegerMappingForKeyboardLayout = new HashMap();
+        characterToIntegerMappingForKeyboardLayout = new HashMap<>();
         int[] numericsMappingForAlphabetsInNumberKeypad = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
         for(int i=0, charCodeForA = 65; i<26; i++){
             characterToIntegerMappingForKeyboardLayout.put((char) (charCodeForA + i), numericsMappingForAlphabetsInNumberKeypad[i]);
@@ -77,15 +79,19 @@ public class DomainUtils {
             vCardWriter = new VCardWriter(new FileOutputStream(file), VCardVersion.V4_0);
 
             StructuredName structuredName = new StructuredName();
-
             for( Contact contact : allContacts){
-                VCard vcard = new VCard();
-                structuredName.setGiven(contact.firstName);
-                structuredName.setFamily(contact.lastName);
-                vcard.setStructuredName(structuredName);
-                for(PhoneNumber phoneNumber : contact.phoneNumbers)
-                    vcard.addTelephoneNumber(phoneNumber.phoneNumber, TelephoneType.CELL);
-                vCardWriter.write(vcard);
+                VCardData vCardData = ContactsDataStore.getVCardData(contact.id);
+                if(vCardData == null)
+                    createVCardAndWrite(vCardWriter, structuredName, contact);
+                else {
+                    try{
+                        vCardWriter.write(new VCardReader(vCardData.vcardDataAsString).readNext());
+                    }
+                    catch (IOException e){
+                        e.printStackTrace();
+                        createVCardAndWrite(vCardWriter, structuredName, contact);
+                    }
+                }
             }
         }
         finally {
@@ -93,6 +99,16 @@ public class DomainUtils {
                 vCardWriter.close();
         }
 
+    }
+
+    private static void createVCardAndWrite(VCardWriter vCardWriter, StructuredName structuredName, Contact contact) throws IOException {
+        VCard vcard = new VCard();
+        structuredName.setGiven(contact.firstName);
+        structuredName.setFamily(contact.lastName);
+        vcard.setStructuredName(structuredName);
+        for(PhoneNumber phoneNumber : contact.phoneNumbers)
+            vcard.addTelephoneNumber(phoneNumber.phoneNumber, TelephoneType.CELL);
+        vCardWriter.write(vcard);
     }
 
     public static String getAllNumericPhoneNumber(String phoneNumber) {

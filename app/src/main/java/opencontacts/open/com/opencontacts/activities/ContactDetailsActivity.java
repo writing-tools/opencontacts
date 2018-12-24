@@ -30,6 +30,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 
@@ -116,7 +117,10 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillAddress() {
-        if(U.isEmpty(vcard.getAddresses())) return;
+        if(U.isEmpty(vcard.getAddresses())) {
+            findViewById(R.id.address_card).setVisibility(GONE);
+            return;
+        }
         findViewById(R.id.address_card).setVisibility(VISIBLE);
         addressLinearLayout.removeAllViews();
         List<Address> addresses = vcard.getAddresses();
@@ -129,7 +133,10 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillEmailAddress() {
-        if(U.isEmpty(vcard.getEmails())) return;
+        if(U.isEmpty(vcard.getEmails())) {
+            findViewById(R.id.email_card).setVisibility(GONE);
+            return;
+        }
         findViewById(R.id.email_card).setVisibility(VISIBLE);
         emailAddressLinearLayout.removeAllViews();
         List<Email> emails = vcard.getEmails();
@@ -141,7 +148,10 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillPhoneNumbers() {
-        if(U.isEmpty(vcard.getTelephoneNumbers())) return;
+        if(U.isEmpty(vcard.getTelephoneNumbers())) {
+            findViewById(R.id.phone_card).setVisibility(GONE);
+            return;
+        }
         findViewById(R.id.phone_card).setVisibility(VISIBLE);
         phoneNumbersLinearLayout.removeAllViews();
         U.forEach(vcard.getTelephoneNumbers(), telephone -> {

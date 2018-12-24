@@ -150,6 +150,7 @@ class ContactsDBHelper {
         Contact.deleteAll(Contact.class);
         PhoneNumber.deleteAll(PhoneNumber.class);
         VCardData.deleteAll(VCardData.class);
+        CallLogDataStore.removeAllContactsLinking();
     }
 
     public static Contact addContact(VCard vcard, Context context){

@@ -11,6 +11,8 @@ import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.widget.Toast;
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -30,6 +32,14 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 
 class CallLogDBHelper {
     private Map<String, Integer> simsInfo = null;
+
+    public static void removeAllContactsLinking() {
+        U.forEach(getRecent100CallLogEntriesFromDB(), callLogEntry -> {
+            callLogEntry.name = null;
+            callLogEntry.contactId = -1;
+            callLogEntry.save();
+        });
+    }
 
     private void createSimsInfo(Context context) {
         simsInfo = new HashMap<>();

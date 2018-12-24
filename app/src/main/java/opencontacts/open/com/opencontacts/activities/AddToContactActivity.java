@@ -10,7 +10,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 import android.widget.LinearLayout;
@@ -24,8 +23,6 @@ import opencontacts.open.com.opencontacts.ContactsListFilter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.orm.PhoneNumber;
-import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.activities.EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER;
 
@@ -59,10 +56,9 @@ public class AddToContactActivity extends AppBaseActivity {
         };
         contactsListView.setAdapter(adapter);
         contactsListView.setOnItemClickListener((parent, view, position, id) -> {
-            Contact tempContact = DomainUtils.getACopyOf(adapter.getItem(position));
-            tempContact.phoneNumbers.add(new PhoneNumber(phoneNumber));
             Intent editContact = new Intent(AddToContactActivity.this, EditContactActivity.class);
-            editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, tempContact);
+            editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, adapter.getItem(position));
+            editContact.putExtra(EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER, phoneNumber);
             AddToContactActivity.this.startActivity(editContact);
         });
         ((LinearLayout)findViewById(R.id.parent_linear_layout)).addView(contactsListView);

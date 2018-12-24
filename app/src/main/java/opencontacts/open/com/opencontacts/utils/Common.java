@@ -1,5 +1,8 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import com.github.underscore.Function;
+import com.github.underscore.U;
+
 import java.text.Normalizer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
@@ -44,12 +47,36 @@ public class Common {
         }
     }
 
+    public static boolean forEachIndexUntilFalseElseEndWithTrue(int count, ForEachIndexUntilFalseFunction function){
+        for(int i=0; i < count; i++){
+            if(!function.apply(i))
+                return false;
+        }
+        return true;
+    }
+
+    public static <T> int findIndexOrDefault(List<T> listOfItems, T item, int defaultIndex) {
+        int indexOfItem = listOfItems.indexOf(item);
+        return indexOfItem == -1 ? defaultIndex : indexOfItem;
+    }
+
+    public static <J> List<List> mapMultiple(List<J> items, Function<J, ?>... functions) {
+        int size = items.size();
+        List<List> finalList = mapIndexes(functions.length, index -> new ArrayList<>(size));
+        U.forEachIndexed(items, (index, item) -> finalList.get(index).add(functions[index].apply(item)));
+        return finalList;
+    }
+
     public interface TimesFunction<T>{
-        T apply(int count);
+        T apply(int index);
     }
 
     public interface ForEachIndexFunction{
-        void apply(int count);
+        void apply(int index);
+    }
+
+    public interface ForEachIndexUntilFalseFunction {
+        boolean apply(int index);
     }
 
 }

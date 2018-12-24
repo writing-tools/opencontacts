@@ -35,8 +35,8 @@ public class ContactsDataStore {
         return new ArrayList<>(contacts);
     }
 
-    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, VCard vCard) {
-        opencontacts.open.com.opencontacts.orm.Contact newContactWithDatabaseId = ContactsDBHelper.addContact(firstName, lastName, phoneNumbers, vCard);
+    public static void addContact(VCard vCard, Context context) {
+        opencontacts.open.com.opencontacts.orm.Contact newContactWithDatabaseId = ContactsDBHelper.addContact(vCard, context);
         Contact addedDomainContact = ContactsDBHelper.getContact(newContactWithDatabaseId.getId());
         contacts.add(addedDomainContact);
         notifyListenersAsync(ADDITION, addedDomainContact);
@@ -50,13 +50,10 @@ public class ContactsDataStore {
         }
     }
 
-    public static void updateContact(Contact contact, VCard vCard) {
-        int indexOfContact = contacts.indexOf(contact);
-        if (indexOfContact == -1)
-            return;
-        ContactsDBHelper.updateContactInDBWith(contact, vCard);
-        reloadContact(contact.id);
-        CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contact.id));
+    public static void updateContact(long contactId, PhoneNumber primaryNumber, VCard vCard, Context context) {
+        ContactsDBHelper.updateContactInDBWith(contactId, primaryNumber, vCard, context);
+        reloadContact(contactId);
+        CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contactId));
     }
 
     private static void reloadContact(long contactId) {

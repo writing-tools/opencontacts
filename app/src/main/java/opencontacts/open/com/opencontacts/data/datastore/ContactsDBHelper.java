@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
+import android.support.v4.util.Pair;
 
 import com.github.underscore.U;
 
@@ -10,24 +11,20 @@ import java.util.HashMap;
 import java.util.List;
 
 import ezvcard.VCard;
-import ezvcard.property.FormattedName;
-import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
-import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
 
 /**
  * Created by sultanm on 7/17/17.
  */
 
 class ContactsDBHelper {
-
-    private static String noNameString;
 
     static Contact getDBContactWithId(Long id){
         return Contact.findById(Contact.class, id);
@@ -58,20 +55,23 @@ class ContactsDBHelper {
         return matchingPhoneNumbers.get(0).contact;
     }
 
-    static void replacePhoneNumbersInDB(Contact dbContact, List<PhoneNumber> phoneNumbers, PhoneNumber primaryPhoneNumber) {
+    static void replacePhoneNumbersInDB(Contact dbContact, VCard vcard, PhoneNumber primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
-        for(PhoneNumber phoneNumber : phoneNumbers){
-            new PhoneNumber(phoneNumber.phoneNumber, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumber.phoneNumber)).save();
-        }
+        U.forEach(vcard.getTelephoneNumbers(),
+                telephone -> {
+                    String phoneNumberText = telephone.getText();
+                    new PhoneNumber(phoneNumberText, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumberText)).save();
+        });
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }
 
-    static void updateContactInDBWith(opencontacts.open.com.opencontacts.domain.Contact contact, VCard vCard){
-        opencontacts.open.com.opencontacts.orm.Contact dbContact = ContactsDBHelper.getDBContactWithId(contact.id);
-        dbContact.firstName = contact.firstName;
-        dbContact.lastName = contact.lastName;
+    static void updateContactInDBWith(long contactId, PhoneNumber primaryNumber, VCard vCard, Context context){
+        Contact dbContact = ContactsDBHelper.getDBContactWithId(contactId);
+        Pair<String, String> nameFromVCard = getNameFromVCard(vCard, context);
+        dbContact.firstName = nameFromVCard.first;
+        dbContact.lastName = nameFromVCard.second;
         dbContact.save();
-        replacePhoneNumbersInDB(dbContact, contact.phoneNumbers, contact.primaryPhoneNumber);
+        replacePhoneNumbersInDB(dbContact, vCard, primaryNumber);
         updateVCardInDBWith(vCard, dbContact.getId());
     }
 
@@ -146,26 +146,17 @@ class ContactsDBHelper {
         vCardDataInDB.save();
     }
 
-    public static Contact addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, VCard vCard){
-        Contact dbContact = new Contact(firstName, lastName);
-        dbContact.save();
-        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, U.first(phoneNumbers));
-        VCardData newVCardData = new VCardData(dbContact, vCard.write());
-        newVCardData.save();
-        return dbContact;
-    }
-
     public static void deleteAllContacts(){
         Contact.deleteAll(Contact.class);
         PhoneNumber.deleteAll(PhoneNumber.class);
         VCardData.deleteAll(VCardData.class);
     }
 
-    public static boolean addContact(VCard vcard, Context context){
+    public static Contact addContact(VCard vcard, Context context){
         Contact contact = createContactSaveInDBAndReturnIt(vcard, context);
         createMobileNumbersAndSaveInDB(vcard, contact);
         createVCardDataAndSaveInDB(vcard, contact);
-        return true;
+        return contact;
     }
 
     private static void createVCardDataAndSaveInDB(VCard vcard, Contact contact) {
@@ -179,29 +170,10 @@ class ContactsDBHelper {
     }
 
     private static Contact createContactSaveInDBAndReturnIt(VCard vcard, Context context) {
-        if(noNameString == null) noNameString = context.getString(R.string.noname);
-        Contact contact;
-        StructuredName structuredName = vcard.getStructuredName();
-        FormattedName formattedName = vcard.getFormattedName();
-        if (structuredName == null)
-            if (formattedName == null) {
-                contact = new Contact(noNameString, "");
-            } else contact = new Contact(formattedName.getValue(), "");
-        else contact = createContactWithStructuredName(structuredName);
+        Pair<String, String> name = getNameFromVCard(vcard, context);
+        Contact contact = new Contact(name.first, name.second);
         contact.save();
         return contact;
-    }
-
-    private static Contact createContactWithStructuredName(StructuredName structuredName) {
-        List<String> additionalNames = structuredName.getAdditionalNames();
-        String lastName = structuredName.getFamily();
-        if (additionalNames.size() > 0) {
-            StringBuilder nameBuffer = new StringBuilder();
-            for (String additionalName : additionalNames)
-                nameBuffer.append(additionalName).append(" ");
-            lastName = nameBuffer.append(structuredName.getFamily()).toString();
-        }
-        return new Contact(structuredName.getGiven(), lastName);
     }
 
 }

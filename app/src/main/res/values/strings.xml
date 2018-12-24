@@ -96,14 +96,32 @@
     <string name="whatsapp_preferences">Whatsapp Preferences</string>
     <string name="do_you_want_to_import">Do you want to import</string>
     <string name="noname">NONAME</string>
+
+
+    <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Mobile</string>
     <string name="work">Work</string>
     <string name="fax">Fax</string>
     <string name="home">Home</string>
+    <string name="email">Email</string>
+    <string name="add_more">Add more</string>
+    <string name="address">Address</string>
+    <string name="firstname">FirstName</string>
+    <string name="lastname">LastName</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>
         <item>Home</item>
         <item>Fax</item>
     </string-array>
+    <string-array name="email_types">
+        <item>Home</item>
+        <item>Work</item>
+    </string-array>
+    <string-array name="address_types">
+        <item>Home</item>
+        <item>Work</item>
+    </string-array>
+
+
 </resources>

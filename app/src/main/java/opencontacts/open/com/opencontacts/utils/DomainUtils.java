@@ -10,7 +10,6 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -42,13 +41,13 @@ public class DomainUtils {
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
     public static final int NUMBER_9 = 9;
 
-    static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
-    static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
-    static Map<String, TelephoneType> translatedTextToMobileNumberType;
-    static Map<AddressType, String> addressTypeToTranslatedText;
-    static Map<String, AddressType> translatedTextToAddressType;
-    static Map<EmailType, String> emailTypeToTranslatedText;
-    static Map<String, EmailType> translatedTextToEmailType;
+    private static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
+    private static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
+    private static Map<String, TelephoneType> translatedTextToMobileNumberType;
+    private static Map<AddressType, String> addressTypeToTranslatedText;
+    private static Map<String, AddressType> translatedTextToAddressType;
+    private static Map<EmailType, String> emailTypeToTranslatedText;
+    private static Map<String, EmailType> translatedTextToEmailType;
     private static String defaultPhoneNumberTypeTranslatedText;
     private static String defaultAddressTypeTranslatedText;
     private static String defaultEmailTypeTranslatedText;
@@ -94,10 +93,6 @@ public class DomainUtils {
                 vCardWriter.close();
         }
 
-    }
-
-    public static Contact getACopyOf(Contact contact){
-        return new Contact(contact.id, contact.firstName, contact.lastName, new ArrayList<>(contact.phoneNumbers));
     }
 
     public static String getAllNumericPhoneNumber(String phoneNumber) {
@@ -160,10 +155,17 @@ public class DomainUtils {
         addressTypeToTranslatedText.put(AddressType.WORK, context.getString(R.string.work));
         return addressTypeToTranslatedText;
     }
+
     public static String getAddressTypeTranslatedText(List<AddressType> types, Context context){
         if(defaultAddressTypeTranslatedText == null) defaultAddressTypeTranslatedText = getAddressTypeToTranslatedTextMap(context).get(defaultAddressType);
         return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), defaultAddressTypeTranslatedText);
     }
+
+    public static AddressType getAddressType(String translatedText, Context context){
+        if(translatedTextToAddressType == null) translatedTextToAddressType = U.toMap(U.invert(getAddressTypeToTranslatedTextMap(context)));
+        return getOrDefault(translatedTextToAddressType, translatedText, defaultAddressType);
+    }
+
 
     private static Map<EmailType, String> getEmailTypeToTranslatedTextMap(Context context){
         if(emailTypeToTranslatedText != null)
@@ -173,8 +175,15 @@ public class DomainUtils {
         emailTypeToTranslatedText.put(EmailType.WORK, context.getString(R.string.work));
         return emailTypeToTranslatedText;
     }
+
     public static String getEmailTypeTranslatedText(List<EmailType> types, Context context){
         if(defaultEmailType == null) defaultEmailTypeTranslatedText = getEmailTypeToTranslatedTextMap(context).get(defaultEmailType);
         return getOrDefault(getEmailTypeToTranslatedTextMap(context), U.first(types), defaultEmailTypeTranslatedText);
     }
+
+    public static EmailType getEmailType(String translatedText, Context context){
+        if(translatedTextToEmailType == null) translatedTextToEmailType = U.toMap(U.invert(getEmailTypeToTranslatedTextMap(context)));
+        return getOrDefault(translatedTextToEmailType, translatedText, defaultEmailType);
+    }
+
 }

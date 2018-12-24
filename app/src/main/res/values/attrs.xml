@@ -1,0 +1,7 @@
+<resources>
+    <declare-styleable name="InputFieldCollection">
+        <attr name="android:entries" />
+        <attr name="android:hint" />
+        <attr name="android:inputType" />
+    </declare-styleable>
+</resources>

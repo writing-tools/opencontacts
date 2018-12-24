@@ -2,36 +2,31 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.AppCompatEditText;
-import android.support.v7.widget.AppCompatSpinner;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.Toast;
 
 
 import com.github.underscore.U;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
-import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.InputFieldCollection;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
@@ -40,23 +35,26 @@ public class EditContactActivity extends AppBaseActivity {
     public static final String INTENT_EXTRA_STRING_PHONE_NUMBER = "phone_number";
     EditText editText_firstName;
     EditText editText_lastName;
-    EditText editText_mobileNumber;
     private boolean addingNewContact = false;
-    private String[] phoneNumberTypesInSpinner;
     private VCard vcardBeforeEdit;
+    private InputFieldCollection phoneNumbersInputCollection;
+    private InputFieldCollection emailsInputCollection;
+    private InputFieldCollection addressesInputCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         editText_firstName = findViewById(R.id.editFirstName);
         editText_lastName = findViewById(R.id.editLastName);
-        editText_mobileNumber = findViewById(R.id.editPhoneNumber);
-        phoneNumberTypesInSpinner = getResources().getStringArray(R.array.phone_number_types);
+        phoneNumbersInputCollection = findViewById(R.id.phonenumbers);
+        emailsInputCollection = findViewById(R.id.emails);
+        addressesInputCollection = findViewById(R.id.addresses);
+
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
             addingNewContact = true;
-            editText_mobileNumber.setText(intent.getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER));
             toolbar.setTitle(R.string.new_contact);
+            vcardBeforeEdit = new VCard();
         }
         else{
             contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
@@ -71,8 +69,8 @@ public class EditContactActivity extends AppBaseActivity {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            fillFieldsFromContactDetails();
         }
+        fillFieldsFromContactDetails();
     }
 
     @Override
@@ -81,94 +79,129 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void fillFieldsFromContactDetails() {
+        fillTelephoneNumbers();
+        fillEmails();
+        fillAddress();
+
+        if(addingNewContact) return;
+
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
-        if(vcardBeforeEdit == null)
-            return;
-        List<Telephone> telephoneNumbers = vcardBeforeEdit.getTelephoneNumbers();
-        Telephone telephone = U.first(telephoneNumbers);
-        editText_mobileNumber.setText(telephone.getText());
-        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(telephone.getTypes(), EditContactActivity.this);
-        int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
-        ((AppCompatSpinner)findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
-
-        U.forEach(U.rest(telephoneNumbers), this::addPhoneNumberViewFor);
     }
 
-    private void addPhoneNumberViewFor(Telephone telephone) {
-        LinearLayout linearLayout = addOneMorePhoneNumberView(null);
-        ((AppCompatEditText)linearLayout.findViewById(R.id.editPhoneNumber)).setText(telephone.getText());
-        String mobileNumberTypeTranslatedText = DomainUtils.getMobileNumberTypeTranslatedText(telephone.getTypes(), EditContactActivity.this);
-        int phoneNumberTypeIndexInSpinner = U.findIndex(phoneNumberTypesInSpinner, arg -> arg.equals(mobileNumberTypeTranslatedText));
-        ((AppCompatSpinner)linearLayout.findViewById(R.id.phone_number_type)).setSelection(phoneNumberTypeIndexInSpinner);
+    private void fillAddress() {
+        List<Address> addresses = vcardBeforeEdit.getAddresses();
+        if(U.isEmpty(addresses)) {
+            addressesInputCollection.addOneMoreView(null);
+            return;
+        }
+        U.forEach(addresses, address -> addressesInputCollection.addOneMoreView(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), EditContactActivity.this)));
+    }
+
+    private void fillEmails() {
+        List<Email> emails = vcardBeforeEdit.getEmails();
+        if(U.isEmpty(emails)) {
+            emailsInputCollection.addOneMoreView(null);
+            return;
+        }
+        U.forEach(emails, email -> emailsInputCollection.addOneMoreView(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), EditContactActivity.this)));
+    }
+
+    private void fillTelephoneNumbers() {
+        List<Telephone> telephoneNumbers = vcardBeforeEdit.getTelephoneNumbers();
+        String newPhoneNumberToBeAdded = getIntent().getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER);
+        if(U.isEmpty(telephoneNumbers)) {
+            phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
+            return;
+        }
+        U.forEach(telephoneNumbers, telephoneNumber -> phoneNumbersInputCollection.addOneMoreView(telephoneNumber.getText(), DomainUtils.getMobileNumberTypeTranslatedText(telephoneNumber.getTypes(), EditContactActivity.this)));
+        if(newPhoneNumberToBeAdded != null) phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
     }
 
     public void saveContact(View view) {
         String firstName = String.valueOf(editText_firstName.getText());
         String lastName = String.valueOf(editText_lastName.getText());
-        if(isEmpty(firstName) && isEmpty(lastName)){
-            editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
-            return;
+        if (warnIfNotFilledMandatoryFields(firstName, lastName)) return;
+
+        VCard vcardAfterEdit = createVCardFromInputFields(firstName, lastName);
+        if(addingNewContact) {
+            ContactsDataStore.addContact(vcardAfterEdit, this);
         }
-        if(phoneNumbersNotEntered()){
-            editText_mobileNumber.setError(getString(R.string.required));
-            return;
-        }
-        List<Pair<PhoneNumber, TelephoneType>> phoneNumbersAndTypeList = getPhoneNumbersAndTelephoneTypesFromView();
-        VCard newVCardData = createVCard(firstName, lastName, phoneNumbersAndTypeList);
-        if(addingNewContact)
-            ContactsDataStore.addContact(firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first), newVCardData);
         else{
-            Contact updatedContact = new Contact(this.contact.id, firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first));
-            updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
-            ContactsDataStore.updateContact(updatedContact, newVCardData);
+            ContactsDataStore.updateContact(contact.id, contact.primaryPhoneNumber, vcardAfterEdit, this);
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();
     }
 
-    private VCard createVCard(String firstName, String lastName, List<Pair<PhoneNumber, TelephoneType>> phoneNumbersAndTypeList) {
+    private boolean warnIfNotFilledMandatoryFields(String firstName, String lastName) {
+        if(isEmpty(firstName) && isEmpty(lastName)){
+            editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
+            return true;
+        }
+        if(phoneNumbersInputCollection.isEmpty()){
+            phoneNumbersInputCollection.getFieldAt(0).editText.setError(getString(R.string.required));
+            return true;
+        }
+        return false;
+    }
+
+    private VCard createVCardFromInputFields(String firstName, String lastName) {
         VCard newVCard = new VCard();
-        StructuredName structuredName = new StructuredName();
-        structuredName.setGiven(firstName);
-        structuredName.setFamily(lastName);
-        newVCard.setStructuredName(structuredName);
-        U.forEach(phoneNumbersAndTypeList, pair -> newVCard.addTelephoneNumber(pair.first.phoneNumber, pair.second));
-        U.forEach(getEmailFromView(), newVCard::addEmail);
-        U.forEach(getAddressFromView(), newVCard::addAddress);
+
+        newVCard.setStructuredName(getStructuredName(firstName, lastName));
+        addTelephoneNumbersFromFieldsToNewVCard(newVCard);
+        addEmailsFromFieldsToNewVCard(newVCard);
+        addAddressFromFieldsToNewVCard(newVCard);
+
         return newVCard;
     }
 
-    private List<Address> getAddressFromView() {
-        return new ArrayList<>();
+    private void addAddressFromFieldsToNewVCard(VCard newVCard) {
+        if(addressesInputCollection.isEmpty()) return;
+        U.chain(addressesInputCollection.getValuesAndTypes())
+                .map(this::createAddress)
+                .forEach(newVCard::addAddress);
     }
 
-    private List<Email> getEmailFromView() {
-        return new ArrayList<>();
+    private void addEmailsFromFieldsToNewVCard(VCard newVCard) {
+        if(emailsInputCollection.isEmpty()) return;
+        U.chain(emailsInputCollection.getValuesAndTypes())
+                .map(this::createEmail)
+                .forEach(newVCard::addEmail);
     }
 
-    private boolean phoneNumbersNotEntered() {
-        return getPhoneNumbersAndTelephoneTypesFromView().isEmpty();
+    private void addTelephoneNumbersFromFieldsToNewVCard(VCard newVCard) {
+        if(phoneNumbersInputCollection.isEmpty()) return;
+        U.chain(phoneNumbersInputCollection.getValuesAndTypes())
+                .map(this::createTelephone)
+                .forEach(newVCard::addTelephoneNumber);
     }
 
-    private List<Pair<PhoneNumber, TelephoneType>> getPhoneNumbersAndTelephoneTypesFromView() {
-        LinearLayout phoneNumbersContainer = findViewById(R.id.phonenumbers);
-        int numberOfPhoneNumbers = phoneNumbersContainer.getChildCount();
-        return U.chain(mapIndexes(numberOfPhoneNumbers, phoneNumbersContainer::getChildAt))
-                .map(this::createPhoneNumberAndTypePair)
-                .value();
+    @NonNull
+    private StructuredName getStructuredName(String firstName, String lastName) {
+        StructuredName structuredName = new StructuredName();
+        structuredName.setGiven(firstName);
+        structuredName.setFamily(lastName);
+        return structuredName;
     }
 
-    private Pair<PhoneNumber, TelephoneType> createPhoneNumberAndTypePair(View phoneNumberHolder) {
-        String phoneNumber = ((AppCompatEditText) (phoneNumberHolder.findViewById(R.id.editPhoneNumber))).getText().toString();
-        String selectedPhoneNumberTypeInSpinner = (String) ((AppCompatSpinner) phoneNumberHolder.findViewById(R.id.phone_number_type)).getSelectedItem();
-        return new Pair<>(new PhoneNumber(phoneNumber), DomainUtils.getMobileNumberType(selectedPhoneNumberTypeInSpinner, this));
+    private Address createAddress(Pair<String, String> addressAndTypePair) {
+        Address address = new Address();
+        address.setStreetAddress(addressAndTypePair.first);
+        address.getTypes().add(DomainUtils.getAddressType(addressAndTypePair.second, this));
+        return address;
     }
 
-    public LinearLayout addOneMorePhoneNumberView(View view){
-        LinearLayout phoneNumbers_linearLayout = findViewById(R.id.phonenumbers);
-        LinearLayout inflatedLayout = (LinearLayout) getLayoutInflater().inflate(R.layout.layout_edit_phone_number_and_type, phoneNumbers_linearLayout, false);
-        phoneNumbers_linearLayout.addView(inflatedLayout);
-        return inflatedLayout;
+    private Email createEmail(Pair<String, String> emailAndTypePair) {
+        Email email = new Email(emailAndTypePair.first);
+        email.getTypes().add(DomainUtils.getEmailType(emailAndTypePair.second, this));
+        return email;
+    }
+
+    private Telephone createTelephone(Pair<String, String> phoneNumberAndTypePair) {
+        Telephone telephone = new Telephone(phoneNumberAndTypePair.first);
+        telephone.getTypes().add(DomainUtils.getMobileNumberType(phoneNumberAndTypePair.second, this));
+        return telephone;
     }
 }

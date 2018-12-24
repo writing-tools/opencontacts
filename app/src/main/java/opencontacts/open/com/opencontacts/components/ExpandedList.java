@@ -19,7 +19,6 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.Common;
 
 public class ExpandedList extends LinearLayout {
-    private Context context;
     private LayoutInflater layoutInflater;
     private AdapterView.OnItemClickListener onItemClickListener;
 
@@ -33,7 +32,6 @@ public class ExpandedList extends LinearLayout {
 
     public ExpandedList(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        this.context = context;
         layoutInflater = LayoutInflater.from(context);
         setOrientation(LinearLayout.VERTICAL);
     }

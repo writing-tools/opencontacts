@@ -1,95 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout android:layout_height="match_parent"
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    android:layout_height="match_parent">
+
     <android.support.v7.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        />
+        app:navigationIcon="@drawable/ic_arrow_back" />
+
     <View
         android:id="@+id/divider"
-        android:layout_below="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="?colorPrimaryDark"
-        />
-    <ScrollView android:layout_height="match_parent"
+        android:layout_below="@+id/toolbar"
+        android:background="?colorPrimaryDark" />
+
+    <ScrollView
         android:layout_width="match_parent"
+        android:layout_height="match_parent"
         android:layout_below="@id/divider">
+
         <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/relative_layout_contact_details"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingBottom="@dimen/activity_vertical_margin"
-            android:paddingLeft="@dimen/activity_horizontal_margin"
-            android:paddingRight="@dimen/activity_horizontal_margin"
-            android:paddingTop="@dimen/activity_vertical_margin"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/activity_vertical_margin"
             tools:context="opencontacts.open.com.opencontacts.activities.EditContactActivity">
 
             <EditText
+                android:id="@+id/editFirstName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
-                android:layout_marginTop="21dp"
-                android:id="@+id/editFirstName"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
-                android:hint="FirstName" />
+                android:layout_alignParentLeft="true"
+                android:layout_marginTop="21dp"
+                android:ems="10"
+                android:hint="@string/firstname"
+                android:inputType="textPersonName" />
 
             <EditText
+                android:id="@+id/editLastName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:inputType="textPersonName"
-                android:ems="10"
                 android:layout_below="@+id/editFirstName"
-                android:layout_alignRight="@+id/editFirstName"
                 android:layout_alignEnd="@+id/editFirstName"
-                android:layout_marginTop="21dp"
-                android:id="@+id/editLastName"
-                android:hint="LastName" />
+                android:layout_alignRight="@+id/editFirstName"
+                android:ems="10"
+                android:hint="@string/lastname"
+                android:inputType="textPersonName" />
 
-            <LinearLayout
+
+            <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:id="@+id/phonenumbers"
+                android:entries="@array/phone_number_types"
+                android:hint="@string/phone_number"
+                android:inputType="phone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="21dp"
-                android:id="@+id/phonenumbers"
-                android:layout_below="@+id/editLastName"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:orientation="vertical">
-                <include layout="@layout/layout_edit_phone_number_and_type" />
-            </LinearLayout>
+                android:layout_below="@id/editLastName" />
 
-            <Button
-                android:text="Add more"
-                android:layout_width="wrap_content"
+
+            <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:id="@+id/emails"
+                android:entries="@array/email_types"
+                android:hint="@string/email"
+                android:inputType="textEmailAddress"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/add_more"
-                android:onClick="addOneMorePhoneNumberView"
-                android:layout_below="@id/phonenumbers"
-                android:layout_marginTop="21dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small" />
+                android:layout_below="@id/phonenumbers" />
+
+            <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:id="@+id/addresses"
+                android:entries="@array/address_types"
+                android:hint="@string/address"
+                android:inputType="text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/emails" />
+
+
         </RelativeLayout>
     </ScrollView>
+
     <ImageButton
+        android:id="@+id/image_button_save"
         android:layout_width="wrap_content"
-        app:srcCompat="@android:drawable/ic_menu_save"
-        android:src="@android:drawable/ic_menu_save"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_marginRight="18dp"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
         android:layout_marginEnd="18dp"
+        android:layout_marginRight="18dp"
         android:layout_marginBottom="22dp"
         android:onClick="saveContact"
-        android:id="@+id/image_button_save" />
+        android:src="@android:drawable/ic_menu_save"
+        app:srcCompat="@android:drawable/ic_menu_save" />
 </RelativeLayout>
 
 

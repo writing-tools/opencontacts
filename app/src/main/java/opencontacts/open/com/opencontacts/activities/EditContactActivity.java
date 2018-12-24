@@ -117,11 +117,11 @@ public class EditContactActivity extends AppBaseActivity {
         List<Pair<PhoneNumber, TelephoneType>> phoneNumbersAndTypeList = getPhoneNumbersAndTelephoneTypesFromView();
         VCard newVCardData = createVCard(firstName, lastName, phoneNumbersAndTypeList);
         if(addingNewContact)
-            ContactsDataStore.addContact(firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first), newVCardData, EditContactActivity.this);
+            ContactsDataStore.addContact(firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first), newVCardData);
         else{
             Contact updatedContact = new Contact(this.contact.id, firstName, lastName, U.map(phoneNumbersAndTypeList, pair -> pair.first));
             updatedContact.primaryPhoneNumber = contact.primaryPhoneNumber;
-            ContactsDataStore.updateContact(updatedContact, newVCardData, this);
+            ContactsDataStore.updateContact(updatedContact, newVCardData);
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();

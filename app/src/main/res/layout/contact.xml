@@ -48,11 +48,11 @@
         />
 
     <TextView
+        android:layout_below="@id/textview_full_name"
         android:text="phone_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textview_phone_number"
-        android:layout_alignBottom="@+id/button_message"
         android:layout_toRightOf="@id/button_info"
          />
 </RelativeLayout>

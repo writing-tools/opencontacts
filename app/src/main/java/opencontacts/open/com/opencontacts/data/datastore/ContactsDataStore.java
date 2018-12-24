@@ -4,8 +4,6 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
-import com.github.underscore.U;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -37,16 +35,12 @@ public class ContactsDataStore {
         return new ArrayList<>(contacts);
     }
 
-    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, VCard vCard, Context context) {
-        opencontacts.open.com.opencontacts.orm.Contact dbContact = new opencontacts.open.com.opencontacts.orm.Contact(firstName, lastName);
-        dbContact.save();
-        ContactsDBHelper.replacePhoneNumbersInDB(dbContact, phoneNumbers, U.first(phoneNumbers));
-        Contact newContactWithDatabaseId = ContactsDBHelper.getContact(dbContact.getId());
-        VCardData newVCardData = new VCardData(dbContact, vCard.write());
-        newVCardData.save();
-        contacts.add(newContactWithDatabaseId);
-        notifyListenersAsync(ADDITION, newContactWithDatabaseId);
-        CallLogDataStore.updateCallLogAsyncForNewContact(newContactWithDatabaseId, context);
+    public static void addContact(String firstName, String lastName, List<PhoneNumber> phoneNumbers, VCard vCard) {
+        opencontacts.open.com.opencontacts.orm.Contact newContactWithDatabaseId = ContactsDBHelper.addContact(firstName, lastName, phoneNumbers, vCard);
+        Contact addedDomainContact = ContactsDBHelper.getContact(newContactWithDatabaseId.getId());
+        contacts.add(addedDomainContact);
+        notifyListenersAsync(ADDITION, addedDomainContact);
+        CallLogDataStore.updateCallLogAsyncForNewContact(addedDomainContact);
     }
 
     public static void removeContact(Contact contact) {
@@ -56,13 +50,13 @@ public class ContactsDataStore {
         }
     }
 
-    public static void updateContact(Contact contact, VCard vCard, Context context) {
+    public static void updateContact(Contact contact, VCard vCard) {
         int indexOfContact = contacts.indexOf(contact);
         if (indexOfContact == -1)
             return;
         ContactsDBHelper.updateContactInDBWith(contact, vCard);
         reloadContact(contact.id);
-        CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contact.id), context);
+        CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contact.id));
     }
 
     private static void reloadContact(long contactId) {
@@ -151,8 +145,7 @@ public class ContactsDataStore {
 
     public static void deleteAllContacts(Context context) {
         processAsync(() -> {
-            opencontacts.open.com.opencontacts.orm.Contact.deleteAll(opencontacts.open.com.opencontacts.orm.Contact.class);
-            PhoneNumber.deleteAll(PhoneNumber.class);
+            ContactsDBHelper.deleteAllContacts();
             refreshStore();
             getMainThreadHandler().post(() -> Toast.makeText(context, R.string.deleted_all_contacts, Toast.LENGTH_LONG).show());
         });

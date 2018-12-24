@@ -13,7 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.utils.VCardImporterAsyncTask;
+import opencontacts.open.com.opencontacts.data.datastore.VCardImporterAsyncTask;
 
 public class ImportVcardActivity extends AppCompatActivity {
 

@@ -75,7 +75,7 @@ public class CallLogDataStore {
         dataChangeListeners.remove(changeListener);
     }
 
-    public static void updateCallLogAsyncForNewContact(final Contact newContact, final Context context){
+    public static void updateCallLogAsyncForNewContact(final Contact newContact){
         processAsync(new Runnable() {
             @Override
             public void run() {

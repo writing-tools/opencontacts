@@ -41,6 +41,7 @@ import static android.Manifest.permission.CALL_PHONE;
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.content.Intent.ACTION_SENDTO;
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 
@@ -57,6 +58,7 @@ public class AndroidUtils {
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
     public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
+    public static final String EMAIL_SCHEME = "mailto:";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -370,5 +372,12 @@ public class AndroidUtils {
 
     public static void showAlert(Context context, int titleRes, int messageRes) {
         showAlert(context, context.getString(titleRes), context.getString(messageRes));
+    }
+
+    public static void email(String emailAddress, Context context) {
+        Intent emailAppChooserIntent = Intent.createChooser(
+                new Intent(ACTION_SENDTO, Uri.parse(EMAIL_SCHEME + emailAddress))
+                , context.getString(R.string.email));
+        context.startActivity(emailAppChooserIntent);
     }
 }

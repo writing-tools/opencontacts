@@ -141,7 +141,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         emailAddressLinearLayout.removeAllViews();
         List<Email> emails = vcard.getEmails();
         ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener(index -> { })
+                .withOnItemClickListener(index -> AndroidUtils.email(emails.get(index).getValue(), this))
                 .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
                 .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(emails.get(index).getValue(),  true, this))
                 .build();

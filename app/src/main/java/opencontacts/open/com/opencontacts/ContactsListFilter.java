@@ -41,7 +41,7 @@ public class ContactsListFilter extends Filter{
     }
 
     public void updateMap(Contact contact) {
-        contact.t9Text = contact.toString();
+        contact.setT9Text();
     }
 
     public interface AllContactsHolder{
@@ -52,7 +52,7 @@ public class ContactsListFilter extends Filter{
     public void mapAsync(List<Contact> contacts) {
         processAsync(() -> {
             for(Contact contact : contacts){
-                contact.t9Text = contact.toString();
+                contact.setT9Text();
             }
         });
     }
@@ -66,7 +66,7 @@ public class ContactsListFilter extends Filter{
         ArrayList<Contact> filteredContacts = new ArrayList<>();
         for (Contact contact : contacts) {
             if(contact.t9Text == null){
-                contact.getT9Text();
+                contact.setT9Text();
             }
             if (contact.t9Text.contains(searchText.toString().toUpperCase())) {
                 filteredContacts.add(contact);

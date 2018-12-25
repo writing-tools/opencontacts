@@ -90,7 +90,7 @@ class CallLogDBHelper {
                 if(contact == null)
                     callLogEntries.add(new CallLogEntry(null, (long)-1, mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, getSimIdOrDefault(subscriptionIdForCall)));
                 else
-                    callLogEntries.add(new CallLogEntry(contact.toString(), contact.getId(), mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, getSimIdOrDefault(subscriptionIdForCall)));
+                    callLogEntries.add(new CallLogEntry(contact.getFullName(), contact.getId(), mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, getSimIdOrDefault(subscriptionIdForCall)));
             }
             c.moveToFirst();
             setLastSavedCallLogDate(c.getString(columnIndexForDate), context);
@@ -114,7 +114,7 @@ class CallLogDBHelper {
                 if(contact == null)
                     callLogEntries.add(new CallLogEntry(null, (long)-1, mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, 1));
                 else
-                    callLogEntries.add(new CallLogEntry(contact.toString(), contact.getId(), mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, 1));
+                    callLogEntries.add(new CallLogEntry(contact.getFullName(), contact.getId(), mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, 1));
             }
             c.moveToFirst();
             setLastSavedCallLogDate(c.getString(columnIndexForDate), context);

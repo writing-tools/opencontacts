@@ -28,7 +28,7 @@ public class Contact extends SugarRecord implements Serializable{
         this.lastName = lastName;
     }
 
-    public String toString(){
+    public String getFullName(){
         return firstName + " " + lastName;
     }
 

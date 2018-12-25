@@ -53,8 +53,8 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
-    public String getT9Text() {
-        StringBuffer searchStringBuffer = new StringBuffer();
+    public String setT9Text() {
+        StringBuilder searchStringBuffer = new StringBuilder();
         searchStringBuffer.append(name).append(' ');
         for(PhoneNumber phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber.phoneNumber).append(' ');

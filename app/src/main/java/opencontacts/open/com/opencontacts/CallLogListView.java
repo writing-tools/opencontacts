@@ -119,7 +119,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                     whatsappIcon.setOnClickListener(whatsappContact);
                     whatsappIcon.setVisibility(VISIBLE);
                 }
-                else whatsappIcon.setVisibility(INVISIBLE);
+                else whatsappIcon.setVisibility(GONE);
                 if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
                     ((ImageView)reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
                 else if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))

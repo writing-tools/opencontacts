@@ -80,7 +80,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
             whatsappIcon.setOnClickListener(whatsappContact);
             whatsappIcon.setVisibility(VISIBLE);
         }
-        else whatsappIcon.setVisibility(INVISIBLE);
+        else whatsappIcon.setVisibility(GONE);
         convertView.setTag(contact);
         convertView.setOnClickListener(callContact);
         return convertView;

@@ -1,17 +1,17 @@
 <resources>
     <!--themes-->
     <style name="Theme.AppCompat.Light.NoActionBar.Customized">
-        <item name="imageButtonWithTint">@style/ImageButtonWithTint</item>
+        <item name="imageButtonWithTint">@style/TransparentImageButton</item>
     </style>
 
     <style name="Theme.AppCompat.NoActionBar.Customized">
-        <item name="imageButtonWithTint">@style/ImageButtonWithTint</item>
+        <item name="imageButtonWithTint">@style/TransparentImageButton</item>
     </style>
 
 
 
     <!--custom styles-->
-    <style name="ImageButtonWithTint">
+    <style name="TransparentImageButton">
         <item name="android:background">?selectableItemBackground</item>
         <item name="android:padding">16dp</item>
     </style>

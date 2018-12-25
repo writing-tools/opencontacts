@@ -16,10 +16,9 @@
         android:layout_centerVertical="true"
         android:layout_alignParentStart="true" />
 
-    <ImageButton
+    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_add_24dp"
         android:src="@drawable/ic_add_24dp"
         android:id="@+id/image_button_add_contact"
         android:layout_alignParentLeft="true"
@@ -27,20 +26,19 @@
         android:layout_alignParentStart="true" />
 
 
-    <ImageButton
+    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_chat_black_24dp"
         android:src="@drawable/ic_chat_black_24dp"
         android:id="@+id/button_message"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
 
-    <ImageButton
+    <android.support.v7.widget.AppCompatImageButton
+        style="@style/TransparentImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/whatsapp"
         android:src="@drawable/whatsapp"
         android:id="@+id/button_whatsapp"
         android:layout_marginRight="10dp"
@@ -54,10 +52,12 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_full_name"
         android:text="name"
-        android:textAppearance="?android:textAppearanceListItem"
+        android:textColor="?android:textColorPrimary"
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/button_whatsapp"
+        android:layout_toStartOf="@id/button_whatsapp"
         android:layout_toRightOf="@+id/button_info"
         android:layout_toEndOf="@+id/button_info" />
 

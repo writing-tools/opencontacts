@@ -47,12 +47,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/phone"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
-
+                    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
+                        android:src="@drawable/ic_call_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
                     <LinearLayout
                         android:id="@+id/phone_numbers_list"
                         android:layout_width="match_parent"
@@ -79,11 +77,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/email"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
+                    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
+                        android:src="@drawable/ic_email_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
                     <LinearLayout
                         android:id="@+id/email_address_list"
@@ -110,11 +107,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/address"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
+                    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
+                        android:src="@drawable/ic_location_on_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
                     <LinearLayout
                         android:id="@+id/address_list"
@@ -141,11 +137,10 @@
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
-                    <android.support.v7.widget.AppCompatTextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:text="@string/notes"
-                        android:textAppearance="@style/Base.TextAppearance.AppCompat.Title" />
+                    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
+                        android:src="@drawable/ic_content_paste_black_24dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content" />
 
                     <include layout="@layout/layout_clickable_text_view_item" />
                 </LinearLayout>

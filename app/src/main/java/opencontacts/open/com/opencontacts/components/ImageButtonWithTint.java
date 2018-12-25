@@ -26,4 +26,8 @@ public class ImageButtonWithTint extends android.support.v7.widget.AppCompatImag
         setImageDrawable(drawable);
     }
 
+    @Override
+    public void setImageResource(int resId) {
+        super.setImageDrawable(TintedDrawablesStore.getTintedDrawable(resId, getContext()));
+    }
 }

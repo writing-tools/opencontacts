@@ -106,7 +106,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
 
     private void setUpUI() {
         toolbar.setTitle(contact.firstName);
-        toolbar.setSubtitle(contact.name);
+        toolbar.setSubtitle(contact.lastName);
         phoneNumbersLinearLayout = findViewById(R.id.phone_numbers_list);
         emailAddressLinearLayout = findViewById(R.id.email_address_list);
         addressLinearLayout = findViewById(R.id.address_list);

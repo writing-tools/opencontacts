@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -169,7 +170,9 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void addNotesFromFieldsToNewVCard(VCard newVCard) {
-        newVCard.addNote(notesTextInputEditText.getText().toString());
+        String notes = notesTextInputEditText.getText().toString();
+        if(TextUtils.isEmpty(notes)) return;
+        newVCard.addNote(notes);
     }
 
     private void addAddressFromFieldsToNewVCard(VCard newVCard) {

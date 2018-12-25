@@ -6,7 +6,7 @@
     android:layout_height="match_parent">
 
 
-    <ImageButton
+    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -14,7 +14,8 @@
         android:id="@+id/button_info"
         android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
-         />
+        android:layout_marginStart="5dp"
+        android:layout_marginEnd="10dp" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -23,10 +24,12 @@
         android:textAppearance="?android:textAppearanceListItem"
         android:text="name"
         android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@id/button_whatsapp"
         android:layout_toRightOf="@id/button_info"
-         />
+        android:layout_toEndOf="@id/button_info"
+        android:layout_toStartOf="@id/button_whatsapp" />
 
-    <ImageButton
+    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_chat_black_24dp"
@@ -34,9 +37,11 @@
         android:layout_marginRight="5dp"
         android:layout_alignParentTop="true"
         android:layout_alignParentRight="true"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="5dp" />
 
     <ImageButton
+        style="@style/TransparentImageButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/whatsapp"
@@ -54,5 +59,5 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_phone_number"
         android:layout_toRightOf="@id/button_info"
-         />
+        android:layout_toEndOf="@id/button_info" />
 </RelativeLayout>

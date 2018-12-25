@@ -2,16 +2,24 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
+import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
 import ezvcard.VCard;
+import ezvcard.io.text.VCardReader;
+import ezvcard.property.Address;
+import ezvcard.property.Email;
+import ezvcard.property.Note;
 import ezvcard.property.Telephone;
+import ezvcard.property.VCardProperty;
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
@@ -72,7 +80,7 @@ class ContactsDBHelper {
         dbContact.lastName = nameFromVCard.second;
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, vCard, primaryNumber);
-        updateVCardInDBWith(vCard, dbContact.getId());
+        updateVCardInDBWith(vCard, dbContact.getId(), context);
     }
 
     static List<opencontacts.open.com.opencontacts.domain.Contact> getAllContactsFromDB(){
@@ -140,10 +148,24 @@ class ContactsDBHelper {
         return VCardData.getVCardData(contactId);
     }
 
-    public static void updateVCardInDBWith(VCard vCard, long contactId) {
+    public static void updateVCardInDBWith(VCard vCard, long contactId, Context context) {
         VCardData vCardDataInDB = VCardData.getVCardData(contactId);
-        vCardDataInDB.vcardDataAsString = vCard.write();
-        vCardDataInDB.save();
+        try {
+            VCard dbVCard = new VCardReader(vCardDataInDB.vcardDataAsString).readNext();
+            dbVCard.setStructuredName(vCard.getStructuredName());
+            dbVCard.getTelephoneNumbers().clear();
+            dbVCard.getTelephoneNumbers().addAll(vCard.getTelephoneNumbers());
+            dbVCard.getEmails().clear();
+            dbVCard.getEmails().addAll(vCard.getEmails());
+            dbVCard.getAddresses().clear();
+            dbVCard.getAddresses().addAll(vCard.getAddresses());
+            if(!vCard.getNotes().isEmpty()) dbVCard.getNotes().set(0, vCard.getNotes().get(0));
+            vCardDataInDB.vcardDataAsString = dbVCard.write();
+            vCardDataInDB.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+            Toast.makeText(context, R.string.error_while_saving_contact, Toast.LENGTH_SHORT);
+        }
     }
 
     public static void deleteAllContacts(){

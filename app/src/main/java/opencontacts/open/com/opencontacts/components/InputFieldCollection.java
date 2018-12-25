@@ -3,8 +3,9 @@ package opencontacts.open.com.opencontacts.components;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.util.AttributeSet;
@@ -21,7 +22,6 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.Common;
 
-import static opencontacts.open.com.opencontacts.utils.Common.forEachIndexUntilFalseElseEndWithTrue;
 import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 public class InputFieldCollection extends LinearLayout {
@@ -79,8 +79,7 @@ public class InputFieldCollection extends LinearLayout {
         int childCount = fieldViewHoldersList.size();
         if(childCount == 0)
             return true;
-        boolean noContent = forEachIndexUntilFalseElseEndWithTrue(childCount, index -> TextUtils.isEmpty(getFieldAt(index).getValue()));
-        return noContent;
+        return !U.any(fieldViewHoldersList, fieldViewHolder -> !TextUtils.isEmpty(fieldViewHolder.getValue()));
     }
 
     public FieldViewHolder getFieldAt(int index) {
@@ -100,14 +99,14 @@ public class InputFieldCollection extends LinearLayout {
     }
 
     public class FieldViewHolder {
-        public AppCompatEditText editText;
+        public TextInputEditText editText;
         public AppCompatSpinner spinner;
         private List<String> types;
 
         FieldViewHolder(String hint, int inputType, List<String> types, View fieldView, Context context){
             editText = fieldView.findViewById(R.id.edit_field);
             spinner = fieldView.findViewById(R.id.type_spinner);
-            editText.setHint(hint);
+            ((TextInputLayout)fieldView.findViewById(R.id.text_input_layout)).setHint(hint);
             editText.setInputType(inputType);
             this.types = types;
             spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, this.types));

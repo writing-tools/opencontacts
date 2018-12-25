@@ -1,3 +1,20 @@
 <resources>
+    <!--themes-->
+    <style name="Theme.AppCompat.Light.NoActionBar.Customized">
+        <item name="imageButtonWithTint">@style/ImageButtonWithTint</item>
+    </style>
+
+    <style name="Theme.AppCompat.NoActionBar.Customized">
+        <item name="imageButtonWithTint">@style/ImageButtonWithTint</item>
+    </style>
+
+
+
+    <!--custom styles-->
+    <style name="ImageButtonWithTint">
+        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
 
 </resources>

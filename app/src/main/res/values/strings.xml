@@ -111,6 +111,8 @@
     <string name="warning">Warning</string>
     <string name="still_on_old_db_resolution">Please export contacts, then delete all contacts using menu and then import again to complete app upgrade. Else app will crash with issues</string>
     <string name="copied_to_clipboard">Copied to clipboard</string>
+    <string name="phone">Phone</string>
+    <string name="notes">Notes</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

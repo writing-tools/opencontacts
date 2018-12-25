@@ -26,64 +26,86 @@
             xmlns:app="http://schemas.android.com/apk/res-auto"
             xmlns:tools="http://schemas.android.com/tools"
             android:id="@+id/relative_layout_contact_details"
-            android:focusableInTouchMode="true"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:focusableInTouchMode="true"
             android:padding="@dimen/activity_vertical_margin"
             tools:context="opencontacts.open.com.opencontacts.activities.EditContactActivity">
 
-            <EditText
-                android:id="@+id/editFirstName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/first_name_text_input_layout"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:layout_marginTop="21dp"
-                android:ems="10"
-                android:hint="@string/firstname"
-                android:inputType="textPersonName" />
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editFirstName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/firstname"
+                    android:inputType="textPersonName" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:layout_marginBottom="20dp"
+                android:id="@+id/last_name_text_input_layout"
+                android:layout_below="@+id/first_name_text_input_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/editLastName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:ems="10"
+                    android:hint="@string/lastname"
+                    android:inputType="textPersonName" />
 
-            <EditText
-                android:id="@+id/editLastName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/editFirstName"
-                android:layout_alignEnd="@+id/editFirstName"
-                android:layout_alignRight="@+id/editFirstName"
-                android:ems="10"
-                android:hint="@string/lastname"
-                android:inputType="textPersonName" />
-
+            </android.support.design.widget.TextInputLayout>
 
             <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:layout_marginBottom="20dp"
                 android:id="@+id/phonenumbers"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/last_name_text_input_layout"
                 android:entries="@array/phone_number_types"
                 android:hint="@string/phone_number"
-                android:inputType="phone"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/editLastName" />
+                android:inputType="phone" />
 
 
             <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:layout_marginBottom="20dp"
                 android:id="@+id/emails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/phonenumbers"
                 android:entries="@array/email_types"
                 android:hint="@string/email"
-                android:inputType="textEmailAddress"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/phonenumbers" />
+                android:inputType="textEmailAddress" />
 
             <opencontacts.open.com.opencontacts.components.InputFieldCollection
+                android:layout_marginBottom="20dp"
                 android:id="@+id/addresses"
-                android:entries="@array/address_types"
-                android:hint="@string/address"
-                android:inputType="textMultiLine"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/emails" />
+                android:layout_below="@id/emails"
+                android:entries="@array/address_types"
+                android:hint="@string/address"
+                android:inputType="textMultiLine" />
 
-
+            <android.support.design.widget.TextInputLayout
+                android:layout_below="@id/addresses"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/notes"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/notes"
+                    android:inputType="textMultiLine"
+                    />
+            </android.support.design.widget.TextInputLayout>
         </RelativeLayout>
     </ScrollView>
 

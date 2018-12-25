@@ -7,10 +7,9 @@
     android:layout_height="wrap_content">
 
 
-    <ImageButton
+    <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:srcCompat="@drawable/ic_info_black_24dp"
         android:src="@drawable/ic_info_black_24dp"
         android:id="@+id/button_info"
         android:layout_alignParentLeft="true"

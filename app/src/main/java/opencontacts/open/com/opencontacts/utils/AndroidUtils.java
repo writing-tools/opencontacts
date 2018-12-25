@@ -34,6 +34,7 @@ import opencontacts.open.com.opencontacts.activities.ContactDetailsActivity;
 import opencontacts.open.com.opencontacts.activities.EditContactActivity;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
@@ -311,6 +312,7 @@ public class AndroidUtils {
     }
 
     public static void switchActiveThemeInPreferences(Context context) {
+        TintedDrawablesStore.reset();
         getAppsSharedPreferences(context)
                 .edit()
                 .putBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, !isLightThemeActive(context))
@@ -318,7 +320,7 @@ public class AndroidUtils {
     }
 
     public static int getCurrentTheme(Context context) {
-        return isLightThemeActive(context) ? R.style.Theme_AppCompat_Light_NoActionBar : R.style.Theme_AppCompat_NoActionBar;
+        return isLightThemeActive(context) ? R.style.Theme_AppCompat_Light_NoActionBar_Customized : R.style.Theme_AppCompat_NoActionBar_Customized;
     }
 
     private static boolean isLightThemeActive(Context context) {

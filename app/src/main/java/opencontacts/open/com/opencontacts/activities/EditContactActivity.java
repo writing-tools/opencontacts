@@ -3,6 +3,7 @@ package opencontacts.open.com.opencontacts.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
 import android.view.View;
 import android.widget.EditText;
@@ -18,6 +19,7 @@ import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
+import ezvcard.property.Note;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
@@ -40,6 +42,7 @@ public class EditContactActivity extends AppBaseActivity {
     private InputFieldCollection phoneNumbersInputCollection;
     private InputFieldCollection emailsInputCollection;
     private InputFieldCollection addressesInputCollection;
+    private TextInputEditText notesTextInputEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,7 @@ public class EditContactActivity extends AppBaseActivity {
         phoneNumbersInputCollection = findViewById(R.id.phonenumbers);
         emailsInputCollection = findViewById(R.id.emails);
         addressesInputCollection = findViewById(R.id.addresses);
+        notesTextInputEditText = findViewById(R.id.notes);
 
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
@@ -82,11 +86,18 @@ public class EditContactActivity extends AppBaseActivity {
         fillTelephoneNumbers();
         fillEmails();
         fillAddress();
+        fillNotes();
 
         if(addingNewContact) return;
 
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
+    }
+
+    private void fillNotes() {
+        Note note = U.firstOrNull(vcardBeforeEdit.getNotes());
+        if(note == null) return;
+        notesTextInputEditText.setText(note.getValue());
     }
 
     private void fillAddress() {
@@ -121,7 +132,7 @@ public class EditContactActivity extends AppBaseActivity {
     public void saveContact(View view) {
         String firstName = String.valueOf(editText_firstName.getText());
         String lastName = String.valueOf(editText_lastName.getText());
-        if (warnIfNotFilledMandatoryFields(firstName, lastName)) return;
+        if (warnIfMandatoryFieldsAreNotFilled(firstName, lastName)) return;
 
         VCard vcardAfterEdit = createVCardFromInputFields(firstName, lastName);
         if(addingNewContact) {
@@ -134,7 +145,7 @@ public class EditContactActivity extends AppBaseActivity {
         finish();
     }
 
-    private boolean warnIfNotFilledMandatoryFields(String firstName, String lastName) {
+    private boolean warnIfMandatoryFieldsAreNotFilled(String firstName, String lastName) {
         if(isEmpty(firstName) && isEmpty(lastName)){
             editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
             return true;
@@ -153,8 +164,12 @@ public class EditContactActivity extends AppBaseActivity {
         addTelephoneNumbersFromFieldsToNewVCard(newVCard);
         addEmailsFromFieldsToNewVCard(newVCard);
         addAddressFromFieldsToNewVCard(newVCard);
-
+        addNotesFromFieldsToNewVCard(newVCard);
         return newVCard;
+    }
+
+    private void addNotesFromFieldsToNewVCard(VCard newVCard) {
+        newVCard.addNote(notesTextInputEditText.getText().toString());
     }
 
     private void addAddressFromFieldsToNewVCard(VCard newVCard) {

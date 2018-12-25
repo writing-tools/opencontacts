@@ -22,6 +22,7 @@ import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
 import ezvcard.property.Email;
+import ezvcard.property.Note;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.ExpandedList;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -114,6 +115,23 @@ public class ContactDetailsActivity extends AppBaseActivity {
         fillPhoneNumbers();
         fillEmailAddress();
         fillAddress();
+        fillNotes();
+    }
+
+    private void fillNotes() {
+        Note note = U.firstOrNull(vcard.getNotes());
+        View notesCard  = findViewById(R.id.notes_card);
+        if(note == null) {
+            notesCard.setVisibility(GONE);
+            return;
+        }
+        AppCompatTextView notesTextView = notesCard.findViewById(R.id.text_view);
+        notesTextView.setText(note.getValue());
+        notesTextView.setOnLongClickListener(v -> {
+            AndroidUtils.copyToClipboard(notesTextView.getText().toString(), true, this);
+            return true;
+        });
+        notesCard.setVisibility(VISIBLE);
     }
 
     private void fillAddress() {

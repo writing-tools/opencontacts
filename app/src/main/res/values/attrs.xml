@@ -4,4 +4,9 @@
         <attr name="android:hint" />
         <attr name="android:inputType" />
     </declare-styleable>
+
+    <declare-styleable name="ImageButtonWithTint">
+        <attr name="android:src" />
+    </declare-styleable>
+    <attr name="imageButtonWithTint" format="reference" />
 </resources>

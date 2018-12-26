@@ -4,28 +4,30 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back"
-        app:title="About" />
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?colorPrimaryDark" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/about" />
+    </android.support.design.widget.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <LinearLayout
-            android:padding="10dp"
-            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="10dp">
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -43,8 +45,7 @@
                         android:padding="3dp"
                         android:text="@string/author_label"
                         android:textAppearance="?android:textAppearanceSearchResultTitle"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:padding="3dp"
@@ -57,8 +58,7 @@
                         android:padding="3dp"
                         android:text="@string/issues_label"
                         android:textAppearance="?android:textAppearanceSearchResultTitle"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:autoLink="web"
@@ -72,8 +72,7 @@
                         android:padding="3dp"
                         android:text="@string/more_apps"
                         android:textAppearance="?android:textAppearanceSearchResultTitle"
-                        android:textSize="18sp"
-                        />
+                        android:textSize="18sp" />
 
                     <TextView
                         android:autoLink="web"

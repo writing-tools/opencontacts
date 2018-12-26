@@ -8,18 +8,18 @@
     android:orientation="vertical"
     tools:context="opencontacts.open.com.opencontacts.activities.ContactDetailsActivity">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:minHeight="?attr/actionBarSize"
-        app:navigationIcon="@drawable/ic_arrow_back" />
+        android:layout_height="wrap_content">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?colorPrimaryDark" />
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back" />
+    </android.support.design.widget.AppBarLayout>
 
     <ScrollView
         android:layout_width="match_parent"
@@ -48,9 +48,10 @@
                     android:orientation="vertical">
 
                     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
-                        android:src="@drawable/ic_call_black_24dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_call_black_24dp" />
+
                     <LinearLayout
                         android:id="@+id/phone_numbers_list"
                         android:layout_width="match_parent"
@@ -78,9 +79,9 @@
                     android:orientation="vertical">
 
                     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
-                        android:src="@drawable/ic_email_black_24dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_email_black_24dp" />
 
                     <LinearLayout
                         android:id="@+id/email_address_list"
@@ -108,9 +109,9 @@
                     android:orientation="vertical">
 
                     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
-                        android:src="@drawable/ic_location_on_black_24dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_location_on_black_24dp" />
 
                     <LinearLayout
                         android:id="@+id/address_list"
@@ -138,9 +139,9 @@
                     android:orientation="vertical">
 
                     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
-                        android:src="@drawable/ic_content_paste_black_24dp"
                         android:layout_width="wrap_content"
-                        android:layout_height="wrap_content" />
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_content_paste_black_24dp" />
 
                     <include layout="@layout/layout_clickable_text_view_item" />
                 </LinearLayout>

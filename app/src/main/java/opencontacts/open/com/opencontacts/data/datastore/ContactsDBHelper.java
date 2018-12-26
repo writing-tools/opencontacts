@@ -159,12 +159,22 @@ class ContactsDBHelper {
             dbVCard.getEmails().addAll(vCard.getEmails());
             dbVCard.getAddresses().clear();
             dbVCard.getAddresses().addAll(vCard.getAddresses());
-            if(!vCard.getNotes().isEmpty()) dbVCard.getNotes().set(0, vCard.getNotes().get(0));
+            addNotesToDBVCard(vCard, dbVCard);
             vCardDataInDB.vcardDataAsString = dbVCard.write();
             vCardDataInDB.save();
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, R.string.error_while_saving_contact, Toast.LENGTH_SHORT);
+            Toast.makeText(context, R.string.error_while_saving_contact, Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private static void addNotesToDBVCard(VCard vCard, VCard dbVCard) {
+        if(vCard.getNotes().isEmpty()){
+            if(!dbVCard.getNotes().isEmpty()) dbVCard.getNotes().remove(0);
+        }
+        else{
+            if(dbVCard.getNotes().isEmpty()) dbVCard.getNotes().addAll(vCard.getNotes());
+            else dbVCard.getNotes().set(0, vCard.getNotes().get(0));
         }
     }
 

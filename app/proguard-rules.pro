@@ -26,3 +26,6 @@
 # for sugardb to work
 # Ensures entities remain un-obfuscated so table and columns are named correctly
 -keep class opencontacts.open.com.opencontacts.orm.** { *; }
+
+#lodash
+-dontwarn com.github.underscore.lodash.*

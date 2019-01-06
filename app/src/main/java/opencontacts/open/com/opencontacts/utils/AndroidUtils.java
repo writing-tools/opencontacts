@@ -60,6 +60,8 @@ public class AndroidUtils {
     public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     public static final String EMAIL_SCHEME = "mailto:";
+    public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
+    public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -74,7 +76,7 @@ public class AndroidUtils {
             }
         }.start();
     }
-    
+
     public static void showSoftKeyboard(View view, Context context) {
         if (view.requestFocus()) {
             InputMethodManager imm = (InputMethodManager)
@@ -381,5 +383,17 @@ public class AndroidUtils {
                 new Intent(ACTION_SENDTO, Uri.parse(EMAIL_SCHEME + emailAddress))
                 , context.getString(R.string.email));
         context.startActivity(emailAppChooserIntent);
+    }
+
+    public static String getStringFromPreferences(String key, Context context) {
+        return getAppsSharedPreferences(context)
+                .getString(key, null);
+    }
+
+    public static void saveStringIntoPreferences(String key, String value, Context context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putString(key, value)
+                .apply();
     }
 }

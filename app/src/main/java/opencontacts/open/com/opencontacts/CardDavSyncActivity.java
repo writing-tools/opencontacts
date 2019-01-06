@@ -1,0 +1,100 @@
+package opencontacts.open.com.opencontacts;
+
+import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
+
+import com.github.underscore.Tuple;
+import com.github.underscore.U;
+
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import ezvcard.VCard;
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
+import opencontacts.open.com.opencontacts.orm.VCardData;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.Triplet;
+
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
+
+public class CardDavSyncActivity extends AppCompatActivity {
+
+    private String savedBaseUrl;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_card_dav_sync);
+        savedBaseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
+        ((TextInputEditText) findViewById(R.id.url)).setText(savedBaseUrl);
+    }
+
+    public void sync(View view) {
+        String url = ((TextInputEditText) findViewById(R.id.url)).getText().toString();
+        String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
+        String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
+        processAsync(() -> sync(url, username, password));
+    }
+
+    private void sync(String urlFromView, String username, String password) {
+
+        String addressBookUrl = getStringFromPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, this);
+        if(addressBookUrl == null || !urlFromView.equals(savedBaseUrl))
+            addressBookUrl = figureOutAddressBookUrl(urlFromView, username, password);
+        if (addressBookUrl == null) {
+            showError(R.string.no_addressbook_found);
+            return;
+        }
+        AndroidUtils.saveStringIntoPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
+        AndroidUtils.saveStringIntoPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
+        List<Triplet<String, String, VCard>> vcardTripletList = downloadAddressBook(urlFromView + addressBookUrl, username, password);
+        List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
+        Map<String, VCardData> allVCardsFromDBAsMap = getAllVCardsAsUIDMap(allVCardDataList);
+        U.forEach(vcardTripletList, vcardTriplet -> {
+            String uid = vcardTriplet.z.getUid().getValue();
+            if(allVCardsFromDBAsMap.containsKey(uid)) processExistingVCard(vcardTriplet, allVCardsFromDBAsMap.get(uid));
+            else ContactsDBHelper.addContact(vcardTriplet, this);
+        });
+        ContactsDataStore.refreshStoreAsync();
+    }
+
+    private void processExistingVCard(Triplet<String, String, VCard> downloadedVCard, VCardData vcardDataFromDB) {
+//        if(vcardDataFromDB.status == VCardData.STATUS_NONE)
+//            ContactsDBHelper.updateVCardInDBWith(downloadedVCard, vcardDataFromDB.contact.getId(), this);
+    }
+
+    private void showError(int messageRes) {
+        runOnUiThread(() -> ((AppCompatTextView) findViewById(R.id.error)).setText(messageRes));
+    }
+
+
+    private static Map<String, VCardData> getAllVCardsAsUIDMap(List<VCardData> allVCardDataList){
+        if(allVCardDataList.isEmpty())
+            return new HashMap<>(0);
+
+        List<Tuple<String, VCardData>> listOfTuples = U.map(allVCardDataList, vCardData -> new Tuple<>(vCardData.uid, vCardData));
+        return U.toMap(listOfTuples);
+    }
+
+    private static Map<String, VCardData> getAllVCardsAsHREFMap(List<VCardData> allVCardDataList){
+        if(allVCardDataList.isEmpty())
+            return new HashMap<>(0);
+
+        return U.reduce(allVCardDataList, (hashMap, VCardData) -> {
+            if(VCardData.href == null)
+                return hashMap;
+            hashMap.put(VCardData.href, VCardData);
+            return hashMap;
+        }, new HashMap<>());
+    }
+}

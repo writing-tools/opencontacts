@@ -37,7 +37,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         setAdapter(adapter);
         View headerView = inflate(context, R.layout.contacts_list_header, null);
         addHeaderView(headerView);
-        totalContactsTextView = (AppCompatTextView) headerView.findViewById(R.id.total_contacts);
+        totalContactsTextView = headerView.findViewById(R.id.total_contacts);
         updateHeaderWithContactsCount();
         onStoreRefreshed();
     }

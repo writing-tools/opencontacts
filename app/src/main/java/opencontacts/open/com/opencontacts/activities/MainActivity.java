@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -105,6 +106,11 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
+        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
+            startActivity(new Intent(this, CardDavSyncActivity.class));
+            return true;
+        });
+
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));

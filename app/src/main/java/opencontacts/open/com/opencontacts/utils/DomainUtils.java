@@ -151,6 +151,7 @@ public class DomainUtils {
 
     public static String getMobileNumberTypeTranslatedText(List<TelephoneType> telephoneTypes, Context context){
         if(defaultPhoneNumberTypeTranslatedText == null) defaultPhoneNumberTypeTranslatedText = getMobileNumberTypeToTranslatedTextMap(context).get(defaultPhoneNumberType);
+        if(telephoneTypes.isEmpty()) return defaultPhoneNumberTypeTranslatedText;
         Map<TelephoneType, String> mobileNumberTypeToTranslatedTextMap = getMobileNumberTypeToTranslatedTextMap(context);
         if(telephoneTypes.contains(TelephoneType.FAX)) {
             return mobileNumberTypeToTranslatedTextMap.get(TelephoneType.FAX);
@@ -174,6 +175,7 @@ public class DomainUtils {
 
     public static String getAddressTypeTranslatedText(List<AddressType> types, Context context){
         if(defaultAddressTypeTranslatedText == null) defaultAddressTypeTranslatedText = getAddressTypeToTranslatedTextMap(context).get(defaultAddressType);
+        if(types.isEmpty()) return defaultAddressTypeTranslatedText;
         return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), defaultAddressTypeTranslatedText);
     }
 
@@ -194,6 +196,7 @@ public class DomainUtils {
 
     public static String getEmailTypeTranslatedText(List<EmailType> types, Context context){
         if(defaultEmailType == null) defaultEmailTypeTranslatedText = getEmailTypeToTranslatedTextMap(context).get(defaultEmailType);
+        if(types.isEmpty()) return defaultEmailTypeTranslatedText;
         return getOrDefault(getEmailTypeToTranslatedTextMap(context), U.first(types), defaultEmailTypeTranslatedText);
     }
 

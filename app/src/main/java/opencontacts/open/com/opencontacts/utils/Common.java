@@ -67,6 +67,14 @@ public class Common {
         return finalList;
     }
 
+    public static <F, T> List<T> map(Iterable<F> iterable, Function<F, T> function){
+        ArrayList<T> list = new ArrayList<>(0);
+        for (F item : iterable) {
+            list.add(function.apply(item));
+        }
+        return list;
+    }
+
     public interface TimesFunction<T>{
         T apply(int index);
     }

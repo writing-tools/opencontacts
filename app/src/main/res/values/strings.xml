@@ -113,6 +113,8 @@
     <string name="copied_to_clipboard">Copied to clipboard</string>
     <string name="phone">Phone</string>
     <string name="notes">Notes</string>
+    <string name="notification_channel_missed_calls">Missed calls</string>
+    <string name="notification_channel_missed_calls_description">Notifications for missed calls</string>
     <string name="username">Username</string>
     <string name="password">Password</string>
     <string name="sync">Sync</string>

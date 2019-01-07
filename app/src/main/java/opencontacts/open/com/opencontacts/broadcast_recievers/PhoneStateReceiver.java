@@ -31,6 +31,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+import static opencontacts.open.com.opencontacts.OpenContactsApplication.MISSED_CALLS_CHANEL_ID;
 
 /**
  * Created by sultanm on 7/30/17.
@@ -73,7 +74,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
                 PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
                 NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(context)
+                        new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)
                                 .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
                                 .setContentTitle(context.getString(R.string.missed_call))
                                 .setTicker(context.getString(R.string.missed_call_from, callingContact.firstName, callingContact.lastName))

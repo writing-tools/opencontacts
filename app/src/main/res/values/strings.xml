@@ -115,6 +115,7 @@
     <string name="notes">Notes</string>
     <string name="notification_channel_missed_calls">Missed calls</string>
     <string name="notification_channel_missed_calls_description">Notifications for missed calls</string>
+    <string name="version">Version</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

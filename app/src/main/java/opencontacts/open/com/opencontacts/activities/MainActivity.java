@@ -36,7 +36,9 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -151,7 +153,13 @@ public class MainActivity extends AppBaseActivity {
                     .setView(countryCodeEditText)
                     .setTitle(R.string.input_country_calling_code_title)
                     .setMessage(R.string.input_country_calling_code_description)
-                    .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> AndroidUtils.saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(countryCodeEditText.getText().toString(), MainActivity.this))
+                    .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> {
+                        if(!isWhatsappInstalled(this)) {
+                            showAlert(this, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
+                            return;
+                        }
+                        AndroidUtils.saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(countryCodeEditText.getText().toString(), MainActivity.this);
+                    })
                     .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> AndroidUtils.disableWhatsappIntegration(MainActivity.this))
                     .show();
             return true;

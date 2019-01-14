@@ -63,6 +63,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         Toast.makeText(ContactDetailsActivity.this, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     };
+    private boolean shouldShowWhatsappIcon;
 
     private String getSelectedMobileNumber(View v){
         return v.getTag().toString();
@@ -74,6 +75,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
         if(contactId == -1)
             showInvalidContactErrorAndExit();
+        shouldShowWhatsappIcon = AndroidUtils.isWhatsappIntegrationEnabled(this);
     }
 
     @Override
@@ -182,7 +184,11 @@ public class ContactDetailsActivity extends AppBaseActivity {
             primaryNumberToggleButton.setImageResource(telephoneText.equals(contact.primaryPhoneNumber.phoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
             primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
             inflatedView.findViewById(R.id.button_message).setOnClickListener(messageContact);
-            inflatedView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
+            View whatsappIcon = inflatedView.findViewById(R.id.button_whatsapp);
+            if(shouldShowWhatsappIcon){
+                whatsappIcon.setOnClickListener(whatsappContact);
+                whatsappIcon.setVisibility(VISIBLE);
+            }
             ((AppCompatTextView)inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(),this));
             inflatedView.setOnClickListener(callContact);
             inflatedView.setOnLongClickListener(copyPhoneNumberToClipboard);

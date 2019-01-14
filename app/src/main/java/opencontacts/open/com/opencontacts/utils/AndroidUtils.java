@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.Point;
 import android.graphics.PorterDuff;
@@ -367,8 +368,8 @@ public class AndroidUtils {
 
     public static boolean isWhatsappIntegrationEnabled(Context  context) {
         return getAppsSharedPreferences(context)
-                .getBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false);
-
+                .getBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
+                && isWhatsappInstalled(context);
     }
 
     public static void setSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener, Context context) {
@@ -400,5 +401,16 @@ public class AndroidUtils {
                 .edit()
                 .putString(key, value)
                 .apply();
+    }
+
+    public static boolean isWhatsappInstalled(Context context) {
+        String whatsappPackageName = "com.whatsapp";
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(whatsappPackageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return false;
     }
 }

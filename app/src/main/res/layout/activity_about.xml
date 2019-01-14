@@ -52,6 +52,20 @@
                         android:text="@string/my_name" />
                 </TableRow>
 
+                <TableRow>
+
+                    <TextView
+                        android:padding="3dp"
+                        android:text="@string/version"
+                        android:textAppearance="?android:textAppearanceSearchResultTitle"
+                        android:textSize="18sp" />
+
+                    <android.support.v7.widget.AppCompatTextView
+                        android:id="@+id/version"
+                        android:padding="3dp"
+                        />
+                </TableRow>
+
                 <TableRow android:gravity="fill">
 
                     <TextView

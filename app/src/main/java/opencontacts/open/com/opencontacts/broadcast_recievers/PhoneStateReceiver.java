@@ -1,6 +1,5 @@
 package opencontacts.open.com.opencontacts.broadcast_recievers;
 
-import android.app.KeyguardManager;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
@@ -31,7 +30,10 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
+import static java.util.Calendar.SECOND;
 import static opencontacts.open.com.opencontacts.OpenContactsApplication.MISSED_CALLS_CHANEL_ID;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isScreenLocked;
+import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 
 /**
  * Created by sultanm on 7/30/17.
@@ -41,6 +43,12 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     private static boolean isCallRecieved;
     private static Contact callingContact;
     private static String incomingNumber;
+    /*
+        Lolipop has a problem of raising these events multiple times leading to multiple
+        drawing of caller id, multiple notifications. Ahhhhhhhhhh!!!!!!
+     */
+    private static String prevState;
+    private static long prevStateTimeStamp;
 
 
     @Override
@@ -60,35 +68,41 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
         else if(state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
             removeCallerIdDrawing(context);
+            if(isCallRecieved || (state.equals(prevState) && hasItBeen(3, SECOND, prevStateTimeStamp)))
+                return;
             // give android some time to write call log
-            new Handler().postDelayed(() -> {
-                try{
-                    if(isCallRecieved)
-                        return;
-                    CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
-                    if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
-                        return;
-                }
-                catch (Exception e){}
-                PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-                PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
-                PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
-                NotificationCompat.Builder mBuilder =
-                        new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)
-                                .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
-                                .setContentTitle(context.getString(R.string.missed_call))
-                                .setTicker(context.getString(R.string.missed_call_from, callingContact.firstName, callingContact.lastName))
-                                .setContentText(callingContact.firstName + " " + callingContact.lastName)
-                                .addAction(R.drawable.ic_call_black_24dp, context.getString(R.string.call), pendingIntentToCall)
-                                .addAction(R.drawable.ic_chat_black_24dp, context.getString(R.string.message), pendingIntentToMessage)
-                                .setContentIntent(pendingIntentToLaunchApp);
-                NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
-                notificationManager.notify(new Random().nextInt(), mBuilder.build());
-            }, 3000);
+            new Handler().postDelayed(() -> notifyAboutMissedCall(context), 3000);
         }
+        prevState = state;
+        prevStateTimeStamp = System.currentTimeMillis();
+    }
+
+    private void notifyAboutMissedCall(Context context) {
+        try{
+            CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
+            if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
+                return;
+        }
+        catch (Exception e){}
+        PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
+        NotificationCompat.Builder mBuilder =
+                new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)
+                        .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
+                        .setContentTitle(context.getString(R.string.missed_call))
+                        .setTicker(context.getString(R.string.missed_call_from, callingContact.firstName, callingContact.lastName))
+                        .setContentText(callingContact.firstName + " " + callingContact.lastName)
+                        .addAction(R.drawable.ic_call_black_24dp, context.getString(R.string.call), pendingIntentToCall)
+                        .addAction(R.drawable.ic_chat_black_24dp, context.getString(R.string.message), pendingIntentToMessage)
+                        .setContentIntent(pendingIntentToLaunchApp);
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        notificationManager.notify(new Random().nextInt(), mBuilder.build());
     }
 
     private void drawContactID(Context context, Contact callingContact) {
+        if(drawOverIncomingCallLayout != null)
+            return;
         final WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         LayoutInflater layoutinflater = LayoutInflater.from(context);
         drawOverIncomingCallLayout = layoutinflater.inflate(R.layout.draw_over_incoming_call, null);
@@ -98,7 +112,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
             typeOfWindow = WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY;
         else
-            typeOfWindow = isLocked(context) ? TYPE_SYSTEM_OVERLAY : TYPE_PHONE;
+            typeOfWindow = isScreenLocked(context) ? TYPE_SYSTEM_OVERLAY : TYPE_PHONE;
 
         final WindowManager.LayoutParams layoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -137,10 +151,6 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             }
         });
         windowManager.addView(drawOverIncomingCallLayout, layoutParams);
-    }
-
-    private boolean isLocked(Context context) {
-        return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
     }
 
     private void removeCallerIdDrawing(Context context) {

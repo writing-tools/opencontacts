@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.utils;
 
 import android.Manifest;
+import android.app.KeyguardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
@@ -383,6 +384,10 @@ public class AndroidUtils {
                 new Intent(ACTION_SENDTO, Uri.parse(EMAIL_SCHEME + emailAddress))
                 , context.getString(R.string.email));
         context.startActivity(emailAppChooserIntent);
+    }
+
+    public static boolean isScreenLocked(Context context) {
+        return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
     }
 
     public static String getStringFromPreferences(String key, Context context) {

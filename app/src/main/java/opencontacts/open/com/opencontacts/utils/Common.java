@@ -6,6 +6,8 @@ import com.github.underscore.U;
 import java.text.Normalizer;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
@@ -87,4 +89,19 @@ public class Common {
         boolean apply(int index);
     }
 
+    public static boolean hasItBeen(int offset, int timeUnit, long since){
+        return getCalendarInstanceAt(since).before(getCalendarOffset(offset, timeUnit));
+    }
+
+    public static Calendar getCalendarInstanceAt(long timestamp){
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(new Date(timestamp));
+        return instance;
+    }
+
+    public static Calendar getCalendarOffset(int offset, int timeUnit){
+        Calendar instance = Calendar.getInstance();
+        instance.add(timeUnit, offset);
+        return instance;
+    }
 }

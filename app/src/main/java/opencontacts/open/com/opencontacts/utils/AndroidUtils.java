@@ -335,7 +335,7 @@ public class AndroidUtils {
         context.getTheme().applyStyle(AndroidUtils.getCurrentTheme(context), true);
     }
 
-    public static void saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(String selectedCountryCodeWithPlus, Context context) {
+    public static void enableWhatsappIntegration(String selectedCountryCodeWithPlus, Context context) {
         getAppsSharedPreferences(context)
                 .edit()
                 .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)

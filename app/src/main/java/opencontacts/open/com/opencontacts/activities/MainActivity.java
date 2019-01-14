@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -158,7 +157,7 @@ public class MainActivity extends AppBaseActivity {
                             showAlert(this, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
                             return;
                         }
-                        AndroidUtils.saveDefaultWhatsAppCountryCodeAndWhatsAppIntegrationEnabled(countryCodeEditText.getText().toString(), MainActivity.this);
+                        AndroidUtils.enableWhatsappIntegration(countryCodeEditText.getText().toString(), MainActivity.this);
                     })
                     .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> AndroidUtils.disableWhatsappIntegration(MainActivity.this))
                     .show();

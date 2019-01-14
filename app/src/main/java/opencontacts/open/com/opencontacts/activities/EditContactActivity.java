@@ -30,6 +30,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
@@ -126,7 +127,7 @@ public class EditContactActivity extends AppBaseActivity {
             phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
             return;
         }
-        U.forEach(telephoneNumbers, telephoneNumber -> phoneNumbersInputCollection.addOneMoreView(telephoneNumber.getText(), DomainUtils.getMobileNumberTypeTranslatedText(telephoneNumber.getTypes(), EditContactActivity.this)));
+        U.forEach(telephoneNumbers, telephoneNumber -> phoneNumbersInputCollection.addOneMoreView(getMobileNumber(telephoneNumber), DomainUtils.getMobileNumberTypeTranslatedText(telephoneNumber.getTypes(), EditContactActivity.this)));
         if(newPhoneNumberToBeAdded != null) phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
     }
 

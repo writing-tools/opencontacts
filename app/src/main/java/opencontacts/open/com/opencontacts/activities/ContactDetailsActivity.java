@@ -34,6 +34,7 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 
 public class ContactDetailsActivity extends AppBaseActivity {
@@ -175,16 +176,17 @@ public class ContactDetailsActivity extends AppBaseActivity {
         phoneNumbersLinearLayout.removeAllViews();
         U.forEach(vcard.getTelephoneNumbers(), telephone -> {
             View inflatedView = layoutInflater.inflate(R.layout.contact_details_row, phoneNumbersLinearLayout, false);
-            ((TextView) inflatedView.findViewById(R.id.textview_phone_number)).setText(telephone.getText());
+            String telephoneText = getMobileNumber(telephone);
+            ((TextView) inflatedView.findViewById(R.id.textview_phone_number)).setText(telephoneText);
             AppCompatImageButton primaryNumberToggleButton = inflatedView.findViewById(R.id.button_primary_number);
-            primaryNumberToggleButton.setImageResource(telephone.getText().equals(contact.primaryPhoneNumber.phoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
+            primaryNumberToggleButton.setImageResource(telephoneText.equals(contact.primaryPhoneNumber.phoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
             primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
             inflatedView.findViewById(R.id.button_message).setOnClickListener(messageContact);
             inflatedView.findViewById(R.id.button_whatsapp).setOnClickListener(whatsappContact);
             ((AppCompatTextView)inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(),this));
             inflatedView.setOnClickListener(callContact);
             inflatedView.setOnLongClickListener(copyPhoneNumberToClipboard);
-            inflatedView.setTag(telephone.getText());
+            inflatedView.setTag(telephoneText);
             phoneNumbersLinearLayout.addView(inflatedView);
         });
     }

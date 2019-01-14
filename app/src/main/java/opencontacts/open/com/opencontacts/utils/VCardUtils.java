@@ -10,6 +10,7 @@ import java.util.List;
 import ezvcard.VCard;
 import ezvcard.property.FormattedName;
 import ezvcard.property.StructuredName;
+import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
 
 public class VCardUtils {
@@ -40,5 +41,10 @@ public class VCardUtils {
             lastName = nameBuffer.append(structuredName.getFamily()).toString();
         }
         return new Pair<>(structuredName.getGiven(), lastName);
+    }
+
+    public static String getMobileNumber(Telephone telephone){
+        String telephoneText = telephone.getText();
+        return telephoneText == null ? telephone.getUri().getNumber() : telephoneText;
     }
 }

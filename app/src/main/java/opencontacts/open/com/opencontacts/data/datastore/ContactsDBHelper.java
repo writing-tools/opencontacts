@@ -26,12 +26,14 @@ import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.Triplet;
+import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
 
 /**
@@ -242,9 +244,7 @@ public class ContactsDBHelper {
         for (Telephone telephoneNumber : vcard.getTelephoneNumbers()) {
             if(isEmpty(telephoneNumber.getText()) && isEmpty(telephoneNumber.getUri().getNumber()))
                 continue;
-            new PhoneNumber(telephoneNumber.getText() == null ?
-                    telephoneNumber.getUri().getNumber() : telephoneNumber.getText(),
-                    contact, false).save();
+            new PhoneNumber(getMobileNumber(telephoneNumber), contact, false).save();
         }
     }
 

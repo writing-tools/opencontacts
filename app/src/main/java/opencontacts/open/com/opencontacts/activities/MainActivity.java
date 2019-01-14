@@ -106,10 +106,10 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
-        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
-            startActivity(new Intent(this, CardDavSyncActivity.class));
-            return true;
-        });
+//        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
+//            startActivity(new Intent(this, CardDavSyncActivity.class));
+//            return true;
+//        });
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);

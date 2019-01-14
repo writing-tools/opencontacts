@@ -1,3 +1,36 @@
+v10.0
+**UI**
+
+Tabs are now part of app bar
+
+Icons now change color as per theme
+
+Revamped contact details page
+
+**Features**
+
+Whatsapp integration is now optional
+
+Import contacts now asks for confirmation
+
+VCard data(as is) is also imported now
+
+Contact details now show phone number types
+
+User can now see/edit address, email and notes of contact
+
+Long click now copies email and address
+
+Clicking email address would open email app
+
+About page now also tells version number of app
+
+**Bugs fixed**
+
+Oreo will now get notifications for missed calls
+
+Fixed callerId bug in lollipop
+
 v9.0
 9.0 is a quick release as it fixes a crash in oreo.
 

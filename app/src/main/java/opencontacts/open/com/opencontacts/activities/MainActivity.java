@@ -107,7 +107,7 @@ public class MainActivity extends AppBaseActivity {
             searchView.requestFocus();
         });
         menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
-            startActivity(new Intent(this, CardDavSyncActivity.class));
+//            startActivity(new Intent(this, CardDavSyncActivity.class));
             return true;
         });
 

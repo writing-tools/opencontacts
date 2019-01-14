@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.utils;
 
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.util.Pair;
 
 import com.github.underscore.lodash.U;
 
@@ -22,6 +23,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.*;
 import static opencontacts.open.com.opencontacts.utils.Common.map;
@@ -115,6 +117,19 @@ public class CardDavUtils {
         });
     }
 
+    public static Pair<String, String> createContactOnServer(VCardData vcardData) {
+        //TODO: implement
+        return null;
+    }
+
+    public static String updateContactOnServer(VCardData vcardData) {
+        //TODO: implement
+        return null;
+    }
+
+    public static void deleteVCardOnServer(VCardData vcardData) {
+        //TODO: implement
+    }
 }
 
 class NodeListIterable implements Iterable<Node>{

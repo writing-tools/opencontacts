@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts;
 
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -17,13 +18,17 @@ import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.VCardData;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
 
@@ -43,11 +48,10 @@ public class CardDavSyncActivity extends AppCompatActivity {
         String url = ((TextInputEditText) findViewById(R.id.url)).getText().toString();
         String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
         String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
-        processAsync(() -> sync(url, username, password));
+//        processAsync(() -> sync(url, username, password));
     }
 
     private void sync(String urlFromView, String username, String password) {
-
         String addressBookUrl = getStringFromPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, this);
         if(addressBookUrl == null || !urlFromView.equals(savedBaseUrl))
             addressBookUrl = figureOutAddressBookUrl(urlFromView, username, password);
@@ -55,22 +59,50 @@ public class CardDavSyncActivity extends AppCompatActivity {
             showError(R.string.no_addressbook_found);
             return;
         }
-        AndroidUtils.saveStringIntoPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
-        AndroidUtils.saveStringIntoPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
-        List<Triplet<String, String, VCard>> vcardTripletList = downloadAddressBook(urlFromView + addressBookUrl, username, password);
+        updatePreference(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
+        updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
+        List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl, username, password);
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
         Map<String, VCardData> allVCardsFromDBAsMap = getAllVCardsAsUIDMap(allVCardDataList);
-        U.forEach(vcardTripletList, vcardTriplet -> {
-            String uid = vcardTriplet.z.getUid().getValue();
-            if(allVCardsFromDBAsMap.containsKey(uid)) processExistingVCard(vcardTriplet, allVCardsFromDBAsMap.get(uid));
-            else ContactsDBHelper.addContact(vcardTriplet, this);
+        U.forEach(hrefEtagAndVCardList, hrefEtagAndVCard -> {
+            String uid = hrefEtagAndVCard.z.getUid().getValue();
+            if(allVCardsFromDBAsMap.containsKey(uid)) processExistingVCard(hrefEtagAndVCard, allVCardsFromDBAsMap.get(uid));
+            else ContactsDBHelper.addContact(hrefEtagAndVCard, this);
         });
+        updateServer(allVCardDataList, true);
+        ContactsDBHelper.deleteVCardsWithStatusDeleted();
         ContactsDataStore.refreshStoreAsync();
     }
 
-    private void processExistingVCard(Triplet<String, String, VCard> downloadedVCard, VCardData vcardDataFromDB) {
-//        if(vcardDataFromDB.status == VCardData.STATUS_NONE)
-//            ContactsDBHelper.updateVCardInDBWith(downloadedVCard, vcardDataFromDB.contact.getId(), this);
+    private void updateServer(List<VCardData> allVCardDataList, boolean newServer) {
+        U.forEach(allVCardDataList, vcardData -> {
+            switch (vcardData.status){
+                case STATUS_NONE:
+                    if(!newServer) break;
+                case STATUS_CREATED:
+                    Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData);
+                    vcardData.href = hrefAndEtag.first;
+                    vcardData.etag = hrefAndEtag.second;
+                    vcardData.save();
+                    break;
+                case STATUS_UPDATED:
+                    vcardData.etag = CardDavUtils.updateContactOnServer(vcardData);
+                    vcardData.save();
+                    break;
+                case STATUS_DELETED:
+                    if(vcardData.href == null) break;
+                    CardDavUtils.deleteVCardOnServer(vcardData);
+                    break;
+            }
+        });
+    }
+
+    private void processExistingVCard(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vcardDataFromDB) {
+        if(vcardDataFromDB.status == VCardData.STATUS_DELETED) {
+            vcardDataFromDB.href = hrefEtagAndVCard.x;
+            return;
+        }
+        ContactsDBHelper.merge(hrefEtagAndVCard, vcardDataFromDB, this);
     }
 
     private void showError(int messageRes) {

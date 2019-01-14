@@ -390,7 +390,7 @@ public class AndroidUtils {
                 .getString(key, null);
     }
 
-    public static void saveStringIntoPreferences(String key, String value, Context context) {
+    public static void updatePreference(String key, String value, Context context) {
         getAppsSharedPreferences(context)
                 .edit()
                 .putString(key, value)

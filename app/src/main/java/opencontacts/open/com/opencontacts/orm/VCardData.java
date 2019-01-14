@@ -4,10 +4,10 @@ import com.github.underscore.U;
 import com.orm.SugarRecord;
 
 public class VCardData extends SugarRecord {
-    public static int STATUS_NONE    = 0,
-                      STATUS_CREATED = 1,
-                      STATUS_UPDATED = 2,
-                      STATUS_DELETED = 3;
+    public static final int   STATUS_NONE    = 0,
+                              STATUS_CREATED = 1,
+                              STATUS_UPDATED = 2,
+                              STATUS_DELETED = 3;
     public Contact contact;
     public String vcardDataAsString;
     public String uid;

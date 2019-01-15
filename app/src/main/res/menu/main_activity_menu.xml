@@ -12,11 +12,11 @@
         android:icon="@drawable/ic_add_circle_outline_24dp"
         android:title="@string/add_contact"
         app:showAsAction="always" />
-    <!--<item-->
-        <!--android:id="@+id/action_sync"-->
-        <!--android:icon="@drawable/ic_sync_24dp"-->
-        <!--android:title="@string/sync"-->
-        <!--app:showAsAction="ifRoom" />-->
+    <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_sync_24dp"
+        android:title="@string/sync"
+        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_export"

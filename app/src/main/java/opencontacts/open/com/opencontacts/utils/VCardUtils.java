@@ -47,4 +47,10 @@ public class VCardUtils {
         String telephoneText = telephone.getText();
         return telephoneText == null ? telephone.getUri().getNumber() : telephoneText;
     }
+
+    public static void setFormattedNameIfNotPresent(VCard vcard) {
+        if(vcard.getFormattedName() != null) return;
+        StructuredName structuredName = vcard.getStructuredName();
+        vcard.setFormattedName(structuredName.getFamily() + " "  + structuredName.getGiven());
+    }
 }

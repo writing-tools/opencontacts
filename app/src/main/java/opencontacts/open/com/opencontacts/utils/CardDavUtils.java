@@ -32,6 +32,9 @@ import static opencontacts.open.com.opencontacts.utils.XMLParsingUtils.createXML
 import static opencontacts.open.com.opencontacts.utils.XMLParsingUtils.getText;
 
 public class CardDavUtils {
+
+    public static final String HTTP_HEADER_E_TAG = "ETag";
+
     public static String figureOutAddressBookUrl(String url, String username, String password){
         OkHttpClient okHttpClient = getHttpClientWithBasicAuth(username, password);
 
@@ -117,8 +120,27 @@ public class CardDavUtils {
         });
     }
 
-    public static Pair<String, String> createContactOnServer(VCardData vcardData) {
-        //TODO: implement
+    public static Pair<String, String> createContactOnServer(VCardData vcardData, String username, String password, String addressBookUrl, String baseUrl) {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+        String newContactUrl = baseUrl + addressBookUrl + vcardData.uid;
+        Request createContactRequest = new Request.Builder()
+                .url(newContactUrl)
+                .put(RequestBody.create(null, vcardData.vcardDataAsString))
+                .build();
+        try {
+            Response response = httpClientWithBasicAuth.newCall(createContactRequest).execute();
+            if(response.isSuccessful()){
+                Response getVCardResponse = httpClientWithBasicAuth.newCall(new Request.Builder()
+                        .url(newContactUrl)
+                        .get()
+                        .build()).execute();
+                if(getVCardResponse.isSuccessful()){
+                    return new Pair<>(newContactUrl, response.header(HTTP_HEADER_E_TAG));
+                }
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 

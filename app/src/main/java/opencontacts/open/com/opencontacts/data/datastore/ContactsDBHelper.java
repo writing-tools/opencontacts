@@ -35,6 +35,7 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.setFormattedNameIfNotPresent;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -84,7 +85,7 @@ public class ContactsDBHelper {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         U.forEach(vcard.getTelephoneNumbers(),
                 telephone -> {
-                    String phoneNumberText = telephone.getText();
+                    String phoneNumberText = VCardUtils.getMobileNumber(telephone);
                     new PhoneNumber(phoneNumberText, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumberText)).save();
         });
         PhoneNumber.deleteInTx(dbPhoneNumbers);
@@ -121,6 +122,8 @@ public class ContactsDBHelper {
     }
 
     private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact, List<PhoneNumber> dbPhoneNumbers){
+        if(dbPhoneNumbers == null || dbPhoneNumbers.isEmpty())
+            return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, dbPhoneNumbers, contact.lastAccessed, new PhoneNumber(""));
         PhoneNumber primaryPhoneNumber = U.chain(dbPhoneNumbers)
                 .filter(arg -> arg.isPrimaryNumber)
                 .firstOrNull()
@@ -170,6 +173,7 @@ public class ContactsDBHelper {
         try {
             VCard dbVCard = new VCardReader(vCardDataInDB.vcardDataAsString).readNext();
             dbVCard.setStructuredName(vCard.getStructuredName());
+            setFormattedNameIfNotPresent(dbVCard);
             dbVCard.getTelephoneNumbers().clear();
             dbVCard.getTelephoneNumbers().addAll(vCard.getTelephoneNumbers());
             dbVCard.getEmails().clear();
@@ -222,6 +226,7 @@ public class ContactsDBHelper {
     }
 
     private static void createVCardDataAndSaveInDB(VCard vcard, Contact contact) {
+        VCardUtils.setFormattedNameIfNotPresent(vcard);
         new VCardData(contact,
                 vcard.write(),
                 vcard.getUid() == null ? UUID.randomUUID().toString() : vcard.getUid().getValue(),
@@ -231,6 +236,7 @@ public class ContactsDBHelper {
     }
 
     private static void createVCardDataAndSaveInDB(Triplet<String, String, VCard> vcardTriplet, Contact contact) {
+        VCardUtils.setFormattedNameIfNotPresent(vcardTriplet.z);
         new VCardData(contact,
                 vcardTriplet.z.write(),
                 vcardTriplet.z.getUid() == null ? UUID.randomUUID().toString() : vcardTriplet.z.getUid().getValue(),

@@ -6,6 +6,7 @@ import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.github.underscore.Tuple;
 import com.github.underscore.U;
@@ -29,6 +30,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.ADDRESSBOOK_
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
@@ -73,15 +75,17 @@ public class CardDavSyncActivity extends AppCompatActivity {
         updateServer(allVCardDataList, true, username, password, addressBookUrl);
         ContactsDBHelper.deleteVCardsWithStatusDeleted();
         ContactsDataStore.refreshStoreAsync();
+        toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
     }
 
     private void updateServer(List<VCardData> allVCardDataList, boolean oldServer, String username, String password, String addressBookUrl) {
+        String baseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
         U.forEach(allVCardDataList, vcardData -> {
             switch (vcardData.status){
                 case STATUS_NONE:
                     if(oldServer) break;
                 case STATUS_CREATED:
-                    Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData, username, password, addressBookUrl, getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this));
+                    Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData, username, password, addressBookUrl, baseUrl);
                     if(hrefAndEtag == null) break;
                     vcardData.href = hrefAndEtag.first;
                     vcardData.etag = hrefAndEtag.second;
@@ -96,7 +100,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
                     vcardData.save();
                     break;
                 case STATUS_DELETED:
-                    CardDavUtils.deleteVCardOnServer(vcardData);
+                    CardDavUtils.deleteVCardOnServer(vcardData, username, password, addressBookUrl, baseUrl);
                     break;
             }
         });

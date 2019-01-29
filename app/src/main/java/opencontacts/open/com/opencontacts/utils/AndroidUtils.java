@@ -413,4 +413,8 @@ public class AndroidUtils {
         }
         return false;
     }
+
+    public static void toastFromNonUIThread(int messageRes, int length, Context context){
+        getMainThreadHandler().post(() -> Toast.makeText(context, context.getString(messageRes), length).show());
+    }
 }

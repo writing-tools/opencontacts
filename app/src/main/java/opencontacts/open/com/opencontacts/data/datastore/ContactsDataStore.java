@@ -20,8 +20,8 @@ import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListe
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 
 public class ContactsDataStore {
     private static List<Contact> contacts = null;
@@ -144,7 +144,7 @@ public class ContactsDataStore {
         processAsync(() -> {
             ContactsDBHelper.deleteAllContacts();
             refreshStore();
-            getMainThreadHandler().post(() -> Toast.makeText(context, R.string.deleted_all_contacts, Toast.LENGTH_LONG).show());
+            toastFromNonUIThread(R.string.deleted_all_contacts, Toast.LENGTH_LONG, context);
         });
     }
 

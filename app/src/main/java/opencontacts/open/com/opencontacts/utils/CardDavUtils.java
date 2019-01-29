@@ -149,8 +149,19 @@ public class CardDavUtils {
         return null;
     }
 
-    public static void deleteVCardOnServer(VCardData vcardData) {
-        //TODO: implement
+    public static boolean deleteVCardOnServer(VCardData vcardData, String username, String password, String addressBookUrl, String baseUrl) {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .delete()
+                    .url(baseUrl + addressBookUrl + vcardData.href)
+                    .build())
+                    .execute();
+            return response.isSuccessful();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
 

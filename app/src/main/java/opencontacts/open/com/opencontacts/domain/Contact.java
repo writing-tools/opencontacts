@@ -57,7 +57,7 @@ public class Contact implements Serializable{
         StringBuilder searchStringBuffer = new StringBuilder();
         searchStringBuffer.append(name).append(' ');
         for(PhoneNumber phoneNumber : phoneNumbers)
-            searchStringBuffer.append(phoneNumber.phoneNumber).append(' ');
+            searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
         searchStringBuffer.append(getNumericKeyPadNumberForString(name));
         t9Text = searchStringBuffer.toString().toUpperCase();
         return t9Text;

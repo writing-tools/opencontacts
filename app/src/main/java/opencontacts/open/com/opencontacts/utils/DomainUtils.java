@@ -206,6 +206,6 @@ public class DomainUtils {
     }
 
     public static boolean isStillOnOldDB() {
-        return VCardData.count(VCardData.class) == 0;
+        return VCardData.count(VCardData.class) == 0 && opencontacts.open.com.opencontacts.orm.Contact.count(opencontacts.open.com.opencontacts.orm.Contact.class) > 0;
     }
 }

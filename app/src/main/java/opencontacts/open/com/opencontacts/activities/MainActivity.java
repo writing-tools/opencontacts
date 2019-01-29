@@ -66,9 +66,6 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(DomainUtils.isStillOnOldDB()){ //TODO: remove this after 1 more version upgrade
-            AndroidUtils.showAlert(this, R.string.warning, R.string.still_on_old_db_resolution);
-        }
         refresh();
     }
 
@@ -77,9 +74,12 @@ public class MainActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         if(AndroidUtils.doesNotHaveAllPermissions(this)){
             AndroidUtils.askForPermissionsIfNotGranted(this);
+            return;
         }
-        else
-            setupTabs();
+        else setupTabs();
+        if(DomainUtils.isStillOnOldDB()){ //TODO: remove this after 1 more version upgrade
+            AndroidUtils.showAlert(this, R.string.warning, R.string.still_on_old_db_resolution);
+        }
     }
 
     @Override

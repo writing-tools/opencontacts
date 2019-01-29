@@ -111,6 +111,10 @@ public class MainActivity extends AppBaseActivity {
 //            startActivity(new Intent(this, CardDavSyncActivity.class));
 //            return true;
 //        });
+        menu.findItem(R.id.action_switch_timeformat).setOnMenuItemClickListener(item -> {
+            AndroidUtils.switchTimeFormat(this);
+            return true;
+        });
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);

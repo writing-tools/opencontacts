@@ -64,6 +64,7 @@ public class AndroidUtils {
     public static final String EMAIL_SCHEME = "mailto:";
     public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
     public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
+    public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -392,8 +393,11 @@ public class AndroidUtils {
     }
 
     public static String getStringFromPreferences(String key, Context context) {
-        return getAppsSharedPreferences(context)
-                .getString(key, null);
+        return getStringFromPreferences(key, null, context);
+    }
+
+    public static String getStringFromPreferences(String key, String defaultValue, Context context) {
+        return getAppsSharedPreferences(context).getString(key, defaultValue);
     }
 
     public static void updatePreference(String key, String value, Context context) {
@@ -401,6 +405,11 @@ public class AndroidUtils {
                 .edit()
                 .putString(key, value)
                 .apply();
+    }
+
+    public static boolean is12HoursPreferedTimeFormat(Context context){
+        return getAppsSharedPreferences(context)
+                .getBoolean(PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, true);
     }
 
     public static boolean isWhatsappInstalled(Context context) {
@@ -412,5 +421,12 @@ public class AndroidUtils {
         } catch (PackageManager.NameNotFoundException ignored) {
         }
         return false;
+    }
+
+    public static void switchTimeFormat(Context context) {
+        getAppsSharedPreferences(context)
+                .edit()
+                .putBoolean(PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, !is12HoursPreferedTimeFormat(context))
+                .apply();
     }
 }

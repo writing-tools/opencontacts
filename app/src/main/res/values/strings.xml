@@ -123,6 +123,7 @@
     <string name="no_addressbook_found">No Addressbook found</string>
     <string name="whatsapp_not_installed">Whatsapp not installed</string>
     <string name="enable_only_after_installing_whatsapp">You can enable this only after installing whatsapp</string>
+    <string name="switch_time_format">Switch time format</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

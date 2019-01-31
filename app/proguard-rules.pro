@@ -22,6 +22,7 @@
 -dontwarn org.jsoup.**                  # jsoup library (for hCard parsing) not used
 -dontwarn sun.misc.Perf
 -keep,includedescriptorclasses class ezvcard.property.** { *; } # keep all VCard properties (created at runtime)
+-keep class !ezvcard.Ezvcard, ezvcard.* { *; }
 
 # for sugardb to work
 # Ensures entities remain un-obfuscated so table and columns are named correctly

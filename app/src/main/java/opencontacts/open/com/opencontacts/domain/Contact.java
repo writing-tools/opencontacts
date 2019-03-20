@@ -5,6 +5,7 @@ import java.util.List;
 
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
+import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
 
 /**
@@ -48,7 +49,7 @@ public class Contact implements Serializable{
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumbers = phoneNumbers;
-        this.name = firstName + " " + lastName;
+        this.name = getEmptyStringIfNull(firstName) + " " + getEmptyStringIfNull(lastName);
         this.lastAccessed = lastAccessed;
         this.primaryPhoneNumber = primaryPhoneNumber;
     }

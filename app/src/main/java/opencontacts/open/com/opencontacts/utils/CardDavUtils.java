@@ -35,14 +35,13 @@ public class CardDavUtils {
 
     public static final String HTTP_HEADER_E_TAG = "ETag";
 
-    public static String figureOutAddressBookUrl(String url, String username, String password){
-        OkHttpClient okHttpClient = getHttpClientWithBasicAuth(username, password);
+    public static String figureOutAddressBookUrl(String url, String username){
+        OkHttpClient okHttpClient = getHttpClientWithBasicAuth();
 
         Request request = new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
                 .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
-//                .url(url + "/carddav")
-                .url(url + "/admin")
+                .url(url + "/" + username)
                 .build();
 
 
@@ -54,9 +53,6 @@ public class CardDavUtils {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-            }
-            else {
-                System.out.println(response.code() + " yolo failed");
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -81,7 +77,7 @@ public class CardDavUtils {
         return getText(XML_TAG_HREF, XML_NAMESPACE_DAV, responseNodeOfAddressbookType);
     }
 
-    public static List<Triplet<String ,String, VCard>> downloadAddressBook(String addressBookUrl, String username, String password) {
+    public static List<Triplet<String ,String, VCard>> downloadAddressBook(String addressBookUrl) {
         String addressBookQueryAskingVCardData = "<card:addressbook-query xmlns:d=\"DAV:\" xmlns:card=\"urn:ietf:params:xml:ns:carddav\">\n" +
                 "    <d:prop>\n" +
                 "        <d:getetag />\n" +
@@ -93,7 +89,7 @@ public class CardDavUtils {
                 .url(addressBookUrl)
                 .build();
         try {
-            Response addressBookResponse = getHttpClientWithBasicAuth(username, password)
+            Response addressBookResponse = getHttpClientWithBasicAuth()
                     .newCall(addressBookDownloadRequest)
                     .execute();
             if(addressBookResponse.isSuccessful()) return getVCardsOutOfAddressBookResponse(addressBookResponse.body().string());
@@ -120,8 +116,8 @@ public class CardDavUtils {
         });
     }
 
-    public static Pair<String, String> createContactOnServer(VCardData vcardData, String username, String password, String addressBookUrl, String baseUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+    public static Pair<String, String> createContactOnServer(VCardData vcardData, String addressBookUrl, String baseUrl) {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
         String newContactUrl = baseUrl + addressBookUrl + vcardData.uid;
         Request createContactRequest = new Request.Builder()
                 .url(newContactUrl)
@@ -135,7 +131,7 @@ public class CardDavUtils {
                         .get()
                         .build()).execute();
                 if(getVCardResponse.isSuccessful()){
-                    return new Pair<>(newContactUrl, response.header(HTTP_HEADER_E_TAG));
+                    return new Pair<>(addressBookUrl + vcardData.uid, response.header(HTTP_HEADER_E_TAG));
                 }
             }
         } catch (IOException e) {
@@ -144,17 +140,27 @@ public class CardDavUtils {
         return null;
     }
 
-    public static String updateContactOnServer(VCardData vcardData) {
-        //TODO: implement
+    public static String updateContactOnServer(VCardData vcardData, String baseUrl) {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .put(RequestBody.create(null, vcardData.vcardDataAsString))
+                    .url(baseUrl + vcardData.href)
+                    .build())
+                    .execute();
+            return response.header(HTTP_HEADER_E_TAG);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         return null;
     }
 
-    public static boolean deleteVCardOnServer(VCardData vcardData, String username, String password, String addressBookUrl, String baseUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+    public static boolean deleteVCardOnServer(VCardData vcardData, String baseUrl) {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                     .delete()
-                    .url(baseUrl + addressBookUrl + vcardData.href)
+                    .url(baseUrl + vcardData.href)
                     .build())
                     .execute();
             return response.isSuccessful();
@@ -162,6 +168,21 @@ public class CardDavUtils {
             e.printStackTrace();
         }
         return false;
+    }
+
+    public static boolean areNotValidDetails(String baseUrl, String username, String password){
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .method(HTTP_METHOD_PROPFIND, null)
+                    .url(baseUrl + "/" + username)
+                    .build())
+                    .execute();
+            return !response.isSuccessful();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return true;
     }
 }
 

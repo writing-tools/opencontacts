@@ -67,9 +67,6 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        if(DomainUtils.isStillOnOldDB()){ //TODO: remove this after 1 more version upgrade
-            AndroidUtils.showAlert(this, R.string.warning, R.string.still_on_old_db_resolution);
-        }
         refresh();
     }
 

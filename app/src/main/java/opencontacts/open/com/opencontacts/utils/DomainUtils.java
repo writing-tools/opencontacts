@@ -205,7 +205,4 @@ public class DomainUtils {
         return getOrDefault(translatedTextToEmailType, translatedText, defaultEmailType);
     }
 
-    public static boolean isStillOnOldDB() {
-        return VCardData.count(VCardData.class) == 0;
-    }
 }

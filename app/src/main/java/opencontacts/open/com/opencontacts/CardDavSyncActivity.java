@@ -5,6 +5,7 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Toast;
 
@@ -18,10 +19,12 @@ import java.util.Map;
 import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
+import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
+import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
@@ -32,6 +35,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFro
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidDetails;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
 
@@ -51,31 +55,50 @@ public class CardDavSyncActivity extends AppCompatActivity {
         String url = ((TextInputEditText) findViewById(R.id.url)).getText().toString();
         String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
         String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
+        if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
+            Toast.makeText(this, R.string.input_username_and_password, LENGTH_SHORT).show();
+            return;
+        }
         processAsync(() -> sync(url, username, password));
     }
 
     private void sync(String urlFromView, String username, String password) {
+        if(areNotValidDetails(urlFromView, username, password)){
+            toastFromNonUIThread(R.string.invalid_username_or_password_or_url, LENGTH_SHORT, this);
+            return;
+        }
         String addressBookUrl = getStringFromPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, this);
         if(addressBookUrl == null || !urlFromView.equals(savedBaseUrl))
-            addressBookUrl = figureOutAddressBookUrl(urlFromView, username, password);
+            addressBookUrl = figureOutAddressBookUrl(urlFromView, username);
         if (addressBookUrl == null) {
             showError(R.string.no_addressbook_found);
             return;
         }
         updatePreference(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
         updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
-        List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl, username, password);
+        List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl);
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
-        Map<String, VCardData> allVCardsFromDBAsMap = getAllVCardsAsUIDMap(allVCardDataList);
+        Map<String, VCardData> allVCardsAsHREFMap = getAllVCardsAsHREFMap(allVCardDataList);
         U.forEach(hrefEtagAndVCardList, hrefEtagAndVCard -> {
-            String uid = hrefEtagAndVCard.z.getUid().getValue();
-            if(allVCardsFromDBAsMap.containsKey(uid)) processExistingVCard(hrefEtagAndVCard, allVCardsFromDBAsMap.get(uid));
-            else ContactsDBHelper.addContact(hrefEtagAndVCard, this);
+            String href = hrefEtagAndVCard.x;
+            if(allVCardsAsHREFMap.containsKey(href)) {
+                VCardData vcardDataFromDB = allVCardsAsHREFMap.get(href);
+                if(hrefEtagAndVCard.y.equals(vcardDataFromDB.etag)) return;
+                processExistingVCard(hrefEtagAndVCard, vcardDataFromDB);
+            }
+            else createContact(hrefEtagAndVCard);
         });
         updateServer(allVCardDataList, true, username, password, addressBookUrl);
-        ContactsDBHelper.deleteVCardsWithStatusDeleted();
         ContactsDataStore.refreshStoreAsync();
         toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
+        finish();
+    }
+
+    private void createContact(Triplet<String, String, VCard> hrefEtagAndVCard) {
+        Contact contact = ContactsDBHelper.addContact(hrefEtagAndVCard, this);
+        VCardData vCardData = ContactsDBHelper.getVCard(contact.getId());
+        vCardData.status = STATUS_NONE;
+        vCardData.save();
     }
 
     private void updateServer(List<VCardData> allVCardDataList, boolean oldServer, String username, String password, String addressBookUrl) {
@@ -85,7 +108,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
                 case STATUS_NONE:
                     if(oldServer) break;
                 case STATUS_CREATED:
-                    Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData, username, password, addressBookUrl, baseUrl);
+                    Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData, addressBookUrl, baseUrl);
                     if(hrefAndEtag == null) break;
                     vcardData.href = hrefAndEtag.first;
                     vcardData.etag = hrefAndEtag.second;
@@ -93,14 +116,15 @@ public class CardDavSyncActivity extends AppCompatActivity {
                     vcardData.save();
                     break;
                 case STATUS_UPDATED:
-                    String etag= CardDavUtils.updateContactOnServer(vcardData);
+                    String etag= CardDavUtils.updateContactOnServer(vcardData, baseUrl);
                     if(etag == null) break;
                     vcardData.etag = etag;
                     vcardData.status = STATUS_NONE;
                     vcardData.save();
                     break;
                 case STATUS_DELETED:
-                    CardDavUtils.deleteVCardOnServer(vcardData, username, password, addressBookUrl, baseUrl);
+                    boolean deletionOnServerSuccessful = CardDavUtils.deleteVCardOnServer(vcardData, baseUrl);
+                    if(deletionOnServerSuccessful) vcardData.delete();
                     break;
             }
         });

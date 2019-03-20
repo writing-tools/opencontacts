@@ -70,6 +70,7 @@ public class ContactsDBHelper {
         }
         vCardData.status = STATUS_DELETED;
         vCardData.vcardDataAsString = null;
+        vCardData.save();
     }
 
     static Contact getContactFromDB(String phoneNumber) {
@@ -261,10 +262,6 @@ public class ContactsDBHelper {
         return contact;
     }
 
-    public static void deleteVCardsWithStatusDeleted() {
-        VCardData.deleteAll(VCardData.class, "status = ?", "" + STATUS_DELETED);
-    }
-
     public static void merge(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vCardData, Context context) {
         VCard vCardInDb = null;
         try {
@@ -272,6 +269,7 @@ public class ContactsDBHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
         List<Telephone> telephoneNumbersInDownloadedVCard = hrefEtagAndVCard.z.getTelephoneNumbers();
 
         List<Telephone> extraTelephoneNumbersInDb = U.chain(vCardInDb.getTelephoneNumbers())
@@ -312,6 +310,7 @@ public class ContactsDBHelper {
         vCardData.vcardDataAsString = hrefEtagAndVCard.z.write();
         vCardData.etag = hrefEtagAndVCard.y;
         vCardData.href = hrefEtagAndVCard.x;
+        vCardData.uid = hrefEtagAndVCard.z.getUid().getValue();
         vCardData.status = STATUS_UPDATED;
         vCardData.save();
     }

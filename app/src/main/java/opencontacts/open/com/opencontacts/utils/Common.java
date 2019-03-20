@@ -104,4 +104,8 @@ public class Common {
         instance.add(timeUnit, offset);
         return instance;
     }
+
+    public static String getEmptyStringIfNull(String string){
+        return string == null ? "" : string;
+    }
 }

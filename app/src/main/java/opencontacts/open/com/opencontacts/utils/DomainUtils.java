@@ -41,7 +41,7 @@ public class DomainUtils {
     public static final String EMPTY_STRING = "";
     public static final Pattern NON_NUMERIC_MATCHING_PATTERN = Pattern.compile("[^0-9]");
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
-    public static final int NUMBER_9 = 9;
+    public static final int NUMBER_8 = 8;
 
     private static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
     private static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
@@ -120,7 +120,7 @@ public class DomainUtils {
         String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
         if(allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
             return null;
-        return allNumericPhoneNumber.length() > NUMBER_9 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_9) : allNumericPhoneNumber;
+        return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
     }
 
     public static String getNumericKeyPadNumberForString(String string){

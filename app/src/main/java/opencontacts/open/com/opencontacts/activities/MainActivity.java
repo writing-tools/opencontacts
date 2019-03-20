@@ -75,9 +75,9 @@ public class MainActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         if(AndroidUtils.doesNotHaveAllPermissions(this)){
             AndroidUtils.askForPermissionsIfNotGranted(this);
+            return;
         }
-        else
-            setupTabs();
+        else setupTabs();
     }
 
     @Override

@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -29,7 +30,9 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.is12HoursPreferedTimeFormat;
 
 /**
  * Created by sultanm on 7/31/17.
@@ -43,6 +46,8 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     private boolean isWhatsappIntegrationEnabled;
     //android has weakref to this listener and gets garbage collected hence we should have it here.
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
+    private SimpleDateFormat timeStampFormat;
+
 
     public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
         super(context);
@@ -50,7 +55,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.UNKNOWN = context.getString(R.string.unknown);
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
         isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
-
+        timeStampFormat = getTimestampPattern(context);
         List<CallLogEntry> callLogEntries = new ArrayList<>();
 
         final OnClickListener callContact = v -> {
@@ -128,7 +133,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                     ((ImageView)reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_missed_outgoing_black_24dp);
                 ((TextView)reusableView.findViewById(R.id.text_view_duration)).setText(Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())));
                 ((TextView)reusableView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
-                String timeStampOfCall = new java.text.SimpleDateFormat("dd/MM  hh:mm a", Locale.getDefault()).format(new Date(Long.parseLong(callLogEntry.getDate())));
+                String timeStampOfCall = timeStampFormat.format(new Date(Long.parseLong(callLogEntry.getDate())));
                 ((TextView)reusableView.findViewById(R.id.text_view_timestamp)).setText(timeStampOfCall);
                 View addButton = reusableView.findViewById(R.id.image_button_add_contact);
                 View infoButton = reusableView.findViewById(R.id.button_info);
@@ -154,11 +159,19 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         reload();
         //android has weakref to this listener and gets garbage collected hence we should have it here.
         sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)) return;
+            if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)
+                    && !PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY.equals(key)
+                    ) return;
             isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+            timeStampFormat = getTimestampPattern(context);
             adapter.notifyDataSetChanged();
         };
         AndroidUtils.setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
+    }
+
+    @NonNull
+    private SimpleDateFormat getTimestampPattern(Context context) {
+        return new SimpleDateFormat(is12HoursPreferedTimeFormat(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
     @Override

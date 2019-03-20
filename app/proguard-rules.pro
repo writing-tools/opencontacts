@@ -22,6 +22,7 @@
 -dontwarn org.jsoup.**                  # jsoup library (for hCard parsing) not used
 -dontwarn sun.misc.Perf
 -keep,includedescriptorclasses class ezvcard.property.** { *; } # keep all VCard properties (created at runtime)
+-keep class !ezvcard.Ezvcard, ezvcard.* { *; }
 
 # for sugardb to work
 # Ensures entities remain un-obfuscated so table and columns are named correctly
@@ -29,3 +30,17 @@
 
 #lodash
 -dontwarn com.github.underscore.lodash.*
+
+##okhttp starts
+# JSR 305 annotations are for embedding nullability information.
+-dontwarn javax.annotation.**
+
+# A resource is loaded with a relative path so the package of this class must be preserved.
+-keepnames class okhttp3.internal.publicsuffix.PublicSuffixDatabase
+
+# Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
+-dontwarn org.codehaus.mojo.animal_sniffer.*
+
+# OkHttp platform used only on JVM and when Conscrypt dependency is available.
+-dontwarn okhttp3.internal.platform.ConscryptPlatform
+##okhttp ends

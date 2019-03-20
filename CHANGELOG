@@ -1,3 +1,13 @@
+v12.0
+Fixed app crash due to wrong proguard rules
+
+v11.0
+User will now be able to switch time format 12/24 hour
+
+Fixes release build crash - proguard rules for okhttp
+
+Number comparison logic has been updated to support 8 digit numbers
+
 v10.0
 **UI**
 

@@ -65,6 +65,7 @@ public class AndroidUtils {
     public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
     public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
     public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";
+    public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {

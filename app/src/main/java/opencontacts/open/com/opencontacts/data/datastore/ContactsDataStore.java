@@ -50,6 +50,10 @@ public class ContactsDataStore {
         }
     }
 
+    public static void removeContact(long contactId) {
+        removeContact(getContactWithId(contactId));
+    }
+
     public static void updateContact(long contactId, PhoneNumber primaryNumber, VCard vCard, Context context) {
         ContactsDBHelper.updateContactInDBWith(contactId, primaryNumber, vCard, context);
         reloadContact(contactId);

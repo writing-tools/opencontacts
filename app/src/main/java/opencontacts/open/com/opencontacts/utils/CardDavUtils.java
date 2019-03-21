@@ -41,7 +41,7 @@ public class CardDavUtils {
         Request request = new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
                 .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
-                .url(url + "/" + username)
+                .url(url + "/carddav/32")
                 .build();
 
 
@@ -118,24 +118,32 @@ public class CardDavUtils {
 
     public static Pair<String, String> createContactOnServer(VCardData vcardData, String addressBookUrl, String baseUrl) {
         OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
-        String newContactUrl = baseUrl + addressBookUrl + vcardData.uid;
+        String newContactUrl = addressBookUrl + vcardData.uid + ".vcf";
         Request createContactRequest = new Request.Builder()
-                .url(newContactUrl)
+                .url(baseUrl + newContactUrl)
                 .put(RequestBody.create(null, vcardData.vcardDataAsString))
                 .build();
         try {
             Response response = httpClientWithBasicAuth.newCall(createContactRequest).execute();
             if(response.isSuccessful()){
-                Response getVCardResponse = httpClientWithBasicAuth.newCall(new Request.Builder()
-                        .url(newContactUrl)
-                        .get()
-                        .build()).execute();
-                if(getVCardResponse.isSuccessful()){
-                    return new Pair<>(addressBookUrl + vcardData.uid, response.header(HTTP_HEADER_E_TAG));
-                }
+                String etag = getVCardEtag(baseUrl, newContactUrl);
+                if (etag != null) return new Pair<>(newContactUrl, etag);
             }
         } catch (IOException e) {
             e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Nullable
+    private static String getVCardEtag(String baseUrl, String newContactUrl) throws IOException {
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        Response getVCardResponse = httpClientWithBasicAuth.newCall(new Request.Builder()
+                .url(baseUrl + newContactUrl)
+                .get()
+                .build()).execute();
+        if(getVCardResponse.isSuccessful()){
+            return getVCardResponse.header(HTTP_HEADER_E_TAG);
         }
         return null;
     }
@@ -148,7 +156,9 @@ public class CardDavUtils {
                     .url(baseUrl + vcardData.href)
                     .build())
                     .execute();
-            return response.header(HTTP_HEADER_E_TAG);
+            if(response.isSuccessful()){
+                return getVCardEtag(baseUrl, vcardData.href);
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -175,7 +185,7 @@ public class CardDavUtils {
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                     .method(HTTP_METHOD_PROPFIND, null)
-                    .url(baseUrl + "/" + username)
+                    .url(baseUrl + "/carddav/32")
                     .build())
                     .execute();
             return !response.isSuccessful();
@@ -184,6 +194,102 @@ public class CardDavUtils {
         }
         return true;
     }
+
+    public static String getSyncToken(String baseUrl, String addressBookUrl){
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .method(HTTP_METHOD_PROPFIND, RequestBody.create(null, "<d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\">\n" +
+                            "  <d:prop>\n" +
+                            "     <d:displayname />\n" +
+                            "     <cs:getctag />\n" +
+                            "     <d:sync-token />\n" +
+                            "  </d:prop>\n" +
+                            "</d:propfind>"))
+                    .url(baseUrl + addressBookUrl)
+                    .build())
+                    .execute();
+            if(response.isSuccessful()){
+                Document xmlDocument = createXMLDocument(response.body().string());
+                NodeList syncTokenNodeList = xmlDocument.getElementsByTagNameNS(XML_NAMESPACE_DAV, XML_TAG_SYNC_TOKEN);
+                if(syncTokenNodeList.getLength() == 0)
+                    return null;
+                return syncTokenNodeList.item(0).getTextContent();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public static Pair<List<String>, List<String>> getChangesSinceSyncToken(String synctoken, String baseUrl, String addressBookUrl){
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        List<String> updatedOrAdded =  new ArrayList<>(0);
+        List<String> deleted =  new ArrayList<>(0);
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .method(HTTP_METHOD_REPORT, RequestBody.create(null, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
+                            "<d:sync-collection xmlns:d=\"DAV:\">\n" +
+                            "  <d:sync-token>"+ synctoken + "</d:sync-token>\n" +
+                            "  <d:sync-level>1</d:sync-level>\n" +
+                            "  <d:prop>\n" +
+                            "    <d:getetag/>\n" +
+                            "  </d:prop>\n" +
+                            "</d:sync-collection>"))
+                    .url(baseUrl + addressBookUrl)
+                    .build())
+                    .execute();
+            if(response.isSuccessful()){
+                Document xmlDocument = createXMLDocument(response.body().string());
+                NodeList responseNodes = xmlDocument.getElementsByTagNameNS(XML_NAMESPACE_DAV, XML_TAG_RESPONSE);
+                U.forEach(new NodeListIterable(responseNodes), node -> {
+                    String href = getText(XML_TAG_HREF, XML_NAMESPACE_DAV, node);
+                    String status = getText(XML_TAG_STATUS, XML_NAMESPACE_DAV, node);
+                    if(status.contains(HTTP_STATUS_NOT_FOUND)) deleted.add(href);
+                    else updatedOrAdded.add(href);
+
+                });
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new Pair<>(updatedOrAdded, deleted);
+    }
+
+    public static List<Triplet<String, String, VCard>> getVcardsWithHrefs(List<String> hrefs, String baseUrl, String addressBookUrl){
+        if(hrefs.isEmpty()) return new ArrayList<>(0);
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        try {
+            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                    .method(HTTP_METHOD_REPORT, RequestBody.create(null, getRequestBodyToFetchVCardsWithHrefs(hrefs)))
+                    .url(baseUrl + addressBookUrl)
+                    .build())
+                    .execute();
+            if(response.isSuccessful()){
+                List<Triplet<String, String, VCard>> tripletOfHrefEtagAndVCard = getVCardsOutOfAddressBookResponse(response.body().string());
+                return tripletOfHrefEtagAndVCard;
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return new ArrayList<>(0);
+    }
+
+    private static String getRequestBodyToFetchVCardsWithHrefs(List<String> hrefs){
+        String prefix = "<card:addressbook-multiget xmlns:d=\"DAV:\" xmlns:card=\"urn:ietf:params:xml:ns:carddav\">\n" +
+                "    <d:prop>\n" +
+                "        <d:getetag />\n" +
+                "        <card:address-data />\n" +
+                "    </d:prop>";
+
+        String suffix = "</card:addressbook-multiget>";
+        final StringBuilder hrefsInRequest = new StringBuilder();
+        String hrefTagOpen = "<d:href>";
+        String hrefTagClose = "</d:href>";
+        U.forEach(hrefs, href -> hrefsInRequest.append(hrefTagOpen + href + hrefTagClose));
+        return prefix + hrefsInRequest.toString() + suffix;
+    }
+
 }
 
 class NodeListIterable implements Iterable<Node>{

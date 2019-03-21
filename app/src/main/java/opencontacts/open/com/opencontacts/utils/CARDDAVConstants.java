@@ -2,12 +2,15 @@ package opencontacts.open.com.opencontacts.utils;
 
 public interface CARDDAVConstants {
     String HTTP_METHOD_PROPFIND = "PROPFIND";
+    String HTTP_STATUS_NOT_FOUND = "404";
     String HTTP_HEADER_DEPTH = "depth";
     String XML_TAG_RESPONSE = "response";
+    String XML_TAG_SYNC_TOKEN = "sync-token";
     String XML_TAG_HREF = "href";
     String XML_TAG_ADDRESSBOOK = "addressbook";
     String HTTP_METHOD_REPORT = "REPORT";
     String XML_TAG_GETETAG = "getetag";
+    String XML_TAG_STATUS = "status";
     String XML_TAG_ADDRESS_DATA = "address-data";
 
     String XML_NAMESPACE_DAV = "DAV:";

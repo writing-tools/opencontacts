@@ -21,6 +21,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
@@ -31,6 +32,7 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.SYNC_TOKEN_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
@@ -38,6 +40,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePrefer
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidDetails;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getChangesSinceSyncToken;
 
 public class CardDavSyncActivity extends AppCompatActivity {
 
@@ -76,8 +79,48 @@ public class CardDavSyncActivity extends AppCompatActivity {
         }
         updatePreference(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
         updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
-        List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl);
+        String syncToken = AndroidUtils.getStringFromPreferences(SYNC_TOKEN_SHARED_PREF_KEY, this);
+        if(TextUtils.isEmpty(syncToken))
+            fullSync(urlFromView, username, password, addressBookUrl);
+        else
+            partialSync(urlFromView, username, password, addressBookUrl, syncToken);
+        ContactsDataStore.refreshStoreAsync();
+        toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
+        finish();
+    }
+
+    private void partialSync(String baseUrl, String username, String password, String addressBookUrl, String syncToken) {
+        Pair<List<String>, List<String>> pairOfListOfAddedUpdatedAndDeleted = getChangesSinceSyncToken(syncToken, baseUrl, addressBookUrl);
+        deleteContactsLocallyAsTheyWereDeletedOnServer(pairOfListOfAddedUpdatedAndDeleted.second);
+        syncChanges(baseUrl, username, password, addressBookUrl, CardDavUtils.getVcardsWithHrefs(pairOfListOfAddedUpdatedAndDeleted.first, baseUrl, addressBookUrl));
+    }
+
+    private void deleteContactsLocallyAsTheyWereDeletedOnServer(List<String> hrefsDeleted) {
+        if(hrefsDeleted.isEmpty()) return;
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
+        Map<String, VCardData> allVCardsAsHREFMap = getAllVCardsAsHREFMap(allVCardDataList);
+
+        U.forEach(hrefsDeleted, href -> {
+            VCardData vCardData = allVCardsAsHREFMap.get(href);
+            if(vCardData == null) return;
+            ContactsDataStore.removeContact(vCardData.contact.getId());
+            vCardData.delete();
+        });
+    }
+
+    private void fullSync(String urlFromView, String username, String password, String addressBookUrl) {
+        List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl);
+        syncChanges(urlFromView, username, password, addressBookUrl, hrefEtagAndVCardList);
+    }
+
+    private void syncChanges(String urlFromView, String username, String password, String addressBookUrl, List<Triplet<String, String, VCard>> hrefEtagAndVCardList) {
+        List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
+        if(!hrefEtagAndVCardList.isEmpty()) updateLocal(hrefEtagAndVCardList, allVCardDataList);
+        updateServer(allVCardDataList, true, username, password, addressBookUrl);
+        AndroidUtils.updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, CardDavUtils.getSyncToken(urlFromView, addressBookUrl), this);
+    }
+
+    private void updateLocal(List<Triplet<String, String, VCard>> hrefEtagAndVCardList, List<VCardData> allVCardDataList) {
         Map<String, VCardData> allVCardsAsHREFMap = getAllVCardsAsHREFMap(allVCardDataList);
         U.forEach(hrefEtagAndVCardList, hrefEtagAndVCard -> {
             String href = hrefEtagAndVCard.x;
@@ -88,10 +131,6 @@ public class CardDavSyncActivity extends AppCompatActivity {
             }
             else createContact(hrefEtagAndVCard);
         });
-        updateServer(allVCardDataList, true, username, password, addressBookUrl);
-        ContactsDataStore.refreshStoreAsync();
-        toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
-        finish();
     }
 
     private void createContact(Triplet<String, String, VCard> hrefEtagAndVCard) {

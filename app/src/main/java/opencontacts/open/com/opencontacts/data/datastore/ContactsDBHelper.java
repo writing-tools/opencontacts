@@ -249,8 +249,11 @@ public class ContactsDBHelper {
 
     private static void createMobileNumbersAndSaveInDB(VCard vcard, Contact contact) {
         for (Telephone telephoneNumber : vcard.getTelephoneNumbers()) {
-            if(isEmpty(telephoneNumber.getText()) && isEmpty(telephoneNumber.getUri().getNumber()))
-                continue;
+            try{//try block here to check if telephoneNumber.getUri is null. Do not want to check a lot of null combos. so try catch would help
+                if(isEmpty(telephoneNumber.getText()) && isEmpty(telephoneNumber.getUri().getNumber()))
+                    continue;
+            }
+            catch (Exception e){continue;}
             new PhoneNumber(getMobileNumber(telephoneNumber), contact, false).save();
         }
     }

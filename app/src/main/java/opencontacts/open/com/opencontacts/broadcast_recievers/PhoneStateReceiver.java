@@ -57,6 +57,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         if(state.equals(TelephonyManager.EXTRA_STATE_RINGING)){
             isCallRecieved = false;
             incomingNumber = intent.getStringExtra(TelephonyManager.EXTRA_INCOMING_NUMBER);
+            if(incomingNumber == null) return; //in pie, two intents are launched one with number and other with not
             callingContact = ContactsDataStore.getContact(incomingNumber);
             if(callingContact == null)
                 callingContact = new Contact(context.getString(R.string.unknown), incomingNumber);

@@ -31,7 +31,6 @@ import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
@@ -105,10 +104,10 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
-        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
-            startActivity(new Intent(this, CardDavSyncActivity.class));
-            return true;
-        });
+//        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
+//            startActivity(new Intent(this, CardDavSyncActivity.class));
+//            return true;
+//        });
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);

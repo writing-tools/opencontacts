@@ -22,6 +22,7 @@ public class Contact implements Serializable{
 
     public String lastAccessed;
     public String t9Text;
+    public String textSearchTarget;
 
     public Contact(long id) {
         this.id = id;
@@ -54,14 +55,22 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
-    public String setT9Text() {
+    public void setT9Text() {
         StringBuilder searchStringBuffer = new StringBuilder();
         searchStringBuffer.append(name).append(' ');
         for(PhoneNumber phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
         searchStringBuffer.append(getNumericKeyPadNumberForString(name));
         t9Text = searchStringBuffer.toString().toUpperCase();
-        return t9Text;
+    }
+
+    public void setTextSearchTarget(){
+        StringBuilder searchStringBuffer = new StringBuilder();
+        searchStringBuffer.append(name).append(' ');
+        for(PhoneNumber phoneNumber : phoneNumbers)
+            searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
+        searchStringBuffer.append(name);
+        textSearchTarget = searchStringBuffer.toString().toUpperCase();
     }
 
     @Override

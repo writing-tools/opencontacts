@@ -13,31 +13,38 @@ import android.widget.TextView;
 import java.util.ArrayList;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
 import static android.view.View.*;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 
 public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
     public ContactsListFilter contactsListFilter;
-    private boolean isWhatsappIntegrationEnabled;
+    private boolean whatsappIntegrationEnabled;
     //android has weakref to this listener and gets garbage collected hence we should have it here.
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
 
     ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
         super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
         layoutInflater = LayoutInflater.from(context);
-        contactsListFilter = new ContactsListFilter(this, allContactsHolder);
-        isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+        createContactsListFilter(allContactsHolder);
+        whatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
         //android has weakref to this listener and gets garbage collected hence we should have it here.
         sharedPreferenceChangeListener = (sharedPreferences, key) -> {
             if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)) return;
-            isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+            whatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
             notifyDataSetChanged();
         };
-        AndroidUtils.setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
+        SharedPreferencesUtils.setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
+    }
+
+    private void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {
+        contactsListFilter = isT9SearchEnabled(getContext()) ? new ContactsListT9Filter(this, allContactsHolder)
+                : new ContactsListTextFilter(this, allContactsHolder);
     }
 
     private final OnClickListener callContact = v -> {
@@ -76,7 +83,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         convertView.findViewById(R.id.button_info).setOnClickListener(showContactDetails);
         convertView.findViewById(R.id.button_message).setOnClickListener(messageContact);
         View whatsappIcon = convertView.findViewById(R.id.button_whatsapp);
-        if(isWhatsappIntegrationEnabled){
+        if(whatsappIntegrationEnabled){
             whatsappIcon.setOnClickListener(whatsappContact);
             whatsappIcon.setVisibility(VISIBLE);
         }

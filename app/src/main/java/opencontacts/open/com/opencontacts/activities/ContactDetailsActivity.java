@@ -34,6 +34,7 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 
@@ -75,7 +76,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
         if(contactId == -1)
             showInvalidContactErrorAndExit();
-        shouldShowWhatsappIcon = AndroidUtils.isWhatsappIntegrationEnabled(this);
+        shouldShowWhatsappIcon = isWhatsappIntegrationEnabled(this);
     }
 
     @Override

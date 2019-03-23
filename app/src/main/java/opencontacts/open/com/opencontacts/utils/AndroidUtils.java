@@ -5,10 +5,8 @@ import android.app.KeyguardManager;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
-import android.graphics.Point;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -36,7 +34,6 @@ import opencontacts.open.com.opencontacts.activities.ContactDetailsActivity;
 import opencontacts.open.com.opencontacts.activities.EditContactActivity;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
@@ -47,6 +44,9 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.Intent.ACTION_SENDTO;
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -55,17 +55,8 @@ import static android.content.pm.PackageManager.PERMISSION_GRANTED;
 public class AndroidUtils {
 
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
-    public static final String IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY = "IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY";
-    public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
-    public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
-    public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
-    public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     public static final String EMAIL_SCHEME = "mailto:";
-    public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
-    public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
-    public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";
-    public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -118,12 +109,6 @@ public class AndroidUtils {
         ));
     }
 
-    public static String getDefaultWhatsAppCountryCode(Context context) {
-        return getAppsSharedPreferences(context)
-                .getString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, "");
-
-    }
-
     @NonNull
     public static Intent getCallIntent(String number, Context context) {
         Uri numberUri = Uri.parse("tel:" + number);
@@ -157,9 +142,6 @@ public class AndroidUtils {
     public static Intent getIntentToShowContactDetails(long contactId, Context context){
      return new Intent(context, ContactDetailsActivity.class)
                     .putExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, contactId);
-    }
-    public static SharedPreferences getAppsSharedPreferences(Context context){
-        return context.getSharedPreferences(context.getString(R.string.app_name), context.MODE_PRIVATE);
     }
 
     public static Intent getIntentToAddContact(String phoneNumber, Context context){
@@ -295,17 +277,6 @@ public class AndroidUtils {
 
     }
 
-    public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {
-        getAppsSharedPreferences(context)
-                .edit()
-                .putInt(CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY, x)
-                .putInt(CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY, y)
-                .apply();
-    }
-    public static Point getCallerIdLocationOnScreen(Context context) {
-        return new Point(getAppsSharedPreferences(context).getInt(CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY, 0), getAppsSharedPreferences(context).getInt(CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY, 100));
-    }
-
     public static void goToUrl (String url, Context context) {
         Uri uri = Uri.parse(url);
         context.startActivity(new Intent(ACTION_VIEW, uri));
@@ -317,32 +288,8 @@ public class AndroidUtils {
         return mainThreadHandler;
     }
 
-    public static void switchActiveThemeInPreferences(Context context) {
-        TintedDrawablesStore.reset();
-        getAppsSharedPreferences(context)
-                .edit()
-                .putBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, !isLightThemeActive(context))
-                .apply();
-    }
-
-    public static int getCurrentTheme(Context context) {
-        return isLightThemeActive(context) ? R.style.Theme_AppCompat_Light_NoActionBar_Customized : R.style.Theme_AppCompat_NoActionBar_Customized;
-    }
-
-    private static boolean isLightThemeActive(Context context) {
-        return getAppsSharedPreferences(context).getBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, true);
-    }
-
     public static void applyOptedTheme(Context context) {
-        context.getTheme().applyStyle(AndroidUtils.getCurrentTheme(context), true);
-    }
-
-    public static void enableWhatsappIntegration(String selectedCountryCodeWithPlus, Context context) {
-        getAppsSharedPreferences(context)
-                .edit()
-                .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
-                .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, true)
-                .apply();
+        context.getTheme().applyStyle(getCurrentTheme(context), true);
     }
 
     public static int getThemeAttributeColor(int attribute, Context context){
@@ -361,23 +308,6 @@ public class AndroidUtils {
         drawable.setColorFilter(color, PorterDuff.Mode.SRC_IN);
     }
 
-    public static void disableWhatsappIntegration(Context  context) {
-        getAppsSharedPreferences(context)
-                .edit()
-                .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
-                .apply();
-    }
-
-    public static boolean isWhatsappIntegrationEnabled(Context  context) {
-        return getAppsSharedPreferences(context)
-                .getBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
-                && isWhatsappInstalled(context);
-    }
-
-    public static void setSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener, Context context) {
-        getAppsSharedPreferences(context).registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
-    }
-
     public static void showAlert(Context context, int titleRes, int messageRes) {
         showAlert(context, context.getString(titleRes), context.getString(messageRes));
     }
@@ -391,6 +321,21 @@ public class AndroidUtils {
 
     public static boolean isScreenLocked(Context context) {
         return ((KeyguardManager) context.getSystemService(Context.KEYGUARD_SERVICE)).inKeyguardRestrictedInputMode();
+    }
+
+    public static boolean isWhatsappInstalled(Context context) {
+        String whatsappPackageName = "com.whatsapp";
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(whatsappPackageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return false;
+    }
+
+    public static void toastFromNonUIThread(int messageRes, int length, Context context){
+        getMainThreadHandler().post(() -> Toast.makeText(context, context.getString(messageRes), length).show());
     }
 
     public static String getStringFromPreferences(String key, Context context) {
@@ -408,30 +353,21 @@ public class AndroidUtils {
                 .apply();
     }
 
-    public static boolean is12HoursPreferedTimeFormat(Context context){
-        return getAppsSharedPreferences(context)
-                .getBoolean(PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, true);
-    }
-
-    public static boolean isWhatsappInstalled(Context context) {
-        String whatsappPackageName = "com.whatsapp";
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(whatsappPackageName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException ignored) {
-        }
-        return false;
-    }
-
-    public static void switchTimeFormat(Context context) {
+    public static void updatePreference(String key, boolean value, Context context){
         getAppsSharedPreferences(context)
                 .edit()
-                .putBoolean(PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, !is12HoursPreferedTimeFormat(context))
+                .putBoolean(key, value)
                 .apply();
     }
 
-    public static void toastFromNonUIThread(int messageRes, int length, Context context){
-        getMainThreadHandler().post(() -> Toast.makeText(context, context.getString(messageRes), length).show());
+    public static boolean getBoolean(String key, boolean defaultValue, Context context){
+        return getAppsSharedPreferences(context).getBoolean(key, defaultValue);
+    }
+
+    public static void toggleBoolean(String key, boolean defaultValue, Context context){
+        updatePreference(key
+                , !getAppsSharedPreferences(context).getBoolean(key, defaultValue)
+                , context);
+
     }
 }

@@ -3,7 +3,6 @@ package opencontacts.open.com.opencontacts;
 import android.widget.ArrayAdapter;
 import android.widget.Filter;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -11,7 +10,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 
-public class ContactsListFilter extends Filter{
+public abstract class ContactsListFilter extends Filter{
     private ArrayAdapter<Contact> adapter;
     private AllContactsHolder allContactsHolder;
 
@@ -40,9 +39,7 @@ public class ContactsListFilter extends Filter{
         adapter.notifyDataSetChanged();
     }
 
-    public void updateMap(Contact contact) {
-        contact.setT9Text();
-    }
+    public abstract void updateMap(Contact contact);
 
     public interface AllContactsHolder{
         List<Contact> getContacts();
@@ -50,12 +47,10 @@ public class ContactsListFilter extends Filter{
 
 
     public void mapAsync(List<Contact> contacts) {
-        processAsync(() -> {
-            for(Contact contact : contacts){
-                contact.setT9Text();
-            }
-        });
+        processAsync(() -> createDataMapping(contacts));
     }
+
+    public abstract void createDataMapping(List<Contact> contacts);
 
     private List<Contact> getMatchingContacts(CharSequence searchText){
         List<Contact> contacts = allContactsHolder.getContacts();
@@ -63,20 +58,14 @@ public class ContactsListFilter extends Filter{
             return contacts;
         }
 
-        ArrayList<Contact> filteredContacts = new ArrayList<>();
-        for (Contact contact : contacts) {
-            if(contact.t9Text == null){
-                contact.setT9Text();
-            }
-            if (contact.t9Text.contains(searchText.toString().toUpperCase())) {
-                filteredContacts.add(contact);
-            }
-        }
+        List<Contact> filteredContacts = filter(searchText, contacts);
         sortFilteredContacts(filteredContacts);
         return filteredContacts;
     }
 
-    private void sortFilteredContacts(ArrayList<Contact> filteredContacts) {
+    public abstract List<Contact> filter(CharSequence searchText, List<Contact> contacts);
+
+    public void sortFilteredContacts(List<Contact> filteredContacts) {
         Collections.sort(filteredContacts, (contact1, contact2) -> {
             String lastAccessedDate1 = contact1.lastAccessed;
             String lastAccessedDate2 = contact2.lastAccessed;

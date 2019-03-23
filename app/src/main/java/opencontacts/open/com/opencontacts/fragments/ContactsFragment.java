@@ -13,6 +13,8 @@ import opencontacts.open.com.opencontacts.ContactsListView;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+
 public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     private LinearLayout linearLayout;
     private ContactsListView contactsListView;
@@ -51,7 +53,8 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
                 contactsListView.clearTextFilter();
             return false;
         });
-        searchView.setInputType(InputType.TYPE_CLASS_PHONE);
+
+        searchView.setInputType(isT9SearchEnabled(getContext()) ? InputType.TYPE_CLASS_PHONE : InputType.TYPE_CLASS_TEXT);
         searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String query) {

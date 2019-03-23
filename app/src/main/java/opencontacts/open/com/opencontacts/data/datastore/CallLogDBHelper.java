@@ -20,10 +20,11 @@ import java.util.Map;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastSavedCallLogDate;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastSavedCallLogDate;
 
 
 /**
@@ -52,7 +53,6 @@ class CallLogDBHelper {
             }
         }
     }
-    private String preferenceLastCallLogSavedDate = "preference_last_call_log_saved_date";
 
     public List<CallLogEntry> loadRecentCallLogEntriesIntoDB(Context context) {
         List<CallLogEntry> callLogEntries = getRecentCallLogEntries(context);
@@ -126,14 +126,6 @@ class CallLogDBHelper {
     private int getSimIdOrDefault(String subscriptionIdForCall) {
         Integer simId = simsInfo.get(subscriptionIdForCall);
         return simId == null ? 1 : simId;
-    }
-
-    private String getLastSavedCallLogDate(Context context) {
-        return AndroidUtils.getAppsSharedPreferences(context).getString(preferenceLastCallLogSavedDate, "0");
-    }
-
-    private void setLastSavedCallLogDate(String date, Context context) {
-        AndroidUtils.getAppsSharedPreferences(context).edit().putString(preferenceLastCallLogSavedDate, date).apply();
     }
 
     public static List<CallLogEntry> getRecent100CallLogEntriesFromDB(){

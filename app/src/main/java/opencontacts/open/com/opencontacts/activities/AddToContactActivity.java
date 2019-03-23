@@ -19,12 +19,14 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.ContactsListFilter;
+import opencontacts.open.com.opencontacts.ContactsListT9Filter;
+import opencontacts.open.com.opencontacts.ContactsListTextFilter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
 import static opencontacts.open.com.opencontacts.activities.EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public class AddToContactActivity extends AppBaseActivity {
 
@@ -43,7 +45,9 @@ public class AddToContactActivity extends AppBaseActivity {
             @NonNull
             @Override
             public Filter getFilter() {
-                return new ContactsListFilter(this, () -> contacts);
+                return isT9SearchEnabled(getContext()) ?
+                        new ContactsListT9Filter(this, () -> contacts)
+                        : new ContactsListTextFilter(this, () -> contacts);
             }
 
             @NonNull

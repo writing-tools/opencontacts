@@ -30,9 +30,11 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.Common;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.is12HoursPreferedTimeFormat;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 
 /**
  * Created by sultanm on 7/31/17.
@@ -54,7 +56,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.context = context;
         this.UNKNOWN = context.getString(R.string.unknown);
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
-        isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+        isWhatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
         timeStampFormat = getTimestampPattern(context);
         List<CallLogEntry> callLogEntries = new ArrayList<>();
 
@@ -162,16 +164,16 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
             if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)
                     && !PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY.equals(key)
                     ) return;
-            isWhatsappIntegrationEnabled = AndroidUtils.isWhatsappIntegrationEnabled(context);
+            isWhatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
             timeStampFormat = getTimestampPattern(context);
             adapter.notifyDataSetChanged();
         };
-        AndroidUtils.setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
+        setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
     }
 
     @NonNull
     private SimpleDateFormat getTimestampPattern(Context context) {
-        return new SimpleDateFormat(is12HoursPreferedTimeFormat(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
+        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
     @Override

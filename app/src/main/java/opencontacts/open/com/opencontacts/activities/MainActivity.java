@@ -21,7 +21,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -38,6 +37,12 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttr
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.switchActiveThemeInPreferences;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.toggleT9Search;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.toggleTimeFormat;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -120,6 +125,15 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(MainActivity.this, HelpActivity.class));
             return true;
         });
+        menu.findItem(R.id.action_switch_timeformat).setOnMenuItemClickListener(item -> {
+            toggleTimeFormat(this);
+            return true;
+        });
+        menu.findItem(R.id.action_switch_t9_search).setOnMenuItemClickListener(item -> {
+            toggleT9Search(this);
+            recreate();
+            return true;
+        });
         menu.findItem(R.id.action_resync).setOnMenuItemClickListener(item -> {
             CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
             return true;
@@ -137,13 +151,13 @@ public class MainActivity extends AppBaseActivity {
             return true;
         });
         menu.findItem(R.id.action_switch_theme).setOnMenuItemClickListener(item -> {
-            AndroidUtils.switchActiveThemeInPreferences(this);
+            switchActiveThemeInPreferences(this);
             recreate();
             return true;
         });
         menu.findItem(R.id.action_whatsapp_preferences).setOnMenuItemClickListener((MenuItem item) -> {
             AppCompatEditText countryCodeEditText = new AppCompatEditText(MainActivity.this);
-            countryCodeEditText.setText(AndroidUtils.getDefaultWhatsAppCountryCode(MainActivity.this));
+            countryCodeEditText.setText(getDefaultWhatsAppCountryCode(MainActivity.this));
             countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
             new AlertDialog.Builder(MainActivity.this)
                     .setView(countryCodeEditText)
@@ -154,9 +168,9 @@ public class MainActivity extends AppBaseActivity {
                             showAlert(this, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
                             return;
                         }
-                        AndroidUtils.enableWhatsappIntegration(countryCodeEditText.getText().toString(), MainActivity.this);
+                        enableWhatsappIntegration(countryCodeEditText.getText().toString(), MainActivity.this);
                     })
-                    .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> AndroidUtils.disableWhatsappIntegration(MainActivity.this))
+                    .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> disableWhatsappIntegration(MainActivity.this))
                     .show();
             return true;
         });

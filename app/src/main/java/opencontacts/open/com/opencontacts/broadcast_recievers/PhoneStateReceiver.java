@@ -34,6 +34,8 @@ import static java.util.Calendar.SECOND;
 import static opencontacts.open.com.opencontacts.OpenContactsApplication.MISSED_CALLS_CHANEL_ID;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isScreenLocked;
 import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCallerIdLocationOnScreen;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveCallerIdLocationOnScreen;
 
 /**
  * Created by sultanm on 7/30/17.
@@ -125,7 +127,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                         | WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON,
                 PixelFormat.TRANSLUCENT);
 
-        Point callerIdLocationOnScreen = AndroidUtils.getCallerIdLocationOnScreen(context);
+        Point callerIdLocationOnScreen = getCallerIdLocationOnScreen(context);
         layoutParams.x = callerIdLocationOnScreen.x;
         layoutParams.y = callerIdLocationOnScreen.y;
         layoutParams.verticalWeight = 0;
@@ -159,7 +161,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             return;
         WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         WindowManager.LayoutParams layoutParams = (WindowManager.LayoutParams) drawOverIncomingCallLayout.getLayoutParams();
-        AndroidUtils.saveCallerIdLocationOnScreen(layoutParams.x, layoutParams.y, context);
+        saveCallerIdLocationOnScreen(layoutParams.x, layoutParams.y, context);
         windowManager.removeView(drawOverIncomingCallLayout);
         drawOverIncomingCallLayout = null;
     }

@@ -71,4 +71,8 @@
         android:title="@string/about"
         app:showAsAction="ifRoom" />
 
+    <item android:id="@+id/action_switch_t9_search"
+        android:title="@string/switch_t9_search"
+        app:showAsAction="ifRoom" />
+
 </menu>

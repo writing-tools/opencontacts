@@ -21,7 +21,6 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
@@ -30,9 +29,6 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.SYNC_TOKEN_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
@@ -41,6 +37,9 @@ import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidD
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getChangesSinceSyncToken;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SYNC_TOKEN_SHARED_PREF_KEY;
 
 public class CardDavSyncActivity extends AppCompatActivity {
 
@@ -79,7 +78,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         }
         updatePreference(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
         updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
-        String syncToken = AndroidUtils.getStringFromPreferences(SYNC_TOKEN_SHARED_PREF_KEY, this);
+        String syncToken = getStringFromPreferences(SYNC_TOKEN_SHARED_PREF_KEY, this);
         if(TextUtils.isEmpty(syncToken))
             fullSync(urlFromView, username, password, addressBookUrl);
         else
@@ -117,7 +116,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
         if(!hrefEtagAndVCardList.isEmpty()) updateLocal(hrefEtagAndVCardList, allVCardDataList);
         updateServer(allVCardDataList, true, username, password, addressBookUrl);
-        AndroidUtils.updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, CardDavUtils.getSyncToken(urlFromView, addressBookUrl), this);
+        updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, CardDavUtils.getSyncToken(urlFromView, addressBookUrl), this);
     }
 
     private void updateLocal(List<Triplet<String, String, VCard>> hrefEtagAndVCardList, List<VCardData> allVCardDataList) {

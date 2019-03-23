@@ -27,7 +27,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import opencontacts.open.com.opencontacts.activities.AddToContactActivity;
 import opencontacts.open.com.opencontacts.activities.ContactDetailsActivity;
@@ -44,6 +46,12 @@ import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.content.Intent.ACTION_SENDTO;
 import static android.content.Intent.ACTION_VIEW;
 import static android.content.pm.PackageManager.PERMISSION_GRANTED;
+import static android.provider.CalendarContract.EXTRA_EVENT_BEGIN_TIME;
+import static android.provider.CalendarContract.EXTRA_EVENT_END_TIME;
+import static android.provider.CalendarContract.Events.CONTENT_URI;
+import static android.provider.CalendarContract.Events.TITLE;
+import static android.provider.CalendarContract.Events.ALL_DAY;
+import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
@@ -114,13 +122,6 @@ public class AndroidUtils {
         Uri numberUri = Uri.parse("tel:" + number);
         Intent callIntent;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
@@ -278,8 +279,14 @@ public class AndroidUtils {
     }
 
     public static void goToUrl (String url, Context context) {
-        Uri uri = Uri.parse(url);
-        context.startActivity(new Intent(ACTION_VIEW, uri));
+        try{
+            Uri uri = Uri.parse(url);
+            if(isEmpty(uri.getScheme())) uri = Uri.parse("https://" + uri.toString());
+            context.startActivity(new Intent(ACTION_VIEW, uri));
+        }
+        catch (Exception e){
+            toastFromNonUIThread(R.string.invalid_url, Toast.LENGTH_LONG, context);
+        }
     }
 
     public static Handler getMainThreadHandler(){
@@ -370,4 +377,20 @@ public class AndroidUtils {
                 , context);
 
     }
+
+    @NonNull
+    public static Intent getIntentToAddFullDayEventOnCalendar(Date birthday, String title) {
+        java.util.Calendar dobCalendarInstance = Common.getCalendarInstanceAt(birthday.getTime());
+        return new Intent(Intent.ACTION_INSERT)
+                .setData(CONTENT_URI)
+                .putExtra(EXTRA_EVENT_BEGIN_TIME, dobCalendarInstance.getTimeInMillis())
+                .putExtra(EXTRA_EVENT_END_TIME, dobCalendarInstance.getTimeInMillis())
+                .putExtra(TITLE, title)
+                .putExtra(ALL_DAY, true);
+    }
+
+    public static String getFormattedDate(Date date) {
+        return SimpleDateFormat.getDateInstance().format(date);
+    }
+
 }

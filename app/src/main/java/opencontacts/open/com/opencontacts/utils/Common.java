@@ -99,6 +99,12 @@ public class Common {
         return instance;
     }
 
+    public static Calendar getCalendarInstanceAt(int year, int month, int date){
+        Calendar instance = Calendar.getInstance();
+        instance.set(year, month, date);
+        return instance;
+    }
+
     public static Calendar getCalendarOffset(int offset, int timeUnit){
         Calendar instance = Calendar.getInstance();
         instance.add(timeUnit, offset);

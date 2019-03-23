@@ -5,8 +5,10 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -14,22 +16,31 @@ import android.widget.Toast;
 import com.github.underscore.U;
 
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
+import ezvcard.property.Birthday;
 import ezvcard.property.Email;
 import ezvcard.property.Note;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
+import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.InputFieldCollection;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static opencontacts.open.com.opencontacts.utils.Common.getCalendarInstanceAt;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 public class EditContactActivity extends AppBaseActivity {
@@ -45,6 +56,9 @@ public class EditContactActivity extends AppBaseActivity {
     private InputFieldCollection emailsInputCollection;
     private InputFieldCollection addressesInputCollection;
     private TextInputEditText notesTextInputEditText;
+    private TextInputEditText websiteTextInputEditText;
+    private TextInputEditText dateOfBirthTextInputEditText;
+    private Date selectedDate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +69,26 @@ public class EditContactActivity extends AppBaseActivity {
         emailsInputCollection = findViewById(R.id.emails);
         addressesInputCollection = findViewById(R.id.addresses);
         notesTextInputEditText = findViewById(R.id.notes);
+        websiteTextInputEditText = findViewById(R.id.website);
+        dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
+
+        View.OnClickListener onClickListener = v -> {
+            DatePicker datePicker = new DatePicker(this);
+            Birthday birthday = vcardBeforeEdit.getBirthday();
+            if(birthday != null){
+                Calendar dateOfBirthInstance = getCalendarInstanceAt(birthday.getDate().getTime());
+                datePicker.init(dateOfBirthInstance.get(YEAR), dateOfBirthInstance.get(MONTH), dateOfBirthInstance.get(DAY_OF_MONTH), null);
+            }
+            new AlertDialog.Builder(this)
+                    .setView(datePicker)
+                    .setNeutralButton(R.string.cancel, null)
+                    .setPositiveButton(R.string.okay, (dialog1, which) -> {
+                        Calendar selectedCalendar = getCalendarInstanceAt(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
+                        ((TextInputEditText)v).setText(AndroidUtils.getFormattedDate(selectedCalendar.getTime()));
+                        selectedDate = selectedCalendar.getTime();
+                    }).show();
+        };
+        findViewById(R.id.date_of_birth).setOnClickListener(onClickListener);
 
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
@@ -89,11 +123,25 @@ public class EditContactActivity extends AppBaseActivity {
         fillEmails();
         fillAddress();
         fillNotes();
+        fillWebsite();
+        fillDateOfBirth();
 
         if(addingNewContact) return;
 
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
+    }
+
+    private void fillDateOfBirth() {
+        Birthday birthday = vcardBeforeEdit.getBirthday();
+        if(birthday == null) return;
+        dateOfBirthTextInputEditText.setText(AndroidUtils.getFormattedDate(birthday.getDate()));
+    }
+
+    private void fillWebsite() {
+        Url url = U.firstOrNull(vcardBeforeEdit.getUrls());
+        if(url == null) return;
+        websiteTextInputEditText.setText(url.getValue());
     }
 
     private void fillNotes() {
@@ -167,7 +215,23 @@ public class EditContactActivity extends AppBaseActivity {
         addEmailsFromFieldsToNewVCard(newVCard);
         addAddressFromFieldsToNewVCard(newVCard);
         addNotesFromFieldsToNewVCard(newVCard);
+        addWebsiteFromFieldsToNewVCard(newVCard);
+        addDateOfBirthFromFieldsToNewVCard(newVCard);
         return newVCard;
+    }
+
+    private void addDateOfBirthFromFieldsToNewVCard(VCard newVCard) {
+        if(selectedDate == null){
+            newVCard.setBirthday(vcardBeforeEdit == null ? null : vcardBeforeEdit.getBirthday());
+            return;
+        }
+        newVCard.setBirthday(new Birthday(selectedDate));
+    }
+
+    private void addWebsiteFromFieldsToNewVCard(VCard newVCard) {
+        String website = websiteTextInputEditText.getText().toString();
+        if(TextUtils.isEmpty(website)) return;
+        newVCard.addUrl(new Url(website));
     }
 
     private void addNotesFromFieldsToNewVCard(VCard newVCard) {

@@ -181,6 +181,9 @@ public class ContactsDBHelper {
             dbVCard.getEmails().addAll(vCard.getEmails());
             dbVCard.getAddresses().clear();
             dbVCard.getAddresses().addAll(vCard.getAddresses());
+            dbVCard.getUrls().clear();
+            dbVCard.getUrls().addAll(vCard.getUrls());
+            dbVCard.setBirthday(vCard.getBirthday());
             addNotesToDBVCard(vCard, dbVCard);
             vCardDataInDB.vcardDataAsString = dbVCard.write();
             updateStatusInVCardDataForUpdateOperation(vCardDataInDB);

@@ -127,7 +127,12 @@
     <string name="sync_complete">Sync complete</string>
     <string name="input_username_and_password">Input both username and password</string>
     <string name="invalid_username_or_password_or_url">Invalid username or password or url</string>
-    <string name="switch_t9_search">Toggle T9 Search</string>
+    <string name="switch_t9_search">Switch T9 Search</string>
+    <string name="calendar_event_title_birthday">%1$s\'s Birthday</string>
+    <string name="website">Website</string>
+    <string name="date_of_birth">Date of birth</string>
+    <string name="invalid_url">Invalid url</string>
+    <string name="cancel">Cancel</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

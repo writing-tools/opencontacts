@@ -21,8 +21,10 @@ import java.util.List;
 import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
+import ezvcard.property.Birthday;
 import ezvcard.property.Email;
 import ezvcard.property.Note;
+import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.ExpandedList;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -33,6 +35,8 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -120,7 +124,39 @@ public class ContactDetailsActivity extends AppBaseActivity {
         fillEmailAddress();
         fillAddress();
         fillNotes();
+        fillDateOfBirth();
+        fillWebsite();
     }
+
+    private void fillWebsite() {
+        Url url = U.firstOrNull(vcard.getUrls());
+        View websiteCard = findViewById(R.id.website_card);
+        if(url == null) {
+            websiteCard.setVisibility(GONE);
+            return;
+        }
+        websiteCard.setVisibility(VISIBLE);
+        AppCompatTextView websiteTextView = websiteCard.findViewById(R.id.text_view);
+        websiteTextView.setText(url.getValue());
+        websiteTextView.setOnClickListener(v -> AndroidUtils.goToUrl(url.getValue(), this));
+    }
+
+    private void fillDateOfBirth() {
+        Birthday birthday = vcard.getBirthday();
+        View birthDayCard = findViewById(R.id.date_of_birth_card);
+        if(birthday == null) {
+            birthDayCard.setVisibility(GONE);
+            return;
+        }
+        birthDayCard.setVisibility(VISIBLE);
+        AppCompatTextView birthDayTextView = birthDayCard.findViewById(R.id.text_view);
+        birthDayTextView.setText(getFormattedDate(birthday.getDate()));
+        birthDayTextView.setOnClickListener(v -> {
+            Intent intent = getIntentToAddFullDayEventOnCalendar(birthday.getDate(), getString(R.string.calendar_event_title_birthday, contact.name));
+            startActivity(intent);
+        });
+    }
+
 
     private void fillNotes() {
         Note note = U.firstOrNull(vcard.getNotes());

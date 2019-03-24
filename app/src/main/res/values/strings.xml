@@ -135,6 +135,7 @@
     <string name="cancel">Cancel</string>
     <string name="call_repeat_text">(%1$d)</string>
     <string name="show_details">Show details</string>
+    <string name="no_app_found_to_open">No app found that could open this</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

@@ -65,6 +65,7 @@ public class AndroidUtils {
     public static final String ONE_HAND_MODE_ENABLED = "ONE_HAND_MODE_ENABLED";
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     public static final String EMAIL_SCHEME = "mailto:";
+    public static final String MAP_LOCATION_URI = "geo:0,0?q=";
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -391,6 +392,16 @@ public class AndroidUtils {
 
     public static String getFormattedDate(Date date) {
         return SimpleDateFormat.getDateInstance().format(date);
+    }
+
+    public static void openMap(String address, Context context){
+        Intent intent = new Intent(Intent.ACTION_VIEW);
+        intent.setData(Uri.parse(MAP_LOCATION_URI + Uri.encode(address)));
+        if (intent.resolveActivity(context.getPackageManager()) != null) {
+            context.startActivity(intent);
+        }
+        else
+            Toast.makeText(context, R.string.no_app_found_to_open, Toast.LENGTH_SHORT).show();
     }
 
 }

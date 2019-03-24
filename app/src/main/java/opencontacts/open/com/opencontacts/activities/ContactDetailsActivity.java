@@ -37,6 +37,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -183,7 +184,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         addressLinearLayout.removeAllViews();
         List<Address> addresses = vcard.getAddresses();
         ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener(index -> { })
+                .withOnItemClickListener(index -> openMap(addresses.get(index).getStreetAddress(), this))
                 .withItems(U.map(addresses, address -> new Pair<>(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), this))))
                 .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(addresses.get(index).getStreetAddress(), true, this))
                 .build();

@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.underscore.U;
@@ -13,6 +14,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.regex.Pattern;
 
@@ -32,6 +34,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -203,6 +206,11 @@ public class DomainUtils {
     public static EmailType getEmailType(String translatedText, Context context){
         if(translatedTextToEmailType == null) translatedTextToEmailType = U.toMap(U.invert(getEmailTypeToTranslatedTextMap(context)));
         return getOrDefault(translatedTextToEmailType, translatedText, defaultEmailType);
+    }
+
+    @NonNull
+    public static SimpleDateFormat getTimestampPattern(Context context) {
+        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
 }

@@ -2,13 +2,14 @@ package opencontacts.open.com.opencontacts.orm;
 
 import com.orm.SugarRecord;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by sultanm on 7/31/17.
  */
 
-public class CallLogEntry extends SugarRecord {
+public class CallLogEntry extends SugarRecord implements Serializable {
     int simId;
     public String name;
     public long contactId;

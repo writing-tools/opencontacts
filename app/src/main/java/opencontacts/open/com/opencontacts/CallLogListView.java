@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,20 +20,22 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.domain.GroupedCallLogEntry;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.interfaces.EditNumberBeforeCallHandler;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.CallLogGroupingUtil;
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 
@@ -44,7 +47,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     private String UNKNOWN;
     Context context;
     private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
-    ArrayAdapter<CallLogEntry> adapter;
+    ArrayAdapter<GroupedCallLogEntry> adapter;
     private boolean isWhatsappIntegrationEnabled;
     //android has weakref to this listener and gets garbage collected hence we should have it here.
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
@@ -61,25 +64,25 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         List<CallLogEntry> callLogEntries = new ArrayList<>();
 
         final OnClickListener callContact = v -> {
-            CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
+            CallLogEntry callLogEntry = getLatestCallLogEntry(v);
             AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
         };
 
         final OnClickListener whatsappContact = v -> {
-            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.whatsapp(callLogEntry.getPhoneNumber(), context);
         };
 
         final OnClickListener messageContact = v -> {
-            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
         };
         final OnClickListener addContact = v -> {
-            final CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            final CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.getAlertDialogToAddContact(callLogEntry.getPhoneNumber(), context).show();
         };
         final OnClickListener showContactDetails = v -> {
-            CallLogEntry callLogEntry = (CallLogEntry) ((View)v.getParent()).getTag();
+            CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             long contactId = callLogEntry.getContactId();
             if(contactId == -1)
                 return;
@@ -91,9 +94,10 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         };
 
         final OnLongClickListener callLogEntryLongClickListener = v -> {
-            CallLogEntry callLogEntry = (CallLogEntry) v.getTag();
+            GroupedCallLogEntry groupedCallLogEntry = (GroupedCallLogEntry) v.getTag();
+            CallLogEntry callLogEntry = groupedCallLogEntry.latestCallLogEntry;
             new AlertDialog.Builder(context)
-                    .setItems(new String[]{context.getString(R.string.copy_to_clipboard), context.getString(R.string.edit_before_call), context.getString(R.string.delete)}, (dialog, which) -> {
+                    .setItems(new String[]{context.getString(R.string.copy_to_clipboard), context.getString(R.string.edit_before_call), context.getString(R.string.delete), context.getString(R.string.show_details)}, (dialog, which) -> {
                         switch(which){
                             case 0:
                                 AndroidUtils.copyToClipboard(callLogEntry.getPhoneNumber(), context);
@@ -104,20 +108,24 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                                 break;
                             case 2:
                                 CallLogDataStore.delete(callLogEntry.getId());
+                                break;
+                            case 3:
+                                context.startActivity(getIntentToShowCallLogEntries(groupedCallLogEntry, context));
                         }
                     }).show();
 
             return true;
         };
 
-        adapter = new ArrayAdapter<CallLogEntry>(CallLogListView.this.context, R.layout.call_log_entry, callLogEntries){
+        adapter = new ArrayAdapter<GroupedCallLogEntry>(CallLogListView.this.context, R.layout.grouped_call_log_entry, CallLogGroupingUtil.group(callLogEntries)){
             private LayoutInflater layoutInflater = LayoutInflater.from(CallLogListView.this.context);
             @NonNull
             @Override
             public View getView(int position, View reusableView, ViewGroup parent) {
-                CallLogEntry callLogEntry = getItem(position);
+                GroupedCallLogEntry groupedCallLogEntry = getItem(position);
+                CallLogEntry callLogEntry = groupedCallLogEntry.latestCallLogEntry;
                 if(reusableView == null)
-                    reusableView = layoutInflater.inflate(R.layout.call_log_entry, parent, false);
+                    reusableView = layoutInflater.inflate(R.layout.grouped_call_log_entry, parent, false);
                 ((TextView) reusableView.findViewById(R.id.textview_full_name)).setText(callLogEntry.getContactId() == -1 ? UNKNOWN : callLogEntry.getName());
                 ((TextView) reusableView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
                 (reusableView.findViewById(R.id.button_message)).setOnClickListener(messageContact);
@@ -139,6 +147,14 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 ((TextView)reusableView.findViewById(R.id.text_view_timestamp)).setText(timeStampOfCall);
                 View addButton = reusableView.findViewById(R.id.image_button_add_contact);
                 View infoButton = reusableView.findViewById(R.id.button_info);
+                List<CallLogEntry> callLogEntriesInGroup = groupedCallLogEntry.callLogEntries;
+                AppCompatTextView callRepeatCount = reusableView.findViewById(R.id.call_repeat_count);
+                int groupSize = callLogEntriesInGroup.size();
+                if(groupSize == 1) callRepeatCount.setVisibility(GONE);
+                else {
+                    callRepeatCount.setText(context.getString(R.string.call_repeat_text, groupSize));
+                    callRepeatCount.setVisibility(VISIBLE);
+                }
 
                 if(callLogEntry.getContactId() == -1){
                     addButton.setOnClickListener(addContact);
@@ -150,7 +166,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                     infoButton.setVisibility(View.VISIBLE);
                     infoButton.setOnClickListener(showContactDetails);
                 }
-                reusableView.setTag(callLogEntry);
+                reusableView.setTag(groupedCallLogEntry);
                 reusableView.setOnClickListener(callContact);
                 reusableView.setOnLongClickListener(callLogEntryLongClickListener);
                 return reusableView;
@@ -171,30 +187,23 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
     }
 
-    @NonNull
-    private SimpleDateFormat getTimestampPattern(Context context) {
-        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
+    private CallLogEntry getLatestCallLogEntry(View v) {
+        return ((GroupedCallLogEntry) v.getTag()).latestCallLogEntry;
     }
 
     @Override
     public void onUpdate(CallLogEntry callLogEntry) {
+        reload();
     }
 
     @Override
     public void onRemove(CallLogEntry callLogEntry) {
-        this.post(() -> {
-            adapter.remove(callLogEntry);
-            adapter.notifyDataSetChanged();
-        });
+        reload();
     }
 
     @Override
     public void onAdd(final CallLogEntry callLogEntry) {
-        this.post(() -> {
-            adapter.insert(callLogEntry, 0);
-            adapter.notifyDataSetChanged();
-        });
-
+        reload();
     }
 
     @Override
@@ -203,10 +212,10 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     }
 
     public void reload(){
-        final List<CallLogEntry> callLogEntries = CallLogDataStore.getRecent100CallLogEntries(context);
+        final List<GroupedCallLogEntry> groupedCallLogEntries = CallLogGroupingUtil.group(CallLogDataStore.getRecent100CallLogEntries(context));
         this.post(() -> {
             adapter.clear();
-            adapter.addAll(callLogEntries);
+            adapter.addAll(groupedCallLogEntries);
             adapter.notifyDataSetChanged();
         });
     }

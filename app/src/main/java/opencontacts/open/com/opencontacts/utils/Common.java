@@ -44,7 +44,11 @@ public class Common {
     }
 
     public static void forEachIndex(int count, ForEachIndexFunction function){
-        for(int i=0; i < count; i++){
+        forEachIndex(0, count, function);
+    }
+
+    public static void forEachIndex(int start, int end, ForEachIndexFunction function){
+        for(int i = start; i < end; i++){
             function.apply(i);
         }
     }
@@ -107,6 +111,13 @@ public class Common {
 
     public static Calendar getCalendarOffset(int offset, int timeUnit){
         Calendar instance = Calendar.getInstance();
+        instance.add(timeUnit, offset);
+        return instance;
+    }
+
+    public static Calendar getCalendarOffset(int offset, int timeUnit, Date date){
+        Calendar instance = Calendar.getInstance();
+        instance.setTime(date);
         instance.add(timeUnit, offset);
         return instance;
     }

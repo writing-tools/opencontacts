@@ -43,8 +43,8 @@ public class CallLogGroupingUtil {
             return false;
         if(callLogEntry.contactId == -1 && !groupedCallLogEntry.latestCallLogEntry.getPhoneNumber().equals(callLogEntry.getPhoneNumber()))
             return false;
-        Calendar hourOffsetCalendarInstance = Common.getCalendarOffset(OFFSET_TIME_IN_HOURS_FOR_GROUPING, HOUR, new Date(Long.parseLong(groupedCallLogEntry.latestCallLogEntry.getDate())));
-        return (Common.getCalendarInstanceAt(Long.parseLong(callLogEntry.getDate())).before(hourOffsetCalendarInstance));
+        Calendar hourOffsetCalendarInstance = Common.getCalendarOffset(- OFFSET_TIME_IN_HOURS_FOR_GROUPING, HOUR, new Date(Long.parseLong(groupedCallLogEntry.latestCallLogEntry.getDate())));
+        return (Common.getCalendarInstanceAt(Long.parseLong(callLogEntry.getDate())).after(hourOffsetCalendarInstance));
     }
 
     @NonNull

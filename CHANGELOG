@@ -1,3 +1,14 @@
+V13.0
+Added traditional chinese translation
+Fixed caller id not popping up in Android pie
+Toggle T9 search with text search
+Date of birth and website fields are now supported in app
+Clicking address would now open maps
+On clicking date of birth, will add that event in calendar
+On clicking webiste, will take you there
+Call log now groups same contact entries if they are within an hour
+Fixed app crash in 4.2.2
+
 v12.0
 Fixed app crash due to wrong proguard rules
 

@@ -136,6 +136,10 @@
     <string name="call_repeat_text">(%1$d)</string>
     <string name="show_details">Show details</string>
     <string name="no_app_found_to_open">No app found that could open this</string>
+    <string name="add_to_favorites">Add to Favorites</string>
+    <string name="remove_favorite">Remove favorite</string>
+    <string name="favorite_contacts">Favorite contacts</string>
+    <string name="favorite_contacts_help_text">Favorite contacts would be placed on top of contacts list so that you can find them easily. You can add or remove favorites in two ways.\n\n1. From contact details page, in the menu you would find a heart symbol clicking on it would toggle the favorite status.\n2. In contacts list, long clicking a contact would lead to menu toggling the favorite status.</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

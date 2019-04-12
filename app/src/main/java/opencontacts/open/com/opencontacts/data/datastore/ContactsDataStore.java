@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.github.underscore.U;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -13,6 +15,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+import opencontacts.open.com.opencontacts.orm.Favorite;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
@@ -26,6 +29,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNon
 public class ContactsDataStore {
     private static List<Contact> contacts = null;
     private static List<DataStoreChangeListener<Contact>> dataChangeListeners = new ArrayList<>(3);
+    private static List<Contact> favorites = new ArrayList<>(0);
 
     public static List<Contact> getAllContacts() {
         if (contacts == null) {
@@ -46,6 +50,7 @@ public class ContactsDataStore {
     public static void removeContact(Contact contact) {
         if (contacts.remove(contact)) {
             ContactsDBHelper.deleteContactInDB(contact.id);
+            removeFavorite(contact);
             notifyListenersAsync(DELETION, contact);
         }
     }
@@ -158,5 +163,38 @@ public class ContactsDataStore {
 
     public static void init() {
         refreshStoreAsync();
+    }
+
+    public static void updateFavoritesList(){
+        favorites = U.chain(Favorite.listAll(Favorite.class))
+                .map(favoriteFromDB -> favoriteFromDB.contact.getId())
+                .map(ContactsDataStore::getContactWithId)
+                .filterFalse(U::isNull)
+                .value();
+    }
+
+    public static List<Contact> getFavorites(){
+        if(favorites.size() != 0 || Favorite.count(Favorite.class) == 0)
+            return favorites;
+        updateFavoritesList();
+        return favorites;
+    }
+
+    public static void addFavorite(Contact contact) {
+        if(getFavorites().contains(contact)) return;
+        new Favorite(ContactsDBHelper.getDBContactWithId(contact.id)).save();
+        favorites.add(contact);
+        notifyListenersAsync(REFRESH, null);
+    }
+
+    public static void removeFavorite(Contact contact) {
+        List<Favorite> favoriteContactQueryResults = Favorite.find(Favorite.class, "contact = ?", contact.id + "");
+        Favorite.deleteInTx(favoriteContactQueryResults);
+        favorites.remove(contact);
+        notifyListenersAsync(REFRESH, null);
+    }
+
+    public static boolean isFavorite(Contact contact){
+        return getFavorites().contains(contact);
     }
 }

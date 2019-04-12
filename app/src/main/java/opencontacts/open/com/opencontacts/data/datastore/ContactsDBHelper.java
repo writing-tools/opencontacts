@@ -23,6 +23,7 @@ import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
+import opencontacts.open.com.opencontacts.orm.Favorite;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.Triplet;
@@ -212,6 +213,7 @@ public class ContactsDBHelper {
         Contact.deleteAll(Contact.class);
         PhoneNumber.deleteAll(PhoneNumber.class);
         VCardData.deleteAll(VCardData.class);
+        Favorite.deleteAll(Favorite.class);
         CallLogDataStore.removeAllContactsLinking();
     }
 

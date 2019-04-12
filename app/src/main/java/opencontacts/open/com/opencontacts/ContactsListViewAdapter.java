@@ -47,6 +47,14 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
                 : new ContactsListTextFilter(this, allContactsHolder);
     }
 
+    private final OnLongClickListener onLongClicked = v -> {
+        if(contactsListActionsListener == null)
+            return false;
+        Contact contact = (Contact) v.getTag();
+        contactsListActionsListener.onLongClick(contact);
+        return true;
+    };
+
     private final OnClickListener callContact = v -> {
             if(contactsListActionsListener == null)
                 return;
@@ -90,6 +98,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         else whatsappIcon.setVisibility(GONE);
         convertView.setTag(contact);
         convertView.setOnClickListener(callContact);
+        convertView.setOnLongClickListener(onLongClicked);
         return convertView;
     }
 
@@ -108,5 +117,6 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         void onMessageClicked(Contact contact);
         void onShowDetails(Contact contact);
         void onWhatsappClicked(Contact contact);
+        void onLongClick(Contact contact);
     }
 }

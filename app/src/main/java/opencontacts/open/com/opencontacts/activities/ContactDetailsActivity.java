@@ -27,14 +27,19 @@ import ezvcard.property.Note;
 import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.ExpandedList;
+import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
@@ -79,8 +84,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
-        if(contactId == -1)
-            showInvalidContactErrorAndExit();
+        if(contactId == -1) showInvalidContactErrorAndExit();
+        contact = ContactsDataStore.getContactWithId(contactId);
         shouldShowWhatsappIcon = isWhatsappIntegrationEnabled(this);
     }
 
@@ -92,6 +97,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        invalidateOptionsMenu();
         contact = ContactsDataStore.getContactWithId(contactId);
         VCardData vcardData = ContactsDataStore.getVCardData(contactId);
         if(contact == null)
@@ -264,6 +270,16 @@ public class ContactDetailsActivity extends AppBaseActivity {
                     .setNegativeButton(R.string.no, null).show();
             return true;
         });
+        boolean isFavorite = isFavorite(contact);
+        menu.add(isFavorite ? R.string.remove_favorite : R.string.add_to_favorites)
+                .setIcon(TintedDrawablesStore.getTintedDrawable(isFavorite ? R.drawable.ic_favorite_solid_24dp : R.drawable.ic_favorite_hollow_black_24dp, this))
+                .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
+                .setOnMenuItemClickListener(item -> {
+                    if(isFavorite) removeFavorite(contact);
+                    else addFavorite(contact);
+                    invalidateOptionsMenu();
+                   return true;
+                });
         return super.onCreateOptionsMenu(menu);
     }
 }

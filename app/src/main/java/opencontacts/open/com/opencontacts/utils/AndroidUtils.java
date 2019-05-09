@@ -120,7 +120,16 @@ public class AndroidUtils {
 
     @NonNull
     public static Intent getCallIntent(String number, Context context) {
-        Uri numberUri = Uri.parse("tel:" + number);
+        // Fix phone call with USSD code problems (sultanahamer/OpenContacts issue #81)
+        String encodedNumber = "";
+        for(char c : number.toCharArray()) {
+            if(c == '#')
+                encodedNumber += Uri.encode(String.valueOf(c));
+            else
+                encodedNumber += c;
+        }
+
+        Uri numberUri = Uri.parse("tel:" + encodedNumber);
         Intent callIntent;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PERMISSION_GRANTED) {
             callIntent = new Intent(Intent.ACTION_DIAL, numberUri);

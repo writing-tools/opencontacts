@@ -120,6 +120,12 @@ public class ContactsDBHelper {
             }
 
         }
+        //for contacts without phone numbers
+        List<PhoneNumber> emptyPhoneNumbersList = Collections.emptyList();
+        new U.Chain<>(Contact.listAll(Contact.class))
+                .filter(ormContact -> !contactsMap.containsKey(ormContact.getId()))
+                .forEach(ormContact -> contactsMap.put(ormContact.getId(), createNewDomainContact(ormContact, emptyPhoneNumbersList)));
+
         return new ArrayList<>(contactsMap.values());
     }
 

@@ -200,10 +200,6 @@ public class EditContactActivity extends AppBaseActivity {
             editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
             return true;
         }
-        if(phoneNumbersInputCollection.isEmpty()){
-            phoneNumbersInputCollection.getFieldAt(0).editText.setError(getString(R.string.required));
-            return true;
-        }
         return false;
     }
 

@@ -120,7 +120,7 @@ public class AndroidUtils {
 
     @NonNull
     public static Intent getCallIntent(String number, Context context) {
-        Uri numberUri = Uri.parse("tel:" + number);
+        Uri numberUri = Uri.parse("tel:" + Uri.encode(number));
         Intent callIntent;
         if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PERMISSION_GRANTED) {
             callIntent = new Intent(Intent.ACTION_DIAL, numberUri);

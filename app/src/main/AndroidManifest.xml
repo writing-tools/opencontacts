@@ -46,6 +46,7 @@
         <activity android:name=".activities.AboutActivity" />
         <activity android:name=".activities.AddToContactActivity" />
         <activity android:name=".activities.HelpActivity" />
+        <activity android:name=".activities.CrashReportingActivity" />
         <activity android:name=".activities.CallLogGroupDetailsActivity" />
         <activity
             android:name=".activities.ContactDetailsActivity"

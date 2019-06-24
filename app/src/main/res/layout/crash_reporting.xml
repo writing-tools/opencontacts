@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            app:title="@string/report_crash_screen_title" />
+    </android.support.design.widget.AppBarLayout>
+    <ScrollView
+        android:layout_below="@id/app_bar_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/crash_help_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/share_log_help_text" />
+
+            <HorizontalScrollView
+                android:id="@+id/crash_log_container"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_below="@id/crash_help_text"
+                android:layout_marginTop="10dp">
+
+                <android.support.v7.widget.AppCompatTextView
+                    android:id="@+id/crash_log"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?colorError" />
+            </HorizontalScrollView>
+
+            <android.support.v7.widget.AppCompatButton
+                android:id="@+id/button_copy"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/crash_log_container"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20dp"
+                android:drawableStart="@drawable/ic_content_copy_black_24dp"
+                android:drawableLeft="@drawable/ic_content_copy_black_24dp"
+                android:drawablePadding="10dp"
+                android:text="@string/copy_to_clipboard" />
+        </RelativeLayout>
+    </ScrollView>
+</RelativeLayout>

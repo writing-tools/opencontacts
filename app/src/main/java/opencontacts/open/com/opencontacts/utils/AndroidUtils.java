@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.utils;
 
 import android.Manifest;
+import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.ContentValues;
 import android.content.Context;
@@ -17,6 +18,7 @@ import android.provider.ContactsContract;
 import android.provider.Settings;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.app.ShareCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -189,7 +191,7 @@ public class AndroidUtils {
                 .show();
     }
 
-    public static void copyToClipboard(String text, Context context) {
+    public static void copyToClipboard(CharSequence text, Context context) {
 
         int sdk = android.os.Build.VERSION.SDK_INT;
         if (sdk < android.os.Build.VERSION_CODES.HONEYCOMB) {
@@ -206,7 +208,7 @@ public class AndroidUtils {
 
     }
 
-    public static void copyToClipboard(String text, boolean shouldShowToast, Context context){
+    public static void copyToClipboard(CharSequence text, boolean shouldShowToast, Context context){
         copyToClipboard(text, context);
         if(shouldShowToast) Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
     }
@@ -403,5 +405,14 @@ public class AndroidUtils {
         else
             Toast.makeText(context, R.string.no_app_found_to_open, Toast.LENGTH_SHORT).show();
     }
+
+    public static void sharePlainText(String text, Activity activity) {
+        activity.startActivity(ShareCompat.IntentBuilder
+                .from(activity)
+                .setText(text)
+                .setType("text/plain")
+                .getIntent());
+    }
+
 
 }

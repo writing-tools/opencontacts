@@ -13,8 +13,10 @@ import java.util.List;
 import ezvcard.Ezvcard;
 import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
-public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
+public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Boolean> {
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
     private final String PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW = "number_of_vcards_imported_until_now";
     private final String PROGRESS_FINAL_RESULT_OF_IMPORT = "final_result_of_import";
@@ -29,7 +31,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
     }
 
     @Override
-    protected Void doInBackground(Void[] voids) {
+    protected Boolean doInBackground(Void[] voids) {
         try {
             InputStream vcardInputStream = context.getContentResolver().openInputStream(fileUri);
             List<VCard> vCards = Ezvcard.parse(vcardInputStream).all();
@@ -41,17 +43,21 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
                 publishProgress(PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW, numberOfvCardsImported, numberOfCardsIgnored);
             }
             publishProgress(PROGRESS_FINAL_RESULT_OF_IMPORT, numberOfvCardsImported, numberOfCardsIgnored);
+            return true;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(context, R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG).show();
+            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, context);
+            CrashUtils.reportError(e, context);
         } catch (IOException e) {
             e.printStackTrace();
-            Toast.makeText(context, R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG).show();
+            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, context);
+            CrashUtils.reportError(e, context);
         } catch (Exception e) {
             e.printStackTrace();
-            Toast.makeText(context, R.string.unexpected_error_happened, Toast.LENGTH_LONG).show();
+            AndroidUtils.toastFromNonUIThread(R.string.unexpected_error_happened, Toast.LENGTH_LONG, context);
+            CrashUtils.reportError(e, context);
         }
-        return null;
+        return false;
     }
 
     private boolean processVCard(VCard vcard) {
@@ -64,8 +70,8 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Void> {
     }
 
     @Override
-    protected void onPostExecute(Void ignore) {
-        Toast.makeText(context, R.string.imported_successfully, Toast.LENGTH_LONG).show();
+    protected void onPostExecute(Boolean importedSuccessfully) {
+        if(importedSuccessfully) Toast.makeText(context, R.string.imported_successfully, Toast.LENGTH_LONG).show();
     }
 
     @Override

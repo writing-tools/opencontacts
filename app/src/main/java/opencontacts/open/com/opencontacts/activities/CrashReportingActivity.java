@@ -16,6 +16,8 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.sharePlainTe
 
 public class CrashReportingActivity extends AppCompatActivity {
 
+    public static final String EXCEPTION_BUNDLE_EXTRA_KEY = "Exception";
+    public static final String IS_NOT_CRASH_BUNDLE_EXTRA_KEY = "crash";
     private AppCompatTextView crashLog;
 
     @Override
@@ -26,6 +28,7 @@ public class CrashReportingActivity extends AppCompatActivity {
         crashLog = findViewById(R.id.crash_log);
         crashLog.setText(getStackTraceAsString());
         findViewById(R.id.button_copy).setOnClickListener(v -> AndroidUtils.copyToClipboard(crashLog.getText(), true, this));
+        if(getIntent().getBooleanExtra(IS_NOT_CRASH_BUNDLE_EXTRA_KEY, false)) getSupportActionBar().setTitle(R.string.report_error_screen_title);
     }
 
     @Override
@@ -41,7 +44,7 @@ public class CrashReportingActivity extends AppCompatActivity {
     }
 
     private String getStackTraceAsString() {
-        Throwable exception = (Throwable) getIntent().getSerializableExtra("Exception");
+        Throwable exception = (Throwable) getIntent().getSerializableExtra(EXCEPTION_BUNDLE_EXTRA_KEY);
         return Log.getStackTraceString(exception);
     }
 }

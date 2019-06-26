@@ -19,6 +19,8 @@ import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
@@ -36,8 +38,13 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         this.context = getContext();
         this.view = view;
-        linkDialerButtonsToHandlers();
         super.onViewCreated(view, savedInstanceState);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        linkDialerButtonsToHandlers();
     }
 
     public void setNumber(String number) {
@@ -63,16 +70,24 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
             TelecomManager telecomManager = context.getSystemService(TelecomManager.class);
             if(telecomManager == null || !hasPermission(Manifest.permission.READ_PHONE_STATE, context)) return;
             //added permission check above using util intellij wasn't able to identify it
-            if(telecomManager.getCallCapablePhoneAccounts().size() < 2) return;
-            showMultiSimDialingButtons();
+            if(telecomManager.getCallCapablePhoneAccounts().size() < 2) hideMultiSimDialingButtons();
+            else showMultiSimDialingButtons();
         }
     }
 
+    private void hideMultiSimDialingButtons() {
+        setVisibilityOfMultiSimButtons(INVISIBLE);
+    }
+
+    private void setVisibilityOfMultiSimButtons(int visibility) {
+        view.findViewById(R.id.button_call_sim1).setVisibility(visibility);
+        view.findViewById(R.id.button_call_sim2).setVisibility(visibility);
+        view.findViewById(R.id.text_call_sim1).setVisibility(visibility);
+        view.findViewById(R.id.text_call_sim2).setVisibility(visibility);
+    }
+
     private void showMultiSimDialingButtons() {
-        view.findViewById(R.id.button_call_sim1).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.button_call_sim2).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.text_call_sim1).setVisibility(View.VISIBLE);
-        view.findViewById(R.id.text_call_sim2).setVisibility(View.VISIBLE);
+        setVisibilityOfMultiSimButtons(VISIBLE);
     }
 
     private void performActionIfPhoneNumberIsValidElseShowError(Consumer<String> action) {

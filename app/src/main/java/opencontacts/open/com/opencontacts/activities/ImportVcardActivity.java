@@ -6,14 +6,22 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.github.underscore.U;
+
+import java.util.List;
+
+import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.VCardImporterAsyncTask;
+import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
 public class ImportVcardActivity extends AppCompatActivity {
 
@@ -63,10 +71,12 @@ public class ImportVcardActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFinish(int imported, int ignored) {
+            public void onFinish(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
                 progressBarComponent.setProgress(progressBarComponent.getMax());
-                textView_vCardsImported.setText(getString(R.string.total_cards_imported, imported));
-                textView_vCardsIgnored.setText(getString(R.string.total_cards_ignored, ignored));
+                if(vCardsAndTheirExceptions.isEmpty()) return;
+                View reportErrorsButton = findViewById(R.id.report_errors);
+                reportErrorsButton.setVisibility(View.VISIBLE);
+                reportErrorsButton.setOnClickListener(v -> CrashUtils.reportError(formatImportErrorsAsString(vCardsAndTheirExceptions), ImportVcardActivity.this));
             }
         }, this);
         new AlertDialog.Builder(this)
@@ -80,6 +90,14 @@ public class ImportVcardActivity extends AppCompatActivity {
                 })
                 .setOnCancelListener(x -> finish())
                 .show();
+    }
+
+    private String formatImportErrorsAsString(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
+        return U.reduce(vCardsAndTheirExceptions, (accumulatingStringBuffer, currentvCardAndException) ->
+                accumulatingStringBuffer.append(currentvCardAndException.first.write())
+                .append("\n\n")
+                .append(Log.getStackTraceString(currentvCardAndException.second))
+                .append("\n\n\n\n"), new StringBuffer()).toString();
     }
 
     private void requestPermission() {

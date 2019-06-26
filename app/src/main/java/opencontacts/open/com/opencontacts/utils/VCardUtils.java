@@ -51,6 +51,7 @@ public class VCardUtils {
     public static void setFormattedNameIfNotPresent(VCard vcard) {
         if(vcard.getFormattedName() != null) return;
         StructuredName structuredName = vcard.getStructuredName();
-        vcard.setFormattedName(structuredName.getFamily() + " "  + structuredName.getGiven());
+        if(structuredName == null) vcard.setFormattedName("");
+        else vcard.setFormattedName(structuredName.getFamily() + " "  + structuredName.getGiven());
     }
 }

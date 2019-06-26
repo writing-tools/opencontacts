@@ -31,4 +31,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
         android:id="@+id/textview_vcards_ignored" />
+
+    <android.support.v7.widget.AppCompatButton
+        android:visibility="invisible"
+        android:id="@+id/report_errors"
+        android:text="@string/report_errors"
+        android:layout_marginTop="20dp"
+        android:layout_below="@id/textview_vcards_ignored"
+        android:layout_centerHorizontal="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
 </RelativeLayout>

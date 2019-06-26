@@ -124,12 +124,11 @@ public class AndroidUtils {
     public static Intent getCallIntent(String number, Context context) {
         Uri numberUri = Uri.parse("tel:" + Uri.encode(number));
         Intent callIntent;
-        if (ActivityCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) != PERMISSION_GRANTED) {
-            callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
-            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        }
-        else{
+        if (hasPermission(Manifest.permission.CALL_PHONE, context)) {
             callIntent = new Intent(Intent.ACTION_CALL, numberUri);
+            callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        } else {
+            callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         }
         return callIntent;
@@ -414,5 +413,8 @@ public class AndroidUtils {
                 .getIntent());
     }
 
+    public static boolean hasPermission(String permission, Context context){
+        return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+    }
 
 }

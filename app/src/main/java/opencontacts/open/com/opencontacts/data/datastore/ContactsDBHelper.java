@@ -2,7 +2,6 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
 import android.support.v4.util.Pair;
-import android.widget.Toast;
 
 import com.github.underscore.U;
 
@@ -20,7 +19,6 @@ import ezvcard.property.Email;
 import ezvcard.property.Note;
 import ezvcard.property.SimpleProperty;
 import ezvcard.property.Telephone;
-import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.Favorite;
@@ -33,10 +31,10 @@ import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
+import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.setFormattedNameIfNotPresent;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -100,7 +98,7 @@ public class ContactsDBHelper {
         dbContact.lastName = nameFromVCard.second;
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, vCard, primaryNumber);
-        updateVCardInDBWith(vCard, dbContact.getId(), context);
+        updateVCardData(vCard, dbContact.getId(), context);
     }
 
     static List<opencontacts.open.com.opencontacts.domain.Contact> getAllContactsFromDB(){
@@ -176,45 +174,6 @@ public class ContactsDBHelper {
         return VCardData.getVCardData(contactId);
     }
 
-    private static void updateVCardInDBWith(VCard vCard, long contactId, Context context) {
-        VCardData vCardDataInDB = VCardData.getVCardData(contactId);
-        try {
-            VCard dbVCard = new VCardReader(vCardDataInDB.vcardDataAsString).readNext();
-            dbVCard.setStructuredName(vCard.getStructuredName());
-            setFormattedNameIfNotPresent(dbVCard);
-            dbVCard.getTelephoneNumbers().clear();
-            dbVCard.getTelephoneNumbers().addAll(vCard.getTelephoneNumbers());
-            dbVCard.getEmails().clear();
-            dbVCard.getEmails().addAll(vCard.getEmails());
-            dbVCard.getAddresses().clear();
-            dbVCard.getAddresses().addAll(vCard.getAddresses());
-            dbVCard.getUrls().clear();
-            dbVCard.getUrls().addAll(vCard.getUrls());
-            dbVCard.setBirthday(vCard.getBirthday());
-            addNotesToDBVCard(vCard, dbVCard);
-            vCardDataInDB.vcardDataAsString = dbVCard.write();
-            updateStatusInVCardDataForUpdateOperation(vCardDataInDB);
-            vCardDataInDB.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-            Toast.makeText(context, R.string.error_while_saving_contact, Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private static void updateStatusInVCardDataForUpdateOperation(VCardData vCardDataInDB) {
-        vCardDataInDB.status = vCardDataInDB.status == STATUS_CREATED ? STATUS_CREATED : STATUS_UPDATED;
-    }
-
-    private static void addNotesToDBVCard(VCard vCard, VCard dbVCard) {
-        if(vCard.getNotes().isEmpty()){
-            if(!dbVCard.getNotes().isEmpty()) dbVCard.getNotes().remove(0);
-        }
-        else{
-            if(dbVCard.getNotes().isEmpty()) dbVCard.getNotes().addAll(vCard.getNotes());
-            else dbVCard.getNotes().set(0, vCard.getNotes().get(0));
-        }
-    }
-
     public static void deleteAllContacts(){
         Contact.deleteAll(Contact.class);
         PhoneNumber.deleteAll(PhoneNumber.class);
@@ -230,31 +189,29 @@ public class ContactsDBHelper {
         return contact;
     }
 
-    public static Contact addContact(Triplet<String, String, VCard> vcardTriplet, Context context){
-        Contact contact = createContactSaveInDBAndReturnIt(vcardTriplet.z, context);
-        createMobileNumbersAndSaveInDB(vcardTriplet.z, contact);
-        createVCardDataAndSaveInDB(vcardTriplet, contact);
+    public static Contact addContact(Triplet<String, String, VCard> hrefEtagAndVCard, Context context){
+        Contact contact = createContactSaveInDBAndReturnIt(hrefEtagAndVCard.z, context);
+        createMobileNumbersAndSaveInDB(hrefEtagAndVCard.z, contact);
+        createVCardDataAndSaveInDB(hrefEtagAndVCard, contact);
         return contact;
     }
 
     private static void createVCardDataAndSaveInDB(VCard vcard, Contact contact) {
-        VCardUtils.setFormattedNameIfNotPresent(vcard);
         new VCardData(contact,
-                vcard.write(),
+                vcard,
                 vcard.getUid() == null ? UUID.randomUUID().toString() : vcard.getUid().getValue(),
                 STATUS_CREATED,
                 null
                 ).save();
     }
 
-    private static void createVCardDataAndSaveInDB(Triplet<String, String, VCard> vcardTriplet, Contact contact) {
-        VCardUtils.setFormattedNameIfNotPresent(vcardTriplet.z);
+    private static void createVCardDataAndSaveInDB(Triplet<String, String, VCard> hrefEtagAndVCard, Contact contact) {
         new VCardData(contact,
-                vcardTriplet.z.write(),
-                vcardTriplet.z.getUid() == null ? UUID.randomUUID().toString() : vcardTriplet.z.getUid().getValue(),
+                hrefEtagAndVCard.z,
+                hrefEtagAndVCard.z.getUid() == null ? UUID.randomUUID().toString() : hrefEtagAndVCard.z.getUid().getValue(),
                 STATUS_CREATED,
-                vcardTriplet.y,
-                vcardTriplet.x
+                hrefEtagAndVCard.y,
+                hrefEtagAndVCard.x
         ).save();
     }
 

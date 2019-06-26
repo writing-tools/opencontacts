@@ -9,6 +9,7 @@ import android.os.Build;
 import opencontacts.open.com.opencontacts.activities.CrashReportingActivity;
 
 import static android.content.Context.ALARM_SERVICE;
+import static opencontacts.open.com.opencontacts.activities.CrashReportingActivity.ERROR_CONTENT_BUNDLE_EXTRA_KEY;
 import static opencontacts.open.com.opencontacts.activities.CrashReportingActivity.EXCEPTION_BUNDLE_EXTRA_KEY;
 import static opencontacts.open.com.opencontacts.activities.CrashReportingActivity.IS_NOT_CRASH_BUNDLE_EXTRA_KEY;
 
@@ -26,12 +27,23 @@ public class CrashUtils {
                 .putExtra(EXCEPTION_BUNDLE_EXTRA_KEY, throwable);
     }
 
+    public static Intent getIntentToReportError(String errorContent, Context context){
+        return new Intent(context, CrashReportingActivity.class)
+                .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                .putExtra(IS_NOT_CRASH_BUNDLE_EXTRA_KEY, true)
+                .putExtra(ERROR_CONTENT_BUNDLE_EXTRA_KEY, errorContent);
+    }
+
     public static void reportCrash(Throwable throwable, Context context){
         context.startActivity(getIntentToReportCrash(throwable, context));
     }
 
     public static void reportError(Throwable throwable, Context context){
         context.startActivity(getIntentToReportError(throwable, context));
+    }
+
+    public static void reportError(String errorContent, Context context){
+        context.startActivity(getIntentToReportError(errorContent, context));
     }
 
     public static void setUpCrashHandler(Context context){

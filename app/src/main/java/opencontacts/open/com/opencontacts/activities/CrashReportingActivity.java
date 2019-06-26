@@ -17,7 +17,8 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.sharePlainTe
 public class CrashReportingActivity extends AppCompatActivity {
 
     public static final String EXCEPTION_BUNDLE_EXTRA_KEY = "Exception";
-    public static final String IS_NOT_CRASH_BUNDLE_EXTRA_KEY = "crash";
+    public static final String IS_NOT_CRASH_BUNDLE_EXTRA_KEY = "isNotCrash";
+    public static final String ERROR_CONTENT_BUNDLE_EXTRA_KEY = "errorContent";
     private AppCompatTextView crashLog;
 
     @Override
@@ -26,7 +27,7 @@ public class CrashReportingActivity extends AppCompatActivity {
         setContentView(R.layout.crash_reporting);
         setSupportActionBar(findViewById(R.id.toolbar));
         crashLog = findViewById(R.id.crash_log);
-        crashLog.setText(getStackTraceAsString());
+        crashLog.setText(getErrorContent());
         findViewById(R.id.button_copy).setOnClickListener(v -> AndroidUtils.copyToClipboard(crashLog.getText(), true, this));
         if(getIntent().getBooleanExtra(IS_NOT_CRASH_BUNDLE_EXTRA_KEY, false)) getSupportActionBar().setTitle(R.string.report_error_screen_title);
     }
@@ -43,8 +44,9 @@ public class CrashReportingActivity extends AppCompatActivity {
         return super.onCreateOptionsMenu(menu);
     }
 
-    private String getStackTraceAsString() {
+    private String getErrorContent() {
         Throwable exception = (Throwable) getIntent().getSerializableExtra(EXCEPTION_BUNDLE_EXTRA_KEY);
-        return Log.getStackTraceString(exception);
+        if(exception != null) return Log.getStackTraceString(exception);
+        return getIntent().getStringExtra(ERROR_CONTENT_BUNDLE_EXTRA_KEY);
     }
 }

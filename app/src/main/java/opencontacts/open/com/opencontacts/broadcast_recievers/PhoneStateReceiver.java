@@ -10,6 +10,7 @@ import android.graphics.Point;
 import android.os.Build;
 import android.os.Handler;
 import android.provider.CallLog;
+import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
@@ -104,8 +105,8 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     }
 
     private void drawContactID(Context context, Contact callingContact) {
-        if(drawOverIncomingCallLayout != null)
-            return;
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) return;
+        if(drawOverIncomingCallLayout != null) return;
         final WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);
         LayoutInflater layoutinflater = LayoutInflater.from(context);
         drawOverIncomingCallLayout = layoutinflater.inflate(R.layout.draw_over_incoming_call, null);

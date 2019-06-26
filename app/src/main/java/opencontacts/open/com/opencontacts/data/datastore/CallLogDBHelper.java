@@ -1,12 +1,14 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.os.Build;
-import android.os.Handler;
 import android.provider.CallLog;
 import android.support.v4.app.ActivityCompat;
+import android.telecom.PhoneAccountHandle;
+import android.telecom.TelecomManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
 import android.widget.Toast;
@@ -20,9 +22,11 @@ import java.util.Map;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastSavedCallLogDate;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastSavedCallLogDate;
 
@@ -44,6 +48,15 @@ class CallLogDBHelper {
 
     private void createSimsInfo(Context context) {
         simsInfo = new HashMap<>();
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            TelecomManager telecomManager = context.getSystemService(TelecomManager.class);
+            if(telecomManager == null || !hasPermission(Manifest.permission.READ_PHONE_STATE, context)) return;
+            //added permission check above using util intellij wasn't able to identify it
+            List<PhoneAccountHandle> callCapablePhoneAccounts = telecomManager.getCallCapablePhoneAccounts();
+            if(callCapablePhoneAccounts.size() < 2) return;
+            U.forEachIndexed(callCapablePhoneAccounts, (index, phoneAccount) -> simsInfo.put(phoneAccount.getId(), index + 1));
+            return;
+        }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
             List<SubscriptionInfo> activeSubscriptionInfoList = ((SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)).getActiveSubscriptionInfoList();
             if(activeSubscriptionInfoList == null)
@@ -62,9 +75,7 @@ class CallLogDBHelper {
 
     private List<CallLogEntry> getRecentCallLogEntries(final Context context){
         if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            Handler mainHandler = new Handler(context.getMainLooper());
-
-            mainHandler.post(() -> Toast.makeText(context, R.string.grant_read_call_logs_permission, Toast.LENGTH_SHORT).show());
+            AndroidUtils.toastFromNonUIThread(R.string.grant_read_call_logs_permission, Toast.LENGTH_SHORT, context);
             return new ArrayList<>(0);
         }
         Cursor c;

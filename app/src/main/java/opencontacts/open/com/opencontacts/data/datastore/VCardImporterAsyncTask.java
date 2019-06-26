@@ -3,11 +3,14 @@ package opencontacts.open.com.opencontacts.data.datastore;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.v4.util.Pair;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.ref.WeakReference;
+import java.util.ArrayList;
 import java.util.List;
 
 import ezvcard.Ezvcard;
@@ -16,52 +19,65 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
-public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Boolean> {
+public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VCard, Throwable>>> {
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
     private final String PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW = "number_of_vcards_imported_until_now";
     private final String PROGRESS_FINAL_RESULT_OF_IMPORT = "final_result_of_import";
     private final Uri fileUri;
     private final ImportProgressListener importProgressListener;
-    private Context context;
+    private WeakReference<Context> contextWeakReference;
 
     public VCardImporterAsyncTask(Uri fileUri, ImportProgressListener importProgressListener, Context context){
         this.fileUri = fileUri;
         this.importProgressListener = importProgressListener;
-        this.context = context;
+        this.contextWeakReference = new WeakReference<>(context);
     }
 
     @Override
-    protected Boolean doInBackground(Void[] voids) {
+    protected List<Pair<VCard, Throwable>> doInBackground(Void[] voids) {
+        List<Pair<VCard, Throwable>> vcardsAndTheirExceptions = new ArrayList<>();
         try {
-            InputStream vcardInputStream = context.getContentResolver().openInputStream(fileUri);
+            InputStream vcardInputStream = contextWeakReference.get().getContentResolver().openInputStream(fileUri);
             List<VCard> vCards = Ezvcard.parse(vcardInputStream).all();
             publishProgress(PROGRESS_TOTAL_NUMBER_OF_VCARDS, vCards.size());
             int numberOfvCardsImported = 0, numberOfCardsIgnored = 0;
             for (VCard vcard : vCards) {
-                if (processVCard(vcard)) ++numberOfvCardsImported;
-                else ++numberOfCardsIgnored;
+                try{
+                    if (processVCard(vcard)) ++numberOfvCardsImported;
+                    else ++numberOfCardsIgnored;
+                }
+                catch (Exception e){
+                    ++numberOfCardsIgnored;
+                    vcardsAndTheirExceptions.add(new Pair<>(vcard, e));
+                }
                 publishProgress(PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW, numberOfvCardsImported, numberOfCardsIgnored);
             }
             publishProgress(PROGRESS_FINAL_RESULT_OF_IMPORT, numberOfvCardsImported, numberOfCardsIgnored);
-            return true;
+            return vcardsAndTheirExceptions;
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, context);
-            CrashUtils.reportError(e, context);
+            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, contextWeakReference.get());
+            CrashUtils.reportError(e, contextWeakReference.get());
         } catch (IOException e) {
             e.printStackTrace();
-            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, context);
-            CrashUtils.reportError(e, context);
+            AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, contextWeakReference.get());
+            CrashUtils.reportError(e, contextWeakReference.get());
         } catch (Exception e) {
             e.printStackTrace();
-            AndroidUtils.toastFromNonUIThread(R.string.unexpected_error_happened, Toast.LENGTH_LONG, context);
-            CrashUtils.reportError(e, context);
+            AndroidUtils.toastFromNonUIThread(R.string.unexpected_error_happened, Toast.LENGTH_LONG, contextWeakReference.get());
+            CrashUtils.reportError(e, contextWeakReference.get());
         }
-        return false;
+        return vcardsAndTheirExceptions;
     }
 
     private boolean processVCard(VCard vcard) {
-        return ContactsDBHelper.addContact(vcard, context) != null;
+        try{
+            return ContactsDBHelper.addContact(vcard, contextWeakReference.get()) != null;
+        }
+        catch (Exception e){
+            throw e;
+        }
+
     }
 
     @Override
@@ -70,8 +86,9 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Boolean> {
     }
 
     @Override
-    protected void onPostExecute(Boolean importedSuccessfully) {
-        if(importedSuccessfully) Toast.makeText(context, R.string.imported_successfully, Toast.LENGTH_LONG).show();
+    protected void onPostExecute(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
+        if(vCardsAndTheirExceptions.isEmpty()) AndroidUtils.toastFromNonUIThread(R.string.imported_successfully, Toast.LENGTH_LONG, contextWeakReference.get());
+        importProgressListener.onFinish(vCardsAndTheirExceptions);
     }
 
     @Override
@@ -83,8 +100,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Boolean> {
                 break;
             case PROGRESS_FINAL_RESULT_OF_IMPORT:
                 ContactsDataStore.refreshStoreAsync();
-                CallLogDataStore.updateCallLogAsyncForAllContacts(context);
-                importProgressListener.onFinish((Integer) values[1], (Integer) values[2]);
+                CallLogDataStore.updateCallLogAsyncForAllContacts(contextWeakReference.get());
                 break;
             case PROGRESS_TOTAL_NUMBER_OF_VCARDS:
                 importProgressListener.onTotalNumberOfCardsToBeImportedDetermined((Integer) values[1]);
@@ -101,7 +117,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, Boolean> {
     public interface ImportProgressListener{
         void onTotalNumberOfCardsToBeImportedDetermined(int totalNumberOfCards);
         void onNumberOfCardsProcessedUpdate(int imported, int ignored);
-        void onFinish(int numberOfCardsImported, int numberOfCardsIgnored);
+        void onFinish(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions);
     }
 
 }

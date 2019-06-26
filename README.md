@@ -18,3 +18,4 @@ I am using this app in day to day life and I usually raise issues and fix them a
 do comment on it saying this should be prioritized and fixed soon.
 
 In case you find a new issue / improvement / suggestion. Please do not hesitate to raise issue and we can together make our experience with this app great.
+In case you had to share some personal information to debug, you can use the [telegram group](https://t.me/joinchat/CCdV7RFz8VE24KqFmhBWrg) to share it. Or you can direct message me from the telegram group.

@@ -31,27 +31,10 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_switch_theme"
-        android:icon="@drawable/ic_invert_colors_black_24dp"
-        android:title="@string/switch_theme"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_switch_timeformat"
-        android:icon="@drawable/ic_time_black_24dp"
-        android:title="@string/switch_time_format"
-        app:showAsAction="ifRoom" />
-
-    <item
         android:id="@+id/action_delete_all_contacts"
         android:icon="@drawable/delete"
         android:title="@string/delete_all_contacts"
         app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_whatsapp_preferences"
-        android:title="@string/whatsapp_preferences"
-        app:showAsAction="never" />
 
     <item
         android:id="@+id/action_whats_new"
@@ -71,8 +54,9 @@
         android:title="@string/about"
         app:showAsAction="ifRoom" />
 
-    <item android:id="@+id/action_switch_t9_search"
-        android:title="@string/switch_t9_search"
+    <item
+        android:id="@+id/action_preferences"
+        android:title="@string/Preferences"
         app:showAsAction="ifRoom" />
 
 </menu>

@@ -2,10 +2,12 @@
     <!--themes-->
     <style name="Theme.AppCompat.Light.NoActionBar.Customized">
         <item name="imageButtonWithTint">@style/TransparentImageButton</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
     <style name="Theme.AppCompat.NoActionBar.Customized">
         <item name="imageButtonWithTint">@style/TransparentImageButton</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 
 

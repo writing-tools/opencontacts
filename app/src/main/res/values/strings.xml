@@ -145,6 +145,15 @@
     <string name="share_log_help_text">One of your favorite app faced an issue. Sharing the below log would help fix it sooner. To share it, you can either use\n\n1. Share button in the top right menu and then email the log to developer or\n\n2. Copy the log using copy to clipboard button and share it on github issue.</string>
     <string name="report_error_screen_title">Report error</string>
     <string name="report_errors">Report errors</string>
+    <string name="Preferences">Preferences</string>
+    <string name="dark_theme_preference_title">Dark Theme</string>
+    <string name="dark_theme_preference_summary">Enables dark theme across the app.</string>
+    <string name="time_format_12hrs_preference_title">Time Format 12 hours</string>
+    <string name="time_format_12hrs_preference_summary">Enables 12 hours clock with AM/PM</string>
+    <string name="whatsapp_integration_preference_title">Whatsapp integration</string>
+    <string name="whatsapp_integration_preference_summary">Enables you to open a whatsapp conversation right from this app</string>
+    <string name="t9_preference_title">T9 Search</string>
+    <string name="t9_preference_summary">Enables quick search using T9 keyboard</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

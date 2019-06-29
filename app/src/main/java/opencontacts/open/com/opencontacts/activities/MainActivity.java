@@ -11,9 +11,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.widget.AppCompatEditText;
 import android.support.v7.widget.SearchView;
-import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -34,21 +32,14 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.switchActiveThemeInPreferences;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.toggleT9Search;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.toggleTimeFormat;
 
 
 public class MainActivity extends AppBaseActivity {
     public static final int CONTACTS_TAB_INDEX = 1;
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
     public static final int DIALER_TAB_INDEX = 2;
+    private static final int PREFERENCES_ACTIVITY_RESULT = 773;
     private ViewPager viewPager;
     private SearchView searchView;
     private CallLogFragment callLogFragment;
@@ -60,6 +51,8 @@ public class MainActivity extends AppBaseActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(requestCode == DRAW_OVERLAY_PERMISSION_RESULT)//granting permission very fast is resulting in false positive hence delaying this check
             getMainThreadHandler().postDelayed(this::recreate, 1000);
+
+        if(requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
     }
 
     @Override
@@ -125,15 +118,12 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(MainActivity.this, HelpActivity.class));
             return true;
         });
-        menu.findItem(R.id.action_switch_timeformat).setOnMenuItemClickListener(item -> {
-            toggleTimeFormat(this);
+
+        menu.findItem(R.id.action_preferences).setOnMenuItemClickListener(item -> {
+            startActivityForResult(new Intent(MainActivity.this, PreferencesActivity.class), PREFERENCES_ACTIVITY_RESULT);
             return true;
         });
-        menu.findItem(R.id.action_switch_t9_search).setOnMenuItemClickListener(item -> {
-            toggleT9Search(this);
-            recreate();
-            return true;
-        });
+
         menu.findItem(R.id.action_resync).setOnMenuItemClickListener(item -> {
             CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
             return true;
@@ -147,30 +137,6 @@ public class MainActivity extends AppBaseActivity {
                     .setMessage(R.string.delete_all_contacts_question)
                     .setPositiveButton(R.string.okay,
                             (dialogInterface, i) -> ContactsDataStore.deleteAllContacts(MainActivity.this))
-                    .show();
-            return true;
-        });
-        menu.findItem(R.id.action_switch_theme).setOnMenuItemClickListener(item -> {
-            switchActiveThemeInPreferences(this);
-            recreate();
-            return true;
-        });
-        menu.findItem(R.id.action_whatsapp_preferences).setOnMenuItemClickListener((MenuItem item) -> {
-            AppCompatEditText countryCodeEditText = new AppCompatEditText(MainActivity.this);
-            countryCodeEditText.setText(getDefaultWhatsAppCountryCode(MainActivity.this));
-            countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
-            new AlertDialog.Builder(MainActivity.this)
-                    .setView(countryCodeEditText)
-                    .setTitle(R.string.input_country_calling_code_title)
-                    .setMessage(R.string.input_country_calling_code_description)
-                    .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> {
-                        if(!isWhatsappInstalled(this)) {
-                            showAlert(this, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
-                            return;
-                        }
-                        enableWhatsappIntegration(countryCodeEditText.getText().toString(), MainActivity.this);
-                    })
-                    .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> disableWhatsappIntegration(MainActivity.this))
                     .show();
             return true;
         });

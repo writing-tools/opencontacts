@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    >
+    <SwitchPreference
+        android:title="@string/dark_theme_preference_title"
+        android:defaultValue="false"
+        android:key="IS_DARK_THEME_ACTIVE_PREFERENCES_KEY"
+        android:summary="@string/dark_theme_preference_summary" />
+    <SwitchPreference
+        android:title="@string/time_format_12hrs_preference_title"
+        android:defaultValue="true"
+        android:key="preftimeformat12hours"
+        android:summary="@string/time_format_12hrs_preference_summary" />
+    <SwitchPreference
+        android:title="@string/whatsapp_integration_preference_title"
+        android:defaultValue="false"
+        android:key="WHATSAPP_INTEGRATION_ENABLED"
+        android:summary="@string/whatsapp_integration_preference_summary" />
+    <SwitchPreference
+        android:title="@string/t9_preference_title"
+        android:defaultValue="true"
+        android:key="t9searchenabled"
+        android:summary="@string/t9_preference_summary" />
+</PreferenceScreen>

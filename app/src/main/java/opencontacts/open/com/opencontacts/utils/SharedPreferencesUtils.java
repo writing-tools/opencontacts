@@ -5,16 +5,15 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
+import static android.content.Context.MODE_PRIVATE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toggleBoolean;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 
 public class SharedPreferencesUtils {
-    public static final String IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY = "IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY";
+    public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";
     public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
@@ -25,6 +24,7 @@ public class SharedPreferencesUtils {
     public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
     public static final String T9_SEARCH_ENABLED_SHARED_PREF_KEY = "t9searchenabled";
     public static final String LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY = "preference_last_call_log_saved_date";
+    public static final String COMMON_SHARED_PREFS_FILE_NAME = "OpenContacts";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -34,7 +34,7 @@ public class SharedPreferencesUtils {
     }
 
     public static SharedPreferences getAppsSharedPreferences(Context context){
-        return context.getSharedPreferences(context.getString(R.string.app_name), context.MODE_PRIVATE);
+        return context.getSharedPreferences(COMMON_SHARED_PREFS_FILE_NAME, MODE_PRIVATE);
     }
 
     public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {
@@ -48,20 +48,12 @@ public class SharedPreferencesUtils {
         return new Point(getAppsSharedPreferences(context).getInt(CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY, 0), getAppsSharedPreferences(context).getInt(CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY, 100));
     }
 
-    public static void switchActiveThemeInPreferences(Context context) {
-        TintedDrawablesStore.reset();
-        getAppsSharedPreferences(context)
-                .edit()
-                .putBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, !isLightThemeActive(context))
-                .apply();
-    }
-
     public static int getCurrentTheme(Context context) {
-        return isLightThemeActive(context) ? R.style.Theme_AppCompat_Light_NoActionBar_Customized : R.style.Theme_AppCompat_NoActionBar_Customized;
+        return isDarkThemeActive(context) ? R.style.Theme_AppCompat_NoActionBar_Customized : R.style.Theme_AppCompat_Light_NoActionBar_Customized;
     }
 
-    private static boolean isLightThemeActive(Context context) {
-        return getAppsSharedPreferences(context).getBoolean(IS_LIGHT_THEME_ACTIVE_PREFERENCES_KEY, true);
+    private static boolean isDarkThemeActive(Context context) {
+        return getAppsSharedPreferences(context).getBoolean(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, false);
     }
 
     public static void enableWhatsappIntegration(String selectedCountryCodeWithPlus, Context context) {
@@ -91,14 +83,6 @@ public class SharedPreferencesUtils {
 
     public static boolean is12HourFormatEnabled(Context context) {
         return getBoolean(PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, true, context);
-    }
-
-    public static void toggleTimeFormat(Context context){
-        toggleBoolean(SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY, true, context);
-    }
-
-    public static void toggleT9Search(Context context){
-        toggleBoolean(T9_SEARCH_ENABLED_SHARED_PREF_KEY, true, context);
     }
 
     public static boolean isT9SearchEnabled(Context context){

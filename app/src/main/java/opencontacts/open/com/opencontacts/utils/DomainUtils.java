@@ -42,7 +42,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is
 
 public class DomainUtils {
     public static final String EMPTY_STRING = "";
-    public static final Pattern NON_NUMERIC_MATCHING_PATTERN = Pattern.compile("[^0-9]");
+    public static final Pattern NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN = Pattern.compile("[^0-9+]");
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
     public static final int NUMBER_8 = 8;
 
@@ -115,7 +115,7 @@ public class DomainUtils {
     }
 
     public static String getAllNumericPhoneNumber(String phoneNumber) {
-        return NON_NUMERIC_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
+        return NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 
     @Nullable

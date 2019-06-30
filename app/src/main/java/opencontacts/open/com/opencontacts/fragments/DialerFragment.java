@@ -21,7 +21,7 @@ import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
     private Context context;
@@ -66,13 +66,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            TelecomManager telecomManager = context.getSystemService(TelecomManager.class);
-            if(telecomManager == null || !hasPermission(Manifest.permission.READ_PHONE_STATE, context)) return;
-            //added permission check above using util intellij wasn't able to identify it
-            if(telecomManager.getCallCapablePhoneAccounts().size() < 2) hideMultiSimDialingButtons();
-            else showMultiSimDialingButtons();
-        }
+        if(hasMultipleSims(getContext())) showMultiSimDialingButtons();
+        else hideMultiSimDialingButtons();
     }
 
     private void hideMultiSimDialingButtons() {

@@ -54,6 +54,7 @@ import static android.provider.CalendarContract.Events.CONTENT_URI;
 import static android.provider.CalendarContract.Events.TITLE;
 import static android.provider.CalendarContract.Events.ALL_DAY;
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
@@ -98,8 +99,15 @@ public class AndroidUtils {
     }
 
     public static void call(String number, Context context) {
-        Intent callIntent = getCallIntent(number, context);
-        context.startActivity(callIntent);
+        if(PhoneCallUtils.hasMultipleSims(context)) {
+            handleMultiSimCalling(number, context);
+            return;
+        }
+        callWithSystemDefaultSim(number, context);
+    }
+
+    public static void callWithSystemDefaultSim(String number, Context context){
+        context.startActivity(getCallIntent(number, context));
     }
 
     public static void whatsapp(String number, Context context) {

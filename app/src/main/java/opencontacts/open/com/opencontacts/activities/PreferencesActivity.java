@@ -8,10 +8,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
+import android.util.TypedValue;
 import android.widget.Toast;
 
 import com.github.underscore.U;
@@ -23,8 +26,10 @@ import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
@@ -59,7 +64,29 @@ public class PreferencesActivity extends AppBaseActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(COMMON_SHARED_PREFS_FILE_NAME);
             addPreferencesFromResource(R.xml.app_preferences);
+            if(hasMultipleSims(getContext())) addSimPreference();
             handlePreferenceUpdates();
+        }
+
+        private void addSimPreference() {
+            ContextThemeWrapper contextThemeWrapper = getContextThemeWrapper();// crazy android hack to get theme wrapped content. Else the dynamically created preferences are failing to create.
+
+            ListPreference listPreference = new ListPreference(contextThemeWrapper);
+            listPreference.setEntries(R.array.sim_selection);
+            listPreference.setTitle(R.string.default_sim_calls_preference_title);
+            listPreference.setSummary("%s");
+            listPreference.setEntryValues(R.array.sim_selection_values);
+            listPreference.setDefaultValue("-2");
+            listPreference.setKey(SIM_PREFERENCE_SHARED_PREF_KEY);
+            getPreferenceScreen().addPreference(listPreference);
+        }
+
+        @NonNull
+        private ContextThemeWrapper getContextThemeWrapper() {
+            TypedValue themeTypedValue = new TypedValue();
+            Context context = getContext();
+            context.getTheme().resolveAttribute(R.attr.preferenceTheme, themeTypedValue, true);
+            return new ContextThemeWrapper(context, themeTypedValue.resourceId);
         }
 
         private void handlePreferenceUpdates() {

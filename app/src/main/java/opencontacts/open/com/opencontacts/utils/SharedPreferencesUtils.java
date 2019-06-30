@@ -13,18 +13,19 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappIn
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 
 public class SharedPreferencesUtils {
-    public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";
+    public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";//also hard coded in xml
     public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
-    public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";
+    public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";//also hard coded in xml
     public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
     public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
-    public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";
+    public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";//also hard coded in xml
     public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
-    public static final String T9_SEARCH_ENABLED_SHARED_PREF_KEY = "t9searchenabled";
+    public static final String T9_SEARCH_ENABLED_SHARED_PREF_KEY = "t9searchenabled";//also hard coded in xml
     public static final String LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY = "preference_last_call_log_saved_date";
     public static final String COMMON_SHARED_PREFS_FILE_NAME = "OpenContacts";
+    public static final String SIM_PREFERENCE_SHARED_PREF_KEY = "defaultCallingSim";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -95,6 +96,10 @@ public class SharedPreferencesUtils {
 
     public static void setLastSavedCallLogDate(String date, Context context) {
         updatePreference(LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY, date, context);
+    }
+
+    public static int getPreferredSim(Context context){
+        return Integer.valueOf(getStringFromPreferences(SIM_PREFERENCE_SHARED_PREF_KEY, "-2", context));
     }
 
 }

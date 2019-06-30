@@ -223,4 +223,8 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     public void onDestroy(){
         CallLogDataStore.removeDataChangeListener(this);
     }
+    public void setEditNumberBeforeCallHandler(EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
+        this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
+    }
+
 }

@@ -44,6 +44,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="@string/error_importing_contacts"
+                android:textAppearance="?android:textAppearanceSearchResultTitle" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/reporting_import_errors_help_text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/search_contacts"
                 android:textAppearance="?android:textAppearanceSearchResultTitle" />
 
@@ -109,7 +122,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:text="@string/whatsapp_help_text" />
-
 
         </LinearLayout>
     </ScrollView>

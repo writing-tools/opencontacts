@@ -155,6 +155,8 @@
     <string name="t9_preference_title">T9 Search</string>
     <string name="t9_preference_summary">Enables quick search using T9 keyboard</string>
     <string name="default_sim_calls_preference_title">Default Sim for calls</string>
+    <string name="error_importing_contacts">Error importing contacts</string>
+    <string name="reporting_import_errors_help_text">In case you face error importing contacts, you could report those errors through \'Report errors\' button after the import fails. Also keep in mind that error information would also include the contacts information that you were trying to import. In case you do not want to include that in report, you could edit that after copying the report and then paste that it on gitlab.</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

@@ -1,3 +1,14 @@
+V14.0
+Importer can now reports error during import through CrashReporter
+Crashes can be reported now
+App now supports showing contacts without phone numbers
+Contacts can now be saved without phone numbers
+App can now handle USSDs like *123#
+Favorites feature
+Multi sim calling
+Added preferences as a seperate screen
+Removed overlay of search text while searching for contact
+
 V13.0
 Added traditional chinese translation
 Fixed caller id not popping up in Android pie

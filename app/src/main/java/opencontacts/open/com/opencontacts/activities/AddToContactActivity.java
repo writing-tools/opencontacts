@@ -39,7 +39,7 @@ public class AddToContactActivity extends AppBaseActivity {
         if(phoneNumber == null)
             finish();
         contactsListView = new ListView(this);
-        contactsListView.setTextFilterEnabled(true);
+        contactsListView.setTextFilterEnabled(false);
         final List<Contact> contacts = ContactsDataStore.getAllContacts();
         final ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_1, android.R.id.text1, new ArrayList<>(contacts)) {
             @NonNull
@@ -99,7 +99,7 @@ public class AddToContactActivity extends AppBaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                contactsListView.setFilterText(newText);
+                ((ArrayAdapter)contactsListView.getAdapter()).getFilter().filter(newText);
                 return true;
             }
         });

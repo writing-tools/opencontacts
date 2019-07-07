@@ -64,7 +64,7 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
             @Override
             public boolean onQueryTextChange(String newText) {
                 if(contactsListView != null)
-                    contactsListView.setFilterText(newText);
+                    contactsListView.filter(newText);
                 return true;
             }
         });

@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
+import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 
 import com.github.underscore.U;
@@ -38,7 +39,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     public ContactsListView(final Context context) {
         super(context);
         this.context = context;
-        setTextFilterEnabled(true);
+        setTextFilterEnabled(false);
         ContactsDataStore.addDataChangeListener(this);
         contacts = new ArrayList<>();
         adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
@@ -162,5 +163,9 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
                             else removeFavorite(contact);
                     }
                 }).show();
+    }
+
+    public void filter(CharSequence filterText){
+        ((HeaderViewListAdapter)getAdapter()).getFilter().filter(filterText);
     }
 }

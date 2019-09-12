@@ -6,8 +6,8 @@ android {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 14
         targetSdkVersion 27
-        versionCode 14
-        versionName "14.0"
+        versionCode 15
+        versionName "15.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

@@ -57,8 +57,9 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     }
 
     private void sortContacts() {
-        Collections.sort(contacts,
-                getContactComparator());
+        List<Contact> newContactsList = U.copyOf(contacts);
+        Collections.sort(newContactsList, getContactComparator());
+        contacts = newContactsList;
     }
 
     @NonNull

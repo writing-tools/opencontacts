@@ -82,6 +82,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
     }
 
     private void notifyAboutMissedCall(Context context) {
+        if(callingContact == null) return; //#98 issue with marshmallow.
         try{
             CallLogEntry callLogEntry =  CallLogDataStore.getMostRecentCallLogEntry(context);
             if(callLogEntry == null || !callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))

@@ -1,3 +1,6 @@
+V15.0
+Fixed multiple issues related to apps stability
+
 V14.0
 Importer can now reports error during import through CrashReporter
 Crashes can be reported now

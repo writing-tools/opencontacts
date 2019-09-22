@@ -29,7 +29,8 @@
     <string name="issues_link">https://gitlab.com/sultanahamer/OpenContacts/issues</string>
     <string name="more_apps">找到更多同類應用</string> //Find more apps
     <string name="more_apps_link">https://gitlab.com/sultanahamer https://github.com/sultanahamer/</string>
-    <string name="about_primary_number">每個聯絡人電話號碼前的星號標註將確認打電話或發簡訊時該號碼作為首要通訊號碼。\n\n默認情況下第一個號碼將會作為每個聯絡人的首要通訊號碼。</string> //Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.“每個聯絡人電話號碼前的星號標註將確認打電話或發簡訊時該號碼作為首要通訊號碼\n\nBy default first number in list would be primary“默認情況下第一個號碼將會作為每個聯絡人的首要通訊號碼
+    <string name="primary_number_help_text">每個聯絡人電話號碼前的星號標註將確認打電話或發簡訊時該號碼作為首要通訊號碼。\n\n默認情況下第一個號碼將會作為每個聯絡人的首要通訊號碼。</string> //Filled star before a number signifies that it would be primary number for that contact and would be used to call/sms when clicked from contacts list.“每個聯絡人電話號碼前的星號標註將確認打電話或發簡訊時該號碼作為首要通訊號碼\n\nBy default first number in list would be primary“默認情況下第一個號碼將會作為每個聯絡人的首要通訊號碼
+    <string name="primary_number">Primary Number(Starred)</string>
     <string name="learn_more_about_star">點擊介面了解更多關於星號標註的信息</string> //Tap to learn more about the star.
     <string name="invalid_number">非法號碼</string> //Invalid number
     <string name="import_contacts">導入聯絡人</string> //Import contacts

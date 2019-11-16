@@ -18,6 +18,8 @@ import java.util.regex.Pattern;
 
 public class Common {
     public static final Pattern NON_ASCII_REGEX_MATCHER = Pattern.compile("[^\\p{ASCII}]");
+    public static final NumberFormat twoDigitFormat = NumberFormat.getInstance();
+
 
     public static String replaceAccentedCharactersWithEnglish(String string) {
         String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
@@ -25,7 +27,6 @@ public class Common {
     }
 
     public static String getDurationInMinsAndSecs(int duration){
-        NumberFormat twoDigitFormat = NumberFormat.getInstance();
         twoDigitFormat.setMinimumIntegerDigits(2);
         return twoDigitFormat.format(duration / 60) + ":" + twoDigitFormat.format(duration % 60);
     }

@@ -77,6 +77,9 @@
     <string name="grant_storage_permisson_detail">Grant storage phone permission to be able to export and import contacts</string>
     <string name="caller_id_text">%1$s calling...</string>
     <string name="missed_call">Missed Call</string>
+    <string name="incoming_call" translatable="false">Incoming Call</string>
+    <string name="outgoing_call" translatable="false">Outgoing Call</string>
+    <string name="rejected_call" translatable="false">Rejected Call</string>
     <string name="missed_call_from">Missed call from %1$s %2$s</string>
     <string name="call">Call</string>
     <string name="message">Message</string>
@@ -158,6 +161,10 @@
     <string name="default_sim_calls_preference_title">Default Sim for calls</string>
     <string name="error_importing_contacts">Error importing contacts</string>
     <string name="reporting_import_errors_help_text">In case you face error importing contacts, you could report those errors through \'Report errors\' button after the import fails. Also keep in mind that error information would also include the contacts information that you were trying to import. In case you do not want to include that in report, you could edit that after copying the report and then paste that it on gitlab.</string>
+    <string name="export_call_log">Export call log</string>
+    <string name="failed_exporting_call_log">Failed exporting call log</string>
+    <string name="exported_call_log_successfully">Exported call log successfully</string>
+    <string name="started_exporting_call_log" translatable="false">Started exporting call log</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

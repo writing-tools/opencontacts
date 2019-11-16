@@ -2,14 +2,18 @@ package opencontacts.open.com.opencontacts.utils;
 
 import android.content.Context;
 import android.os.Environment;
+import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 
 import com.github.underscore.U;
+import com.opencsv.CSVWriterBuilder;
+import com.opencsv.ICSVWriter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -30,6 +34,7 @@ import ezvcard.property.StructuredName;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
@@ -56,6 +61,7 @@ public class DomainUtils {
     private static Map<String, AddressType> translatedTextToAddressType;
     private static Map<EmailType, String> emailTypeToTranslatedText;
     private static Map<String, EmailType> translatedTextToEmailType;
+    private static Map<String, String> stringValueOfCallTypeIntToTextMapping;
     private static String defaultPhoneNumberTypeTranslatedText;
     private static String defaultAddressTypeTranslatedText;
     private static String defaultEmailTypeTranslatedText;
@@ -71,6 +77,13 @@ public class DomainUtils {
         }
     }
 
+    private static void createCallTypeIntToTextMapping(Context context){
+        stringValueOfCallTypeIntToTextMapping = new HashMap<>(3);
+        stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.INCOMING_TYPE), context.getString(R.string.incoming_call));
+        stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.MISSED_TYPE), context.getString(R.string.missed_call));
+        stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.OUTGOING_TYPE), context.getString(R.string.outgoing_call));
+        stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.REJECTED_TYPE), context.getString(R.string.rejected_call));
+    }
     public static void exportAllContacts(Context context) throws IOException {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
@@ -240,40 +253,46 @@ public class DomainUtils {
         return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
-//    public static void exportCallLog(Context context) throws IOException{
-//        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
-//            AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
-//            return;
-//        }
-//        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
-//        File file = new File(Environment.getExternalStorageDirectory(), "CallLog_" + simpleDateFormat.format(new Date()) + ".vcf");
-//        file.createNewFile();
-//
-//        VCardWriter vCardWriter = null;
-//        try{
-//            vCardWriter = new VCardWriter(new FileOutputStream(file), VCardVersion.V4_0);
-//
-//            StructuredName structuredName = new StructuredName();
-//            for( Contact contact : allContacts){
-//                VCardData vCardData = ContactsDataStore.getVCardData(contact.id);
-//                if(vCardData == null)
-//                    createVCardAndWrite(vCardWriter, structuredName, contact);
-//                else {
-//                    try{
-//                        vCardWriter.write(new VCardReader(vCardData.vcardDataAsString).readNext());
-//                    }
-//                    catch (IOException e){
-//                        e.printStackTrace();
-//                        createVCardAndWrite(vCardWriter, structuredName, contact);
-//                    }
-//                }
-//            }
-//        }
-//        finally {
-//            if(vCardWriter != null)
-//                vCardWriter.close();
-//        }
-//
-//    }
+    public static void exportCallLog(Context context) throws IOException{
+        if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
+            AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
+            return;
+        }
+        createCallTypeIntToTextMapping(context);
+        createOpenContactsDirectoryIfItDoesNotExist();
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yy hh-mm-ss");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts", "CallLog_" + simpleDateFormat.format(new Date()) + ".csv");
+        ICSVWriter csvWriter = null;
+        try{
+            file.createNewFile();
+            //below is a crazy hack for java lambda
+            ICSVWriter finalCsvWriter = csvWriter = new CSVWriterBuilder(new FileWriter(file))
+                    .build();
+            SimpleDateFormat callTimeStampFormat = new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
+            List<CallLogEntry> entireCallLog = CallLogEntry.listAll(CallLogEntry.class);
+            writeCallLogCSVHeader(csvWriter);
+            U.forEach(entireCallLog, callLogEntry -> writeCallLogEntryToFile(callLogEntry, callTimeStampFormat, finalCsvWriter));
+        }
+        finally {
+            if(csvWriter != null) csvWriter.flushQuietly();
+        }
+
+    }
+
+    private static void writeCallLogCSVHeader(ICSVWriter csvWriter) {
+        csvWriter.writeNext(new String[]{"Name", "Phone number", "Call Type",
+                "Timestamp", "Duration", "Sim used"
+        });
+    }
+
+    private static void writeCallLogEntryToFile(CallLogEntry callLogEntry, SimpleDateFormat callTimeStampFormat, ICSVWriter writer) {
+        writer.writeNext(new String[]{
+                callLogEntry.name, callLogEntry.getPhoneNumber(),
+                getOrDefault(stringValueOfCallTypeIntToTextMapping, callLogEntry.getCallType(), callLogEntry.getCallType()),
+                callTimeStampFormat.format(new Date(Long.parseLong(callLogEntry.getDate()))),
+                Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())),
+                String.valueOf(callLogEntry.getSimId())
+        });
+    }
 
 }

@@ -158,6 +158,9 @@
     <string name="default_sim_calls_preference_title">Standard SIM-Karte für Anrufe</string>
     <string name="error_importing_contacts">Probleme beim Kontaktimport</string>
     <string name="reporting_import_errors_help_text">Falls es zu Fehlern beim Kontaktimport kommt, kannst du sie durch den \'Fehler melden\' Button nach dem Import melden. Bitte bedenke, dass der Fehlerbericht Kontaktdaten enthalten wird die du importieren wolltest. Falls du dies nicht willst, kannst du den Bericht nach dem Kopieren bearbeiten und dann bei GitLab einfügen.</string>
+    <string name="export_call_log">Export call log</string>
+    <string name="failed_exporting_call_log">Failed exporting call log</string>
+    <string name="exported_call_log_successfully">Exported call log successfully</string>
     <string-array name="phone_number_types">
         <item>Mobil</item>
         <item>Geschäftlich</item>

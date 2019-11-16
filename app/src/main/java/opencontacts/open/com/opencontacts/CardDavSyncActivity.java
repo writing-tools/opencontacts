@@ -3,6 +3,7 @@ package opencontacts.open.com.opencontacts;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
@@ -21,6 +22,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
@@ -51,17 +53,30 @@ public class CardDavSyncActivity extends AppCompatActivity {
         setContentView(R.layout.activity_card_dav_sync);
         savedBaseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
         ((TextInputEditText) findViewById(R.id.url)).setText(savedBaseUrl);
+        new AlertDialog.Builder(this)
+                .setTitle("Warning!")
+                .setMessage("Sync is experimental yet, please use this only if you have read the issue status in gitlab")
+                .setPositiveButton("Okay", null)
+                .show();
     }
 
     public void sync(View view) {
         String url = ((TextInputEditText) findViewById(R.id.url)).getText().toString();
         String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
         String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
+        AndroidUtils.hideSoftKeyboard(findViewById(R.id.username), this);
         if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
             Toast.makeText(this, R.string.input_username_and_password, LENGTH_SHORT).show();
             return;
         }
-        processAsync(() -> sync(url, username, password));
+        AlertDialog loadingDialog = new AlertDialog.Builder(this)
+                .setCancelable(false)
+                .setMessage("Please wait...")
+                .show();
+        processAsync(() -> {
+            sync(url, username, password);
+            runOnUiThread(loadingDialog::dismiss);
+        });
     }
 
     private void sync(String urlFromView, String username, String password) {

@@ -14,11 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -28,6 +31,7 @@ import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
@@ -102,10 +106,10 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
-//        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
-//            startActivity(new Intent(this, CardDavSyncActivity.class));
-//            return true;
-//        });
+        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
+            startActivity(new Intent(this, CardDavSyncActivity.class));
+            return true;
+        });
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
@@ -131,6 +135,16 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(item -> {
             AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this);
            return true;
+        });
+        menu.findItem(R.id.action_export_call_log).setOnMenuItemClickListener(item -> {
+            Toast.makeText(this, R.string.started_exporting_call_log, Toast.LENGTH_SHORT).show();
+            try {
+                DomainUtils.exportCallLog(this);
+                Toast.makeText(this, R.string.exported_call_log_successfully, Toast.LENGTH_LONG).show();
+            } catch (IOException e) {
+                Toast.makeText(this, R.string.failed_exporting_call_log, Toast.LENGTH_LONG).show();
+            }
+            return true;
         });
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(item -> {
             new AlertDialog.Builder(this)

@@ -7,7 +7,7 @@ import android.widget.Toast;
 import com.github.underscore.U;
 
 import java.util.ArrayList;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.List;
 
 import ezvcard.VCard;
@@ -28,7 +28,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNon
 
 public class ContactsDataStore {
     private static List<Contact> contacts = null;
-    private static List<DataStoreChangeListener<Contact>> dataChangeListeners = new ArrayList<>(3);
+    private static final List<DataStoreChangeListener<Contact>> dataChangeListeners = Collections.synchronizedList(new ArrayList<>(3));
     private static List<Contact> favorites = new ArrayList<>(0);
 
     public static List<Contact> getAllContacts() {
@@ -75,11 +75,17 @@ public class ContactsDataStore {
     }
 
     public static void addDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
-        dataChangeListeners.add(changeListener);
+        synchronized (dataChangeListeners){
+            dataChangeListeners.add(changeListener);
+        }
     }
 
     public static void removeDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
-        dataChangeListeners.remove(changeListener);
+        processAsync(() -> { //for those listeners who want to deregister inside the registered listener callback
+            synchronized (dataChangeListeners){
+                dataChangeListeners.remove(changeListener);
+            }
+        });
     }
 
     public static opencontacts.open.com.opencontacts.orm.Contact getContact(String phoneNumber) {
@@ -134,19 +140,19 @@ public class ContactsDataStore {
     private static void notifyListeners(int type, Contact contact) {
         if(dataChangeListeners.isEmpty())
             return;
-        Iterator<DataStoreChangeListener<Contact>> iterator = dataChangeListeners.iterator();
-        if(type == ADDITION)
-            while(iterator.hasNext())
-                iterator.next().onAdd(contact);
-        else if(type == DELETION)
-            while(iterator.hasNext())
-                iterator.next().onRemove(contact);
-        else if(type == UPDATION)
-            while(iterator.hasNext())
-                iterator.next().onUpdate(contact);
-        else if (type == REFRESH)
-            while(iterator.hasNext())
-                iterator.next().onStoreRefreshed();
+        synchronized (dataChangeListeners){
+            U.forEach(dataChangeListeners, listener -> {
+                if(listener == null) return;
+                if(type == ADDITION)
+                    listener.onAdd(contact);
+                else if(type == DELETION)
+                    listener.onRemove(contact);
+                else if(type == UPDATION)
+                    listener.onUpdate(contact);
+                else if (type == REFRESH)
+                    listener.onStoreRefreshed();
+            });
+        }
     }
 
     public static void deleteAllContacts(Context context) {

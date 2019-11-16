@@ -3,6 +3,9 @@ package opencontacts.open.com.opencontacts;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
+import android.support.multidex.MultiDexApplication;
+
+import com.orm.SugarContext;
 
 import opencontacts.open.com.opencontacts.actions.AutoContactsExporter;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
@@ -11,13 +14,14 @@ import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
 
-public class OpenContactsApplication extends com.orm.SugarApp{
+public class OpenContactsApplication extends MultiDexApplication {
 
     public static final String MISSED_CALLS_CHANEL_ID = "6477";
 
     @Override
     public void onCreate() {
         super.onCreate();
+        SugarContext.init(this);
         ContactsDataStore.init();
         CallLogDataStore.init(getApplicationContext());
         createNotificationChannels();
@@ -33,5 +37,11 @@ public class OpenContactsApplication extends com.orm.SugarApp{
             notificationManager.createNotificationChannel(channel);
         }
 
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        SugarContext.terminate();
     }
 }

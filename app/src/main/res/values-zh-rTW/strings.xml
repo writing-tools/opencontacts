@@ -124,7 +124,11 @@
     <string name="no_addressbook_found">沒有找到地址記錄表</string> //No Addressbook found
     <string name="whatsapp_not_installed">Whatsapp尚未安裝</string> //Whatsapp not installed
     <string name="enable_only_after_installing_whatsapp">只有安裝Whatsapp後才可以啟動該項目</string> //You can enable this only after installing whatsapp
-    <string name="switch_time_format">轉換時間格式</string> //Switch time format
+    <string name="switch_time_format">轉換時間格式</string>
+    <string name="export_call_log">Export call log</string>
+    <string name="failed_exporting_call_log">Failed exporting call log</string>
+    <string name="exported_call_log_successfully">Exported call log successfully</string>
+    //Switch time format
     <string-array name="phone_number_types">
         <item>移動電話</item> //Mobile
         <item>工作電話</item> //Work

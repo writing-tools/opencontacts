@@ -4,6 +4,7 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
 
+import opencontacts.open.com.opencontacts.actions.AutoContactsExporter;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
@@ -21,6 +22,7 @@ public class OpenContactsApplication extends com.orm.SugarApp{
         CallLogDataStore.init(getApplicationContext());
         createNotificationChannels();
         CrashUtils.setUpCrashHandler(getApplicationContext());
+        new AutoContactsExporter(this).exportContactsAsPerPreferences();
     }
 
     private void createNotificationChannels() {

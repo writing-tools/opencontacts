@@ -59,7 +59,7 @@
     <string name="edit_before_call">Vor Anruf bearbeiten</string>
     <string name="do_you_want_to_export">Möchtest du deine Kontakte exportieren?</string>
     <string name="failed">Fehlgeschlagen</string>
-    <string name="failed_extracting_contacts">Kontaktexport fehlgeschlagen</string>
+    <string name="failed_exporting_contacts">Kontaktexport fehlgeschlagen</string>
     <string name="filled_star">Ausgefüllter Stern</string>
     <string name="do_you_want_to_delete">Möchtest du diesen Kontakt wirklich löschen?</string>
     <string name="deleted">Gelöscht</string>

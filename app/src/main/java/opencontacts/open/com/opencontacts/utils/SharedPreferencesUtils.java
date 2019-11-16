@@ -4,13 +4,18 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 
+import java.util.Date;
+
 import opencontacts.open.com.opencontacts.R;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.text.TextUtils.isEmpty;
+import static java.util.Calendar.HOUR;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
+import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 
 public class SharedPreferencesUtils {
     public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";//also hard coded in xml
@@ -26,6 +31,10 @@ public class SharedPreferencesUtils {
     public static final String LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY = "preference_last_call_log_saved_date";
     public static final String COMMON_SHARED_PREFS_FILE_NAME = "OpenContacts";
     public static final String SIM_PREFERENCE_SHARED_PREF_KEY = "defaultCallingSim";
+    public static final String EXPORT_CONTACTS_EVERY_WEEK_SHARED_PREF_KEY = "exportContactsEveryWeek";
+    public static final String LAST_EXPORT_TIME_STAMP = "lastExportTimeStamp";
+    public static final int WEEKS_TIME_IN_HOURS = 24 * 7;
+    public static final String ENCRYPTING_CONTACTS_EXPORT_KEY = "encryptingContactsExportKey";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -100,6 +109,27 @@ public class SharedPreferencesUtils {
 
     public static int getPreferredSim(Context context){
         return Integer.valueOf(getStringFromPreferences(SIM_PREFERENCE_SHARED_PREF_KEY, "-2", context));
+    }
+
+    public static boolean shouldExportContactsEveryWeek(Context context){
+        return getBoolean(EXPORT_CONTACTS_EVERY_WEEK_SHARED_PREF_KEY, true, context);
+    }
+
+    public static boolean hasItBeenAWeekSinceLastExportOfContacts(Context context){
+        long lastExportTimeStamp = getAppsSharedPreferences(context).getLong(LAST_EXPORT_TIME_STAMP, 0);
+        return hasItBeen(WEEKS_TIME_IN_HOURS, HOUR, lastExportTimeStamp);
+    }
+
+    public static String getEncryptingContactsKey(Context context){
+        return getStringFromPreferences(ENCRYPTING_CONTACTS_EXPORT_KEY, context);
+    }
+
+    public static boolean hasEncryptingContactsKey(Context context){
+        return !isEmpty(getEncryptingContactsKey(context));
+    }
+
+    public static void markAutoExportComplete(Context context){
+        updatePreference(LAST_EXPORT_TIME_STAMP, new Date().getTime(), context);
     }
 
 }

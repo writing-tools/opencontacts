@@ -59,7 +59,7 @@
     <string name="edit_before_call">Edit before call</string>
     <string name="do_you_want_to_export">Do you want to export?</string>
     <string name="failed">Failed</string>
-    <string name="failed_extracting_contacts">Failed exporting contacts</string>
+    <string name="failed_exporting_contacts">Failed exporting contacts</string>
     <string name="filled_star">Filled Star</string>
     <string name="do_you_want_to_delete">Do you want to delete?</string>
     <string name="deleted">Deleted</string>

@@ -1,14 +1,13 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
 import android.text.TextUtils;
 import android.view.View;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Toast;
 
@@ -58,7 +57,7 @@ public class EditContactActivity extends AppBaseActivity {
     private TextInputEditText notesTextInputEditText;
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
-    private Date selectedDate;
+    private Date selectedBirthDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,23 +71,18 @@ public class EditContactActivity extends AppBaseActivity {
         websiteTextInputEditText = findViewById(R.id.website);
         dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
 
-        View.OnClickListener onClickListener = v -> {
-            DatePicker datePicker = new DatePicker(this);
+        View.OnClickListener onBirthDayClickListener = v -> {
             Birthday birthday = vcardBeforeEdit.getBirthday();
-            if(birthday != null){
-                Calendar dateOfBirthInstance = getCalendarInstanceAt(birthday.getDate().getTime());
-                datePicker.init(dateOfBirthInstance.get(YEAR), dateOfBirthInstance.get(MONTH), dateOfBirthInstance.get(DAY_OF_MONTH), null);
-            }
-            new AlertDialog.Builder(this)
-                    .setView(datePicker)
-                    .setNeutralButton(R.string.cancel, null)
-                    .setPositiveButton(R.string.okay, (dialog1, which) -> {
-                        Calendar selectedCalendar = getCalendarInstanceAt(datePicker.getYear(), datePicker.getMonth(), datePicker.getDayOfMonth());
-                        ((TextInputEditText)v).setText(AndroidUtils.getFormattedDate(selectedCalendar.getTime()));
-                        selectedDate = selectedCalendar.getTime();
-                    }).show();
+            Calendar dateOfBirthInstance = Calendar.getInstance();
+            if(selectedBirthDay != null) dateOfBirthInstance = getCalendarInstanceAt(selectedBirthDay.getTime());
+            else if(birthday != null) dateOfBirthInstance = getCalendarInstanceAt(birthday.getDate().getTime());
+            new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
+                Calendar selectedCalendar = getCalendarInstanceAt(year, month, dayOfMonth);
+                ((TextInputEditText)v).setText(AndroidUtils.getFormattedDate(selectedCalendar.getTime()));
+                selectedBirthDay = selectedCalendar.getTime();
+            }, dateOfBirthInstance.get(YEAR), dateOfBirthInstance.get(MONTH), dateOfBirthInstance.get(DAY_OF_MONTH)).show();
         };
-        findViewById(R.id.date_of_birth).setOnClickListener(onClickListener);
+        findViewById(R.id.date_of_birth).setOnClickListener(onBirthDayClickListener);
 
         Intent intent = getIntent();
         if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
@@ -217,11 +211,11 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void addDateOfBirthFromFieldsToNewVCard(VCard newVCard) {
-        if(selectedDate == null){
+        if(selectedBirthDay == null){
             newVCard.setBirthday(vcardBeforeEdit == null ? null : vcardBeforeEdit.getBirthday());
             return;
         }
-        newVCard.setBirthday(new Birthday(selectedDate));
+        newVCard.setBirthday(new Birthday(selectedBirthDay));
     }
 
     private void addWebsiteFromFieldsToNewVCard(VCard newVCard) {

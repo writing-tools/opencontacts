@@ -1,24 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-    <SwitchPreference
-        android:title="@string/dark_theme_preference_title"
-        android:defaultValue="false"
-        android:key="IS_DARK_THEME_ACTIVE_PREFERENCES_KEY"
-        android:summary="@string/dark_theme_preference_summary" />
-    <SwitchPreference
-        android:title="@string/time_format_12hrs_preference_title"
-        android:defaultValue="true"
-        android:key="preftimeformat12hours"
-        android:summary="@string/time_format_12hrs_preference_summary" />
-    <SwitchPreference
-        android:title="@string/whatsapp_integration_preference_title"
-        android:defaultValue="false"
-        android:key="WHATSAPP_INTEGRATION_ENABLED"
-        android:summary="@string/whatsapp_integration_preference_summary" />
-    <SwitchPreference
-        android:title="@string/t9_preference_title"
-        android:defaultValue="true"
-        android:key="t9searchenabled"
-        android:summary="@string/t9_preference_summary" />
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <PreferenceCategory
+        app:key="General"
+        app:title="General">
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="IS_DARK_THEME_ACTIVE_PREFERENCES_KEY"
+            android:summary="@string/dark_theme_preference_summary"
+            android:title="@string/dark_theme_preference_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="preftimeformat12hours"
+            android:summary="@string/time_format_12hrs_preference_summary"
+            android:title="@string/time_format_12hrs_preference_title" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="WHATSAPP_INTEGRATION_ENABLED"
+            android:summary="@string/whatsapp_integration_preference_summary"
+            android:title="@string/whatsapp_integration_preference_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="t9searchenabled"
+            android:summary="@string/t9_preference_summary"
+            android:title="@string/t9_preference_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:key="Export"
+        app:title="Export">
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="exportContactsEveryWeek"
+            android:summary="Will export contacts every week"
+            android:title="Auto export contacts" />
+
+        <EditTextPreference
+            android:key="encryptingContactsExportKey"
+            android:summary="Will encrypt the contacts export using this password"
+            android:title="Encryption password" />
+    </PreferenceCategory>
 </PreferenceScreen>

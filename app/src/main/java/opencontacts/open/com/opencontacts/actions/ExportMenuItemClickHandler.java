@@ -1,7 +1,6 @@
 package opencontacts.open.com.opencontacts.actions;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
@@ -36,6 +35,7 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
                             try {
                                 DomainUtils.exportAllContacts(context);
                             } catch (IOException e) {
+                                e.printStackTrace();
                                 return false;
                             }
                             return true;
@@ -44,7 +44,7 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
                         @Override
                         protected void onPostExecute(Boolean success) {
                             if (Boolean.FALSE.equals(success))
-                                AndroidUtils.showAlert(context, context.getString(R.string.failed), context.getString(R.string.failed_extracting_contacts));
+                                AndroidUtils.showAlert(context, context.getString(R.string.failed), context.getString(R.string.failed_exporting_contacts));
                             else
                                 Toast.makeText(context, R.string.exporting_contacts_complete, Toast.LENGTH_LONG).show();
 

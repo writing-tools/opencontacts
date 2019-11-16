@@ -377,6 +377,13 @@ public class AndroidUtils {
                 .apply();
     }
 
+    public static void updatePreference(String key, long value, Context context){
+        getAppsSharedPreferences(context)
+                .edit()
+                .putLong(key, value)
+                .apply();
+    }
+
     public static boolean getBoolean(String key, boolean defaultValue, Context context){
         return getAppsSharedPreferences(context).getBoolean(key, defaultValue);
     }

@@ -59,7 +59,7 @@
     <string name="edit_before_call">撥號前編輯</string> //Edit before call
     <string name="do_you_want_to_export">想要導出嗎？</string> //Do you want to export?
     <string name="failed">失敗</string> //Failed
-    <string name="failed_extracting_contacts">導出聯絡人失敗</string> //Failed exporting contacts
+    <string name="failed_exporting_contacts">導出聯絡人失敗</string> //Failed exporting contacts
     <string name="filled_star">星號已標註</string> //Filled Star
     <string name="do_you_want_to_delete">要刪除嗎？</string> //Do you want to delete?
     <string name="deleted">已刪除</string> //Deleted

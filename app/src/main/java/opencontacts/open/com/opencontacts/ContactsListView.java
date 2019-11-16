@@ -24,6 +24,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
 
 /**
  * Created by sultanm on 3/25/17.
@@ -64,7 +65,10 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @NonNull
     private Comparator<Contact> getContactComparator() {
-        return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.name);
+        if(shouldSortUsingFirstName(context))
+            return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
+        else
+            return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
     }
 
     private void addContactsToAdapter() {

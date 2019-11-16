@@ -161,6 +161,7 @@
     <string name="export_call_log">Export call log</string>
     <string name="failed_exporting_call_log">Failed exporting call log</string>
     <string name="exported_call_log_successfully">Exported call log successfully</string>
+    <string name="sort_using_first_name">Sort using first name</string>
     <string-array name="phone_number_types">
         <item>Mobil</item>
         <item>Geschäftlich</item>

@@ -24,6 +24,10 @@
             android:key="t9searchenabled"
             android:summary="@string/t9_preference_summary"
             android:title="@string/t9_preference_title" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="sortUsingFirstName"
+            android:title="@string/sort_using_first_name" />
     </PreferenceCategory>
     <PreferenceCategory
         app:key="Export"

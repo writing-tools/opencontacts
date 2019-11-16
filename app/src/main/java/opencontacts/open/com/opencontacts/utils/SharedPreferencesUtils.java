@@ -35,6 +35,7 @@ public class SharedPreferencesUtils {
     public static final String LAST_EXPORT_TIME_STAMP = "lastExportTimeStamp";
     public static final int WEEKS_TIME_IN_HOURS = 24 * 7;
     public static final String ENCRYPTING_CONTACTS_EXPORT_KEY = "encryptingContactsExportKey";
+    public static final String SORT_USING_FIRST_NAME = "sortUsingFirstName";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -130,6 +131,10 @@ public class SharedPreferencesUtils {
 
     public static void markAutoExportComplete(Context context){
         updatePreference(LAST_EXPORT_TIME_STAMP, new Date().getTime(), context);
+    }
+
+    public static boolean shouldSortUsingFirstName(Context context){
+        return getBoolean(SORT_USING_FIRST_NAME, true, context);
     }
 
 }

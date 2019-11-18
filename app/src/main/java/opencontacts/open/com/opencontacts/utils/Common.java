@@ -1,5 +1,6 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import com.github.underscore.Consumer;
 import com.github.underscore.Function;
 import com.github.underscore.U;
 
@@ -82,6 +83,13 @@ public class Common {
         return list;
     }
 
+    public static void forEach(int[] integers, Consumer<Integer> consumer){
+        for(int i : integers){
+            consumer.accept(i);
+        }
+    }
+
+
     public interface TimesFunction<T>{
         T apply(int index);
     }
@@ -95,7 +103,7 @@ public class Common {
     }
 
     public static boolean hasItBeen(int offset, int timeUnit, long since){
-        return getCalendarInstanceAt(since).before(getCalendarOffset(offset, timeUnit));
+        return getCalendarInstanceAt(since).before(getCalendarOffset(-offset, timeUnit));
     }
 
     public static Calendar getCalendarInstanceAt(long timestamp){
@@ -125,5 +133,10 @@ public class Common {
 
     public static String getEmptyStringIfNull(String string){
         return string == null ? "" : string;
+    }
+
+    public static <T> T checkNotNull(T object) throws Exception {
+        if(object == null) throw new Exception("Found a null");
+        return object;
     }
 }

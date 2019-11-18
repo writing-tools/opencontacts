@@ -36,6 +36,7 @@ public class SharedPreferencesUtils {
     public static final int WEEKS_TIME_IN_HOURS = 24 * 7;
     public static final String ENCRYPTING_CONTACTS_EXPORT_KEY = "encryptingContactsExportKey";
     public static final String SORT_USING_FIRST_NAME = "sortUsingFirstName";
+    public static final String SINGLE_CONTACT_WIDGET_TO_CONTACT_MAPPING = "singleContactWidgetToContactMapping";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {

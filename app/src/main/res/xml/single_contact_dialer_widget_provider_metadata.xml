@@ -1,0 +1,10 @@
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="40dp"
+    android:minHeight="40dp"
+    android:updatePeriodMillis="86400000"
+    android:previewImage="@drawable/single_contact_dialer_widget_preview_40dp"
+    android:initialLayout="@layout/widget_single_contact_dialer"
+    android:resizeMode="horizontal|vertical"
+    android:configure="opencontacts.open.com.opencontacts.activities.SingleContactWidgetChooserActivity"
+    android:widgetCategory="home_screen">
+</appwidget-provider>

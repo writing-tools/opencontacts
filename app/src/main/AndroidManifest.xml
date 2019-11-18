@@ -27,6 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".activities.SingleContactWidgetChooserActivity">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
+            </intent-filter>
+        </activity>
 
         <meta-data
             android:name="DATABASE"
@@ -81,6 +86,17 @@
                 <action android:name="android.intent.action.PHONE_STATE" />
             </intent-filter>
         </receiver>
+        <receiver android:name=".widgets.SingleContactDialerWidgetProvider"
+            android:label="@string/app_name" android:icon="@mipmap/ic_launcher"
+            >
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/single_contact_dialer_widget_provider_metadata" />
+        </receiver>
+
         <activity android:name=".CardDavSyncActivity" />
         <activity android:name=".activities.PreferencesActivity" />
     </application>

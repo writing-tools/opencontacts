@@ -92,6 +92,10 @@ public class ContactsDataStore {
         return ContactsDBHelper.getContactFromDB(phoneNumber);
     }
 
+    public static Contact cautiouslyGetContactFromDatabase(long contactId) throws Exception{
+        return U.checkNotNull(ContactsDBHelper.getContact(contactId));
+    }
+
     public static Contact getContactWithId(long contactId) {
         if (contactId == -1 || contacts == null)
             return null;

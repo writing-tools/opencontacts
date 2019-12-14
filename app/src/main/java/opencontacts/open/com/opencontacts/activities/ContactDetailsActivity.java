@@ -151,7 +151,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private void fillDateOfBirth() {
         Birthday birthday = vcard.getBirthday();
         View birthDayCard = findViewById(R.id.date_of_birth_card);
-        if(birthday == null) {
+        if(birthday == null || birthday.getDate() == null) {
             birthDayCard.setVisibility(GONE);
             return;
         }

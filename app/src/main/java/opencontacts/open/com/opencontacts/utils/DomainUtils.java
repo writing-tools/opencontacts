@@ -157,6 +157,7 @@ public class DomainUtils {
     }
 
     public static String getAllNumericPhoneNumber(String phoneNumber) {
+        if(phoneNumber == null) return "";
         return NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 

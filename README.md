@@ -12,6 +12,12 @@ We can export / import contacts from Android contacts app into this app.
 Maintains call log as well coz Android call log app would not be able to show name of contact
 Also shows the person name upon recieving call
 
+# Translation
+
+Do you want to see this app in your own language, contribute the translations at [[https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458](https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458)
+]([https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458](https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458)
+)
+
 # Issues management
 
 I am using this app in day to day life and I usually raise issues and fix them as I feel the priority. If anyone feels that an issue needs to be fixed soon,

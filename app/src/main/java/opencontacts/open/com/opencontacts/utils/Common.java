@@ -23,6 +23,7 @@ public class Common {
 
 
     public static String replaceAccentedCharactersWithEnglish(String string) {
+        if(string == null) return "";
         String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
         return NON_ASCII_REGEX_MATCHER.matcher(normalizedString).replaceAll("");
     }

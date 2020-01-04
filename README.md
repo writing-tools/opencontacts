@@ -14,9 +14,7 @@ Also shows the person name upon recieving call
 
 # Translation
 
-Do you want to see this app in your own language, contribute the translations at [[https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458](https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458)
-]([https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458](https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458)
-)
+Do you want to see this app in your own language, contribute the translations at https://translate.zanata.org/iteration/view/OpenContacts/1/languages?dswid=7458
 
 # Issues management
 

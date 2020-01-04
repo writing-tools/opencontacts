@@ -14,7 +14,7 @@ Also shows the person name upon recieving call
 
 # Translation
 
-Do you want to see this app in your own language, contribute the translations at https://crowdin.com/project/opencontacts
+Do you want to see this app in your own language, contribute the translations at https://crwd.in/opencontacts
 
 # Issues management
 

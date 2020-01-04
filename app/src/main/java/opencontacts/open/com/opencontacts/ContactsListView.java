@@ -7,6 +7,7 @@ import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.github.underscore.U;
 
@@ -20,6 +21,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
@@ -161,11 +163,21 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     public void onLongClick(Contact contact) {
         int favoritesResource = isFavorite(contact) ? R.string.remove_favorite : R.string.add_to_favorites;
         new AlertDialog.Builder(context)
-                .setItems(new String[]{context.getString(favoritesResource)}, (dialog, which) -> {
+                .setItems(new String[]{
+                        context.getString(favoritesResource),
+                        context.getString(R.string.add_shortcut)
+                }, (dialog, which) -> {
                     switch(which){
                         case 0:
                             if (favoritesResource == R.string.add_to_favorites) addFavorite(contact);
                             else removeFavorite(contact);
+                            break;
+                        case 1:
+                            boolean added = DomainUtils.addContactAsShortcut(contact, context);
+                            Toast.makeText(context,
+                                    added ? getContext().getString(R.string.added_shortcut) : getContext().getString(R.string.failed_adding_shortcut),
+                                    Toast.LENGTH_LONG).show();
+                            break;
                     }
                 }).show();
     }

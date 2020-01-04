@@ -171,6 +171,8 @@
     <string name="failed_adding_shortcut">Failed adding shortcut</string>
     <string name="addshortcut_help_text">Adding shortcut will create a icon on home screen letting you call contact from home screen. This is supported on devices with Android 7.1(Noughat) and above. \n\nTo add a shortcut, goto contacts list, long press a contact and select add to homescreen.
         \n\nIn devices older than Noughat, you can still add a widget. To add a widget, long press on homescreen and click add a widget and select Open Contacts and follow steps ahead</string>
+    <string name="start">Start</string>
+    <string name="ask_permissions_again">Ask permissions again</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

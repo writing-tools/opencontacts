@@ -14,6 +14,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -32,11 +33,12 @@ import opencontacts.open.com.opencontacts.fragments.DialerFragment;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.DRAW_OVERLAY_PERMISSION_RESULT;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMainThreadHandler;
+import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -53,16 +55,16 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == DRAW_OVERLAY_PERMISSION_RESULT)//granting permission very fast is resulting in false positive hence delaying this check
-            getMainThreadHandler().postDelayed(this::recreate, 1000);
-
+//        if(requestCode == DRAW_OVERLAY_PERMISSION_RESULT)//granting permission very fast is resulting in false positive hence delaying this check
+//            getMainThreadHandler().postDelayed(this::recreate, 1000);
+//
         if(requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        recreate();
+//        recreate();
     }
 
     @Override
@@ -74,11 +76,16 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(AndroidUtils.doesNotHaveAllPermissions(this)){
+        if(SharedPreferencesUtils.shouldAskForPermissions(this)){
             AndroidUtils.askForPermissionsIfNotGranted(this);
+            View startButton = findViewById(R.id.start_button);
+            startButton.setVisibility(VISIBLE);
+            startButton.setOnClickListener(x -> this.recreate());
+            markPermissionsAksed(this);
             return;
         }
         else setupTabs();
+        markPermissionsAksed(this);
     }
 
     @Override

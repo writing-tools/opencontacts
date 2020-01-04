@@ -37,6 +37,7 @@ public class SharedPreferencesUtils {
     public static final String ENCRYPTING_CONTACTS_EXPORT_KEY = "encryptingContactsExportKey";
     public static final String SORT_USING_FIRST_NAME = "sortUsingFirstName";
     public static final String SINGLE_CONTACT_WIDGET_TO_CONTACT_MAPPING = "singleContactWidgetToContactMapping";
+    public static final String SHOULD_ASK_FOR_PERMISSIONS = "SHOULD_ASK_FOR_PERMISSIONS";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -136,6 +137,14 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldSortUsingFirstName(Context context){
         return getBoolean(SORT_USING_FIRST_NAME, true, context);
+    }
+
+    public static boolean shouldAskForPermissions(Context context){
+        return getBoolean(SHOULD_ASK_FOR_PERMISSIONS, true, context);
+    }
+
+    public static void markPermissionsAksed(Context context){
+         updatePreference(SHOULD_ASK_FOR_PERMISSIONS, false, context);
     }
 
 }

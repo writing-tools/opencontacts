@@ -58,6 +58,7 @@ public class VCardData extends SugarRecord {
         try {
             VCard dbVCard = new VCardReader(vCardDataInDB.vcardDataAsString).readNext();
             dbVCard.setStructuredName(vCard.getStructuredName());
+            dbVCard.setFormattedName((String) null);
             setFormattedNameIfNotPresent(dbVCard);
             dbVCard.getTelephoneNumbers().clear();
             dbVCard.getTelephoneNumbers().addAll(vCard.getTelephoneNumbers());

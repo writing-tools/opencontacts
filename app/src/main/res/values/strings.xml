@@ -87,7 +87,7 @@
     <string name="enable_draw_over_apps">Enable draw over apps</string>
     <string name="enable_draw_over_apps_detail">This will allow app to show the calling person\'s name on screen during call</string>
     <string name="grant_phone_permission">Grant phone permission</string>
-    <string name="grant_phone_permission_detail">Grant manage phone permission to be able to read call log</string>
+    <string name="grant_phone_permission_detail">Grant manage phone permission to be able to read call log, know when someone is calling and call a number from the app</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="calllog">Call log</string>

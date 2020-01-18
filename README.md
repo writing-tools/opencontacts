@@ -12,6 +12,10 @@ We can export / import contacts from Android contacts app into this app.
 Maintains call log as well coz Android call log app would not be able to show name of contact
 Also shows the person name upon recieving call
 
+# Latest debug app
+
+Latest debug app can be found in #113
+
 # Translation
 
 Do you want to see this app in your own language, contribute the translations at https://crwd.in/opencontacts

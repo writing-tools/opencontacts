@@ -5,6 +5,8 @@ import android.os.Environment;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.content.pm.ShortcutInfoCompat;
+import android.support.v4.content.pm.ShortcutManagerCompat;
 
 import com.github.underscore.U;
 import com.opencsv.CSVWriterBuilder;
@@ -155,6 +157,7 @@ public class DomainUtils {
     }
 
     public static String getAllNumericPhoneNumber(String phoneNumber) {
+        if(phoneNumber == null) return "";
         return NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 
@@ -293,6 +296,15 @@ public class DomainUtils {
                 Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())),
                 String.valueOf(callLogEntry.getSimId())
         });
+    }
+
+    public static boolean addContactAsShortcut(Contact contact, Context context){
+        ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, contact.id + "")
+                .setIntent(AndroidUtils.getCallIntent(contact.primaryPhoneNumber.phoneNumber, context))
+                .setShortLabel(contact.name)
+                .setLongLabel(contact.name)
+                .build();
+        return ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
     }
 
 }

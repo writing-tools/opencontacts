@@ -253,7 +253,6 @@ public class AndroidUtils {
                         .setOnDismissListener(dialog -> activity.startActivityForResult(new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION, Uri.parse("package:" + activity.getPackageName())), DRAW_OVERLAY_PERMISSION_RESULT))
                         .create()
                         .show();
-                return;
             }
             if(activity.checkSelfPermission(READ_CALL_LOG) != PERMISSION_GRANTED || activity.checkSelfPermission(READ_PHONE_STATE) != PERMISSION_GRANTED || activity.checkSelfPermission(CALL_PHONE) != PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
@@ -263,7 +262,6 @@ public class AndroidUtils {
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{READ_CALL_LOG, READ_PHONE_STATE, CALL_PHONE}, 123))
                         .create()
                         .show();
-                return;
             }
             if(activity.checkSelfPermission(WRITE_EXTERNAL_STORAGE) != PERMISSION_GRANTED){
                 new AlertDialog.Builder(activity)
@@ -273,7 +271,6 @@ public class AndroidUtils {
                         .setOnDismissListener(dialog -> activity.requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 123))
                         .create()
                         .show();
-                return;
             }
         }
     }

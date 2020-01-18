@@ -87,7 +87,7 @@
     <string name="enable_draw_over_apps">Enable draw over apps</string>
     <string name="enable_draw_over_apps_detail">This will allow app to show the calling person\'s name on screen during call</string>
     <string name="grant_phone_permission">Grant phone permission</string>
-    <string name="grant_phone_permission_detail">Grant manage phone permission to be able to read call log</string>
+    <string name="grant_phone_permission_detail">Grant manage phone permission to be able to read call log, know when someone is calling and call a number from the app</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="calllog">Call log</string>
@@ -166,6 +166,13 @@
     <string name="exported_call_log_successfully">Exported call log successfully</string>
     <string name="started_exporting_call_log" translatable="false">Started exporting call log</string>
     <string name="sort_using_first_name">Sort using first name</string>
+    <string name="add_shortcut">Add to homescreen</string>
+    <string name="added_shortcut">Added shortcut successfully</string>
+    <string name="failed_adding_shortcut">Failed adding shortcut</string>
+    <string name="addshortcut_help_text">Adding shortcut will create a icon on home screen letting you call contact from home screen. This is supported on devices with Android 7.1(Noughat) and above. \n\nTo add a shortcut, goto contacts list, long press a contact and select add to homescreen.
+        \n\nIn devices older than Noughat, you can still add a widget. To add a widget, long press on homescreen and click add a widget and select Open Contacts and follow steps ahead</string>
+    <string name="start">Start</string>
+    <string name="ask_permissions_again">Ask permissions again</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

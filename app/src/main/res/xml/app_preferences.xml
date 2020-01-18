@@ -28,6 +28,10 @@
             android:defaultValue="true"
             android:key="sortUsingFirstName"
             android:title="@string/sort_using_first_name" />
+        <SwitchPreference
+            android:defaultValue="true"
+            android:key="SHOULD_ASK_FOR_PERMISSIONS"
+            android:title="@string/ask_permissions_again" />
     </PreferenceCategory>
     <PreferenceCategory
         app:key="Export"

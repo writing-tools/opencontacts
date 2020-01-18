@@ -46,7 +46,6 @@ public class AutoContactsExporter {
 
     private void exportContactsAndUpdateLastExportTimeStamp() {
         if(!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context)) {
-            toastFromNonUIThread(R.string.grant_storage_permisson_detail, LENGTH_LONG, context);
             return;
         }
         try {

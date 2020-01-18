@@ -75,7 +75,6 @@ class CallLogDBHelper {
 
     private List<CallLogEntry> getRecentCallLogEntries(final Context context){
         if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-            AndroidUtils.toastFromNonUIThread(R.string.grant_read_call_logs_permission, Toast.LENGTH_SHORT, context);
             return new ArrayList<>(0);
         }
         Cursor c;

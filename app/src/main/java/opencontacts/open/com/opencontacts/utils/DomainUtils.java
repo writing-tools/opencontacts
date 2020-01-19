@@ -94,7 +94,7 @@ public class DomainUtils {
 
         byte[] plainTextExportBytes = getVCFExportBytes(ContactsDataStore.getAllContacts());
         createOpenContactsDirectoryIfItDoesNotExist();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd hh-mm-ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
         if (hasEncryptingContactsKey(context)) exportAsEncryptedZip(context, plainTextExportBytes, simpleDateFormat);
         else exportAsPlainTextVCFFile(plainTextExportBytes, simpleDateFormat);
     }
@@ -263,7 +263,7 @@ public class DomainUtils {
         }
         createCallTypeIntToTextMapping(context);
         createOpenContactsDirectoryIfItDoesNotExist();
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd hh-mm-ss");
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
         File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts", "CallLog_" + simpleDateFormat.format(new Date()) + ".csv");
         ICSVWriter csvWriter = null;
         try{

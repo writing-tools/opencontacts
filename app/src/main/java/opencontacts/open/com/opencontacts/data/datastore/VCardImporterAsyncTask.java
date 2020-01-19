@@ -19,6 +19,9 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
+import static opencontacts.open.com.opencontacts.utils.ZipUtils.getPlainTextInputStreamFromZip;
+
 public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VCard, Throwable>>> {
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
     private final String PROGRESS_NUMBER_OF_VCARDS_PROCESSED_UNTIL_NOW = "number_of_vcards_imported_until_now";
@@ -38,6 +41,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
         List<Pair<VCard, Throwable>> vcardsAndTheirExceptions = new ArrayList<>();
         try {
             InputStream vcardInputStream = contextWeakReference.get().getContentResolver().openInputStream(fileUri);
+            if(fileUri.toString().endsWith(".zip")) vcardInputStream = getPlainTextInputStreamFromZip(getEncryptingContactsKey(contextWeakReference.get()), vcardInputStream);
             List<VCard> vCards = Ezvcard.parse(vcardInputStream).all();
             publishProgress(PROGRESS_TOTAL_NUMBER_OF_VCARDS, vCards.size());
             int numberOfvCardsImported = 0, numberOfCardsIgnored = 0;

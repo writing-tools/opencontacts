@@ -67,7 +67,8 @@
 
                 <data android:scheme="content" />
                 <data android:mimeType="text/*" />
-                <data android:pathPattern=".*\\.vcf" />
+                <data android:mimeType="application/zip" />
+                <data android:pathPattern=".*\\.(vcf)|(zip)" />
             </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
@@ -77,7 +78,8 @@
 
                 <data android:scheme="file" />
                 <data android:mimeType="text/*" />
-                <data android:pathPattern=".*\\.vcf" />
+                <data android:mimeType="application/zip" />
+                <data android:pathPattern=".*\\.(vcf)|(zip)" />
             </intent-filter>
         </activity>
 

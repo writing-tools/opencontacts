@@ -1,4 +1,26 @@
-V15.0
+V17.0
+Can now auto export contacts
+Can now encrypt contacts export
+Can now import encrypted contacts
+Added sync in main menu
+Call log can be exported now
+User can now sort contact using either name
+Contact can now become a shortcut/widget that would call
+Added french translation
+Added german translation
+Added spanish translation
+Added russian translation
+Added traditional chinese translation
+App now works without any permissions but handicaped
+Changed formatted name from being family name then first name to first and then family
+Fixed issue where after editing contact formatted name is still being old
+Added translations third party link in readme
+Latest debug app link added in readme
+Exported file names will now have 24 hours timestamp and date in format yy-mm-dd
+Reordered main menu and added translations from crowdin
+Latest debug app will be in readme of app
+
+V16.0
 Fixed multiple issues related to apps stability
 
 V14.0

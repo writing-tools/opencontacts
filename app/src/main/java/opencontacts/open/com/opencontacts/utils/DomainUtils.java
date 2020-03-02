@@ -18,6 +18,8 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -45,6 +47,7 @@ import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCha
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -306,5 +309,20 @@ public class DomainUtils {
                 .build();
         return ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
     }
+
+    public static List<Contact> sortContacts(List<Contact> contacts, Context context) {
+        List<Contact> newContactsList = U.copyOf(contacts);
+        Collections.sort(newContactsList, getContactComparator(context));
+        return newContactsList;
+    }
+
+    @NonNull
+    public static Comparator<Contact> getContactComparator(Context context) {
+        if(shouldSortUsingFirstName(context))
+            return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
+        else
+            return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
+    }
+
 
 }

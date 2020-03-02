@@ -26,6 +26,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public abstract class SingleContactChooserActivityBase extends AppBaseActivity {
@@ -37,7 +38,7 @@ public abstract class SingleContactChooserActivityBase extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         contactsListView = new ListView(this);
         contactsListView.setTextFilterEnabled(false);
-        final List<Contact> contacts = ContactsDataStore.getAllContacts();
+        final List<Contact> contacts = sortContacts(ContactsDataStore.getAllContacts(), this);
         final ArrayAdapter<Contact> adapter = new ArrayAdapter<Contact>(this, android.R.layout.simple_list_item_1, android.R.id.text1, new ArrayList<>(contacts)) {
             @NonNull
             @Override

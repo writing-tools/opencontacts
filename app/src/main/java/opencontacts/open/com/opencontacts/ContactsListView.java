@@ -1,7 +1,6 @@
 package opencontacts.open.com.opencontacts;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.github.underscore.U;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter.ContactsListActionsListener;
@@ -26,7 +24,8 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparator;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 
 /**
  * Created by sultanm on 3/25/17.
@@ -57,20 +56,6 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     private void updateHeaderWithContactsCount() {
         totalContactsTextView.setText(String.valueOf(contacts.size()));
-    }
-
-    private void sortContacts() {
-        List<Contact> newContactsList = U.copyOf(contacts);
-        Collections.sort(newContactsList, getContactComparator());
-        contacts = newContactsList;
-    }
-
-    @NonNull
-    private Comparator<Contact> getContactComparator() {
-        if(shouldSortUsingFirstName(context))
-            return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
-        else
-            return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
     }
 
     private void addContactsToAdapter() {
@@ -118,8 +103,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onStoreRefreshed() {
-        contacts = ContactsDataStore.getAllContacts();
-        sortContacts();
+        contacts = sortContacts(ContactsDataStore.getAllContacts(), context);
         moveFavoritesToTop();
         post(() -> {
             addContactsToAdapter();
@@ -130,7 +114,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     private void moveFavoritesToTop() {
         List<Contact> favorites = ContactsDataStore.getFavorites();
-        Collections.sort(favorites, getContactComparator());
+        Collections.sort(favorites, getContactComparator(context));
         U.forEach(favorites, contacts::remove);
         contacts.addAll(0, favorites);
     }

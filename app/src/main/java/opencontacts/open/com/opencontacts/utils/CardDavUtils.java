@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import android.content.Context;
+import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.util.Pair;
@@ -23,6 +25,7 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.*;
@@ -35,13 +38,13 @@ public class CardDavUtils {
 
     public static final String HTTP_HEADER_E_TAG = "ETag";
 
-    public static String figureOutAddressBookUrl(String url, String username){
+    public static String figureOutAddressBookUrl(String url, String username, String carddavServerType, Context context){
         OkHttpClient okHttpClient = getHttpClientWithBasicAuth();
-
+        boolean isMailboxServer = carddavServerType.equals(context.getString(R.string.carddav_server_mailbox));
         Request request = new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
                 .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
-                .url(url + "/carddav/32")
+                .url(url + (isMailboxServer ? "/carddav/32" : ""))
                 .build();
 
 
@@ -77,26 +80,23 @@ public class CardDavUtils {
         return getText(XML_TAG_HREF, XML_NAMESPACE_DAV, responseNodeOfAddressbookType);
     }
 
-    public static List<Triplet<String ,String, VCard>> downloadAddressBook(String addressBookUrl) {
+    public static List<Triplet<String ,String, VCard>> downloadAddressBook(String addressBookUrl) throws Exception {
         String addressBookQueryAskingVCardData = "<card:addressbook-query xmlns:d=\"DAV:\" xmlns:card=\"urn:ietf:params:xml:ns:carddav\">\n" +
                 "    <d:prop>\n" +
                 "        <d:getetag />\n" +
                 "        <card:address-data />\n" +
                 "    </d:prop>\n" +
+                "    <card:filter />\n" +
                 "</card:addressbook-query>";
         Request addressBookDownloadRequest = new Request.Builder()
                 .method(HTTP_METHOD_REPORT, RequestBody.create(null, addressBookQueryAskingVCardData))
                 .url(addressBookUrl)
                 .build();
-        try {
-            Response addressBookResponse = getHttpClientWithBasicAuth()
-                    .newCall(addressBookDownloadRequest)
-                    .execute();
-            if(addressBookResponse.isSuccessful()) return getVCardsOutOfAddressBookResponse(addressBookResponse.body().string());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return new ArrayList<>(0);
+        Response addressBookResponse = getHttpClientWithBasicAuth()
+                .newCall(addressBookDownloadRequest)
+                .execute();
+        if(addressBookResponse.isSuccessful()) return getVCardsOutOfAddressBookResponse(addressBookResponse.body().string());
+        else throw new Exception(addressBookResponse.body().string());
     }
 
     private static List<Triplet<String, String, VCard>> getVCardsOutOfAddressBookResponse(String xml) {
@@ -180,19 +180,27 @@ public class CardDavUtils {
         return false;
     }
 
-    public static boolean areNotValidDetails(String baseUrl, String username, String password){
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password);
+    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, String carddavServerType, Context context){
+        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password, shouldIgnoreSSL);
+        boolean isMailboxServer = carddavServerType.equals(context.getString(R.string.carddav_server_mailbox));
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                     .method(HTTP_METHOD_PROPFIND, null)
-                    .url(baseUrl + "/carddav/32")
+                    .addHeader(HTTP_HEADER_DEPTH, "0")
+                    .url(url + (isMailboxServer ? "/carddav/32" : ""))
                     .build())
                     .execute();
             return !response.isSuccessful();
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return true;
+    }
+
+    public static String getBaseURL(String url) {
+        String path = Uri.parse(url).getPath();
+        if(path == null) return url;
+        return url.replace(path , "");
     }
 
     public static String getSyncToken(String baseUrl, String addressBookUrl){
@@ -207,6 +215,7 @@ public class CardDavUtils {
                             "  </d:prop>\n" +
                             "</d:propfind>"))
                     .url(baseUrl + addressBookUrl)
+                    .addHeader(HTTP_HEADER_DEPTH, "0")
                     .build())
                     .execute();
             if(response.isSuccessful()){
@@ -222,37 +231,33 @@ public class CardDavUtils {
         return null;
     }
 
-    public static Pair<List<String>, List<String>> getChangesSinceSyncToken(String synctoken, String baseUrl, String addressBookUrl){
+    public static Pair<List<String>, List<String>> getChangesSinceSyncToken(String synctoken, String baseUrl, String addressBookUrl) throws Exception {
         OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
         List<String> updatedOrAdded =  new ArrayList<>(0);
         List<String> deleted =  new ArrayList<>(0);
-        try {
-            Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
-                    .method(HTTP_METHOD_REPORT, RequestBody.create(null, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
-                            "<d:sync-collection xmlns:d=\"DAV:\">\n" +
-                            "  <d:sync-token>"+ synctoken + "</d:sync-token>\n" +
-                            "  <d:sync-level>1</d:sync-level>\n" +
-                            "  <d:prop>\n" +
-                            "    <d:getetag/>\n" +
-                            "  </d:prop>\n" +
-                            "</d:sync-collection>"))
-                    .url(baseUrl + addressBookUrl)
-                    .build())
-                    .execute();
-            if(response.isSuccessful()){
-                Document xmlDocument = createXMLDocument(response.body().string());
-                NodeList responseNodes = xmlDocument.getElementsByTagNameNS(XML_NAMESPACE_DAV, XML_TAG_RESPONSE);
-                U.forEach(new NodeListIterable(responseNodes), node -> {
-                    String href = getText(XML_TAG_HREF, XML_NAMESPACE_DAV, node);
-                    String status = getText(XML_TAG_STATUS, XML_NAMESPACE_DAV, node);
-                    if(status.contains(HTTP_STATUS_NOT_FOUND)) deleted.add(href);
-                    else updatedOrAdded.add(href);
+        Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
+                .method(HTTP_METHOD_REPORT, RequestBody.create(null, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
+                        "<d:sync-collection xmlns:d=\"DAV:\">\n" +
+                        "  <d:sync-token>"+ synctoken + "</d:sync-token>\n" +
+                        "  <d:sync-level>1</d:sync-level>\n" +
+                        "  <d:prop>\n" +
+                        "    <d:getetag/>\n" +
+                        "  </d:prop>\n" +
+                        "</d:sync-collection>"))
+                .url(baseUrl + addressBookUrl)
+                .build())
+                .execute();
+        if(response.isSuccessful()){
+            Document xmlDocument = createXMLDocument(response.body().string());
+            NodeList responseNodes = xmlDocument.getElementsByTagNameNS(XML_NAMESPACE_DAV, XML_TAG_RESPONSE);
+            U.forEach(new NodeListIterable(responseNodes), node -> {
+                String href = getText(XML_TAG_HREF, XML_NAMESPACE_DAV, node);
+                String status = getText(XML_TAG_STATUS, XML_NAMESPACE_DAV, node);
+                if(status.contains(HTTP_STATUS_NOT_FOUND)) deleted.add(href);
+                else updatedOrAdded.add(href);
 
-                });
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            });
+        }else throw new Exception("failed fetching changes");
         return new Pair<>(updatedOrAdded, deleted);
     }
 

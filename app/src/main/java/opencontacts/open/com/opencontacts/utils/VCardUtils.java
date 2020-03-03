@@ -11,6 +11,7 @@ import ezvcard.VCard;
 import ezvcard.property.FormattedName;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
+import ezvcard.property.Uid;
 import opencontacts.open.com.opencontacts.R;
 
 public class VCardUtils {
@@ -53,5 +54,10 @@ public class VCardUtils {
         StructuredName structuredName = vcard.getStructuredName();
         if(structuredName == null) vcard.setFormattedName("");
         else vcard.setFormattedName(structuredName.getGiven() + " "  + structuredName.getFamily());
+    }
+
+    public static void setUidIfNotPresent(VCard vCard, String uid) {
+        Uid existingUid = vCard.getUid();
+        if(existingUid == null) vCard.setUid(new Uid(uid));
     }
 }

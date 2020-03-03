@@ -59,7 +59,7 @@ public class ContactsDataStore {
         removeContact(getContactWithId(contactId));
     }
 
-    public static void updateContact(long contactId, PhoneNumber primaryNumber, VCard vCard, Context context) {
+    public static void updateContact(long contactId, String primaryNumber, VCard vCard, Context context) {
         ContactsDBHelper.updateContactInDBWith(contactId, primaryNumber, vCard, context);
         reloadContact(contactId);
         CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contactId));

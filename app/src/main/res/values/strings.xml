@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">OpenContacts</string>
     <string name="title_activity_main">Open Contacts</string>
     <string name="button_new">+</string>
@@ -173,6 +173,12 @@
         \n\nIn devices older than Noughat, you can still add a widget. To add a widget, long press on homescreen and click add a widget and select Open Contacts and follow steps ahead</string>
     <string name="start">Start</string>
     <string name="ask_permissions_again">Ask permissions again</string>
+    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
+    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
+    <string name="other" tools:ignore="MissingTranslation">Other</string>
+    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
+    <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
+    <string name="mailbox_sync_url" translatable="false">https://dav.mailbox.org</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>
@@ -199,6 +205,10 @@
         <item>0</item>
         <item>1</item>
     </string-array>
-
+    <string-array name="carddav_servers">
+        <item>@string/select_carddav_server</item>
+        <item>@string/carddav_server_mailbox</item>
+        <item>@string/other</item>
+    </string-array>
 
 </resources>

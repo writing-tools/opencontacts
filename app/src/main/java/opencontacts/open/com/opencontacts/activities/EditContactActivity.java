@@ -183,7 +183,7 @@ public class EditContactActivity extends AppBaseActivity {
             ContactsDataStore.addContact(vcardAfterEdit, this);
         }
         else{
-            ContactsDataStore.updateContact(contact.id, contact.primaryPhoneNumber, vcardAfterEdit, this);
+            ContactsDataStore.updateContact(contact.id, contact.primaryPhoneNumber.phoneNumber, vcardAfterEdit, this);
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();

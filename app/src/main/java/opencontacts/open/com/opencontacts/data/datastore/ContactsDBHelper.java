@@ -5,7 +5,6 @@ import android.support.v4.util.Pair;
 
 import com.github.underscore.U;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,11 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 import ezvcard.VCard;
-import ezvcard.io.text.VCardReader;
-import ezvcard.property.Address;
-import ezvcard.property.Email;
-import ezvcard.property.Note;
-import ezvcard.property.SimpleProperty;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
@@ -30,7 +24,6 @@ import opencontacts.open.com.opencontacts.utils.VCardUtils;
 import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -81,17 +74,17 @@ public class ContactsDBHelper {
         return matchingPhoneNumbers.get(0).contact;
     }
 
-    static void replacePhoneNumbersInDB(Contact dbContact, VCard vcard, PhoneNumber primaryPhoneNumber) {
+    static void replacePhoneNumbersInDB(Contact dbContact, VCard vcard, String primaryPhoneNumber) {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         U.forEach(vcard.getTelephoneNumbers(),
                 telephone -> {
                     String phoneNumberText = VCardUtils.getMobileNumber(telephone);
-                    new PhoneNumber(phoneNumberText, dbContact, primaryPhoneNumber.phoneNumber.equals(phoneNumberText)).save();
+                    new PhoneNumber(phoneNumberText, dbContact, primaryPhoneNumber.equals(phoneNumberText)).save();
         });
         PhoneNumber.deleteInTx(dbPhoneNumbers);
     }
 
-    static void updateContactInDBWith(long contactId, PhoneNumber primaryNumber, VCard vCard, Context context){
+    static void updateContactInDBWith(long contactId, String primaryNumber, VCard vCard, Context context){
         Contact dbContact = ContactsDBHelper.getDBContactWithId(contactId);
         Pair<String, String> nameFromVCard = getNameFromVCard(vCard, context);
         dbContact.firstName = nameFromVCard.first;
@@ -231,59 +224,6 @@ public class ContactsDBHelper {
         Contact contact = new Contact(name.first, name.second);
         contact.save();
         return contact;
-    }
-
-    public static void merge(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vCardData, Context context) {
-        VCard vCardInDb = null;
-        try {
-            vCardInDb = new VCardReader(vCardData.vcardDataAsString).readNext();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        List<Telephone> telephoneNumbersInDownloadedVCard = hrefEtagAndVCard.z.getTelephoneNumbers();
-
-        List<Telephone> extraTelephoneNumbersInDb = U.chain(vCardInDb.getTelephoneNumbers())
-                .filterFalse(telephoneNumbersInDownloadedVCard::contains)
-                .value();
-
-        List<Address> addressesInDownloadedCard = hrefEtagAndVCard.z.getAddresses();
-
-        List<Address> extraAddressInDb = U.chain(vCardInDb.getAddresses())
-                .filterFalse(addressesInDownloadedCard::contains)
-                .value();
-
-        List<String> notesInDownloadedCard = U.map(hrefEtagAndVCard.z.getNotes(), SimpleProperty::getValue);
-        List<Note> extraNotesInDb = U.chain(vCardInDb.getNotes())
-                .map(note -> new Pair<>(note, note.getValue()))
-                .filterFalse(pair -> notesInDownloadedCard.contains(pair.second))
-                .map(pair -> pair.first)
-                .value();
-
-        List<String> emailsInDownloadedCard = U.map(hrefEtagAndVCard.z.getEmails(), SimpleProperty::getValue);
-        List<Email> extraEmailsInDb = U.chain(vCardInDb.getEmails())
-                .map(email -> new Pair<>(email, email.getValue()))
-                .filterFalse(pair -> emailsInDownloadedCard.contains(pair.second))
-                .map(pair -> pair.first)
-                .value();
-
-        hrefEtagAndVCard.z.getTelephoneNumbers().addAll(extraTelephoneNumbersInDb);
-        hrefEtagAndVCard.z.getEmails().addAll(extraEmailsInDb);
-        hrefEtagAndVCard.z.getNotes().addAll(extraNotesInDb);
-        hrefEtagAndVCard.z.getAddresses().addAll(extraAddressInDb);
-
-        Contact dbContact = ContactsDBHelper.getDBContactWithId(vCardData.contact.getId());
-        Pair<String, String> nameFromVCard = getNameFromVCard(hrefEtagAndVCard.z, context);
-        dbContact.firstName = nameFromVCard.first;
-        dbContact.lastName = nameFromVCard.second;
-        dbContact.save();
-        replacePhoneNumbersInDB(dbContact, hrefEtagAndVCard.z, getContact(vCardData.contact.getId()).primaryPhoneNumber);
-        vCardData.vcardDataAsString = hrefEtagAndVCard.z.write();
-        vCardData.etag = hrefEtagAndVCard.y;
-        vCardData.href = hrefEtagAndVCard.x;
-        vCardData.uid = hrefEtagAndVCard.z.getUid().getValue();
-        vCardData.status = STATUS_UPDATED;
-        vCardData.save();
     }
 
 }

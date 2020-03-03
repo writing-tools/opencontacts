@@ -5,9 +5,12 @@ import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.AppCompatSpinner;
 import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Toast;
 
 import com.github.underscore.Tuple;
@@ -26,7 +29,11 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
 import static android.widget.Toast.LENGTH_SHORT;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.merge;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.replaceContactWithServers;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
@@ -38,6 +45,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePrefer
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidDetails;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getBaseURL;
 import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getChangesSinceSyncToken;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
@@ -52,6 +60,26 @@ public class CardDavSyncActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_card_dav_sync);
         savedBaseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
+        AppCompatSpinner carddavServerTypeSpinner = findViewById(R.id.carddav_server_type);
+        TextInputEditText urlTextInputEditTextView = findViewById(R.id.url);
+        carddavServerTypeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Object selectedCarddavServer = carddavServerTypeSpinner.getSelectedItem();
+                if (selectedCarddavServer.equals(getString(R.string.other))) {
+                    (findViewById(R.id.url_input_layout)).setVisibility(VISIBLE);
+                }
+                else if (selectedCarddavServer.equals(getString(R.string.carddav_server_mailbox))) {
+                    (findViewById(R.id.url_input_layout)).setVisibility(GONE);
+                    urlTextInputEditTextView.setText(R.string.mailbox_sync_url);
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
         ((TextInputEditText) findViewById(R.id.url)).setText(savedBaseUrl);
         new AlertDialog.Builder(this)
                 .setTitle("Warning!")
@@ -64,6 +92,8 @@ public class CardDavSyncActivity extends AppCompatActivity {
         String url = ((TextInputEditText) findViewById(R.id.url)).getText().toString();
         String username = ((TextInputEditText) findViewById(R.id.username)).getText().toString();
         String password = ((TextInputEditText) findViewById(R.id.password)).getText().toString();
+        boolean shouldIgnoreSSL = ((SwitchCompat) findViewById(R.id.ignore_ssl)).isChecked();
+        String carddavServerType = (String) ((AppCompatSpinner) findViewById(R.id.carddav_server_type)).getSelectedItem();
         AndroidUtils.hideSoftKeyboard(findViewById(R.id.username), this);
         if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
             Toast.makeText(this, R.string.input_username_and_password, LENGTH_SHORT).show();
@@ -74,36 +104,43 @@ public class CardDavSyncActivity extends AppCompatActivity {
                 .setMessage("Please wait...")
                 .show();
         processAsync(() -> {
-            sync(url, username, password);
+            sync(url, username, password, shouldIgnoreSSL, carddavServerType);
             runOnUiThread(loadingDialog::dismiss);
         });
     }
 
-    private void sync(String urlFromView, String username, String password) {
-        if(areNotValidDetails(urlFromView, username, password)){
+    private void sync(String urlFromView, String username, String password, boolean shouldIgnoreSSL, String carddavServerType) {
+        if (areNotValidDetails(urlFromView, username, password, shouldIgnoreSSL, carddavServerType, this)) {
             toastFromNonUIThread(R.string.invalid_username_or_password_or_url, LENGTH_SHORT, this);
             return;
         }
         String addressBookUrl = getStringFromPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, this);
-        if(addressBookUrl == null || !urlFromView.equals(savedBaseUrl))
-            addressBookUrl = figureOutAddressBookUrl(urlFromView, username);
+        if (addressBookUrl == null || !urlFromView.equals(savedBaseUrl))
+            addressBookUrl = figureOutAddressBookUrl(urlFromView, username, carddavServerType, this);
         if (addressBookUrl == null) {
             showError(R.string.no_addressbook_found);
             return;
         }
         updatePreference(ADDRESSBOOK_URL_SHARED_PREFS_KEY, addressBookUrl, this);
-        updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, urlFromView, this);
+        String baseURL = getBaseURL(urlFromView);
+        updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, baseURL, this);
         String syncToken = getStringFromPreferences(SYNC_TOKEN_SHARED_PREF_KEY, this);
-        if(TextUtils.isEmpty(syncToken))
-            fullSync(urlFromView, username, password, addressBookUrl);
-        else
-            partialSync(urlFromView, username, password, addressBookUrl, syncToken);
+        try {
+            if (TextUtils.isEmpty(syncToken))
+                fullSync(baseURL, username, password, addressBookUrl);
+            else
+                partialSync(baseURL, username, password, addressBookUrl, syncToken);
+        }
+        catch (Exception e){
+            showError(R.string.sync_failed);
+            return;
+        }
         ContactsDataStore.refreshStoreAsync();
         toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
         finish();
     }
 
-    private void partialSync(String baseUrl, String username, String password, String addressBookUrl, String syncToken) {
+    private void partialSync(String baseUrl, String username, String password, String addressBookUrl, String syncToken) throws Exception {
         Pair<List<String>, List<String>> pairOfListOfAddedUpdatedAndDeleted = getChangesSinceSyncToken(syncToken, baseUrl, addressBookUrl);
         deleteContactsLocallyAsTheyWereDeletedOnServer(pairOfListOfAddedUpdatedAndDeleted.second);
         syncChanges(baseUrl, username, password, addressBookUrl, CardDavUtils.getVcardsWithHrefs(pairOfListOfAddedUpdatedAndDeleted.first, baseUrl, addressBookUrl));
@@ -122,7 +159,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         });
     }
 
-    private void fullSync(String urlFromView, String username, String password, String addressBookUrl) {
+    private void fullSync(String urlFromView, String username, String password, String addressBookUrl) throws Exception {
         List<Triplet<String, String, VCard>> hrefEtagAndVCardList = downloadAddressBook(urlFromView + addressBookUrl);
         syncChanges(urlFromView, username, password, addressBookUrl, hrefEtagAndVCardList);
     }
@@ -184,11 +221,15 @@ public class CardDavSyncActivity extends AppCompatActivity {
     }
 
     private void processExistingVCard(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vcardDataFromDB) {
-        if(vcardDataFromDB.status == VCardData.STATUS_DELETED) {
+        if(vcardDataFromDB.status == STATUS_DELETED) {
             vcardDataFromDB.href = hrefEtagAndVCard.x;
             return;
         }
-        ContactsDBHelper.merge(hrefEtagAndVCard, vcardDataFromDB, this);
+        if(vcardDataFromDB.status == STATUS_NONE) {
+            replaceContactWithServers(hrefEtagAndVCard, vcardDataFromDB, this);
+            return;
+        }
+        merge(hrefEtagAndVCard, vcardDataFromDB, this);
     }
 
     private void showError(int messageRes) {

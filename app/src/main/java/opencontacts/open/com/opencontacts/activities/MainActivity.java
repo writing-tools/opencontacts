@@ -37,8 +37,11 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -71,6 +74,15 @@ public class MainActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         refresh();
+        if(shouldLaunchDefaultTab(this)) gotoDefaultTab();
+    }
+
+    private void gotoDefaultTab() {
+        // post delayed as view pager is prioritising the fragment launched first as fragment 0 in the list
+        // affecting the fragments order etc resulting in cast exception when recreating activity while reusing fragments
+        runOnMainDelayed(() -> viewPager.setCurrentItem(getDefaultTab(this)),
+                100
+        );
     }
 
     @Override
@@ -85,6 +97,7 @@ public class MainActivity extends AppBaseActivity {
             return;
         }
         else setupTabs();
+        gotoDefaultTab();
         markPermissionsAksed(this);
     }
 

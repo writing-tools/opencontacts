@@ -84,6 +84,10 @@ public class AndroidUtils {
         }.start();
     }
 
+    public static void runOnMainDelayed(final Runnable someRunnable, long delayInMillis){
+        new Handler(Looper.getMainLooper()).postDelayed(someRunnable, delayInMillis);
+    }
+
     public static void showSoftKeyboard(View view, Context context) {
         if (view.requestFocus()) {
             InputMethodManager imm = (InputMethodManager)
@@ -383,6 +387,10 @@ public class AndroidUtils {
 
     public static boolean getBoolean(String key, boolean defaultValue, Context context){
         return getAppsSharedPreferences(context).getBoolean(key, defaultValue);
+    }
+
+    public static long getLong(String key, long defaultValue, Context context){
+        return getAppsSharedPreferences(context).getLong(key, defaultValue);
     }
 
     public static void toggleBoolean(String key, boolean defaultValue, Context context){

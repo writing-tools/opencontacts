@@ -11,7 +11,9 @@ import opencontacts.open.com.opencontacts.R;
 import static android.content.Context.MODE_PRIVATE;
 import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.HOUR;
+import static java.util.Calendar.MINUTE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getLong;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
@@ -38,6 +40,8 @@ public class SharedPreferencesUtils {
     public static final String SORT_USING_FIRST_NAME = "sortUsingFirstName";
     public static final String SINGLE_CONTACT_WIDGET_TO_CONTACT_MAPPING = "singleContactWidgetToContactMapping";
     public static final String SHOULD_ASK_FOR_PERMISSIONS = "SHOULD_ASK_FOR_PERMISSIONS";
+    public static final String LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY = "LAST_DEFAULT_TAB_LAUNCH_TIME";
+    public static final String DEFAULT_TAB_SHARED_PREF_KEY = "DEFAULT_TAB";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -145,6 +149,16 @@ public class SharedPreferencesUtils {
 
     public static void markPermissionsAksed(Context context){
          updatePreference(SHOULD_ASK_FOR_PERMISSIONS, false, context);
+    }
+
+    public static boolean shouldLaunchDefaultTab(Context context){
+        boolean shouldLaunchDefaultTab = hasItBeen(5, MINUTE, getLong(LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY, 0, context));
+        updatePreference(LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY, new Date().getTime(), context);
+        return shouldLaunchDefaultTab;
+    }
+
+    public static int getDefaultTab(Context context){
+        return Integer.parseInt(getStringFromPreferences(DEFAULT_TAB_SHARED_PREF_KEY, "0", context));
     }
 
 }

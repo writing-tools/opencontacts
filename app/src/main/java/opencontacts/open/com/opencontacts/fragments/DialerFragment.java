@@ -100,6 +100,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
     @Override
     public void onSelect() {
+        if(this.view == null) return;
         EditText editText = dialPadEditText == null ? (EditText) view.findViewById(R.id.editText_dialpad_number) : dialPadEditText;
         AndroidUtils.showSoftKeyboard(editText, context);
     }

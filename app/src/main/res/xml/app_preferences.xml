@@ -32,6 +32,13 @@
             android:defaultValue="true"
             android:key="SHOULD_ASK_FOR_PERMISSIONS"
             android:title="@string/ask_permissions_again" />
+        <ListPreference
+            android:title="@string/default_tab"
+            android:key="DEFAULT_TAB"
+            android:entries="@array/tabs_list"
+            android:entryValues="@array/tabs_values"
+            />
+
     </PreferenceCategory>
     <PreferenceCategory
         app:key="Export"

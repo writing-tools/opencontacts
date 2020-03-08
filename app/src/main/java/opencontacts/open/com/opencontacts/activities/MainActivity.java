@@ -80,9 +80,10 @@ public class MainActivity extends AppBaseActivity {
     private void gotoDefaultTab() {
         // post delayed as view pager is prioritising the fragment launched first as fragment 0 in the list
         // affecting the fragments order etc resulting in cast exception when recreating activity while reusing fragments
-        runOnMainDelayed(() -> viewPager.setCurrentItem(getDefaultTab(this)),
-                100
-        );
+        runOnMainDelayed(() -> {
+                if(viewPager == null) return;
+                viewPager.setCurrentItem(getDefaultTab(this));
+            }, 100);
     }
 
     @Override
@@ -96,8 +97,10 @@ public class MainActivity extends AppBaseActivity {
             markPermissionsAksed(this);
             return;
         }
-        else setupTabs();
-        gotoDefaultTab();
+        else {
+            setupTabs();
+            gotoDefaultTab();
+        }
         markPermissionsAksed(this);
     }
 

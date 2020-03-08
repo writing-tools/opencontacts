@@ -69,6 +69,9 @@ public class CardDavSyncActivity extends AppCompatActivity {
                 if (selectedCarddavServer.equals(getString(R.string.other))) {
                     (findViewById(R.id.url_input_layout)).setVisibility(VISIBLE);
                 }
+                else if (selectedCarddavServer.equals(getString(R.string.carddav_server_radicale))) {
+                    (findViewById(R.id.url_input_layout)).setVisibility(VISIBLE);
+                }
                 else if (selectedCarddavServer.equals(getString(R.string.carddav_server_mailbox))) {
                     (findViewById(R.id.url_input_layout)).setVisibility(GONE);
                     urlTextInputEditTextView.setText(R.string.mailbox_sync_url);

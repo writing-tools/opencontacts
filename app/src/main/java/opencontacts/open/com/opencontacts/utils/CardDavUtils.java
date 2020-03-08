@@ -38,13 +38,20 @@ public class CardDavUtils {
 
     public static final String HTTP_HEADER_E_TAG = "ETag";
 
-    public static String figureOutAddressBookUrl(String url, String username, String carddavServerType, Context context){
+    private static String constructUrlToBeSearchedForAddressbook(String baseUrl, String username, String carddavServerType, Context context) {
+        final String mailboxServer = context.getString(R.string.carddav_server_mailbox);
+        final String radicaleServer = context.getString(R.string.carddav_server_radicale);
+        if (carddavServerType.equals(mailboxServer)) return baseUrl + "/carddav/32";
+        else if (carddavServerType.equals(radicaleServer)) return baseUrl + "/" + username;
+        return baseUrl;
+    }
+
+    public static String figureOutAddressBookUrl(String baseUrl, String username, String carddavServerType, Context context){
         OkHttpClient okHttpClient = getHttpClientWithBasicAuth();
-        boolean isMailboxServer = carddavServerType.equals(context.getString(R.string.carddav_server_mailbox));
         Request request = new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
                 .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
-                .url(url + (isMailboxServer ? "/carddav/32" : ""))
+                .url(constructUrlToBeSearchedForAddressbook(baseUrl, username, carddavServerType, context))
                 .build();
 
 

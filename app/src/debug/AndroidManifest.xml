@@ -12,7 +12,7 @@
         tools:replace="android:allowBackup, android:label" >
         <activity
             android:name="opencontacts.open.com.opencontacts.activities.ImportVcardActivity"
-            android:label="DImport Contacts"
+            android:label="DOpen Contacts"
             tools:replace="android:label"
             android:screenOrientation="portrait">
             <intent-filter>

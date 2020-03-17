@@ -5,7 +5,13 @@ Privacy to your contacts.
       alt="Get it on F-Droid"
       height="80">](https://f-droid.org/app/opencontacts.open.com.opencontacts)
 
+# Translation
 
+Do you want to see this app in your own language, contribute the translations
+
+[![Crowdin](https://badges.crowdin.net/opencontacts/localized.svg)](https://crowdin.com/project/opencontacts)
+
+# About
 This app saves contacts in its own database seperate from android contacts. This way no other app would be able to access contacts. Can be used in place of your default phone(dialer) app.
 
 We can export / import contacts from Android contacts app into this app.
@@ -15,10 +21,6 @@ Also shows the person name upon recieving call
 # Latest debug app
 
 Latest debug app can be found in #113
-
-# Translation
-
-Do you want to see this app in your own language, contribute the translations at https://crwd.in/opencontacts
 
 # Issues management
 

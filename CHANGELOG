@@ -1,3 +1,12 @@
+V18.0
+While choosing contact for widget, contacts would be sorted
+Added synology carddav server for sync
+User can now opt to ignore ssl errors during sync
+Radicale carddav sync support added
+Fixed crash in oreo while editing contacts
+User can have a default tab to go on launch
+Renamed app label during import to OpenContacts from ImportContacts
+
 V17.0
 Can now auto export contacts
 Can now encrypt contacts export

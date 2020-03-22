@@ -6,7 +6,6 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.util.Pair;
-import android.support.v7.widget.AppCompatSpinner;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -15,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
 
 import com.github.underscore.U;
+import com.reginald.editspinner.EditSpinner;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,7 +100,7 @@ public class InputFieldCollection extends LinearLayout {
 
     public class FieldViewHolder {
         public TextInputEditText editText;
-        public AppCompatSpinner spinner;
+        public EditSpinner spinner;
         private List<String> types;
 
         FieldViewHolder(String hint, int inputType, List<String> types, View fieldView, Context context){
@@ -110,11 +110,15 @@ public class InputFieldCollection extends LinearLayout {
             editText.setInputType(inputType);
             this.types = types;
             spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, this.types));
+            if(types.size() > 0) spinner.selectItem(0);
+
         }
 
         public void set(String value, String type) {
             editText.setText(value);
-            spinner.setSelection(Common.findIndexOrDefault(types, type, 0));
+            int indexOfType = types.indexOf(type);
+            if(indexOfType == -1) spinner.setText(type);
+            else spinner.selectItem(indexOfType);
         }
 
         public String getValue(){
@@ -122,7 +126,10 @@ public class InputFieldCollection extends LinearLayout {
         }
 
         public Pair<String, String> getValueAndTypeAsPair() {
-            return new Pair<>(getValue(), types.get(spinner.getSelectedItemPosition()));
+            int indexOfSelectedValue = spinner.getListSelection();
+            return new Pair<>(getValue(), indexOfSelectedValue == -1 ?
+                    spinner.getText().toString()
+                    : types.get(indexOfSelectedValue));
         }
     }
 }

@@ -8,7 +8,7 @@
     <string name="error_while_parsing_contact_details">Error occurred while parsing contact details</string>
     <string name="copied_phonenumber_to_clipboard">Copied phone number to clipboard</string>
     <string name="unexpected_error_happened">Unexpected error happened</string>
-    <string name="title_activity_contact_details">ContactDetailsActivity</string>
+    <string name="title_activity_contact_details" translatable="false">ContactDetailsActivity</string>
     <string name="grant_read_call_logs_permission">Please grant read call logs permission to this application</string>
     <string name="exporting_contacts_complete">Finished exporting contacts to internal/external storage\'s root directory</string>
     <string name="exporting_contacts_started">Started exporting contacts</string>
@@ -181,6 +181,7 @@
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="mailbox_sync_url" translatable="false">https://dav.mailbox.org</string>
     <string name="default_tab" >Default tab</string>
+    <string name="save">Save</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

@@ -7,6 +7,8 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
 import android.text.TextUtils;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -40,6 +42,7 @@ import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
 import static opencontacts.open.com.opencontacts.utils.Common.getCalendarInstanceAt;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.defaultPhoneNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 public class EditContactActivity extends AppBaseActivity {
@@ -166,11 +169,11 @@ public class EditContactActivity extends AppBaseActivity {
         List<Telephone> telephoneNumbers = vcardBeforeEdit.getTelephoneNumbers();
         String newPhoneNumberToBeAdded = getIntent().getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER);
         if(U.isEmpty(telephoneNumbers)) {
-            phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
+            phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, defaultPhoneNumberTypeTranslatedText);
             return;
         }
         U.forEach(telephoneNumbers, telephoneNumber -> phoneNumbersInputCollection.addOneMoreView(getMobileNumber(telephoneNumber), DomainUtils.getMobileNumberTypeTranslatedText(telephoneNumber.getTypes(), EditContactActivity.this)));
-        if(newPhoneNumberToBeAdded != null) phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, "");
+        if(newPhoneNumberToBeAdded != null) phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, defaultPhoneNumberTypeTranslatedText);
     }
 
     public void saveContact(View view) {
@@ -277,4 +280,17 @@ public class EditContactActivity extends AppBaseActivity {
         telephone.getTypes().add(DomainUtils.getMobileNumberType(phoneNumberAndTypePair.second, this));
         return telephone;
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(final Menu menu) {
+        menu.add(R.string.save)
+                .setIcon(R.drawable.ic_save_black_24dp)
+                .setOnMenuItemClickListener(item -> {
+                    saveContact(null);
+                    return true;
+                })
+                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+        return super.onCreateOptionsMenu(menu);
+    }
+
 }

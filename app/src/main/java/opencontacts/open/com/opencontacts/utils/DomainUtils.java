@@ -67,9 +67,9 @@ public class DomainUtils {
     private static Map<EmailType, String> emailTypeToTranslatedText;
     private static Map<String, EmailType> translatedTextToEmailType;
     private static Map<String, String> stringValueOfCallTypeIntToTextMapping;
-    private static String defaultPhoneNumberTypeTranslatedText;
-    private static String defaultAddressTypeTranslatedText;
-    private static String defaultEmailTypeTranslatedText;
+    public static String defaultPhoneNumberTypeTranslatedText;
+    public static String defaultAddressTypeTranslatedText;
+    public static String defaultEmailTypeTranslatedText;
     public static TelephoneType defaultPhoneNumberType = TelephoneType.CELL;
     public static AddressType defaultAddressType = AddressType.HOME;
     public static EmailType defaultEmailType = EmailType.HOME;
@@ -205,12 +205,12 @@ public class DomainUtils {
         if(telephoneTypes.contains(TelephoneType.FAX)) {
             return mobileNumberTypeToTranslatedTextMap.get(TelephoneType.FAX);
         }
-        return getOrDefault(mobileNumberTypeToTranslatedTextMap, U.first(telephoneTypes), defaultPhoneNumberTypeTranslatedText);
+        return getOrDefault(mobileNumberTypeToTranslatedTextMap, U.first(telephoneTypes), U.first(telephoneTypes).getValue());
     }
 
     public static TelephoneType getMobileNumberType(String translatedText, Context context){
         if(translatedTextToMobileNumberType == null) translatedTextToMobileNumberType = U.toMap(U.invert(getMobileNumberTypeToTranslatedTextMap(context)));
-        return getOrDefault(translatedTextToMobileNumberType, translatedText, defaultPhoneNumberType);
+        return getOrDefault(translatedTextToMobileNumberType, translatedText, TelephoneType.get(translatedText));
     }
 
     private static Map<AddressType, String> getAddressTypeToTranslatedTextMap(Context context){
@@ -225,12 +225,12 @@ public class DomainUtils {
     public static String getAddressTypeTranslatedText(List<AddressType> types, Context context){
         if(defaultAddressTypeTranslatedText == null) defaultAddressTypeTranslatedText = getAddressTypeToTranslatedTextMap(context).get(defaultAddressType);
         if(types.isEmpty()) return defaultAddressTypeTranslatedText;
-        return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), defaultAddressTypeTranslatedText);
+        return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), U.first(types).getValue());
     }
 
     public static AddressType getAddressType(String translatedText, Context context){
         if(translatedTextToAddressType == null) translatedTextToAddressType = U.toMap(U.invert(getAddressTypeToTranslatedTextMap(context)));
-        return getOrDefault(translatedTextToAddressType, translatedText, defaultAddressType);
+        return getOrDefault(translatedTextToAddressType, translatedText, AddressType.get(translatedText));
     }
 
 
@@ -246,12 +246,12 @@ public class DomainUtils {
     public static String getEmailTypeTranslatedText(List<EmailType> types, Context context){
         if(defaultEmailType == null) defaultEmailTypeTranslatedText = getEmailTypeToTranslatedTextMap(context).get(defaultEmailType);
         if(types.isEmpty()) return defaultEmailTypeTranslatedText;
-        return getOrDefault(getEmailTypeToTranslatedTextMap(context), U.first(types), defaultEmailTypeTranslatedText);
+        return getOrDefault(getEmailTypeToTranslatedTextMap(context), U.first(types), U.first(types).getValue());
     }
 
     public static EmailType getEmailType(String translatedText, Context context){
         if(translatedTextToEmailType == null) translatedTextToEmailType = U.toMap(U.invert(getEmailTypeToTranslatedTextMap(context)));
-        return getOrDefault(translatedTextToEmailType, translatedText, defaultEmailType);
+        return getOrDefault(translatedTextToEmailType, translatedText, EmailType.get(translatedText));
     }
 
     @NonNull

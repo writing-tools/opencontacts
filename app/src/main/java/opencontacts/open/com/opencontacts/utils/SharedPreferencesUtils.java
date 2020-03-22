@@ -42,6 +42,7 @@ public class SharedPreferencesUtils {
     public static final String SHOULD_ASK_FOR_PERMISSIONS = "SHOULD_ASK_FOR_PERMISSIONS";
     public static final String LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY = "LAST_DEFAULT_TAB_LAUNCH_TIME";
     public static final String DEFAULT_TAB_SHARED_PREF_KEY = "DEFAULT_TAB";
+    public static final String TOGGLE_CONTACT_ACTIONS = "TOGGLE_CONTACT_ACTIONS";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -161,4 +162,7 @@ public class SharedPreferencesUtils {
         return Integer.parseInt(getStringFromPreferences(DEFAULT_TAB_SHARED_PREF_KEY, "0", context));
     }
 
+    public static boolean shouldToggleContactActions(Context context){
+        return getBoolean(TOGGLE_CONTACT_ACTIONS, false, context);
+    }
 }

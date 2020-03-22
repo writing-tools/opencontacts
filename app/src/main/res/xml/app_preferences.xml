@@ -32,11 +32,19 @@
             android:defaultValue="true"
             android:key="SHOULD_ASK_FOR_PERMISSIONS"
             android:title="@string/ask_permissions_again" />
+        <SwitchPreference
+            android:defaultValue="false"
+            android:key="TOGGLE_CONTACT_ACTIONS"
+            android:title="@string/toggle_contact_actions"
+            android:summary="@string/toggle_contact_actions_summary"
+            />
+
         <ListPreference
             android:title="@string/default_tab"
             android:key="DEFAULT_TAB"
             android:entries="@array/tabs_list"
             android:entryValues="@array/tabs_values"
+            android:summary="@string/default_tab_summary"
             />
 
     </PreferenceCategory>

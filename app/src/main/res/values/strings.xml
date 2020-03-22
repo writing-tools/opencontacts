@@ -180,8 +180,11 @@
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="mailbox_sync_url" translatable="false">https://dav.mailbox.org</string>
-    <string name="default_tab" >Default tab</string>
+    <string name="default_tab">Default tab</string>
+    <string name="default_tab_summary">Tab on which app opens by default</string>
     <string name="save">Save</string>
+    <string name="toggle_contact_actions">Toggle contact actions</string>
+    <string name="toggle_contact_actions_summary">Toggle call and message actions position</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

@@ -38,20 +38,12 @@ public class CardDavUtils {
 
     public static final String HTTP_HEADER_E_TAG = "ETag";
 
-    private static String constructUrlToBeSearchedForAddressbook(String baseUrl, String username, String carddavServerType, Context context) {
-        final String mailboxServer = context.getString(R.string.carddav_server_mailbox);
-        final String radicaleServer = context.getString(R.string.carddav_server_radicale);
-        if (carddavServerType.equals(mailboxServer)) return baseUrl + "/carddav/32";
-        else if (carddavServerType.equals(radicaleServer)) return baseUrl + "/" + username;
-        return baseUrl;
-    }
-
-    public static String figureOutAddressBookUrl(String baseUrl, String username, String carddavServerType, Context context){
+    public static String figureOutAddressBookUrl(String baseUrl, String username, CheekyCarddavServerStuff carddavServerType, Context context){
         OkHttpClient okHttpClient = getHttpClientWithBasicAuth();
         Request request = new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
                 .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
-                .url(constructUrlToBeSearchedForAddressbook(baseUrl, username, carddavServerType, context))
+                .url(carddavServerType.getAddressBookUrl(baseUrl, username))
                 .build();
 
 
@@ -97,6 +89,7 @@ public class CardDavUtils {
                 "</card:addressbook-query>";
         Request addressBookDownloadRequest = new Request.Builder()
                 .method(HTTP_METHOD_REPORT, RequestBody.create(null, addressBookQueryAskingVCardData))
+                .header("depth", "1") //failing on nextcloud sabre dav server if depth is 0
                 .url(addressBookUrl)
                 .build();
         Response addressBookResponse = getHttpClientWithBasicAuth()
@@ -187,14 +180,13 @@ public class CardDavUtils {
         return false;
     }
 
-    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, String carddavServerType, Context context){
+    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType){
         OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password, shouldIgnoreSSL);
-        boolean isMailboxServer = carddavServerType.equals(context.getString(R.string.carddav_server_mailbox));
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                     .method(HTTP_METHOD_PROPFIND, null)
                     .addHeader(HTTP_HEADER_DEPTH, "0")
-                    .url(url + (isMailboxServer ? "/carddav/32" : ""))
+                    .url(carddavServerType.getValidateServerUrl(url, username))
                     .build())
                     .execute();
             return !response.isSuccessful();

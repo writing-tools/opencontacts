@@ -168,10 +168,6 @@
         \n\nНа устройствах старше Noughat, вы можете добавить виджет. Чтобы добавить виджет, удерживайте на главном экране и нажмите на кнопку \"Добавить виджет\" и выберите \"Открыть контакты\" и следуйте инструкциям</string>
     <string name="start">Начать</string>
     <string name="ask_permissions_again">Снова запросить разрешения</string>
-    <string name="select_carddav_server" tools:ignore="MissingTranslation">Выберите сервер carddav</string>
-    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Почтовый ящик</string>
-    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Ключ</string>
-    <string name="other" tools:ignore="MissingTranslation">Другое</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Игнорировать ошибки сертификата http</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Сбой синхронизации</string>
     <string name="default_tab">Вкладка по умолчанию</string>
@@ -210,11 +206,5 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="carddav_servers">
-        <item>@string/select_carddav_server</item>
-        <item>@string/carddav_server_mailbox</item>
-        <item>@string/carddav_server_radicale</item>
-        <item>@string/other</item>
     </string-array>
 </resources>

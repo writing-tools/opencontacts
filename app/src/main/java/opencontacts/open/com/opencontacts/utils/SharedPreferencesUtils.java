@@ -27,6 +27,7 @@ public class SharedPreferencesUtils {
     public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";//also hard coded in xml
     public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
     public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
+    public static final String CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY = "CARD_DAV_SERVER_TYPE";
     public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";//also hard coded in xml
     public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
     public static final String T9_SEARCH_ENABLED_SHARED_PREF_KEY = "t9searchenabled";//also hard coded in xml

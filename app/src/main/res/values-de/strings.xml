@@ -167,10 +167,6 @@
     <string name="addshortcut_help_text">Das Hinzufügen einer Verknüpfung erstellt ein Symbol auf den Startbildschirm, mit dem Sie den Kontakt anrufen können. Dies wird auf Geräten mit Android 7.1(Noughat) oder höher unterstützt. \n\nZum Hinzufügen einer Verknüpfung wechseln Sie zur Kontaktliste, halten den entsprechenden Kontakt länger gedrückt und wählen zum Startbildschirm hinzufügen.          \n\nAuf Geräten mit älterem Android kann weiterhin ein Widget hinzugefügt werden. Zum Hinzufügen eines Widget halten Sie den Startbildschirm länger gedrückt, wählen Open Contacts aus und folgen den weiteren Schritten</string>
     <string name="start">Start</string>
     <string name="ask_permissions_again">Berechtigungen erneut anfragen</string>
-    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
-    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
-    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Radicale</string>
-    <string name="other" tools:ignore="MissingTranslation">Other</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
@@ -209,11 +205,5 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="carddav_servers">
-        <item>@string/select_carddav_server</item>
-        <item>@string/carddav_server_mailbox</item>
-        <item>@string/carddav_server_radicale</item>
-        <item>@string/other</item>
     </string-array>
 </resources>

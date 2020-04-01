@@ -236,7 +236,7 @@ public class EditContactActivity extends AppBaseActivity {
     private void addAddressFromFieldsToNewVCard(VCard newVCard) {
         if(addressesInputCollection.isEmpty()) return;
         U.chain(addressesInputCollection.getValuesAndTypes())
-                .map(this::createAddress)
+                .mapIndexed(this::createAddress)
                 .forEach(newVCard::addAddress);
     }
 
@@ -262,8 +262,8 @@ public class EditContactActivity extends AppBaseActivity {
         return structuredName;
     }
 
-    private Address createAddress(Pair<String, String> addressAndTypePair) {
-        Address address = new Address();
+    private Address createAddress(int index, Pair<String, String> addressAndTypePair) {
+        Address address = U.elementAtOrElse(vcardBeforeEdit.getAddresses(), index, new Address());
         address.setStreetAddress(addressAndTypePair.first);
         address.getTypes().add(DomainUtils.getAddressType(addressAndTypePair.second, this));
         return address;

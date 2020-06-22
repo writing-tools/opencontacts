@@ -59,6 +59,22 @@ public interface CARDDAVConstants {
             return getAddressBookUrl(baseUrl, username);
         }
     };
+
+    CheekyCarddavServerStuff sogoConstants = new CheekyCarddavServerStuff(
+            "Sogo",
+            "",
+            "/SOGo/dav/",
+            "/SOGo/dav/"){
+        @Override
+        public String getAddressBookUrl(String baseUrl, String username) {
+            return baseUrl + addressBookUrlSuffix + username + "/Contacts/personal/";
+        }
+
+        @Override
+        public String getValidateServerUrl(String baseUrl, String username) {
+            return baseUrl + validateServerUrlSuffix;
+        }
+    };
     CheekyCarddavServerStuff otherServerConstants = new CheekyCarddavServerStuff("Other");
 
     Map<String, CheekyCarddavServerStuff> carddavServersCheekyStuffMap = U.toMap(
@@ -66,6 +82,7 @@ public interface CARDDAVConstants {
                     new Tuple<>(mailboxServerConstants.name, mailboxServerConstants),
                     new Tuple<>(radicaleServerConstants.name, radicaleServerConstants),
                     new Tuple<>(nextCloudConstants.name, nextCloudConstants),
+                    new Tuple<>(sogoConstants.name, sogoConstants),
                     new Tuple<>(otherServerConstants.name, otherServerConstants)
             )
     );

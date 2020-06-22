@@ -124,7 +124,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         boolean hasServerChangedFromEarlier = !urlFromView.equals(savedBaseUrl);
 
         String addressBookUrl = getStringFromPreferences(ADDRESSBOOK_URL_SHARED_PREFS_KEY, this);
-        if (areNotValidDetails(urlFromView, username, password, shouldIgnoreSSL, carddavServerType)) {
+        if (areNotValidDetails(urlFromView, username, password, shouldIgnoreSSL, carddavServerType, addressBookUrl)) {
             toastFromNonUIThread(R.string.invalid_username_or_password_or_url, LENGTH_SHORT, this);
             return;
         }

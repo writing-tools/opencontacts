@@ -21,11 +21,11 @@ import org.w3c.dom.Node;
 
 import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
+import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.*;
@@ -88,7 +88,7 @@ public class CardDavUtils {
                 "    <card:filter />\n" +
                 "</card:addressbook-query>";
         Request addressBookDownloadRequest = new Request.Builder()
-                .method(HTTP_METHOD_REPORT, RequestBody.create(null, addressBookQueryAskingVCardData))
+                .method(HTTP_METHOD_REPORT, RequestBody.create(MediaType.get("text/xml"), addressBookQueryAskingVCardData))
                 .header("depth", "1") //failing on nextcloud sabre dav server if depth is 0
                 .url(addressBookUrl)
                 .build();
@@ -180,13 +180,15 @@ public class CardDavUtils {
         return false;
     }
 
-    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType){
+    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType, String addressBookUrl){
+        String addressBookBasedUrl = addressBookUrl == null ? "" : url + addressBookUrl;
+        String urlToTest = getBaseURL(addressBookBasedUrl).equals(url) ? addressBookBasedUrl : carddavServerType.getValidateServerUrl(url, username);
         OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password, shouldIgnoreSSL);
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                     .method(HTTP_METHOD_PROPFIND, null)
                     .addHeader(HTTP_HEADER_DEPTH, "0")
-                    .url(carddavServerType.getValidateServerUrl(url, username))
+                    .url(urlToTest)
                     .build())
                     .execute();
             return !response.isSuccessful();
@@ -197,7 +199,10 @@ public class CardDavUtils {
     }
 
     public static String getBaseURL(String url) {
-        String path = Uri.parse(url).getPath();
+        String path = null;
+        try {
+            path = Uri.parse(url).getPath();
+        }catch (Exception e) {}
         if(path == null) return url;
         return url.replace(path , "");
     }
@@ -235,7 +240,7 @@ public class CardDavUtils {
         List<String> updatedOrAdded =  new ArrayList<>(0);
         List<String> deleted =  new ArrayList<>(0);
         Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
-                .method(HTTP_METHOD_REPORT, RequestBody.create(null, "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
+                .method(HTTP_METHOD_REPORT, RequestBody.create(MediaType.get("application/xml"), "<?xml version=\"1.0\" encoding=\"utf-8\" ?>\n" +
                         "<d:sync-collection xmlns:d=\"DAV:\">\n" +
                         "  <d:sync-token>"+ synctoken + "</d:sync-token>\n" +
                         "  <d:sync-level>1</d:sync-level>\n" +

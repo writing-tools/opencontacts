@@ -8,6 +8,7 @@ import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.github.underscore.Supplier;
 import com.github.underscore.U;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
@@ -34,13 +36,15 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>, ContactsListActionsListener {
     private List <Contact> contacts;
     private Context context;
+    private Supplier<String> searchStringSupplier;
     private ContactsListViewAdapter adapter;
     private final AppCompatTextView totalContactsTextView;
 
 
-    public ContactsListView(final Context context) {
+    public ContactsListView(final Context context, Supplier<String> searchStringSupplier) {
         super(context);
         this.context = context;
+        this.searchStringSupplier = searchStringSupplier;
         setTextFilterEnabled(false);
         ContactsDataStore.addDataChangeListener(this);
         contacts = new ArrayList<>();
@@ -62,8 +66,9 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         adapter.clear();
         adapter.addAll(contacts);
         adapter.notifyDataSetChanged();
-        if (isInFilterMode())
-            setFilterText(getTextFilter().toString());
+        String searchText = searchStringSupplier.get();
+        if (isEmpty(searchText)) return;
+        filter(searchText);
     }
 
     @Override

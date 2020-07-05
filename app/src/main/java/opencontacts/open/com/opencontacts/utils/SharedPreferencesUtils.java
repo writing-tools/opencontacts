@@ -44,6 +44,10 @@ public class SharedPreferencesUtils {
     public static final String LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY = "LAST_DEFAULT_TAB_LAUNCH_TIME";
     public static final String DEFAULT_TAB_SHARED_PREF_KEY = "DEFAULT_TAB";
     public static final String TOGGLE_CONTACT_ACTIONS = "TOGGLE_CONTACT_ACTIONS";
+    public static final String DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT = "-2";
+    public static final String DEFAULT_SIM_SELECTION_ALWAYS_ASK = "-1";
+    public static final String DEFAULT_SIM_SELECTION_SIM_1 = "0";
+    public static final String DEFAULT_SIM_SELECTION_SIM_2 = "1";
 
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
@@ -116,8 +120,8 @@ public class SharedPreferencesUtils {
         updatePreference(LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY, date, context);
     }
 
-    public static int getPreferredSim(Context context){
-        return Integer.valueOf(getStringFromPreferences(SIM_PREFERENCE_SHARED_PREF_KEY, "-2", context));
+    public static String getPreferredSim(Context context){
+        return getStringFromPreferences(SIM_PREFERENCE_SHARED_PREF_KEY, DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT, context);
     }
 
     public static boolean shouldExportContactsEveryWeek(Context context){

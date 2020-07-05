@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.util.Arrays;
 import java.util.HashMap;
 
 import opencontacts.open.com.opencontacts.R;
@@ -26,8 +27,11 @@ import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
@@ -35,6 +39,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WH
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
 
 public class PreferencesActivity extends AppBaseActivity {
 
@@ -68,15 +73,24 @@ public class PreferencesActivity extends AppBaseActivity {
             handlePreferenceUpdates();
         }
 
+        private boolean hasNoPreferredSim() {
+            return U.contains(Arrays.asList(DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT, DEFAULT_SIM_SELECTION_ALWAYS_ASK), getPreferredSim(getContext()));
+        }
+
         private void addSimPreference() {
             ContextThemeWrapper contextThemeWrapper = getContextThemeWrapper();// crazy android hack to get theme wrapped content. Else the dynamically created preferences are failing to create.
 
             ListPreference listPreference = new ListPreference(contextThemeWrapper);
-            listPreference.setEntries(R.array.sim_selection);
+            String[] simSelectionTitles = getResources().getStringArray(R.array.sim_selection);
+            String[] simNames = getSimNames(getContext());
+            simSelectionTitles[2] = simNames[0];
+            simSelectionTitles[3] = simNames[1];
+            String simSelectionSummary = hasNoPreferredSim() ? "%s" : simNames[Integer.valueOf(getPreferredSim(getContext()))];
+            listPreference.setEntries(simSelectionTitles);
             listPreference.setTitle(R.string.default_sim_calls_preference_title);
-            listPreference.setSummary("%s");
+            listPreference.setSummary(simSelectionSummary);
             listPreference.setEntryValues(R.array.sim_selection_values);
-            listPreference.setDefaultValue("-2");
+            listPreference.setDefaultValue(DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT);
             listPreference.setKey(SIM_PREFERENCE_SHARED_PREF_KEY);
             getPreferenceScreen().addPreference(listPreference);
         }

@@ -19,7 +19,8 @@ public class ContactsListTextFilter extends ContactsListFilter{
 
     @Override
     public void createDataMapping(List<Contact> contacts) {
-        for(Contact contact : contacts){
+        List<Contact> threadSafeContacts = new ArrayList<>(contacts);
+        for(Contact contact : threadSafeContacts){
             contact.setTextSearchTarget();
         }
     }

@@ -180,6 +180,10 @@
     <string name="save">Save</string>
     <string name="toggle_contact_actions">Toggle contact actions</string>
     <string name="toggle_contact_actions_summary">Toggle call and message actions position</string>
+    <string name="merge">Merge</string>
+    <string name="failed_merging_a_contact">Not able to merge one of the contacts</string>
+    <string name="choose_a_contact">Choose a contact</string>
+    <string name="auto_merge_complete">Auto merge complete, merged %1$d</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

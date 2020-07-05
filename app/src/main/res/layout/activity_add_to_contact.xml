@@ -18,4 +18,9 @@
             app:navigationIcon="@drawable/ic_arrow_back"
             app:title="@string/add_to_contact" />
     </android.support.design.widget.AppBarLayout>
+    <RelativeLayout
+        android:layout_marginBottom="20dp"
+        android:id="@+id/content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 </LinearLayout>

@@ -133,6 +133,10 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(this, CardDavSyncActivity.class));
             return true;
         });
+        menu.findItem(R.id.action_merge).setOnMenuItemClickListener(x -> {
+            startActivity(new Intent(this, MergeContactsActivity.class));
+            return true;
+        });
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);

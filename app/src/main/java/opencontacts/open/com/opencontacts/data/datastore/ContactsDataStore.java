@@ -6,6 +6,7 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -16,8 +17,8 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Favorite;
-import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
@@ -25,11 +26,13 @@ import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListe
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.mergeVCardStrings;
 
 public class ContactsDataStore {
     private static List<Contact> contacts = null;
     private static final List<DataStoreChangeListener<Contact>> dataChangeListeners = Collections.synchronizedList(new ArrayList<>(3));
     private static List<Contact> favorites = new ArrayList<>(0);
+    private static boolean pauseUpdates;
 
     public static List<Contact> getAllContacts() {
         if (contacts == null) {
@@ -37,6 +40,15 @@ public class ContactsDataStore {
             return new ArrayList<>(0);
         }
         return new ArrayList<>(contacts);
+    }
+
+    public static void requestPauseOnUpdates() {
+        pauseUpdates = true;
+    }
+
+    public static void requestResumeUpdates() {
+        pauseUpdates = false;
+        notifyListenersAsync(REFRESH, null);
     }
 
     public static void addContact(VCard vCard, Context context) {
@@ -50,8 +62,8 @@ public class ContactsDataStore {
     public static void removeContact(Contact contact) {
         if (contacts.remove(contact)) {
             ContactsDBHelper.deleteContactInDB(contact.id);
-            removeFavorite(contact);
             notifyListenersAsync(DELETION, contact);
+            removeFavorite(contact);
         }
     }
 
@@ -136,13 +148,13 @@ public class ContactsDataStore {
     }
 
     private static void notifyListenersAsync(final int type, final Contact contact){
-        if(dataChangeListeners.isEmpty())
+        if(dataChangeListeners.isEmpty() || pauseUpdates)
             return;
         processAsync(() -> notifyListeners(type, contact));
     }
 
     private static void notifyListeners(int type, Contact contact) {
-        if(dataChangeListeners.isEmpty())
+        if(dataChangeListeners.isEmpty() || pauseUpdates)
             return;
         synchronized (dataChangeListeners){
             U.forEach(dataChangeListeners, listener -> {
@@ -206,5 +218,29 @@ public class ContactsDataStore {
 
     public static boolean isFavorite(Contact contact){
         return getFavorites().contains(contact);
+    }
+
+    public static void mergeContacts(Contact primaryContact, Contact secondaryContact, Context context) throws IOException {
+        VCardData primaryVCardData = VCardData.getVCardData(primaryContact.id);
+        VCardData secondaryVCardData = VCardData.getVCardData(secondaryContact.id);
+        VCard mergedVCard = mergeVCardStrings(primaryVCardData.vcardDataAsString, secondaryVCardData.vcardDataAsString, context);
+        removeContact(secondaryContact);
+        updateContact(primaryContact.id, primaryContact.primaryPhoneNumber.phoneNumber, mergedVCard, context);
+    }
+
+    public static void mergeContacts(List<Contact> contactsToMerge, Context context){
+        if (contactsToMerge == null || contactsToMerge.size() < 2) return;
+        final Contact firstContact = U.first(contactsToMerge);
+        U.chain(contactsToMerge)
+                .rest()
+                .forEach(contactToMerge -> {
+                    try {
+                        mergeContacts(firstContact, contactToMerge, context);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                        AndroidUtils.toastFromNonUIThread(R.string.failed_merging_a_contact, Toast.LENGTH_SHORT, context);
+                        // this happened coz of not being able to read contact data from vcard table. So, its fine if its not merged finally
+                    }
+                });
     }
 }

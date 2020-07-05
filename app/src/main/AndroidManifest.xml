@@ -27,7 +27,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activities.SingleContactWidgetChooserActivity">
+        <activity android:name=".activities.ContactWidgetChooserActivity">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
@@ -52,6 +52,7 @@
         <activity android:name=".activities.HelpActivity" />
         <activity android:name=".activities.CrashReportingActivity" />
         <activity android:name=".activities.CallLogGroupDetailsActivity" />
+        <activity android:name=".activities.MergeContactsActivity" />
         <activity
             android:name=".activities.ContactDetailsActivity"
             android:label="@string/title_activity_contact_details" />

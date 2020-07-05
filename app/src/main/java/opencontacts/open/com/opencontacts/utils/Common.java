@@ -90,7 +90,6 @@ public class Common {
         }
     }
 
-
     public interface TimesFunction<T>{
         T apply(int index);
     }
@@ -140,4 +139,12 @@ public class Common {
         if(object == null) throw new Exception("Found a null");
         return object;
     }
+
+    public static List<String> getPartsThatAreNotPresentCaseInSensitive(String stringToBeSearchedIn, String stringPartsToBeSearchedFor){
+        final String stringToBeSearchedInLowerCase = stringToBeSearchedIn.toLowerCase();
+        return U.chain(getEmptyStringIfNull(stringPartsToBeSearchedFor).split(" "))
+                .reject(partOfString -> stringToBeSearchedInLowerCase.contains(partOfString.toLowerCase()))
+                .value();
+    }
+
 }

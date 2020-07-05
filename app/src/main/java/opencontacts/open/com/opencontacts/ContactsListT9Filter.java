@@ -17,7 +17,8 @@ public class ContactsListT9Filter extends ContactsListFilter{
     }
 
     public void createDataMapping(List<Contact> contacts) {
-        for(Contact contact : contacts){
+        List<Contact> threadSafeContacts = new ArrayList<>(contacts);
+        for(Contact contact : threadSafeContacts){
             contact.setT9Text();
         }
     }

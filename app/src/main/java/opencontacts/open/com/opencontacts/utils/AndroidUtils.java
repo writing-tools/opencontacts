@@ -356,6 +356,10 @@ public class AndroidUtils {
         getMainThreadHandler().post(() -> Toast.makeText(context, context.getString(messageRes), length).show());
     }
 
+    public static void toastFromNonUIThread(String message, int length, Context context){
+        getMainThreadHandler().post(() -> Toast.makeText(context, message, length).show());
+    }
+
     public static String getStringFromPreferences(String key, Context context) {
         return getStringFromPreferences(key, null, context);
     }

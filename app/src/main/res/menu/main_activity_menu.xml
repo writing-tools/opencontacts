@@ -1,11 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
-    <item
-        android:id="@+id/action_merge"
-        android:icon="@android:drawable/ic_menu_directions"
-        android:title="@string/merge"
-        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_search"
@@ -18,17 +13,6 @@
         android:icon="@drawable/ic_add_circle_outline_24dp"
         android:title="@string/add_contact"
         app:showAsAction="always" />
-    <item
-        android:id="@+id/action_sync"
-        android:icon="@drawable/ic_sync_24dp"
-        android:title="@string/sync"
-        app:showAsAction="ifRoom" />
-
-    <item
-        android:id="@+id/action_resync"
-        android:icon="@drawable/ic_sync_24dp"
-        android:title="@string/resync_call_log_with_contacts"
-        app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_export"
@@ -45,6 +29,30 @@
         android:id="@+id/action_delete_all_contacts"
         android:icon="@drawable/delete"
         android:title="@string/delete_all_contacts"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_merge"
+        android:icon="@android:drawable/ic_menu_directions"
+        android:title="@string/merge"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_sync"
+        android:icon="@drawable/ic_sync_24dp"
+        android:title="@string/sync"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_resync"
+        android:icon="@drawable/ic_sync_24dp"
+        android:title="@string/resync_call_log_with_contacts"
+        app:showAsAction="ifRoom" />
+
+    <item
+        android:id="@+id/action_import"
+        android:icon="@drawable/import_export"
+        android:title="@string/import_contacts"
         app:showAsAction="ifRoom" />
 
     <item

@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.activities;
 
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TabLayout;
@@ -49,6 +50,7 @@ public class MainActivity extends AppBaseActivity {
     public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
     public static final int DIALER_TAB_INDEX = 2;
     private static final int PREFERENCES_ACTIVITY_RESULT = 773;
+    private static final int IMPORT_FILE_CHOOSER_RESULT = 467;
     private ViewPager viewPager;
     private SearchView searchView;
     private CallLogFragment callLogFragment;
@@ -58,9 +60,14 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-//        if(requestCode == DRAW_OVERLAY_PERMISSION_RESULT)//granting permission very fast is resulting in false positive hence delaying this check
-//            getMainThreadHandler().postDelayed(this::recreate, 1000);
-//
+        if(requestCode == IMPORT_FILE_CHOOSER_RESULT){
+            if(data == null) return;
+            startActivity(
+                    new Intent(this, ImportVcardActivity.class)
+                    .setData(data.getData())
+            );
+            return;
+        }
         if(requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
     }
 
@@ -133,6 +140,10 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(this, CardDavSyncActivity.class));
             return true;
         });
+        menu.findItem(R.id.action_import).setOnMenuItemClickListener(x -> {
+            importContacts();
+            return true;
+        });
         menu.findItem(R.id.action_merge).setOnMenuItemClickListener(x -> {
             startActivity(new Intent(this, MergeContactsActivity.class));
             return true;
@@ -181,6 +192,17 @@ public class MainActivity extends AppBaseActivity {
                     .show();
             return true;
         });
+    }
+
+    private void importContacts() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                    .setType("*/*"),
+                    IMPORT_FILE_CHOOSER_RESULT);
+        }
+        else startActivityForResult(
+                new Intent(Intent.ACTION_PICK),
+                IMPORT_FILE_CHOOSER_RESULT);
     }
 
     private void refresh() {

@@ -166,8 +166,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     }
 
     private void bindSearchViewToContacts(SearchView searchView) {
-        searchView.setInputType(InputType.TYPE_CLASS_PHONE);
-
+        searchView.setInputType(isT9SearchEnabled(this) ? InputType.TYPE_CLASS_PHONE : InputType.TYPE_CLASS_TEXT);
         searchView.setOnCloseListener(() -> {
             contactsListView.clearTextFilter();
             return false;

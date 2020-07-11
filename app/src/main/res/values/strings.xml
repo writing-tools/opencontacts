@@ -184,6 +184,8 @@
     <string name="failed_merging_a_contact">Not able to merge one of the contacts</string>
     <string name="choose_a_contact">Choose a contact</string>
     <string name="auto_merge_complete">Auto merge complete, merged %1$d</string>
+    <string name="should_use_system_app">Force system\'s phone app to call</string>
+    <string name="should_use_system_app_summary">Will call only using system\'s default phone app than giving options</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

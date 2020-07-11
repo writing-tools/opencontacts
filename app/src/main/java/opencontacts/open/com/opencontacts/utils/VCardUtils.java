@@ -85,6 +85,7 @@ public class VCardUtils {
             mergedCard = new VCardReader(primaryVCard.write()).readNext();
         } catch (IOException e) {
             e.printStackTrace();
+//            TODO: this will crash. Throw this exception and let consumers handle this
         }
 
         mergedCard.getTelephoneNumbers().addAll(getExtraVCardProperties(primaryVCard, secondaryVcard, Telephone.class));

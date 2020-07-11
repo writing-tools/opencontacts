@@ -48,7 +48,7 @@ public class SharedPreferencesUtils {
     public static final String DEFAULT_SIM_SELECTION_ALWAYS_ASK = "-1";
     public static final String DEFAULT_SIM_SELECTION_SIM_1 = "0";
     public static final String DEFAULT_SIM_SELECTION_SIM_2 = "1";
-
+    public static final String SHOULD_USE_SYSTEM_PHONE_APP = "SHOULD_USE_SYSTEM_PHONE_APP";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -169,5 +169,9 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldToggleContactActions(Context context){
         return getBoolean(TOGGLE_CONTACT_ACTIONS, false, context);
+    }
+
+    public static boolean shouldUseSystemCallingApp(Context context){
+        return getBoolean(SHOULD_USE_SYSTEM_PHONE_APP, false, context);
     }
 }

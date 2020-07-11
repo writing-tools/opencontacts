@@ -3,10 +3,13 @@ package opencontacts.open.com.opencontacts.utils;
 import android.Manifest;
 import android.app.Activity;
 import android.app.KeyguardManager;
+import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.content.res.Resources;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
@@ -58,6 +61,7 @@ import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMult
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldUseSystemCallingApp;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -111,7 +115,8 @@ public class AndroidUtils {
     }
 
     public static void callWithSystemDefaultSim(String number, Context context){
-        context.startActivity(getCallIntent(number, context));
+        Intent callIntent = getCallIntent(number, context);
+        context.startActivity(callIntent);
     }
 
     public static void whatsapp(String number, Context context) {
@@ -142,6 +147,11 @@ public class AndroidUtils {
         } else {
             callIntent = new Intent(Intent.ACTION_DIAL, numberUri);
             callIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        }
+        if(shouldUseSystemCallingApp(context)){
+            ResolveInfo resolveInfo = context.getPackageManager().resolveActivity(callIntent, PackageManager.MATCH_SYSTEM_ONLY);
+            ActivityInfo targetActivityInfo = resolveInfo.activityInfo;
+            callIntent.setComponent(new ComponentName(targetActivityInfo.packageName, targetActivityInfo.name));
         }
         return callIntent;
     }

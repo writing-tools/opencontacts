@@ -11,6 +11,8 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
+import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
@@ -33,6 +35,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.CO
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
@@ -70,7 +73,24 @@ public class PreferencesActivity extends AppBaseActivity {
             getPreferenceManager().setSharedPreferencesName(COMMON_SHARED_PREFS_FILE_NAME);
             addPreferencesFromResource(R.xml.app_preferences);
             if(hasMultipleSims(getContext())) addSimPreference();
+            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) addShouldUseSystemPhoneAppPreference();
             handlePreferenceUpdates();
+        }
+
+        private void addShouldUseSystemPhoneAppPreference() {
+            PreferenceScreen preferenceScreen = getPreferenceScreen();
+            SwitchPreferenceCompat forceCallUsingSystemApp = createForceCallUsingSystemAppPreference();
+            preferenceScreen.addPreference(forceCallUsingSystemApp);
+        }
+
+        @NonNull
+        private SwitchPreferenceCompat createForceCallUsingSystemAppPreference() {
+            SwitchPreferenceCompat forceCallUsingSystemApp = new SwitchPreferenceCompat(getContextThemeWrapper());
+            forceCallUsingSystemApp.setTitle(R.string.should_use_system_app);
+            forceCallUsingSystemApp.setSummary(R.string.should_use_system_app_summary);
+            forceCallUsingSystemApp.setKey(SHOULD_USE_SYSTEM_PHONE_APP);
+            forceCallUsingSystemApp.setDefaultValue(false);
+            return forceCallUsingSystemApp;
         }
 
         private boolean hasNoPreferredSim() {

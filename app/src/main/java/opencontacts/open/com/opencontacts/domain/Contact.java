@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.domain;
 
+import android.support.annotation.NonNull;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -32,6 +34,7 @@ public class Contact implements Serializable{
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.name = getName(firstName, lastName);
         this.phoneNumbers = phoneNumbers;
         this.primaryPhoneNumber = phoneNumbers.get(0);
     }
@@ -40,6 +43,7 @@ public class Contact implements Serializable{
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.name = getName(firstName, lastName);
         this.phoneNumbers = phoneNumbers;
         this.lastAccessed = lastAccessed;
         this.primaryPhoneNumber = phoneNumbers.get(0);
@@ -50,9 +54,17 @@ public class Contact implements Serializable{
         this.firstName = firstName;
         this.lastName = lastName;
         this.phoneNumbers = phoneNumbers;
-        this.name = getEmptyStringIfNull(firstName) + " " + getEmptyStringIfNull(lastName);
+        this.name = getName(firstName, lastName);
         this.lastAccessed = lastAccessed;
         this.primaryPhoneNumber = primaryPhoneNumber;
+    }
+
+    public Contact(String firstName, String lastName, String number) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.name = getName(firstName, lastName);
+        this.primaryPhoneNumber = new PhoneNumber(number);
+        id = -1;
     }
 
     public void setT9Text() {
@@ -79,4 +91,10 @@ public class Contact implements Serializable{
             return false;
         return id == ((Contact)obj).id;
     }
+
+    @NonNull
+    private String getName(String firstName, String lastName) {
+        return getEmptyStringIfNull(firstName) + " " + getEmptyStringIfNull(lastName);
+    }
+
 }

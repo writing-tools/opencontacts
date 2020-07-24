@@ -1,12 +1,10 @@
 package opencontacts.open.com.opencontacts;
 
 import android.content.Context;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.github.underscore.Supplier;
 import com.github.underscore.U;
@@ -44,7 +42,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         ContactsDataStore.addDataChangeListener(this);
         contacts = new ArrayList<>();
         adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
-        adapter.setContactsListActionsListener(DefaultContactsListActions.getDefaultActions(context));
+        adapter.setContactsListActionsListener(new DefaultContactsListActions(context));
         View headerView = inflate(context, R.layout.contacts_list_header, null);
         addHeaderView(headerView);
         setAdapter(adapter);

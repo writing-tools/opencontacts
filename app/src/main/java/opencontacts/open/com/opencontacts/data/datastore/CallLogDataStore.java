@@ -1,8 +1,12 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
+import android.support.v4.util.ArrayMap;
+
+import com.github.underscore.U;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
@@ -170,5 +174,17 @@ public class CallLogDataStore {
 
     private static void refreshStoreAsync() {
         processAsync(CallLogDataStore::refreshStore);
+    }
+
+    public static Collection<CallLogEntry> getUnLabelledCallLogEntriesMatching(String number) {
+        ArrayMap<String, CallLogEntry> matchedEntries = new ArrayMap<>();
+        U.forEach(callLogEntries, entry -> {
+            if(entry.name != null) return;
+            String phoneNumber = entry.getPhoneNumber();
+            String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
+            if(searchablePhoneNumber == null || !searchablePhoneNumber.contains(number)) return;
+            matchedEntries.put(phoneNumber, entry);
+        });
+        return matchedEntries.values();
     }
 }

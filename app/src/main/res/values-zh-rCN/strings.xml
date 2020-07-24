@@ -168,6 +168,10 @@
         \n\n在 安卓7.1(Noughat) 之前的设备中，您仍然可以通过添加一个小部件实现以上功能。 若要添加小部件，长按主屏幕并点击添加小部件然后选择 \'开源通讯录\' 小部件，之后按照系统提示操作完成快捷方式设置。</string>
     <string name="start">开始</string>
     <string name="ask_permissions_again">再次询问授权</string>
+    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
+    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
+    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Radicale</string>
+    <string name="other" tools:ignore="MissingTranslation">Other</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
@@ -206,5 +210,11 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="carddav_servers">
+        <item>@string/select_carddav_server</item>
+        <item>@string/carddav_server_mailbox</item>
+        <item>@string/carddav_server_radicale</item>
+        <item>@string/other</item>
     </string-array>
 </resources>

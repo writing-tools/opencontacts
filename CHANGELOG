@@ -1,3 +1,13 @@
+V19.0
+Added option to start import contacts right from app
+User can now choose if calls should go using system default app only
+App now shows display names of sims in case of dual sim phone
+Fixed issue where after call, filter text exists but the contacts are not filtered
+Merge contacts manually or auto merge in case there is a matching phone number
+Added support for sogo and nextcloud carddav server
+call and info actions have been toggled to avoid accidental calls
+Custom field types support have been added to the fields like phone number, email etc
+
 V18.0
 While choosing contact for widget, contacts would be sorted
 Added synology carddav server for sync

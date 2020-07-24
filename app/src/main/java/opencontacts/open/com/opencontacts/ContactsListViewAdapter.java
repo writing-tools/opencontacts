@@ -1,7 +1,6 @@
 package opencontacts.open.com.opencontacts;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
@@ -30,20 +28,19 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
 
     public ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
         super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
-        setupActions(context);
+        init(context);
         createContactsListFilter(allContactsHolder);
     }
 
     public ContactsListViewAdapter(@NonNull Context context) {
         super(context, R.layout.contact, new ArrayList<>());
-        setupActions(context);
+        init(context);
     }
 
-    private void setupActions(@NonNull Context context) {
+    private void init(@NonNull Context context) {
         layoutInflater = LayoutInflater.from(context);
         whatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
         shouldToggleContactActions = shouldToggleContactActions(context);
-        setContactsListActionsListener(DefaultContactsListActions.getDefaultActions(context));
     }
 
     private void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {

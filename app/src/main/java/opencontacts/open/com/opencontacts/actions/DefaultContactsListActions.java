@@ -14,57 +14,56 @@ import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStor
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
 
-public class DefaultContactsListActions {
+public class DefaultContactsListActions implements ContactsListViewAdapter.ContactsListActionsListener {
 
-    public static ContactsListViewAdapter.ContactsListActionsListener defaultContactsListActionsListener;
+    private Context context;
 
-    public static ContactsListViewAdapter.ContactsListActionsListener getDefaultActions(Context context) {
-        if(defaultContactsListActionsListener != null) return  defaultContactsListActionsListener;
-        defaultContactsListActionsListener = new ContactsListViewAdapter.ContactsListActionsListener() {
-            @Override
-            public void onCallClicked(Contact contact) {
-                AndroidUtils.call(contact.primaryPhoneNumber.phoneNumber, context);
-            }
-
-            @Override
-            public void onMessageClicked(Contact contact) {
-                AndroidUtils.message(contact.primaryPhoneNumber.phoneNumber, context);
-            }
-
-            @Override
-            public void onShowDetails(Contact contact) {
-                context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.id, context));
-            }
-
-            @Override
-            public void onWhatsappClicked(Contact contact) {
-                AndroidUtils.whatsapp(contact.primaryPhoneNumber.phoneNumber, context);
-            }
-
-            @Override
-            public void onLongClick(Contact contact) {
-                int favoritesResource = isFavorite(contact) ? R.string.remove_favorite : R.string.add_to_favorites;
-                new AlertDialog.Builder(context)
-                        .setItems(new String[]{
-                                context.getString(favoritesResource),
-                                context.getString(R.string.add_shortcut)
-                        }, (dialog, which) -> {
-                            switch(which){
-                                case 0:
-                                    if (favoritesResource == R.string.add_to_favorites) addFavorite(contact);
-                                    else removeFavorite(contact);
-                                    break;
-                                case 1:
-                                    boolean added = DomainUtils.addContactAsShortcut(contact, context);
-                                    Toast.makeText(context,
-                                            added ? context.getString(R.string.added_shortcut) : context.getString(R.string.failed_adding_shortcut),
-                                            Toast.LENGTH_LONG).show();
-                                    break;
-                            }
-                        }).show();
-            }
-
-        };
-        return defaultContactsListActionsListener;
+    public DefaultContactsListActions(Context context){
+        this.context = context;
     }
+
+    @Override
+    public void onCallClicked(Contact contact) {
+        AndroidUtils.call(contact.primaryPhoneNumber.phoneNumber, context);
+    }
+
+    @Override
+    public void onMessageClicked(Contact contact) {
+        AndroidUtils.message(contact.primaryPhoneNumber.phoneNumber, context);
+    }
+
+    @Override
+    public void onShowDetails(Contact contact) {
+        if(contact.id < 0) return;
+        context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.id, context));
+    }
+
+    @Override
+    public void onWhatsappClicked(Contact contact) {
+        AndroidUtils.whatsapp(contact.primaryPhoneNumber.phoneNumber, context);
+    }
+
+    @Override
+    public void onLongClick(Contact contact) {
+        int favoritesResource = isFavorite(contact) ? R.string.remove_favorite : R.string.add_to_favorites;
+        new AlertDialog.Builder(context)
+                .setItems(new String[]{
+                        context.getString(favoritesResource),
+                        context.getString(R.string.add_shortcut)
+                }, (dialog, which) -> {
+                    switch(which){
+                        case 0:
+                            if (favoritesResource == R.string.add_to_favorites) addFavorite(contact);
+                            else removeFavorite(contact);
+                            break;
+                        case 1:
+                            boolean added = DomainUtils.addContactAsShortcut(contact, context);
+                            Toast.makeText(context,
+                                    added ? context.getString(R.string.added_shortcut) : context.getString(R.string.failed_adding_shortcut),
+                                    Toast.LENGTH_LONG).show();
+                            break;
+                    }
+                }).show();
+    }
+
 }

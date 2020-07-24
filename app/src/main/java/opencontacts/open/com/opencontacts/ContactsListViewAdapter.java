@@ -12,6 +12,7 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
@@ -21,19 +22,28 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
 
 public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
-    private final boolean shouldToggleContactActions;
+    private boolean shouldToggleContactActions;
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
     public ContactsListFilter contactsListFilter;
     private boolean whatsappIntegrationEnabled;
 
-    ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
+    public ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
         super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
-        layoutInflater = LayoutInflater.from(context);
+        setupActions(context);
         createContactsListFilter(allContactsHolder);
+    }
+
+    public ContactsListViewAdapter(@NonNull Context context) {
+        super(context, R.layout.contact, new ArrayList<>());
+        setupActions(context);
+    }
+
+    private void setupActions(@NonNull Context context) {
+        layoutInflater = LayoutInflater.from(context);
         whatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
         shouldToggleContactActions = shouldToggleContactActions(context);
-
+        setContactsListActionsListener(DefaultContactsListActions.getDefaultActions(context));
     }
 
     private void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {
@@ -118,7 +128,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         this.contactsListActionsListener = contactsListActionsListener;
     }
 
-    interface ContactsListActionsListener {
+    public interface ContactsListActionsListener {
         void onCallClicked(Contact contact);
         void onMessageClicked(Contact contact);
         void onShowDetails(Contact contact);

@@ -15,17 +15,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.ContactsListViewAdapter.ContactsListActionsListener;
+import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparator;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 
@@ -33,7 +28,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
  * Created by sultanm on 3/25/17.
  */
 
-public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>, ContactsListActionsListener {
+public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>{
     private List <Contact> contacts;
     private Context context;
     private Supplier<String> searchStringSupplier;
@@ -49,7 +44,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         ContactsDataStore.addDataChangeListener(this);
         contacts = new ArrayList<>();
         adapter = new ContactsListViewAdapter(context, R.layout.contact, () -> contacts);
-        adapter.setContactsListActionsListener(ContactsListView.this);
+        adapter.setContactsListActionsListener(DefaultContactsListActions.getDefaultActions(context));
         View headerView = inflate(context, R.layout.contacts_list_header, null);
         addHeaderView(headerView);
         setAdapter(adapter);
@@ -126,49 +121,6 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     public void onDestroy(){
         ContactsDataStore.removeDataChangeListener(this);
-    }
-
-    @Override
-    public void onCallClicked(Contact contact) {
-        AndroidUtils.call(contact.primaryPhoneNumber.phoneNumber, context);
-    }
-
-    @Override
-    public void onMessageClicked(Contact contact) {
-        AndroidUtils.message(contact.primaryPhoneNumber.phoneNumber, context);
-    }
-
-    @Override
-    public void onShowDetails(Contact contact) {
-        context.startActivity(AndroidUtils.getIntentToShowContactDetails(contact.id, context));
-    }
-
-    @Override
-    public void onWhatsappClicked(Contact contact) {
-        AndroidUtils.whatsapp(contact.primaryPhoneNumber.phoneNumber, context);
-    }
-
-    @Override
-    public void onLongClick(Contact contact) {
-        int favoritesResource = isFavorite(contact) ? R.string.remove_favorite : R.string.add_to_favorites;
-        new AlertDialog.Builder(context)
-                .setItems(new String[]{
-                        context.getString(favoritesResource),
-                        context.getString(R.string.add_shortcut)
-                }, (dialog, which) -> {
-                    switch(which){
-                        case 0:
-                            if (favoritesResource == R.string.add_to_favorites) addFavorite(contact);
-                            else removeFavorite(contact);
-                            break;
-                        case 1:
-                            boolean added = DomainUtils.addContactAsShortcut(contact, context);
-                            Toast.makeText(context,
-                                    added ? getContext().getString(R.string.added_shortcut) : getContext().getString(R.string.failed_adding_shortcut),
-                                    Toast.LENGTH_LONG).show();
-                            break;
-                    }
-                }).show();
     }
 
     public void filter(CharSequence filterText){

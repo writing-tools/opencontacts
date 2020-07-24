@@ -18,6 +18,7 @@ import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -324,5 +325,16 @@ public class DomainUtils {
             return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
     }
 
-
+    public static List<Contact> filterContactsBasedOnT9Text(CharSequence t9Text, List<Contact> contacts) {
+        ArrayList<Contact> filteredContacts = new ArrayList<>();
+        for (Contact contact : contacts) {
+            if(contact.t9Text == null){
+                contact.setT9Text();
+            }
+            if (contact.t9Text.contains(t9Text.toString().toUpperCase())) {
+                filteredContacts.add(contact);
+            }
+        }
+        return filteredContacts;
+    }
 }

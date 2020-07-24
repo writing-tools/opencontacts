@@ -19,6 +19,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Favorite;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
@@ -242,5 +243,9 @@ public class ContactsDataStore {
                         // this happened coz of not being able to read contact data from vcard table. So, its fine if its not merged finally
                     }
                 });
+    }
+
+    public static List<Contact> getContactsMatchingT9(String t9Text) {
+        return DomainUtils.filterContactsBasedOnT9Text(t9Text, contacts);
     }
 }

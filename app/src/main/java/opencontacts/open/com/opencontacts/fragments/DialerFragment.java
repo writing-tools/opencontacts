@@ -1,32 +1,39 @@
 package opencontacts.open.com.opencontacts.fragments;
 
-import android.Manifest;
 import android.content.Context;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.telecom.TelecomManager;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ListView;
 
 import com.github.underscore.Consumer;
 
+import java.util.List;
+
+import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
     private Context context;
     private View view;
     private EditText dialPadEditText;
+    private ListView searchList;
+    private ContactsListViewAdapter searchListAdapter;
 
     @Nullable
     @Override
@@ -38,6 +45,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         this.context = getContext();
         this.view = view;
+        linkEditTextWithSearchList(view);
         super.onViewCreated(view, savedInstanceState);
     }
 
@@ -47,12 +55,52 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         linkDialerButtonsToHandlers();
     }
 
+    private void linkEditTextWithSearchList(View view) {
+        setupSearchList(view);
+        dialPadEditText = view.findViewById(R.id.editText_dialpad_number);
+        dialPadEditText.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+
+            @Override
+            public void afterTextChanged(Editable searchText) {
+                String t9Text = searchText.toString();
+                if(TextUtils.isEmpty(t9Text)){
+                    hideSearchList();
+                    return;
+                }
+                List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
+                if(contactsMatchingT9.isEmpty()) hideSearchList();
+                else{
+                    searchListAdapter.clear();
+                    searchListAdapter.addAll(contactsMatchingT9);
+                    searchListAdapter.notifyDataSetChanged();
+                    searchList.setVisibility(VISIBLE);
+                }
+            }
+        });
+    }
+
+    private void hideSearchList() {
+        searchListAdapter.clear();
+        searchListAdapter.notifyDataSetChanged();
+        searchList.setVisibility(INVISIBLE);
+    }
+
+    private void setupSearchList(View view) {
+        searchList = view.findViewById(R.id.search_list);
+        searchListAdapter = new ContactsListViewAdapter(context);
+        searchList.setAdapter(searchListAdapter);
+    }
+
     public void setNumber(String number) {
         dialPadEditText.setText(number);
     }
 
     private void linkDialerButtonsToHandlers() {
-        dialPadEditText = view.findViewById(R.id.editText_dialpad_number);
 
         view.findViewById(R.id.button_call).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.call(phoneNumber, context)));
 

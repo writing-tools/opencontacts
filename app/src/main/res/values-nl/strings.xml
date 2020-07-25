@@ -169,10 +169,6 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
         \n\nBij apparaten ouder dan Nougat, kunt u nog steeds een widget toevoegen. Om een widget toe te voegen, druk lang op het startscherm en klik op een widget toevoegen en selecteer OpenContacts</string>
     <string name="start">Begin</string>
     <string name="ask_permissions_again">Machtigingen opnieuw vragen</string>
-    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
-    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
-    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Radicale</string>
-    <string name="other" tools:ignore="MissingTranslation">Other</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
@@ -211,11 +207,5 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="carddav_servers">
-        <item>@string/select_carddav_server</item>
-        <item>@string/carddav_server_mailbox</item>
-        <item>@string/carddav_server_radicale</item>
-        <item>@string/other</item>
     </string-array>
 </resources>

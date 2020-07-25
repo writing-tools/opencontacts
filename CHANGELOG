@@ -1,3 +1,6 @@
+V20.0
+Fixed build issue changelog is same as 19.0
+
 V19.0
 Added option to start import contacts right from app
 User can now choose if calls should go using system default app only

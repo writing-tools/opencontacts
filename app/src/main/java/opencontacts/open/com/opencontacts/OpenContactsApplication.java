@@ -13,6 +13,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
 import static android.app.NotificationManager.IMPORTANCE_HIGH;
+import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.addShortcutsIfNotAddedAlreadyAsync;
 
 public class OpenContactsApplication extends MultiDexApplication {
 
@@ -27,6 +28,7 @@ public class OpenContactsApplication extends MultiDexApplication {
         createNotificationChannels();
         CrashUtils.setUpCrashHandler(getApplicationContext());
         new AutoContactsExporter(this).exportContactsAsPerPreferences();
+        addShortcutsIfNotAddedAlreadyAsync(getApplicationContext());
     }
 
     private void createNotificationChannels() {

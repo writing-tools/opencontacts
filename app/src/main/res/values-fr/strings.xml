@@ -167,10 +167,6 @@
     <string name="addshortcut_help_text">L\'ajout de raccourci créera une icône sur l\'écran d\'accueil qui vous permettra d\'appeler un contact directement depuis l\'écran d\'accueil. Ceci est pris en charge sur les appareils avec Android 7+. \n\nPour ajouter un raccourci, aller à la liste de contacts, appuyez longuement sur un contact et sélectionnez \"Ajouter à l\'écran d\'accueil\". \n\nSur les appareils avec une version Android plus ancienne que la version 7, vous pouvez quand même ajouter un widget sur l\'écran d\'accueil qui vous permettra d\'en arriver au même résultat. Pour ajouter un widget, appuyez longuement sur votre écran d\'accueil, cliquez sur \"Ajouter un widget\", sélectionnez Open Contacts et suivez les étapes subséquentes.</string>
     <string name="start">Démarrer</string>
     <string name="ask_permissions_again">Demander à nouveau les autorisations</string>
-    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
-    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
-    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Radicale</string>
-    <string name="other" tools:ignore="MissingTranslation">Other</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
@@ -209,11 +205,5 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="carddav_servers">
-        <item>@string/select_carddav_server</item>
-        <item>@string/carddav_server_mailbox</item>
-        <item>@string/carddav_server_radicale</item>
-        <item>@string/other</item>
     </string-array>
 </resources>

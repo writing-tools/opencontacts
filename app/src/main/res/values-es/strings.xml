@@ -168,10 +168,6 @@
         \n\nEn dispositivos anteriores a Nougat, aún puede agregar un widget. Para agregar un widget, mantenga presionada la pantalla de inicio y haga clic en agregar un widget y seleccione Open Contacts y siga los pasos siguientes</string>
     <string name="start">Inicio</string>
     <string name="ask_permissions_again">Solicitar permisos de nuevo</string>
-    <string name="select_carddav_server" tools:ignore="MissingTranslation">Select a carddav server</string>
-    <string name="carddav_server_mailbox" tools:ignore="MissingTranslation">Mailbox</string>
-    <string name="carddav_server_radicale" tools:ignore="MissingTranslation">Radicale</string>
-    <string name="other" tools:ignore="MissingTranslation">Other</string>
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
@@ -210,11 +206,5 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
-    </string-array>
-    <string-array name="carddav_servers">
-        <item>@string/select_carddav_server</item>
-        <item>@string/carddav_server_mailbox</item>
-        <item>@string/carddav_server_radicale</item>
-        <item>@string/other</item>
     </string-array>
 </resources>

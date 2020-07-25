@@ -43,6 +43,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilt
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
 
 
 public class MainActivity extends AppBaseActivity {
@@ -69,6 +70,18 @@ public class MainActivity extends AppBaseActivity {
             return;
         }
         if(requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        gotoTabIfSpecified(intent);
+    }
+
+    private void gotoTabIfSpecified(Intent intent) {
+        int tabIndexToShow = intent.getIntExtra(TAB_INDEX_INTENT_EXTRA, -1);
+        if(tabIndexToShow == -1 || viewPager == null) return;
+        runOnMainDelayed(() -> viewPager.setCurrentItem(tabIndexToShow), 300);
     }
 
     @Override
@@ -107,6 +120,7 @@ public class MainActivity extends AppBaseActivity {
         else {
             setupTabs();
             gotoDefaultTab();
+            gotoTabIfSpecified(getIntent());
         }
         markPermissionsAksed(this);
     }

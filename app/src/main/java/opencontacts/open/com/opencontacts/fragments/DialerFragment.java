@@ -73,28 +73,30 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
             public void afterTextChanged(Editable searchText) {
                 String t9Text = searchText.toString();
                 if(TextUtils.isEmpty(t9Text)){
-                    hideSearchList();
+                    hideSearchListAndUpdateUIForRest();
                     return;
                 }
                 List<Contact> unLabelledCallLogEntriesMatchingText = new U<>(getUnLabelledCallLogEntriesMatching(t9Text))
                         .map(callLogEntry -> new Contact(unknownContactString, "", callLogEntry.getPhoneNumber()));
                 List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
-                if(contactsMatchingT9.isEmpty()) hideSearchList();
+                if(contactsMatchingT9.isEmpty()) hideSearchListAndUpdateUIForRest();
                 else{
                     searchListAdapter.clear();
                     searchListAdapter.addAll(unLabelledCallLogEntriesMatchingText);
                     searchListAdapter.addAll(contactsMatchingT9);
                     searchListAdapter.notifyDataSetChanged();
                     searchList.setVisibility(VISIBLE);
+                    hideMultiSimDialingButtons();
                 }
             }
         });
     }
 
-    private void hideSearchList() {
+    private void hideSearchListAndUpdateUIForRest() {
         searchListAdapter.clear();
         searchListAdapter.notifyDataSetChanged();
         searchList.setVisibility(INVISIBLE);
+        enableMultiSimDialingButtonsIfHavingMutipleSims();
     }
 
     private void setupSearchList(View view) {
@@ -126,6 +128,10 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
 
+        enableMultiSimDialingButtonsIfHavingMutipleSims();
+    }
+
+    private void enableMultiSimDialingButtonsIfHavingMutipleSims() {
         if(hasMultipleSims(getContext())) showMultiSimDialingButtons();
         else hideMultiSimDialingButtons();
     }

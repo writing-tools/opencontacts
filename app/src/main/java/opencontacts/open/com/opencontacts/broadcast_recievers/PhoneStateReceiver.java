@@ -72,7 +72,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
         else if(state.equals(TelephonyManager.EXTRA_STATE_IDLE)){
             removeCallerIdDrawing(context);
-            if(isCallRecieved || (state.equals(prevState) && hasItBeen(3, SECOND, prevStateTimeStamp)))
+            if(isCallRecieved || state.equals(prevState))
                 return;
             // give android some time to write call log
             new Handler().postDelayed(() -> notifyAboutMissedCall(context), 3000);

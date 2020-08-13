@@ -37,7 +37,9 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
@@ -75,12 +77,32 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        gotoTabIfSpecified(intent);
+        handleIntent(intent);
     }
 
-    private void gotoTabIfSpecified(Intent intent) {
+    private boolean handleIntent(Intent intent) {
+        if(isValidDialIntent(intent)) {
+            showDialerWithNumber(getNumberToDial(intent));
+        } else if(isTabSpecified(intent)){
+            gotoTabSpecified(intent);
+        }
+        else return false;
+        return true;
+    }
+
+    private void showDialerWithNumber(String number) {
+        runOnMainDelayed(() -> {
+            viewPager.setCurrentItem(DIALER_TAB_INDEX);
+            dialerFragment.setNumber(number);
+        }, 500);
+    }
+
+    private boolean isTabSpecified(Intent intent) {
+        return intent.getIntExtra(TAB_INDEX_INTENT_EXTRA, -1) != -1;
+    }
+
+    private void gotoTabSpecified(Intent intent) {
         int tabIndexToShow = intent.getIntExtra(TAB_INDEX_INTENT_EXTRA, -1);
-        if(tabIndexToShow == -1 || viewPager == null) return;
         runOnMainDelayed(() -> viewPager.setCurrentItem(tabIndexToShow), 300);
     }
 
@@ -119,8 +141,8 @@ public class MainActivity extends AppBaseActivity {
         }
         else {
             setupTabs();
-            gotoDefaultTab();
-            gotoTabIfSpecified(getIntent());
+            if(handleIntent(getIntent())) ;
+            else gotoDefaultTab();
         }
         markPermissionsAksed(this);
     }

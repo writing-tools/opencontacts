@@ -451,4 +451,12 @@ public class AndroidUtils {
         return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
     }
 
+    public static boolean isValidDialIntent(Intent intent) {
+        return intent.getData() != null && "tel".equals(intent.getScheme());
+    }
+
+    public static String getNumberToDial(Intent intent) {
+        return intent.getData() == null ? "" : intent.getData().getSchemeSpecificPart();
+    }
+
 }

@@ -11,7 +11,6 @@ import android.telecom.PhoneAccountHandle;
 import android.telecom.TelecomManager;
 import android.telephony.SubscriptionInfo;
 import android.telephony.SubscriptionManager;
-import android.widget.Toast;
 
 import com.github.underscore.U;
 
@@ -20,12 +19,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.CALL_LOG_ENTRIES_CHUNK_SIZE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastSavedCallLogDate;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastSavedCallLogDate;
@@ -39,7 +37,7 @@ class CallLogDBHelper {
     private Map<String, Integer> simsInfo = null;
 
     public static void removeAllContactsLinking() {
-        U.forEach(getRecent100CallLogEntriesFromDB(), callLogEntry -> {
+        U.forEach(getRecentCallLogEntriesFromDB(), callLogEntry -> {
             callLogEntry.name = null;
             callLogEntry.contactId = -1;
             callLogEntry.save();
@@ -138,8 +136,13 @@ class CallLogDBHelper {
         return simId == null ? 1 : simId;
     }
 
-    public static List<CallLogEntry> getRecent100CallLogEntriesFromDB(){
-        return CallLogEntry.find(CallLogEntry.class, null, null, null, "date desc", "100");
+    public static List<CallLogEntry> getRecentCallLogEntriesFromDB(){
+        return CallLogEntry.find(CallLogEntry.class, null, null, null, "date desc", String.valueOf(CALL_LOG_ENTRIES_CHUNK_SIZE));
+    }
+
+    public static List<CallLogEntry> getCallLogEntriesFromDB(int size){
+        int validSize = size > 0 ? size : CALL_LOG_ENTRIES_CHUNK_SIZE;
+        return CallLogEntry.find(CallLogEntry.class, null, null, null, "date desc", String.valueOf(validSize));
     }
 
     public static boolean delete(Long id) {

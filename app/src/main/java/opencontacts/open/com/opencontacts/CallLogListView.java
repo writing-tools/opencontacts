@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -187,6 +188,15 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
             adapter.notifyDataSetChanged();
         };
         setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
+        addFooterView(getViewMoreButton());
+    }
+
+    @NonNull
+    private AppCompatButton getViewMoreButton() {
+        AppCompatButton viewMoreButton = new AppCompatButton(getContext());
+        viewMoreButton.setText(R.string.view_more);
+        viewMoreButton.setOnClickListener(v -> CallLogDataStore.loadNextChunkOfCallLogEntries());
+        return viewMoreButton;
     }
 
     private void prepareLongClickActions() {
@@ -235,7 +245,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     }
 
     public void reload(){
-        final List<GroupedCallLogEntry> groupedCallLogEntries = CallLogGroupingUtil.group(CallLogDataStore.getRecent100CallLogEntries(context));
+        final List<GroupedCallLogEntry> groupedCallLogEntries = CallLogGroupingUtil.group(CallLogDataStore.getRecentCallLogEntries(context));
         this.post(() -> {
             adapter.clear();
             adapter.addAll(groupedCallLogEntries);

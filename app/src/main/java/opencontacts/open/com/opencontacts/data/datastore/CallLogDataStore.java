@@ -19,6 +19,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumeric
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
 public class CallLogDataStore {
+    public static final int CALL_LOG_ENTRIES_CHUNK_SIZE = 100;
     private static CallLogDBHelper callLogDBHelper = new CallLogDBHelper();
     private static List<CallLogEntry> callLogEntries = new ArrayList<>(0);
     private static List<DataStoreChangeListener<CallLogEntry>> dataChangeListeners = new ArrayList<>(3);
@@ -51,11 +52,16 @@ public class CallLogDataStore {
     }
 
     private synchronized static void refreshStore() {
-        callLogEntries = CallLogDBHelper.getRecent100CallLogEntriesFromDB();
-        if(!callLogEntries.isEmpty())
-            for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
-                dataStoreChangeListener.onStoreRefreshed();
-            }
+        callLogEntries = CallLogDBHelper.getRecentCallLogEntriesFromDB();
+        if(!callLogEntries.isEmpty()) {
+            notifyRefreshStore();
+        }
+    }
+
+    private static void notifyRefreshStore() {
+        for (DataStoreChangeListener<CallLogEntry> dataStoreChangeListener : dataChangeListeners) {
+            dataStoreChangeListener.onStoreRefreshed();
+        }
     }
 
     public static CallLogEntry getMostRecentCallLogEntry(Context context) {
@@ -63,7 +69,7 @@ public class CallLogDataStore {
         return callLogEntries.isEmpty() ? null : callLogEntries.get(0);
     }
 
-    public static List<CallLogEntry> getRecent100CallLogEntries(Context context){
+    public static List<CallLogEntry> getRecentCallLogEntries(Context context){
         if(callLogEntries.isEmpty()){
             processAsync(CallLogDataStore::refreshStore);
             return new ArrayList<>(0);
@@ -106,13 +112,11 @@ public class CallLogDataStore {
                 }
                 if(numberOfEntriesUpdated == 0)
                     return;
-                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
-                    dataStoreChangeListener.onStoreRefreshed();
-                }
+                notifyRefreshStore();
             }
 
             private List<CallLogEntry> getCallLogEntriesToWorkWith() {
-                return callLogEntries.isEmpty() ? CallLogDBHelper.getRecent100CallLogEntriesFromDB() : callLogEntries;
+                return callLogEntries.isEmpty() ? CallLogDBHelper.getRecentCallLogEntriesFromDB() : callLogEntries;
             }
         });
     }
@@ -123,7 +127,7 @@ public class CallLogDataStore {
 
     public static void updateCallLogForAllContacts(Context context) {
         if(callLogEntries == null)
-            callLogEntries = getRecent100CallLogEntries(context);
+            callLogEntries = getRecentCallLogEntries(context);
         int numberOfEntriesUpdated = 0;
         for(CallLogEntry callLogEntry : callLogEntries){
             if(callLogEntry.getContactId() != -1)
@@ -138,9 +142,7 @@ public class CallLogDataStore {
         }
         if(numberOfEntriesUpdated == 0)
             return;
-        for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
-            dataStoreChangeListener.onStoreRefreshed();
-        }
+        notifyRefreshStore();
     }
 
     public static void delete(Long id) {
@@ -186,5 +188,12 @@ public class CallLogDataStore {
             matchedEntries.put(phoneNumber, entry);
         });
         return matchedEntries.values();
+    }
+
+    public static void loadNextChunkOfCallLogEntries() {
+        processAsync(() -> {
+            callLogEntries = CallLogDBHelper.getCallLogEntriesFromDB(callLogEntries.size() + CALL_LOG_ENTRIES_CHUNK_SIZE);
+            notifyRefreshStore();
+        });
     }
 }

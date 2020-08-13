@@ -187,6 +187,7 @@
     <string name="should_use_system_app">Force system\'s phone app to call</string>
     <string name="should_use_system_app_summary">Will call only using system\'s default phone app than giving options</string>
     <string name="dialer">Dialer</string>
+    <string name="view_more">View more</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

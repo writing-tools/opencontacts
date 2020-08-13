@@ -13,7 +13,7 @@ import opencontacts.open.com.opencontacts.utils.Common;
 import static opencontacts.open.com.opencontacts.data.datastore.SingleContactWidgetDataStore.getContactForSingleContactWidget;
 import static opencontacts.open.com.opencontacts.data.datastore.SingleContactWidgetDataStore.removeSingleContactWidgets;
 import static opencontacts.open.com.opencontacts.data.datastore.SingleContactWidgetDataStore.replaceOldWithNewWidgetIds;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getCallIntent;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToCall;
 
 public class SingleContactDialerWidgetProvider extends AppWidgetProvider {
     @Override
@@ -53,7 +53,7 @@ public class SingleContactDialerWidgetProvider extends AppWidgetProvider {
         widgetView.setTextViewText(R.id.contact_name, contact.name);
         widgetView.setOnClickPendingIntent(R.id.entire_single_contact_widget,
                 PendingIntent.getActivity(context, 0,
-                        getCallIntent(contact.primaryPhoneNumber.phoneNumber, context),
+                        getIntentToCall(contact.primaryPhoneNumber.phoneNumber, context),
                         0));
         appWidgetManager.updateAppWidget(widgetId, widgetView);
 

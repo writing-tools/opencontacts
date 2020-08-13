@@ -31,10 +31,8 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.view.WindowManager.LayoutParams.TYPE_PHONE;
 import static android.view.WindowManager.LayoutParams.TYPE_SYSTEM_OVERLAY;
-import static java.util.Calendar.SECOND;
 import static opencontacts.open.com.opencontacts.OpenContactsApplication.MISSED_CALLS_CHANEL_ID;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isScreenLocked;
-import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCallerIdLocationOnScreen;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveCallerIdLocationOnScreen;
 
@@ -90,7 +88,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         }
         catch (Exception e){}
         PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT);
-        PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getCallIntent(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getIntentToCall(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT);
         PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getMessageIntent(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT);
         NotificationCompat.Builder mBuilder =
                 new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)

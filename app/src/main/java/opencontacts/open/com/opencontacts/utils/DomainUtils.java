@@ -304,7 +304,7 @@ public class DomainUtils {
 
     public static boolean addContactAsShortcut(Contact contact, Context context){
         ShortcutInfoCompat shortcutInfo = new ShortcutInfoCompat.Builder(context, contact.id + "")
-                .setIntent(AndroidUtils.getCallIntent(contact.primaryPhoneNumber.phoneNumber, context))
+                .setIntent(AndroidUtils.getIntentToCall(contact.primaryPhoneNumber.phoneNumber, context))
                 .setShortLabel(contact.name)
                 .setLongLabel(contact.name)
                 .build();

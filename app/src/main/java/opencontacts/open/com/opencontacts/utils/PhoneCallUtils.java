@@ -17,7 +17,7 @@ import java.util.List;
 import static android.telecom.TelecomManager.EXTRA_PHONE_ACCOUNT_HANDLE;
 import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.callWithSystemDefaultSim;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getCallIntent;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToCall;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
@@ -37,7 +37,7 @@ public class PhoneCallUtils {
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     private static Intent getIntentToCallUsingSim(String number, int simIndex, Context context){
-        Intent callIntent = getCallIntent(number, context);
+        Intent callIntent = getIntentToCall(number, context);
         PhoneAccountHandle phoneAccountHandleToCallWith = getPhoneAccountHandleToCallWith(simIndex, context);
         if(phoneAccountHandleToCallWith == null) return callIntent;
         return callIntent.putExtra(EXTRA_PHONE_ACCOUNT_HANDLE, phoneAccountHandleToCallWith);

@@ -115,7 +115,7 @@ public class AndroidUtils {
     }
 
     public static void callWithSystemDefaultSim(String number, Context context){
-        Intent callIntent = getCallIntent(number, context);
+        Intent callIntent = getIntentToCall(number, context);
         context.startActivity(callIntent);
     }
 
@@ -138,7 +138,7 @@ public class AndroidUtils {
     }
 
     @NonNull
-    public static Intent getCallIntent(String number, Context context) {
+    public static Intent getIntentToCall(String number, Context context) {
         Uri numberUri = Uri.parse("tel:" + Uri.encode(number));
         Intent callIntent;
         if (hasPermission(Manifest.permission.CALL_PHONE, context)) {

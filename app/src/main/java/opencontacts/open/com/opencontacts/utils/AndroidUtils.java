@@ -166,6 +166,7 @@ public class AndroidUtils {
 
     public static Intent getIntentToShowContactDetails(long contactId, Context context){
      return new Intent(context, ContactDetailsActivity.class)
+                    .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     .putExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, contactId);
     }
 

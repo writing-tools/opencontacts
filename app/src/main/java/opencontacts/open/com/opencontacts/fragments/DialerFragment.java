@@ -79,7 +79,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
                 List<Contact> unLabelledCallLogEntriesMatchingText = new U<>(getUnLabelledCallLogEntriesMatching(t9Text))
                         .map(callLogEntry -> new Contact(unknownContactString, "", callLogEntry.getPhoneNumber()));
                 List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
-                if(contactsMatchingT9.isEmpty()) hideSearchListAndUpdateUIForRest();
+                if(contactsMatchingT9.isEmpty() && unLabelledCallLogEntriesMatchingText.isEmpty()) hideSearchListAndUpdateUIForRest();
                 else{
                     searchListAdapter.clear();
                     searchListAdapter.addAll(unLabelledCallLogEntriesMatchingText);

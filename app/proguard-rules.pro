@@ -47,3 +47,6 @@
 # Animal Sniffer compileOnly dependency to ensure APIs are compatible with older versions of Java.
 -dontwarn org.codehaus.mojo.animal_sniffer.*
 ##okhttp ends
+
+#Keep all the app's source code intact atleast upto names. Optimization might still happen
+-keepclasseswithmembers class opencontacts.open.com.opencontacts.** {*;}

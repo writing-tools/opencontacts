@@ -18,6 +18,8 @@ import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static opencontacts.open.com.opencontacts.activities.MainActivity.DIALER_TAB_INDEX;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.dynamicShortcutsAddedAlready;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markAddedDynamicShortcuts;
 
 public class AppShortcuts {
     public static final String ADD_CONTACT_SHORTCUT_ID = "ADD_CONTACT_SHORTCUT_ID";
@@ -31,13 +33,14 @@ public class AppShortcuts {
     @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     private static void addDynamicShortcuts(Context context) {
         ShortcutManager shortcutManager = (ShortcutManager) context.getSystemService(Context.SHORTCUT_SERVICE);
-        if(!shortcutManager.getDynamicShortcuts().isEmpty()) return;
+        if(dynamicShortcutsAddedAlready(context)) return;
         shortcutManager.addDynamicShortcuts(
                 Arrays.asList(
                     getAddContactShortcut(context),
                     getDialerShortcut(context)
                 )
         );
+        markAddedDynamicShortcuts(context);
     }
 
     @NonNull

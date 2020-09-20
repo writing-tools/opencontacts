@@ -6,6 +6,7 @@ import android.graphics.Point;
 
 import java.util.Date;
 
+import opencontacts.open.com.opencontacts.BuildConfig;
 import opencontacts.open.com.opencontacts.R;
 
 import static android.content.Context.MODE_PRIVATE;
@@ -49,6 +50,7 @@ public class SharedPreferencesUtils {
     public static final String DEFAULT_SIM_SELECTION_SIM_1 = "0";
     public static final String DEFAULT_SIM_SELECTION_SIM_2 = "1";
     public static final String SHOULD_USE_SYSTEM_PHONE_APP = "SHOULD_USE_SYSTEM_PHONE_APP";
+    public static final String SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY = "SHORTCUTS_ADDED_IN_VERSION";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -173,5 +175,13 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldUseSystemCallingApp(Context context){
         return getBoolean(SHOULD_USE_SYSTEM_PHONE_APP, false, context);
+    }
+
+    public static boolean dynamicShortcutsAddedAlready(Context context) {
+        return BuildConfig.VERSION_NAME.equals(getStringFromPreferences(SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY, context));
+    }
+
+    public static void markAddedDynamicShortcuts(Context context) {
+        updatePreference(SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY, BuildConfig.VERSION_NAME, context);
     }
 }

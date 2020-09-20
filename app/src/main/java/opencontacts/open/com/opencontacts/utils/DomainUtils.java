@@ -59,6 +59,7 @@ public class DomainUtils {
     public static final Pattern NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN = Pattern.compile("[^0-9+]");
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
     public static final int NUMBER_8 = 8;
+    public static final String X_FAVORITE_EXTENDED_VCARD_PROPERTY = "X-FAVORITE";
 
     private static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
     private static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
@@ -138,7 +139,7 @@ public class DomainUtils {
             else {
                 try{
                     VCard vcard = new VCardReader(vCardData.vcardDataAsString).readNext();
-                    vcard.setExtendedProperty("X-FAVORITE", String.valueOf(favorites.contains(contact)));
+                    vcard.setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(favorites.contains(contact)));
                     vCardWriter.write(vcard);
                 }
                 catch (IOException e){

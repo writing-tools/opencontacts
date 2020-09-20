@@ -145,6 +145,7 @@ public class ContactsDataStore {
 
     private static void refreshStore() {
         contacts = ContactsDBHelper.getAllContactsFromDB();
+        updateFavoritesList();
         notifyListeners(REFRESH, null);
     }
 
@@ -208,6 +209,13 @@ public class ContactsDataStore {
         new Favorite(ContactsDBHelper.getDBContactWithId(contact.id)).save();
         favorites.add(contact);
         notifyListenersAsync(REFRESH, null);
+    }
+
+    public static void addFavorite(opencontacts.open.com.opencontacts.orm.Contact contact) {
+        Contact dummyContactMatchingId = new Contact(contact.getId());
+        if(getFavorites().contains(dummyContactMatchingId)) return;
+        new Favorite(ContactsDBHelper.getDBContactWithId(contact.getId())).save();
+        favorites.add(ContactsDBHelper.getContact(contact.getId()));
     }
 
     public static void removeFavorite(Contact contact) {

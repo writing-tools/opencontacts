@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.UUID;
 
 import ezvcard.VCard;
+import ezvcard.property.RawProperty;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
@@ -25,6 +26,7 @@ import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.X_FAVORITE_EXTENDED_VCARD_PROPERTY;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
@@ -179,13 +181,21 @@ public class ContactsDBHelper {
         Contact contact = createContactSaveInDBAndReturnIt(vcard, context);
         createMobileNumbersAndSaveInDB(vcard, contact);
         createVCardDataAndSaveInDB(vcard, contact);
+        addToFavoritesInCaseIs(vcard, contact);
         return contact;
+    }
+
+    private static void addToFavoritesInCaseIs(VCard vcard, Contact contact) {
+        RawProperty isFavoriteRawProperty = vcard.getExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY);
+        if(isFavoriteRawProperty != null && Boolean.valueOf(isFavoriteRawProperty.getValue()))
+            ContactsDataStore.addFavorite(contact);
     }
 
     public static Contact addContact(Triplet<String, String, VCard> hrefEtagAndVCard, Context context){
         Contact contact = createContactSaveInDBAndReturnIt(hrefEtagAndVCard.z, context);
         createMobileNumbersAndSaveInDB(hrefEtagAndVCard.z, contact);
         createVCardDataAndSaveInDB(hrefEtagAndVCard, contact);
+        addToFavoritesInCaseIs(hrefEtagAndVCard.z, contact);
         return contact;
     }
 

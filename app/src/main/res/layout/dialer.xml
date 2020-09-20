@@ -9,7 +9,11 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:ems="10"
-        android:inputType="phone" />
+        android:inputType="phone"
+        android:textAlignment="center"
+        android:letterSpacing="0.2"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+         />
     <View
         android:id="@+id/center"
         android:layout_centerHorizontal="true"

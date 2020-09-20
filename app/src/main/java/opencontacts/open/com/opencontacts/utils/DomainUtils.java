@@ -96,7 +96,7 @@ public class DomainUtils {
             return;
         }
 
-        byte[] plainTextExportBytes = getVCFExportBytes(ContactsDataStore.getAllContacts());
+        byte[] plainTextExportBytes = getVCFExportBytes(ContactsDataStore.getAllContacts(), ContactsDataStore.getFavorites());
         createOpenContactsDirectoryIfItDoesNotExist();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
         if (hasEncryptingContactsKey(context)) exportAsEncryptedZip(context, plainTextExportBytes, simpleDateFormat);
@@ -127,7 +127,7 @@ public class DomainUtils {
         ZipUtils.exportZip(getEncryptingContactsKey(context), plainTextExportBytes, exportFilePath);
     }
 
-    private static byte[] getVCFExportBytes(List<Contact> allContacts) throws IOException {
+    private static byte[] getVCFExportBytes(List<Contact> allContacts, List<Contact> favorites) throws IOException {
         ByteArrayOutputStream contactsPlainTextExportStream = new ByteArrayOutputStream();
         VCardWriter vCardWriter = new VCardWriter(contactsPlainTextExportStream, VCardVersion.V4_0);
         StructuredName structuredName = new StructuredName();
@@ -137,7 +137,9 @@ public class DomainUtils {
                 createVCardAndWrite(vCardWriter, structuredName, contact);
             else {
                 try{
-                    vCardWriter.write(new VCardReader(vCardData.vcardDataAsString).readNext());
+                    VCard vcard = new VCardReader(vCardData.vcardDataAsString).readNext();
+                    vcard.setExtendedProperty("X-FAVORITE", String.valueOf(favorites.contains(contact)));
+                    vCardWriter.write(vcard);
                 }
                 catch (IOException e){
                     e.printStackTrace();

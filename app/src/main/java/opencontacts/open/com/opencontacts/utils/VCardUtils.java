@@ -18,6 +18,7 @@ import ezvcard.property.Birthday;
 import ezvcard.property.Email;
 import ezvcard.property.FormattedName;
 import ezvcard.property.Note;
+import ezvcard.property.RawProperty;
 import ezvcard.property.SimpleProperty;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
@@ -26,6 +27,7 @@ import ezvcard.property.Uid;
 import ezvcard.property.Url;
 import ezvcard.property.VCardProperty;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.domain.Contact;
 
 import static ezvcard.util.StringUtils.join;
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
@@ -34,6 +36,10 @@ import static opencontacts.open.com.opencontacts.utils.Common.getPartsThatAreNot
 public class VCardUtils {
 
     private static String noNameString;
+    public static final String X_FAVORITE_EXTENDED_VCARD_PROPERTY = "X-FAVORITE";
+    public static final int PRIMARY_PHONE_NUMBER_PREF = 1;
+    public static final int NON_PRIMARY_PHONE_NUMBER_PREF = 3;
+
 
     @NonNull
     public static Pair<String, String> getNameFromVCard(VCard vcard, Context context) {
@@ -140,4 +146,41 @@ public class VCardUtils {
     public static VCard mergeVCardStrings(String primaryVCardString, String secondaryVCardString, Context context) throws IOException {
         return mergeVCards(getVCardFromString(secondaryVCardString), getVCardFromString(primaryVCardString), context);
     }
+
+    public static void markFavoriteInVCard(boolean isFavorite, VCard vcard) {
+        vcard.setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(isFavorite));
+    }
+
+    public static void markFavoriteInVCard(boolean isFavorite, String vCardAsString) throws IOException {
+        getVCardFromString(vCardAsString)
+                .setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(isFavorite));
+    }
+
+    public static boolean isFavorite(VCard vcard) {
+        RawProperty isFavoriteVcardProperty = vcard.getExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY);
+        return isFavoriteVcardProperty != null && isFavoriteVcardProperty.getValue().equals(String.valueOf(true));
+    }
+
+    public static void markPrimaryPhoneNumberInVCard(Contact contact, VCard vcard) {
+        U.forEach(vcard.getTelephoneNumbers(),
+                telephoneNumber -> {
+                    if(contact.primaryPhoneNumber.phoneNumber.equals(telephoneNumber.getText())) telephoneNumber.setPref(PRIMARY_PHONE_NUMBER_PREF);
+                    else  telephoneNumber.setPref(NON_PRIMARY_PHONE_NUMBER_PREF);
+                }
+        );
+    }
+
+    public static void markPrimaryPhoneNumberInVCard(Contact contact, String vcardData) {
+        try {
+            markPrimaryPhoneNumberInVCard(contact, getVCardFromString(vcardData));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static boolean isPrimaryPhoneNumber(Telephone telephone){
+        Integer telephonePref = telephone.getPref();
+        return telephonePref != null &&  telephone.getPref() == PRIMARY_PHONE_NUMBER_PREF;
+    }
+
 }

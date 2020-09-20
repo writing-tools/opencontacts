@@ -27,6 +27,7 @@ import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListe
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.mergeVCardStrings;
 
 public class ContactsDataStore {
@@ -208,14 +209,24 @@ public class ContactsDataStore {
         if(getFavorites().contains(contact)) return;
         new Favorite(ContactsDBHelper.getDBContactWithId(contact.id)).save();
         favorites.add(contact);
+        markAsFavoriteInVCard(contact.id);
         notifyListenersAsync(REFRESH, null);
+    }
+
+    private static void markAsFavoriteInVCard(long contactId) {
+        try {
+            markFavoriteInVCard(true, ContactsDBHelper.getVCard(contactId).vcardDataAsString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void addFavorite(opencontacts.open.com.opencontacts.orm.Contact contact) {
         Contact dummyContactMatchingId = new Contact(contact.getId());
         if(getFavorites().contains(dummyContactMatchingId)) return;
-        new Favorite(ContactsDBHelper.getDBContactWithId(contact.getId())).save();
-        favorites.add(ContactsDBHelper.getContact(contact.getId()));
+        new Favorite(ContactsDBHelper.getDBContactWithId(dummyContactMatchingId.id)).save();
+        favorites.add(ContactsDBHelper.getContact(dummyContactMatchingId.id));
+        markAsFavoriteInVCard(dummyContactMatchingId.id);
     }
 
     public static void removeFavorite(Contact contact) {

@@ -30,7 +30,6 @@ import java.util.regex.Pattern;
 
 import ezvcard.VCard;
 import ezvcard.VCardVersion;
-import ezvcard.io.text.VCardReader;
 import ezvcard.io.text.VCardWriter;
 import ezvcard.parameter.AddressType;
 import ezvcard.parameter.EmailType;
@@ -49,6 +48,9 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ge
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getVCardFromString;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.markPrimaryPhoneNumberInVCard;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -59,7 +61,6 @@ public class DomainUtils {
     public static final Pattern NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN = Pattern.compile("[^0-9+]");
     public static final int MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS = 7;
     public static final int NUMBER_8 = 8;
-    public static final String X_FAVORITE_EXTENDED_VCARD_PROPERTY = "X-FAVORITE";
 
     private static Map<Character, Integer> characterToIntegerMappingForKeyboardLayout;
     private static Map<TelephoneType, String> mobileNumberTypeToTranslatedText;
@@ -138,8 +139,9 @@ public class DomainUtils {
                 createVCardAndWrite(vCardWriter, structuredName, contact);
             else {
                 try{
-                    VCard vcard = new VCardReader(vCardData.vcardDataAsString).readNext();
-                    vcard.setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(favorites.contains(contact)));
+                    VCard vcard = getVCardFromString(vCardData.vcardDataAsString);
+                    if(contact.primaryPhoneNumber.isPrimaryNumber) markPrimaryPhoneNumberInVCard(contact, vcard); //TODO: remove this after two release 22 - this is present for compatibility in 20
+                    markFavoriteInVCard(favorites.contains(contact), vcard); //TODO: remove this after two release 22 - this is present for compatibility in 20
                     vCardWriter.write(vcard);
                 }
                 catch (IOException e){

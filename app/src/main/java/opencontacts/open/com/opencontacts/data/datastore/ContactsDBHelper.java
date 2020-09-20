@@ -26,10 +26,12 @@ import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.X_FAVORITE_EXTENDED_VCARD_PROPERTY;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.isFavorite;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.isPrimaryPhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.markPrimaryPhoneNumberInVCard;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -155,6 +157,7 @@ public class ContactsDBHelper {
                 dbPhoneNumber.isPrimaryNumber = false;
         }
         PhoneNumber.saveInTx(allDbPhoneNumbersOfContact);
+        markPrimaryPhoneNumberInVCard(contact, getVCard(contact.id).vcardDataAsString);
     }
 
     static void updateLastAccessed(long contactId, String callTimeStamp) {
@@ -186,9 +189,7 @@ public class ContactsDBHelper {
     }
 
     private static void addToFavoritesInCaseIs(VCard vcard, Contact contact) {
-        RawProperty isFavoriteRawProperty = vcard.getExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY);
-        if(isFavoriteRawProperty != null && Boolean.valueOf(isFavoriteRawProperty.getValue()))
-            ContactsDataStore.addFavorite(contact);
+        if(isFavorite(vcard)) ContactsDataStore.addFavorite(contact);
     }
 
     public static Contact addContact(Triplet<String, String, VCard> hrefEtagAndVCard, Context context){
@@ -225,7 +226,7 @@ public class ContactsDBHelper {
                     continue;
             }
             catch (Exception e){continue;}
-            new PhoneNumber(getMobileNumber(telephoneNumber), contact, false).save();
+            new PhoneNumber(getMobileNumber(telephoneNumber), contact, isPrimaryPhoneNumber(telephoneNumber)).save();
         }
     }
 

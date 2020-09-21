@@ -8,6 +8,7 @@ import android.support.v4.util.Pair;
 import com.github.underscore.U;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -15,6 +16,7 @@ import ezvcard.VCard;
 import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
 import ezvcard.property.Birthday;
+import ezvcard.property.Categories;
 import ezvcard.property.Email;
 import ezvcard.property.FormattedName;
 import ezvcard.property.Note;
@@ -181,6 +183,15 @@ public class VCardUtils {
     public static boolean isPrimaryPhoneNumber(Telephone telephone){
         Integer telephonePref = telephone.getPref();
         return telephonePref != null &&  telephone.getPref() == PRIMARY_PHONE_NUMBER_PREF;
+    }
+
+    public static List<String> getCategories(VCard vcard) {
+        Categories categories = vcard.getCategories();
+        return categories == null ? Collections.emptyList() : categories.getValues();
+    }
+
+    public static void setCategories(List<String> categories, VCard vcard) {
+        vcard.setCategories(categories.toArray(new String[] {}));
     }
 
 }

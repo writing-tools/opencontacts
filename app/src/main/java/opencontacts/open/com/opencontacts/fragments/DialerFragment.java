@@ -29,6 +29,7 @@ import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
+import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
@@ -77,7 +78,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
                     return;
                 }
                 List<Contact> unLabelledCallLogEntriesMatchingText = new U<>(getUnLabelledCallLogEntriesMatching(t9Text))
-                        .map(callLogEntry -> new Contact(unknownContactString, "", callLogEntry.getPhoneNumber()));
+                        .map(callLogEntry -> createDummyContact(unknownContactString, "", callLogEntry.getPhoneNumber()));
                 List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
                 if(contactsMatchingT9.isEmpty() && unLabelledCallLogEntriesMatchingText.isEmpty()) hideSearchListAndUpdateUIForRest();
                 else{

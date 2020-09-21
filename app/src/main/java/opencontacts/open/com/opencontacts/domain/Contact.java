@@ -2,13 +2,17 @@ package opencontacts.open.com.opencontacts.domain;
 
 import android.support.annotation.NonNull;
 
+import com.github.underscore.U;
+
 import java.io.Serializable;
+import java.util.Collections;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
+import static opencontacts.open.com.opencontacts.utils.domain.ContactGroupsUtil.getGroups;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -25,31 +29,13 @@ public class Contact implements Serializable{
     public String lastAccessed;
     public String t9Text;
     public String textSearchTarget;
+    public List<String> groups;
 
-    public Contact(long id) {
+    private Contact(long id) {
         this.id = id;
     }
 
-    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.name = getName(firstName, lastName);
-        this.phoneNumbers = phoneNumbers;
-        this.primaryPhoneNumber = phoneNumbers.get(0);
-    }
-
-    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed) {
-        this.id = id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.name = getName(firstName, lastName);
-        this.phoneNumbers = phoneNumbers;
-        this.lastAccessed = lastAccessed;
-        this.primaryPhoneNumber = phoneNumbers.get(0);
-    }
-
-    public Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed, PhoneNumber primaryPhoneNumber) {
+    private Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed, PhoneNumber primaryPhoneNumber) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -59,7 +45,7 @@ public class Contact implements Serializable{
         this.primaryPhoneNumber = primaryPhoneNumber;
     }
 
-    public Contact(String firstName, String lastName, String number) {
+    private Contact(String firstName, String lastName, String number) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.name = getName(firstName, lastName);
@@ -95,6 +81,36 @@ public class Contact implements Serializable{
     @NonNull
     private String getName(String firstName, String lastName) {
         return getEmptyStringIfNull(firstName) + " " + getEmptyStringIfNull(lastName);
+    }
+
+    public Contact setGroups(List<String> groups){
+        this.groups = groups;
+        return this;
+    }
+
+    public static Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact, List<PhoneNumber> dbPhoneNumbers){
+        List<PhoneNumber> safePhoneNumbersList = dbPhoneNumbers == null ? Collections.emptyList() : dbPhoneNumbers;
+        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName,
+                contact.lastName, safePhoneNumbersList, contact.lastAccessed,
+                getPrimaryPhoneNumber(safePhoneNumbersList))
+                .setGroups(getGroups(contact));
+    }
+
+    private static PhoneNumber getPrimaryPhoneNumber(List<PhoneNumber> dbPhoneNumbers) {
+        if(dbPhoneNumbers.isEmpty()) return new PhoneNumber("");
+        PhoneNumber primaryPhoneNumber = U.chain(dbPhoneNumbers)
+                .filter(arg -> arg.isPrimaryNumber)
+                .firstOrNull()
+                .item();
+        return primaryPhoneNumber == null ? dbPhoneNumbers.get(0) : primaryPhoneNumber;
+    }
+
+    public static Contact createDummyContact(long id){
+        return new Contact(id);
+    }
+
+    public static Contact createDummyContact(String firstName, String lastName, String number){
+        return new Contact(firstName, lastName, number);
     }
 
 }

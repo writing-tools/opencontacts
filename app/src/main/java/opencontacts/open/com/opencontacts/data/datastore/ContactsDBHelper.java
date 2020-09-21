@@ -23,6 +23,7 @@ import opencontacts.open.com.opencontacts.utils.Triplet;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.domain.Contact.createNewDomainContact;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
@@ -122,18 +123,6 @@ public class ContactsDBHelper {
                 .forEach(ormContact -> contactsMap.put(ormContact.getId(), createNewDomainContact(ormContact, emptyPhoneNumbersList)));
 
         return new ArrayList<>(contactsMap.values());
-    }
-
-    private static opencontacts.open.com.opencontacts.domain.Contact createNewDomainContact(opencontacts.open.com.opencontacts.orm.Contact contact, List<PhoneNumber> dbPhoneNumbers){
-        if(dbPhoneNumbers == null || dbPhoneNumbers.isEmpty())
-            return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, dbPhoneNumbers, contact.lastAccessed, new PhoneNumber(""));
-        PhoneNumber primaryPhoneNumber = U.chain(dbPhoneNumbers)
-                .filter(arg -> arg.isPrimaryNumber)
-                .firstOrNull()
-                .item();
-        primaryPhoneNumber = primaryPhoneNumber == null ? dbPhoneNumbers.get(0) : primaryPhoneNumber;
-
-        return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName, contact.lastName, dbPhoneNumbers, contact.lastAccessed, primaryPhoneNumber);
     }
 
     static opencontacts.open.com.opencontacts.domain.Contact getContact(long id){

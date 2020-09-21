@@ -21,6 +21,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
@@ -80,7 +81,7 @@ public class ContactsDataStore {
     }
 
     private static void reloadContact(long contactId) {
-        int indexOfContact = contacts.indexOf(new Contact(contactId));
+        int indexOfContact = contacts.indexOf(createDummyContact(contactId));
         if (indexOfContact == -1)
             return;
         Contact contactFromDB = ContactsDBHelper.getContact(contactId);
@@ -113,7 +114,7 @@ public class ContactsDataStore {
     public static Contact getContactWithId(long contactId) {
         if (contactId == -1 || contacts == null)
             return null;
-        int indexOfContact = contacts.indexOf(new Contact(contactId));
+        int indexOfContact = contacts.indexOf(createDummyContact(contactId));
         if (indexOfContact == -1)
             return null;
         return contacts.get(indexOfContact);
@@ -222,7 +223,7 @@ public class ContactsDataStore {
     }
 
     public static void addFavorite(opencontacts.open.com.opencontacts.orm.Contact contact) {
-        Contact dummyContactMatchingId = new Contact(contact.getId());
+        Contact dummyContactMatchingId = createDummyContact(contact.getId());
         if(getFavorites().contains(dummyContactMatchingId)) return;
         new Favorite(ContactsDBHelper.getDBContactWithId(dummyContactMatchingId.id)).save();
         favorites.add(ContactsDBHelper.getContact(dummyContactMatchingId.id));

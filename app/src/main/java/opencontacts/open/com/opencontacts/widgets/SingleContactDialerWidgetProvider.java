@@ -43,7 +43,6 @@ public class SingleContactDialerWidgetProvider extends AppWidgetProvider {
         try {
             contact = getContactForSingleContactWidget(widgetId, context);
         } catch (Exception e) {
-            System.out.println("setting all gone yolo");
             widgetView.setTextViewText(R.id.contact_name, "DELETED");
             widgetView.setImageViewResource(R.id.contact_image, R.drawable.ic_error_outline_black_24dp);
             appWidgetManager.updateAppWidget(widgetId, widgetView);

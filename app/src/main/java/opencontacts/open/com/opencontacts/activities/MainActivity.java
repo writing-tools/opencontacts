@@ -329,6 +329,6 @@ public class MainActivity extends AppBaseActivity {
         return Pair.create(dialpadIconOnUnSelect, dialpadIconOnSelect);
     }
     public void collapseSearchView(){
-        searchView.onActionViewCollapsed();
+        if(searchView != null) searchView.onActionViewCollapsed(); // happens when app hasn't even got menu items callback
     }
 }

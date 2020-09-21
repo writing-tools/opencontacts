@@ -30,6 +30,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SampleDataStoreChangeListener;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
@@ -38,6 +39,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     private ArrayAdapter<Contact> adapter;
     private SearchView searchView;
     private List<Contact> contacts;
+    private SampleDataStoreChangeListener<Contact> contactsDataChangeListener;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,7 +68,12 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
             @Override
             public long getItemId(int position) {
-                return getItem(position).id;
+                try{
+                    return getItem(position).id;
+                }
+                catch (Exception e){
+                    return -1; // happening as we add and remove entities.
+                }
             }
 
             @NonNull
@@ -79,38 +86,36 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         };
         adapter.setNotifyOnChange(true);
         contactsListView.setAdapter(adapter);
-        ((RelativeLayout)findViewById(R.id.content)).addView(contactsListView);
+        ((RelativeLayout)findViewById(R.id.contacts_list)).addView(contactsListView);
 
         ((Toolbar)findViewById(R.id.toolbar)).setTitle(getTitleResource());
 
-        ContactsDataStore.addDataChangeListener(new SampleDataStoreChangeListener<Contact>(){
+        contactsDataChangeListener = new SampleDataStoreChangeListener<Contact>() {
             @Override
             public void onUpdate(Contact contact) {
                 contactsListView.post(() -> {
-                    System.out.println("yolo updated contact: " + contact.name);
                     adapter.remove(contact);
                     adapter.add(contact);
                     contacts.remove(contact);
                     contacts.add(contact);
-                    ((ContactsListFilter)(adapter.getFilter())).updateMap(contact);
+                    ((ContactsListFilter) (adapter.getFilter())).updateMap(contact);
                     setFilterInCaseExisting();
                 });
             }
 
             @Override
             public void onRemove(Contact contact) {
-                contactsListView.post(() ->{
-                    System.out.println("yolo removed contact: " + contact.name);
+                contactsListView.post(() -> {
                     adapter.remove(contact);
                     contacts.remove(contact);
-                    ((ContactsListFilter)(adapter.getFilter())).updateMap(contact);
+                    ((ContactsListFilter) (adapter.getFilter())).updateMap(contact);
                     setFilterInCaseExisting();
                 });
             }
 
             @Override
             public void onAdd(Contact contact) {
-                contactsListView.post(()-> {
+                contactsListView.post(() -> {
                     adapter.add(contact);
                     setFilterInCaseExisting();
                 });
@@ -119,15 +124,15 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
             @Override
             public void onStoreRefreshed() {
                 contactsListView.post(() -> {
-                    System.out.println("yolo store updated: ");
                     contacts = getAllContacts();
                     adapter.clear();
                     adapter.addAll(contacts);
-                    ((ContactsListFilter)(adapter.getFilter())).mapAsync(contacts);
+                    ((ContactsListFilter) (adapter.getFilter())).mapAsync(contacts);
                     setFilterInCaseExisting();
                 });
             }
-        });
+        };
+        ContactsDataStore.addDataChangeListener(contactsDataChangeListener);
     }
 
     private void setFilterInCaseExisting() {
@@ -152,7 +157,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
     @Override
     int getLayoutResource() {
-        return R.layout.activity_add_to_contact;
+        return R.layout.activity_base_contact_chooser;
     }
 
     @Override
@@ -185,5 +190,11 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
             }
         });
 
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        removeDataChangeListener(contactsDataChangeListener);
     }
 }

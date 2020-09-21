@@ -41,7 +41,8 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
-        <activity android:name=".activities.GroupsActivity"></activity>
+        <activity android:name=".activities.GroupsActivity" />
+        <activity android:name=".activities.ContactGroupEditActivity" />
 
         <meta-data
             android:name="DATABASE"

@@ -50,7 +50,7 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
         layoutParams.rightMargin = (int) AndroidUtils.dpToPixels(20);
         layoutParams.addRule(ALIGN_PARENT_RIGHT);
         layoutParams.addRule(ALIGN_PARENT_BOTTOM);
-        ((RelativeLayout)findViewById(R.id.content)).addView(fabMergeButton, layoutParams);
+        ((RelativeLayout)findViewById(R.id.contacts_list)).addView(fabMergeButton, layoutParams);
 
         fabMergeButton.setOnClickListener(v -> mergeContacts(getSelectedContacts(), MergeContactsActivity.this));
     }

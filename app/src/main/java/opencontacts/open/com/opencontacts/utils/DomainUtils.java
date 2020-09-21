@@ -83,6 +83,10 @@ public class DomainUtils {
         for(int i=0, charCodeForA = 65; i<26; i++){
             characterToIntegerMappingForKeyboardLayout.put((char) (charCodeForA + i), numericsMappingForAlphabetsInNumberKeypad[i]);
         }
+        characterToIntegerMappingForKeyboardLayout.put('.', 1);
+        characterToIntegerMappingForKeyboardLayout.put(' ', 0);
+        for (int i = 0, numericAsciiCodeStartingCode = 48; i < 10; i++)
+            characterToIntegerMappingForKeyboardLayout.put((char) (numericAsciiCodeStartingCode + i), i);
     }
 
     private static void createCallTypeIntToTextMapping(Context context){
@@ -183,7 +187,7 @@ public class DomainUtils {
         StringBuffer numericString = new StringBuffer();
         for(char c: nonAccentedText.toCharArray()){
             if(Character.isSpaceChar(c)){
-                numericString.append(" ");
+                numericString.append(0);
                 continue;
             }
             Integer numericCode = characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c));

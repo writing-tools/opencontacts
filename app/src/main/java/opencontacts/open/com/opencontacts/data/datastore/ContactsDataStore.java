@@ -147,6 +147,7 @@ public class ContactsDataStore {
 
     private static void refreshStore() {
         contacts = ContactsDBHelper.getAllContactsFromDB();
+        ContactGroupsDataStore.initInCaseHasNot();
         updateFavoritesList();
         notifyListeners(REFRESH, null);
     }

@@ -31,6 +31,7 @@ import opencontacts.open.com.opencontacts.interfaces.SampleDataStoreChangeListen
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
+import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
@@ -196,5 +197,11 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         removeDataChangeListener(contactsDataChangeListener);
+    }
+
+    @NonNull
+    protected List<Contact> getSelectedContacts() {
+        long[] checkedItemIds = getContactsListView().getCheckedItemIds();
+        return mapIndexes(checkedItemIds.length, index -> ContactsDataStore.getContactWithId(checkedItemIds[index]));
     }
 }

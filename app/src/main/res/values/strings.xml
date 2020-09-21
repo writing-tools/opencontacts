@@ -193,6 +193,7 @@
     <string name="group_name">Group name</string>
     <string name="add_contacts">Add contacts</string>
     <string name="edit_group">Edit group</string>
+    <string name="Automerge">AutoMerge</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

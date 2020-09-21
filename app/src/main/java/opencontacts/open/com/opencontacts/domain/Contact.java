@@ -119,6 +119,22 @@ public class Contact implements Serializable{
         return Arrays.asList(groups.split(GROUPS_SEPERATOR_CHAR));
     }
 
+    public List<String> addGroup(String groupName){
+        List<String> groupNames = getGroupNames();
+        if (groupNames.contains(groupName)) return groupNames;
+        groupNames.add(groupName);
+        this.groups = getGroupsNamesCSVString(groupNames);
+        return groupNames;
+    }
+
+    public List<String> removeGroup(String groupName){
+        List<String> groupNames = getGroupNames();
+        if (!groupNames.contains(groupName)) return groupNames;
+        while(groupNames.remove(groupName)){};
+        this.groups = getGroupsNamesCSVString(groupNames);
+        return groupNames;
+    }
+
     private static String getGroupsNamesCSVString(List<String> groups) {
         return U.join(groups, GROUPS_SEPERATOR_CHAR);
     }

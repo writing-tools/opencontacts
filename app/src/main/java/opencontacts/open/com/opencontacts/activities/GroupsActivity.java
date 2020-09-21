@@ -8,7 +8,7 @@ import android.widget.ArrayAdapter;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsStore;
+import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
 import static android.view.View.GONE;
@@ -35,7 +35,7 @@ public class GroupsActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        allGroups = ContactGroupsStore.getAllGroups();
+        allGroups = ContactGroupsDataStore.getAllGroups();
         if(allGroups.isEmpty()) showAddGroupLayout();
         else setupAndShowGroups();
     }

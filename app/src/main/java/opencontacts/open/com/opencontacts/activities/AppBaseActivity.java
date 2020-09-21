@@ -40,11 +40,16 @@ public abstract class AppBaseActivity extends AppCompatActivity{
         if(!menu.hasVisibleItems())
             return super.onCreateOptionsMenu(menu);
         int textColorPrimary = getThemeAttributeColor(android.R.attr.textColorSecondary, this);
+        processMenu(menu, textColorPrimary);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    private void processMenu(Menu menu, int textColorPrimary) {
         for(int i = 0, totalItems = menu.size(); i < totalItems; i++){
             MenuItem menuItem = menu.getItem(i);
+            if(menuItem.hasSubMenu()) processMenu(menuItem.getSubMenu(), textColorPrimary);
             if(menuItem.getIcon() == null) continue;
             setColorFilterUsingColor(menuItem.getIcon(), textColorPrimary);
         }
-        return super.onCreateOptionsMenu(menu);
     }
 }

@@ -67,7 +67,7 @@ public class ContactGroupsDataStore {
 
     public static void updateGroup(List<Contact> newContacts, String newGroupName, ContactGroup group){
         group.updateName(newGroupName);
-        Collection<Contact> onlyNewContacts = U.filter(newContacts, group.contacts::contains);
+        Collection<Contact> onlyNewContacts = U.reject(newContacts, group.contacts::contains);
         U.forEach(onlyNewContacts, newContact -> addContactToGroup(group, newContact));
 
         Collection<Contact> removedContacts = U.reject(group.contacts, newContacts::contains);

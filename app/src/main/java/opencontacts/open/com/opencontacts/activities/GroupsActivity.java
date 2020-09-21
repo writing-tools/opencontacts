@@ -5,15 +5,24 @@ import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
 import android.view.Menu;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import com.github.underscore.U;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
+import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
+import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
@@ -24,6 +33,9 @@ public class GroupsActivity extends AppBaseActivity {
     private AppCompatSpinner groupNameSpinner;
     private List<ContactGroup> allGroups;
     private ArrayAdapter<Object> spinnerAdapter;
+    private ListView contactsListView;
+    private String selectedGroupName;
+    private ContactsListViewAdapter contactsListAdapter;
 
     @Override
     int getLayoutResource() {
@@ -35,6 +47,21 @@ public class GroupsActivity extends AppBaseActivity {
         super.onCreate(savedInstanceState);
         setTitle("");
         groupNameSpinner = findViewById(R.id.group_name);
+        groupNameSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                ContactGroup selectedItem = (ContactGroup) groupNameSpinner.getSelectedItem();
+                if(selectedItem == null) return;
+                selectedGroupName = selectedItem.getName();
+                showContactsListOfSelectedGroup(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        contactsListView = findViewById(R.id.contacts_list);
     }
 
     @Override
@@ -46,16 +73,50 @@ public class GroupsActivity extends AppBaseActivity {
     }
 
     private void setupAndShowGroups() {
-        if(spinnerAdapter == null)
-            spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>(allGroups));
-        else{
+        int selectedGroupIndex = getSelectedGroupIndex();
+        refreshGroupNamesSpinnerData(selectedGroupIndex);
+        showContactsListOfSelectedGroup(selectedGroupIndex);
+        showGroupNamesAndRelatedContacts();
+    }
+
+    private int getSelectedGroupIndex() {
+        if(isEmpty(selectedGroupName)) return 0;
+        int selectedGroupIndex = U.findIndex(allGroups, group -> group.getName().equals(selectedGroupName));
+        return selectedGroupIndex == -1 ? 0 : selectedGroupIndex;
+    }
+
+    private void showContactsListOfSelectedGroup(int selectedGroupIndex) {
+        if(contactsListAdapter == null) setupContactsListAdapter();
+
+        contactsListAdapter.clear();
+        contactsListAdapter.addAll(new ArrayList<>(allGroups.get(selectedGroupIndex).contacts));
+        contactsListAdapter.notifyDataSetChanged();
+    }
+
+    private void setupContactsListAdapter() {
+        contactsListAdapter = new ContactsListViewAdapter(this);
+        contactsListView.setAdapter(contactsListAdapter);
+        contactsListAdapter.setContactsListActionsListener(new DefaultContactsListActions(this){
+            @Override
+            public void onLongClick(Contact contact) { }
+        });
+    }
+
+    private void refreshGroupNamesSpinnerData(int selectedGroupIndex) {
+        if(spinnerAdapter == null) setupSpinnerAdapter();
+        else {
             spinnerAdapter.clear();
             spinnerAdapter.addAll(allGroups);
         }
         invalidateOptionsMenu(); //this will show the edit option
         groupNameSpinner.setAdapter(spinnerAdapter);
         spinnerAdapter.notifyDataSetChanged();
-        showGroups();
+        groupNameSpinner.setSelection(selectedGroupIndex);
+    }
+
+    private void setupSpinnerAdapter() {
+        spinnerAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, new ArrayList<>(allGroups));
+        spinnerAdapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item);
     }
 
     private void showEmptyGroupsMessage(){
@@ -64,9 +125,10 @@ public class GroupsActivity extends AppBaseActivity {
         setTitle(R.string.groups);
     }
 
-    private void showGroups() {
+    private void showGroupNamesAndRelatedContacts() {
         findViewById(R.id.empty_groups_textview).setVisibility(GONE);
         groupNameSpinner.setVisibility(VISIBLE);
+        contactsListView.setVisibility(VISIBLE);
         setTitle("");
     }
 

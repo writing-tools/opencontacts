@@ -127,12 +127,12 @@ public class Contact implements Serializable{
         return groupNames;
     }
 
-    public List<String> removeGroup(String groupName){
+    public List<String> removeGroup(String groupNameToRemove){
         List<String> groupNames = getGroupNames();
-        if (!groupNames.contains(groupName)) return groupNames;
-        while(groupNames.remove(groupName)){};
-        this.groups = getGroupsNamesCSVString(groupNames);
-        return groupNames;
+        List<String> finalGroupNames = U.reject(groupNames, groupNameToRemove::equals);
+        if (finalGroupNames.size() == groupNames.size()) return groupNames;
+        this.groups = getGroupsNamesCSVString(finalGroupNames);
+        return finalGroupNames;
     }
 
     private static String getGroupsNamesCSVString(List<String> groups) {

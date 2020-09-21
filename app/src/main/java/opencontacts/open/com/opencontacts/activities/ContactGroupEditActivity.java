@@ -14,9 +14,11 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
+import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.createNewGroup;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.updateGroup;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 
 
@@ -32,6 +34,14 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
         groupNameFromPrevScreen = getEmptyStringIfNull(getIntent().getStringExtra(GROUP_NAME_INTENT_EXTRA));
         LinearLayout aboveContactsListLinearLayout = findViewById(R.id.above_contacts_list);
         aboveContactsListLinearLayout.addView(getEditTextForGroupName());
+        if(isEmpty(groupNameFromPrevScreen)) return;
+        runOnMainDelayed(this::preselectContactsFromGroup, 300);
+    }
+
+    private void preselectContactsFromGroup() {
+        ContactGroup group = ContactGroupsDataStore.getGroup(groupNameFromPrevScreen);
+        if(group == null) return;
+        setSelectedContacts(group.contacts);
     }
 
     private View getEditTextForGroupName() {

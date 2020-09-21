@@ -19,6 +19,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.ContactsListFilter;
@@ -28,6 +29,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SampleDataStoreChangeListener;
+import opencontacts.open.com.opencontacts.utils.Common;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
@@ -203,5 +205,13 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     protected List<Contact> getSelectedContacts() {
         long[] checkedItemIds = getContactsListView().getCheckedItemIds();
         return mapIndexes(checkedItemIds.length, index -> ContactsDataStore.getContactWithId(checkedItemIds[index]));
+    }
+
+    protected void setSelectedContacts(Collection<Contact> contactsToBeSelected){
+        Common.forEachIndex(contactsListView.getCount(), index -> {
+            if(contactsToBeSelected.contains(contactsListView.getItemAtPosition(index)))
+            contactsListView.setItemChecked(index, true);
+        });
+
     }
 }

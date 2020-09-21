@@ -6,11 +6,11 @@ import android.support.v7.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import java.io.IOException;
-
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+
+import static opencontacts.open.com.opencontacts.utils.CrashUtils.reportError;
 
 /**
  * Created by sultanm on 1/21/18.
@@ -34,8 +34,9 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
                         protected Boolean doInBackground(Void... params) {
                             try {
                                 DomainUtils.exportAllContacts(context);
-                            } catch (IOException e) {
+                            } catch (Exception e) {
                                 e.printStackTrace();
+                                AndroidUtils.runOnMainDelayed(() -> reportError(e, context), 100);
                                 return false;
                             }
                             return true;

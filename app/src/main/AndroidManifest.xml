@@ -41,6 +41,7 @@
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE"/>
             </intent-filter>
         </activity>
+        <activity android:name=".activities.GroupsActivity"></activity>
 
         <meta-data
             android:name="DATABASE"

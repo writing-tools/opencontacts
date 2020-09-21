@@ -192,6 +192,11 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(MainActivity.this, AboutActivity.class));
             return true;
         });
+
+        menu.findItem(R.id.action_groups).setOnMenuItemClickListener(item -> {
+            startActivity(new Intent(MainActivity.this, GroupsActivity.class));
+            return true;
+        });
         menu.findItem(R.id.action_help).setOnMenuItemClickListener(item -> {
             startActivity(new Intent(MainActivity.this, HelpActivity.class));
             return true;

@@ -18,4 +18,9 @@ public class ContactGroup {
         contacts.remove(contact);
         return this;
     }
+
+    @Override
+    public String toString() {
+        return name;
+    }
 }

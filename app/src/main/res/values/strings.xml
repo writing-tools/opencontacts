@@ -189,6 +189,9 @@
     <string name="dialer">Dialer</string>
     <string name="view_more">View more</string>
     <string name="more">More</string>
+    <string name="groups">Groups</string>
+    <string name="group_name">Group name</string>
+    <string name="add_contacts">Add contacts</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>
@@ -216,7 +219,7 @@
         <item>1</item>
     </string-array>
     <string-array name="tabs_list">
-        <item >Call log</item>
+        <item>Call log</item>
         <item>Contacts</item>
         <item>Dialer</item>
     </string-array>

@@ -3,6 +3,7 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import com.github.underscore.lodash.U;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -37,5 +38,9 @@ public class ContactGroupsStore {
 
     public static void computeGroupsAsync(){
         processAsync(ContactGroupsStore::COMPUTE_INTENSIVE_computeGroups);
+    }
+
+    public static List<ContactGroup> getAllGroups() {
+        return new ArrayList<>(groupsMap.values());
     }
 }

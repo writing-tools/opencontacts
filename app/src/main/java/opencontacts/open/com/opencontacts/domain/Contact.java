@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import com.github.underscore.U;
 
 import java.io.Serializable;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -12,7 +13,6 @@ import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
-import static opencontacts.open.com.opencontacts.utils.domain.ContactGroupsUtil.getGroups;
 
 /**
  * Created by sultanm on 7/22/17.
@@ -29,7 +29,8 @@ public class Contact implements Serializable{
     public String lastAccessed;
     public String t9Text;
     public String textSearchTarget;
-    public List<String> groups;
+    public String groups;
+    public static final String GROUPS_SEPERATOR_CHAR = ",";
 
     private Contact(long id) {
         this.id = id;
@@ -83,7 +84,7 @@ public class Contact implements Serializable{
         return getEmptyStringIfNull(firstName) + " " + getEmptyStringIfNull(lastName);
     }
 
-    public Contact setGroups(List<String> groups){
+    public Contact setGroups(String groups){
         this.groups = groups;
         return this;
     }
@@ -93,7 +94,7 @@ public class Contact implements Serializable{
         return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName,
                 contact.lastName, safePhoneNumbersList, contact.lastAccessed,
                 getPrimaryPhoneNumber(safePhoneNumbersList))
-                .setGroups(getGroups(contact));
+                .setGroups(contact.groups);
     }
 
     private static PhoneNumber getPrimaryPhoneNumber(List<PhoneNumber> dbPhoneNumbers) {
@@ -111,6 +112,15 @@ public class Contact implements Serializable{
 
     public static Contact createDummyContact(String firstName, String lastName, String number){
         return new Contact(firstName, lastName, number);
+    }
+
+    public List<String> getGroupNames() {
+        if(groups == null) return Collections.emptyList();
+        return Arrays.asList(groups.split(GROUPS_SEPERATOR_CHAR));
+    }
+
+    private static String getGroupsNamesCSVString(List<String> groups) {
+        return U.join(groups, GROUPS_SEPERATOR_CHAR);
     }
 
 }

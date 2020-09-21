@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.UUID;
 
 import ezvcard.VCard;
-import ezvcard.property.RawProperty;
 import ezvcard.property.Telephone;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;

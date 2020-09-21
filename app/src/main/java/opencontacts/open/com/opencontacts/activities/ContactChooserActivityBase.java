@@ -168,7 +168,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         menu.add(R.string.search)
                 .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
                 .setActionView(searchView);
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
     private void bindSearchViewToContacts(SearchView searchView) {

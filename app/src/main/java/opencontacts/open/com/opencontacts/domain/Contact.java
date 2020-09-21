@@ -119,10 +119,10 @@ public class Contact implements Serializable{
         return Arrays.asList(groups.split(GROUPS_SEPERATOR_CHAR));
     }
 
-    public List<String> addGroup(String groupName){
+    public List<String> addGroup(String newGroupName){
         List<String> groupNames = getGroupNames();
-        if (groupNames.contains(groupName)) return groupNames;
-        groupNames.add(groupName);
+        if (groupNames.contains(newGroupName)) return groupNames;
+        groupNames = U.concat(groupNames, Collections.singleton(newGroupName));
         this.groups = getGroupsNamesCSVString(groupNames);
         return groupNames;
     }

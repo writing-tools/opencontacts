@@ -178,7 +178,7 @@ public class ContactsDataStore {
 
     public static void deleteAllContacts(Context context) {
         processAsync(() -> {
-            ContactsDBHelper.deleteAllContacts();
+            ContactsDBHelper.deleteAllContactsAndRelatedStuff();
             refreshStore();
             toastFromNonUIThread(R.string.deleted_all_contacts, Toast.LENGTH_LONG, context);
         });

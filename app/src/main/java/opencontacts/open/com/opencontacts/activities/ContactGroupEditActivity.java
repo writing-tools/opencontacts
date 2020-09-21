@@ -1,7 +1,8 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import android.os.Bundle;
-import android.support.v7.widget.AppCompatEditText;
+import android.support.design.widget.TextInputEditText;
+import android.support.design.widget.TextInputLayout;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -13,6 +14,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
+import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.createNewGroup;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.updateGroup;
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
@@ -20,8 +22,8 @@ import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNu
 
 public class ContactGroupEditActivity extends ContactChooserActivityBase {
 
-    private static final String GROUP_NAME_INTENT_EXTRA = "group_name";
-    private AppCompatEditText groupNameEditText;
+    public static final String GROUP_NAME_INTENT_EXTRA = "group_name";
+    private TextInputEditText groupNameEditText;
     private String groupNameFromPrevScreen;
 
     @Override
@@ -33,9 +35,12 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
     }
 
     private View getEditTextForGroupName() {
-        groupNameEditText = new AppCompatEditText(this);
+        groupNameEditText = new TextInputEditText(this);
+        groupNameEditText.setHint(R.string.group_name);
         groupNameEditText.setText(groupNameFromPrevScreen);
-        return groupNameEditText;
+        TextInputLayout textInputLayout = new TextInputLayout(this);
+        textInputLayout.addView(groupNameEditText);
+        return textInputLayout;
     }
 
     @Override
@@ -44,8 +49,11 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getString(R.string.save))
+                .setIcon(R.drawable.ic_save_black_24dp)
+                .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
                 .setOnMenuItemClickListener(item -> {
                     save();
+                    finish();
                     return true;
                 });
         return super.onCreateOptionsMenu(menu);
@@ -54,8 +62,7 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
     private void save() {
         List<Contact> selectedContacts = getSelectedContacts();
         ContactGroup group = ContactGroupsDataStore.getGroup(groupNameFromPrevScreen);
-        if(group == null)
-            createNewGroup(selectedContacts, groupNameEditText.getText().toString());
+        if(group == null) createNewGroup(selectedContacts, groupNameEditText.getText().toString());
         else updateGroup(selectedContacts, groupNameEditText.getText().toString(), group);
     }
 

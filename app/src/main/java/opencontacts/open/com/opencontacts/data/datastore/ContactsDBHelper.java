@@ -160,12 +160,13 @@ public class ContactsDBHelper {
         return VCardData.getVCardData(contactId);
     }
 
-    public static void deleteAllContacts(){
+    public static void deleteAllContactsAndRelatedStuff(){
         Contact.deleteAll(Contact.class);
         PhoneNumber.deleteAll(PhoneNumber.class);
         VCardData.deleteAll(VCardData.class);
         Favorite.deleteAll(Favorite.class);
         CallLogDataStore.removeAllContactsLinking();
+        ContactGroupsDataStore.computeGroupsAsync();
     }
 
     public static Contact addContact(VCard vcard, Context context){

@@ -50,13 +50,16 @@ public class ContactGroupsDataStore {
         init = true;
     }
 
+    public static void invalidateGroups(){
+        init = false;
+        groupsMap = new HashMap<>(0);
+    }
+
     public static void computeGroupsAsync(){
         processAsync(ContactGroupsDataStore::COMPUTE_INTENSIVE_computeGroups);
     }
 
-    public static List<ContactGroup> getAllGroups() {
-        return new ArrayList<>(groupsMap.values());
-    }
+    public static List<ContactGroup> getAllGroups() { return new ArrayList<>(groupsMap.values()); }
 
 
     public static void createNewGroup(List<Contact> contacts , String groupName) {

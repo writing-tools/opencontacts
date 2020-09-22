@@ -23,10 +23,12 @@ import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.domain.Contact.createNewDomainContact;
+import static opencontacts.open.com.opencontacts.domain.Contact.getGroupsNamesCSVString;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getCategories;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.isFavorite;
@@ -166,7 +168,6 @@ public class ContactsDBHelper {
         VCardData.deleteAll(VCardData.class);
         Favorite.deleteAll(Favorite.class);
         CallLogDataStore.removeAllContactsLinking();
-        ContactGroupsDataStore.computeGroupsAsync();
     }
 
     public static Contact addContact(VCard vcard, Context context){
@@ -222,6 +223,7 @@ public class ContactsDBHelper {
     private static Contact createContactSaveInDBAndReturnIt(VCard vcard, Context context) {
         Pair<String, String> name = getNameFromVCard(vcard, context);
         Contact contact = new Contact(name.first, name.second);
+        contact.groups = getGroupsNamesCSVString(getCategories(vcard));
         contact.save();
         return contact;
     }

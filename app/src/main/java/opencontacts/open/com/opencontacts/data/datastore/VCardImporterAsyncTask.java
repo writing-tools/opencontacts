@@ -19,7 +19,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
-import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.ZipUtils.getPlainTextInputStreamFromZip;
 
@@ -106,7 +106,8 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
                 break;
             case PROGRESS_FINAL_RESULT_OF_IMPORT:
                 ContactsDataStore.requestResumeUpdates();
-                computeGroupsAsync();
+                ContactsDataStore.refreshStoreAsync();
+                invalidateGroups();
                 CallLogDataStore.updateCallLogAsyncForAllContacts(contextWeakReference.get());
                 break;
             case PROGRESS_TOTAL_NUMBER_OF_VCARDS:

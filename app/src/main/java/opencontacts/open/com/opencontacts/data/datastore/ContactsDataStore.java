@@ -21,6 +21,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
@@ -181,6 +182,7 @@ public class ContactsDataStore {
         processAsync(() -> {
             ContactsDBHelper.deleteAllContactsAndRelatedStuff();
             refreshStore();
+            computeGroupsAsync();
             toastFromNonUIThread(R.string.deleted_all_contacts, Toast.LENGTH_LONG, context);
         });
     }

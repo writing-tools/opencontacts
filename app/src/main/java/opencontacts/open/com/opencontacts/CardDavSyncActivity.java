@@ -34,6 +34,7 @@ import opencontacts.open.com.opencontacts.utils.CheekyCarddavServerStuff;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
 import static android.widget.Toast.LENGTH_SHORT;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.merge;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.replaceContactWithServers;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
@@ -151,8 +152,9 @@ public class CardDavSyncActivity extends AppCompatActivity {
             showError(R.string.sync_failed);
             return;
         }
-        ContactGroupsDataStore.computeGroupsAsync();
+        invalidateGroups();
         ContactsDataStore.requestResumeUpdates();
+        ContactsDataStore.refreshStoreAsync();
         toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
         finish();
     }

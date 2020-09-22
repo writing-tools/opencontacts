@@ -135,7 +135,7 @@ public class Contact implements Serializable{
         return finalGroupNames;
     }
 
-    private static String getGroupsNamesCSVString(List<String> groups) {
+    public static String getGroupsNamesCSVString(List<String> groups) {
         return U.join(groups, GROUPS_SEPERATOR_CHAR);
     }
 

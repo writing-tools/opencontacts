@@ -19,6 +19,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
@@ -320,7 +321,7 @@ public class DomainUtils {
         return ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
     }
 
-    public static List<Contact> sortContacts(List<Contact> contacts, Context context) {
+    public static List<Contact> sortContacts(Collection<Contact> contacts, Context context) {
         List<Contact> newContactsList = U.copyOf(contacts);
         Collections.sort(newContactsList, getContactComparator(context));
         return newContactsList;

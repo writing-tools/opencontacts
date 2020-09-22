@@ -27,6 +27,7 @@ import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.activities.ContactGroupEditActivity.GROUP_NAME_INTENT_EXTRA;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 
 public class GroupsActivity extends AppBaseActivity {
 
@@ -89,7 +90,10 @@ public class GroupsActivity extends AppBaseActivity {
         if(contactsListAdapter == null) setupContactsListAdapter();
 
         contactsListAdapter.clear();
-        contactsListAdapter.addAll(new ArrayList<>(allGroups.get(selectedGroupIndex).contacts));
+        contactsListAdapter.addAll(
+                new ArrayList<>(
+                        sortContacts(allGroups.get(selectedGroupIndex).contacts, this)
+                ));
         contactsListAdapter.notifyDataSetChanged();
     }
 

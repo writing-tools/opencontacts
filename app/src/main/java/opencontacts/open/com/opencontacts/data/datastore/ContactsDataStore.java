@@ -67,6 +67,7 @@ public class ContactsDataStore {
             ContactsDBHelper.deleteContactInDB(contact.id);
             notifyListenersAsync(DELETION, contact);
             removeFavorite(contact);
+            ContactGroupsDataStore.handleContactDeletion(contact);
         }
     }
 

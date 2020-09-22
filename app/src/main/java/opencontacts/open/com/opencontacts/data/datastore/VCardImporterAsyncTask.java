@@ -19,6 +19,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
 
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.ZipUtils.getPlainTextInputStreamFromZip;
 
@@ -45,6 +46,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
             List<VCard> vCards = Ezvcard.parse(vcardInputStream).all();
             publishProgress(PROGRESS_TOTAL_NUMBER_OF_VCARDS, vCards.size());
             int numberOfvCardsImported = 0, numberOfCardsIgnored = 0;
+            ContactsDataStore.requestPauseOnUpdates();
             for (VCard vcard : vCards) {
                 try{
                     if (processVCard(vcard)) ++numberOfvCardsImported;
@@ -103,7 +105,8 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
                 importProgressListener.onNumberOfCardsProcessedUpdate((Integer) values[1], (Integer) values[2]);
                 break;
             case PROGRESS_FINAL_RESULT_OF_IMPORT:
-                ContactsDataStore.refreshStoreAsync();
+                ContactsDataStore.requestResumeUpdates();
+                computeGroupsAsync();
                 CallLogDataStore.updateCallLogAsyncForAllContacts(contextWeakReference.get());
                 break;
             case PROGRESS_TOTAL_NUMBER_OF_VCARDS:

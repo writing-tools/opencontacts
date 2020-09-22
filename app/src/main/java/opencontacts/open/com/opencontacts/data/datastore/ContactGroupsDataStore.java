@@ -110,5 +110,11 @@ public class ContactGroupsDataStore {
     public static ContactGroup getGroup(String name){
         return groupsMap.get(name);
     }
+
+    public static void handleContactDeletion(Contact contact) {
+        U.chain(groupsMap.values())
+                .map(group -> group.contacts)
+                .forEach(contactsList -> contactsList.remove(contact));
+    }
 }
 

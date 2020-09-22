@@ -23,6 +23,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ezvcard.VCard;
+import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
@@ -139,6 +140,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         updatePreference(BASE_SYNC_URL_SHARED_PREFS_KEY, baseURL, this);
         updatePreference(CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY, carddavServerType.name, this);
         String syncToken = getStringFromPreferences(SYNC_TOKEN_SHARED_PREF_KEY, this);
+        ContactsDataStore.requestPauseOnUpdates();
         try {
             if (TextUtils.isEmpty(syncToken) || hasServerChangedFromEarlier)
                 fullSync(baseURL, username, password, addressBookUrl);
@@ -149,7 +151,8 @@ public class CardDavSyncActivity extends AppCompatActivity {
             showError(R.string.sync_failed);
             return;
         }
-        ContactsDataStore.refreshStoreAsync();
+        ContactGroupsDataStore.computeGroupsAsync();
+        ContactsDataStore.requestResumeUpdates();
         toastFromNonUIThread(R.string.sync_complete, Toast.LENGTH_LONG, this);
         finish();
     }

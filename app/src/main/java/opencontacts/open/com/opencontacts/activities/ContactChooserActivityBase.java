@@ -8,6 +8,7 @@ import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.text.InputType;
 import android.text.TextUtils;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -18,9 +19,15 @@ import android.widget.Filter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 
+import com.github.underscore.lodash.U;
+
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import opencontacts.open.com.opencontacts.ContactsListFilter;
 import opencontacts.open.com.opencontacts.ContactsListT9Filter;
@@ -43,11 +50,44 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     private SearchView searchView;
     private List<Contact> contacts;
     private SampleDataStoreChangeListener<Contact> contactsDataChangeListener;
+    private Set<Contact> selectedContactsSet = new HashSet<>(0);
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contactsListView = new ListView(this);
+        contactsListView = new ListView(this){
+            @Override
+            public void setItemChecked(int position, boolean isChecked) {
+                super.setItemChecked(position, isChecked);
+                Contact contact = (Contact) getItemAtPosition(position);
+                if(isChecked) selectedContactsSet.add(contact);
+                else selectedContactsSet.remove(contact);
+            }
+
+            @Override
+            public int getCheckedItemCount() {
+                return selectedContactsSet.size();
+            }
+
+            @Override
+            public long[] getCheckedItemIds() {
+                return ArrayUtils.toPrimitive(
+                        U.map(selectedContactsSet, contact -> contact.id).toArray(new Long[]{})
+                );
+            }
+
+            @Override
+            public SparseBooleanArray getCheckedItemPositions() {
+                SparseBooleanArray sparseBooleanArray = new SparseBooleanArray();
+                Common.forEachIndex(getCount(), index -> sparseBooleanArray.put(index, isItemChecked(index)));
+                return sparseBooleanArray;
+            }
+
+            @Override
+            public boolean isItemChecked(int position) {
+                return selectedContactsSet.contains(getItemAtPosition(position));
+            }
+        };
         contactsListView.setTextFilterEnabled(false);
         if(shouldEnableMultiSelect()) contactsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         else
@@ -83,7 +123,10 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
                 convertView = super.getView(position, convertView, parent);
-                ((AppCompatCheckedTextView)(convertView.findViewById(R.id.contact_name))).setText(getItem(position).name);
+                AppCompatCheckedTextView checkedTextView = convertView.findViewById(R.id.contact_name);
+                Contact contact = getItem(position);
+                checkedTextView.setText(contact.name);
+                checkedTextView.setChecked(selectedContactsSet.contains(contact));
                 return convertView;
             }
         };
@@ -203,8 +246,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
     @NonNull
     protected List<Contact> getSelectedContacts() {
-        long[] checkedItemIds = getContactsListView().getCheckedItemIds();
-        return mapIndexes(checkedItemIds.length, index -> ContactsDataStore.getContactWithId(checkedItemIds[index]));
+        return new ArrayList<>(selectedContactsSet);
     }
 
     protected void setSelectedContacts(Collection<Contact> contactsToBeSelected){

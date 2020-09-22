@@ -40,7 +40,6 @@ import opencontacts.open.com.opencontacts.utils.Common;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
-import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
@@ -58,10 +57,10 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         contactsListView = new ListView(this){
             @Override
             public void setItemChecked(int position, boolean isChecked) {
-                super.setItemChecked(position, isChecked);
                 Contact contact = (Contact) getItemAtPosition(position);
                 if(isChecked) selectedContactsSet.add(contact);
                 else selectedContactsSet.remove(contact);
+                super.setItemChecked(position, isChecked);
             }
 
             @Override
@@ -119,6 +118,13 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
                 }
             }
 
+            public void onItemSelect(View v){
+                Contact contact = (Contact) v.getTag();
+                if(selectedContactsSet.contains(contact)) selectedContactsSet.remove(contact);
+                else selectedContactsSet.add(contact);
+                adapter.notifyDataSetChanged();
+            }
+
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
@@ -126,6 +132,8 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
                 AppCompatCheckedTextView checkedTextView = convertView.findViewById(R.id.contact_name);
                 Contact contact = getItem(position);
                 checkedTextView.setText(contact.name);
+                checkedTextView.setTag(contact);
+                checkedTextView.setOnClickListener(this::onItemSelect);
                 checkedTextView.setChecked(selectedContactsSet.contains(contact));
                 return convertView;
             }

@@ -21,6 +21,10 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
@@ -36,11 +40,17 @@ public class ContactsDataStore {
     private static final List<DataStoreChangeListener<Contact>> dataChangeListeners = Collections.synchronizedList(new ArrayList<>(3));
     private static List<Contact> favorites = new ArrayList<>(0);
     private static boolean pauseUpdates;
+    private static int currentState;
 
-    public static List<Contact> getAllContacts() {
-        if (contacts == null) {
+    public synchronized static List<Contact> getAllContacts() {
+        if(currentState == LOADING) {
+            System.out.println("skipping the load yolo");
+            return Collections.emptyList();
+        }
+        if (currentState == NONE ) {
+            currentState = LOADING;
             refreshStoreAsync();
-            return new ArrayList<>(0);
+            return Collections.emptyList();
         }
         return new ArrayList<>(contacts);
     }
@@ -146,7 +156,9 @@ public class ContactsDataStore {
     }
 
     private static void refreshStore() {
+        if (currentState == LOADED) currentState = REFRESHING;
         contacts = ContactsDBHelper.getAllContactsFromDB();
+        currentState = LOADED;
         updateFavoritesList();
         notifyListeners(REFRESH, null);
     }

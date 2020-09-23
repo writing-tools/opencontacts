@@ -43,7 +43,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         shouldToggleContactActions = shouldToggleContactActions(context);
     }
 
-    private void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {
+    public void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {
         contactsListFilter = isT9SearchEnabled(getContext()) ? new ContactsListT9Filter(this, allContactsHolder)
                 : new ContactsListTextFilter(this, allContactsHolder);
     }

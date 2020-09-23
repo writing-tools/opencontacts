@@ -4,7 +4,10 @@ import android.content.Intent;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
 import android.support.v7.widget.AppCompatSpinner;
+import android.support.v7.widget.SearchView;
+import android.text.InputType;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -24,10 +27,12 @@ import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
 import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
+import static android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.activities.ContactGroupEditActivity.GROUP_NAME_INTENT_EXTRA;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public class GroupsActivity extends AppBaseActivity {
 
@@ -37,6 +42,7 @@ public class GroupsActivity extends AppBaseActivity {
     private ListView contactsListView;
     private String selectedGroupName;
     private ContactsListViewAdapter contactsListAdapter;
+    private ArrayList<Contact> currentlySelectedGroupContactsSorted;
 
     @Override
     int getLayoutResource() {
@@ -87,23 +93,29 @@ public class GroupsActivity extends AppBaseActivity {
     }
 
     private void showContactsListOfSelectedGroup(int selectedGroupIndex) {
+        currentlySelectedGroupContactsSorted = new ArrayList<>(
+                sortContacts(allGroups.get(selectedGroupIndex).contacts, this)
+        );// these will be used in search as well hence keeping them in member variable
         if(contactsListAdapter == null) setupContactsListAdapter();
 
         contactsListAdapter.clear();
-        contactsListAdapter.addAll(
-                new ArrayList<>(
-                        sortContacts(allGroups.get(selectedGroupIndex).contacts, this)
-                ));
+        contactsListAdapter.addAll(currentlySelectedGroupContactsSorted);
         contactsListAdapter.notifyDataSetChanged();
     }
 
     private void setupContactsListAdapter() {
         contactsListAdapter = new ContactsListViewAdapter(this);
+        contactsListAdapter.createContactsListFilter(this::getCurrentGroupContacts);
         contactsListView.setAdapter(contactsListAdapter);
         contactsListAdapter.setContactsListActionsListener(new DefaultContactsListActions(this){
             @Override
             public void onLongClick(Contact contact) { }
         });
+
+    }
+
+    private List<Contact> getCurrentGroupContacts() {
+        return currentlySelectedGroupContactsSorted;
     }
 
     private void refreshGroupNamesSpinnerData(int selectedGroupIndex) {
@@ -140,7 +152,7 @@ public class GroupsActivity extends AppBaseActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(R.string.add_group)
                 .setIcon(R.drawable.ic_add_24dp)
-                .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
+                .setShowAsActionFlags(SHOW_AS_ACTION_IF_ROOM)
                 .setOnMenuItemClickListener(item -> {
                     startActivity(new Intent(GroupsActivity.this, ContactGroupEditActivity.class));
                     return true;
@@ -157,7 +169,35 @@ public class GroupsActivity extends AppBaseActivity {
                     );
                     return true;
                 });
+        SearchView searchView = new SearchView(this);
+        bindSearchViewToContacts(searchView);
+        menu.add(R.string.search)
+                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
+                .setActionView(searchView);
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void bindSearchViewToContacts(SearchView searchView) {
+        if(contactsListView == null) return;
+        searchView.setInputType(isT9SearchEnabled(this) ? InputType.TYPE_CLASS_PHONE : InputType.TYPE_CLASS_TEXT);
+        searchView.setOnCloseListener(() -> {
+            contactsListView.clearTextFilter();
+            return false;
+        });
+
+        searchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                return false;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                ((ArrayAdapter)contactsListView.getAdapter()).getFilter().filter(newText);
+                return true;
+            }
+        });
+
     }
 
 }

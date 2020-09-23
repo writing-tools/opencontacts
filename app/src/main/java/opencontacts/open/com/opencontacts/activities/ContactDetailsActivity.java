@@ -33,6 +33,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static android.view.View.GONE;
@@ -133,6 +134,20 @@ public class ContactDetailsActivity extends AppBaseActivity {
         fillNotes();
         fillDateOfBirth();
         fillWebsite();
+        fillGroups();
+    }
+
+    private void fillGroups() {
+        List<String> categories = VCardUtils.getCategories(vcard);
+        View groupsCard = findViewById(R.id.groups_card);
+        if(categories.isEmpty()) {
+            groupsCard.setVisibility(GONE);
+            return;
+        }
+        groupsCard.setVisibility(VISIBLE);
+        AppCompatTextView groupsTextView = groupsCard.findViewById(R.id.text_view);
+        groupsTextView.setText(Contact.getGroupsNamesCSVString(categories).replaceAll(",", ", "));
+        groupsTextView.setOnClickListener(v -> startActivity(new Intent(this, GroupsActivity.class)));
     }
 
     private void fillWebsite() {

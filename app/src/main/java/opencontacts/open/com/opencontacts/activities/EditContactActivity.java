@@ -39,6 +39,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.DAY_OF_MONTH;
@@ -225,7 +226,14 @@ public class EditContactActivity extends AppBaseActivity {
         addNotesFromFieldsToNewVCard(newVCard);
         addWebsiteFromFieldsToNewVCard(newVCard);
         addDateOfBirthFromFieldsToNewVCard(newVCard);
+        addGroupsToNewVCard(newVCard);
         return newVCard;
+    }
+
+    private void addGroupsToNewVCard(VCard newVCard) {
+        List<String> newGroupNames = groupsInputCollection.getValues();
+        if(newGroupNames.isEmpty()) return;
+        VCardUtils.setCategories(newGroupNames, newVCard);
     }
 
     private void addDateOfBirthFromFieldsToNewVCard(VCard newVCard) {

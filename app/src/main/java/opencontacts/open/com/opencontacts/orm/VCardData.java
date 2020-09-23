@@ -57,28 +57,9 @@ public class VCardData extends SugarRecord {
 
     public static void updateVCardData(VCard vCard, long contactId, Context context) {
         VCardData vCardDataInDB = VCardData.getVCardData(contactId);
-        try {
-            VCard dbVCard = new VCardReader(vCardDataInDB.vcardDataAsString).readNext();
-            dbVCard.setStructuredName(vCard.getStructuredName());
-            dbVCard.setFormattedName((String) null);
-            setFormattedNameIfNotPresent(dbVCard);
-            dbVCard.getTelephoneNumbers().clear();
-            dbVCard.getTelephoneNumbers().addAll(vCard.getTelephoneNumbers());
-            dbVCard.getEmails().clear();
-            dbVCard.getEmails().addAll(vCard.getEmails());
-            dbVCard.getAddresses().clear();
-            dbVCard.getAddresses().addAll(vCard.getAddresses());
-            dbVCard.getUrls().clear();
-            dbVCard.getUrls().addAll(vCard.getUrls());
-            dbVCard.setBirthday(vCard.getBirthday());
-            addNotesToVCard(vCard, dbVCard);
-            vCardDataInDB.vcardDataAsString = dbVCard.write();
-            vCardDataInDB.status = vCardDataInDB.status == STATUS_CREATED ? STATUS_CREATED : STATUS_UPDATED;
-            vCardDataInDB.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-            AndroidUtils.toastFromNonUIThread(R.string.error_while_saving_contact, LENGTH_SHORT, context);
-        }
+        vCardDataInDB.vcardDataAsString = vCard.write();
+        vCardDataInDB.status = vCardDataInDB.status == STATUS_CREATED ? STATUS_CREATED : STATUS_UPDATED;
+        vCardDataInDB.save();
     }
 
     private static void addNotesToVCard(VCard vCard, VCard dbVCard) {

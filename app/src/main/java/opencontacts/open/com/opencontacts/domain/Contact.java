@@ -139,4 +139,8 @@ public class Contact implements Serializable{
         return U.join(groups, GROUPS_SEPERATOR_CHAR);
     }
 
+    @Override
+    public int hashCode() {
+        return (int) id; //hoping that this number doesn't cross 62K. Overriding so that sets can work well with this when reloading contacts
+    }
 }

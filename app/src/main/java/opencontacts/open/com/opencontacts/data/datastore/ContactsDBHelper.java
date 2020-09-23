@@ -95,6 +95,7 @@ public class ContactsDBHelper {
         Pair<String, String> nameFromVCard = getNameFromVCard(vCard, context);
         dbContact.firstName = nameFromVCard.first;
         dbContact.lastName = nameFromVCard.second;
+        dbContact.groups = getGroupsNamesCSVString(getCategories(vCard));
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, vCard, primaryNumber);
         updateVCardData(vCard, dbContact.getId(), context);

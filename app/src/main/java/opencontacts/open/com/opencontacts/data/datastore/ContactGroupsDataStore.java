@@ -119,5 +119,13 @@ public class ContactGroupsDataStore {
                 .map(group -> group.contacts)
                 .forEach(contactsList -> contactsList.remove(contact));
     }
+
+    public static void handleContactUpdate(Contact contact) {
+        List<String> newGroupAssociations = contact.getGroupNames();
+        U.forEach(groupsMap.values(), group -> {
+            if (newGroupAssociations.contains(group.getName())) group.contacts.add(contact);
+            else group.contacts.remove(contact);
+        });
+    }
 }
 

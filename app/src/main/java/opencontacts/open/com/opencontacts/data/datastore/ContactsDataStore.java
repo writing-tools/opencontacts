@@ -79,6 +79,7 @@ public class ContactsDataStore {
     public static void updateContact(long contactId, String primaryNumber, VCard vCard, Context context) {
         ContactsDBHelper.updateContactInDBWith(contactId, primaryNumber, vCard, context);
         reloadContact(contactId);
+        ContactGroupsDataStore.handleContactUpdate(getContactWithId(contactId));
         CallLogDataStore.updateCallLogAsyncForNewContact(getContactWithId(contactId));
     }
 

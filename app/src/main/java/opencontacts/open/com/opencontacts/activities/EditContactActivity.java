@@ -31,6 +31,7 @@ import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldCollection;
 import opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection.TextInputAndSpinnerFieldCollection;
 import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -63,7 +64,7 @@ public class EditContactActivity extends AppBaseActivity {
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
     private Date selectedBirthDay;
-    private TextInputAndSpinnerFieldCollection groupsInputCollection;
+    private SpinnerFieldCollection groupsInputCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -135,12 +136,12 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void fillGroups() {
-        groupsInputCollection.setFieldTypes(
+        groupsInputCollection.set(
                 U.chain(ContactGroupsDataStore.getAllGroups())
                 .map(ContactGroup::getName)
                 .value());
         if(contact == null) return;
-        U.forEach(contact.getGroupNames(), groupName -> groupsInputCollection.addOneMoreView("", groupName));
+        groupsInputCollection.addFields(contact.getGroupNames());
     }
 
     private void fillDateOfBirth() {

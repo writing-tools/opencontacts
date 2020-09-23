@@ -146,10 +146,12 @@
                      />
             </android.support.design.widget.TextInputLayout>
 
-            <opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection.TextInputAndSpinnerFieldCollection
+            <opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldCollection
                 android:id="@+id/groups"
                 android:layout_width="match_parent"
+                android:title="@string/groups"
                 android:layout_height="wrap_content"
+                android:inputType="none"
                 android:layout_below="@id/date_of_birth_text_input_layout"
                 android:layout_marginTop="20dp"
                  />

@@ -1,7 +1,9 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.AppCompatTextView;
 import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -37,7 +39,21 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         View addMoreButton = findViewById(R.id.add_more);
         fieldsHolderLayout = findViewById(R.id.fields_holder);
         addMoreButton.setOnClickListener(x -> addOneMoreView());
+        consumeAttributes(context, attrs);
         processAttributesPassedThroughXML(context, attrs);
+    }
+
+    protected void consumeAttributes(Context context, @Nullable AttributeSet attrs){
+        TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputFieldCollection);
+        String title = typedArray.getString(R.styleable.InputFieldCollection_android_title);
+        if(!TextUtils.isEmpty(title)) setupTitle(title);
+        typedArray.recycle();
+    }
+
+    protected void setupTitle(String title) {
+        AppCompatTextView titleTextView = findViewById(R.id.title);
+        titleTextView.setText(title);
+        titleTextView.setVisibility(VISIBLE);
     }
 
     protected abstract void processAttributesPassedThroughXML(Context context, @Nullable AttributeSet attrs);

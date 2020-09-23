@@ -31,9 +31,11 @@ import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.InputFieldCollection;
+import opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection.TextInputAndSpinnerFieldCollection;
+import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
@@ -54,13 +56,14 @@ public class EditContactActivity extends AppBaseActivity {
     EditText editText_lastName;
     private boolean addingNewContact = false;
     private VCard vcardBeforeEdit;
-    private InputFieldCollection phoneNumbersInputCollection;
-    private InputFieldCollection emailsInputCollection;
-    private InputFieldCollection addressesInputCollection;
+    private TextInputAndSpinnerFieldCollection phoneNumbersInputCollection;
+    private TextInputAndSpinnerFieldCollection emailsInputCollection;
+    private TextInputAndSpinnerFieldCollection addressesInputCollection;
     private TextInputEditText notesTextInputEditText;
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
     private Date selectedBirthDay;
+    private TextInputAndSpinnerFieldCollection groupsInputCollection;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +76,7 @@ public class EditContactActivity extends AppBaseActivity {
         notesTextInputEditText = findViewById(R.id.notes);
         websiteTextInputEditText = findViewById(R.id.website);
         dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
+        groupsInputCollection = findViewById(R.id.groups);
 
         View.OnClickListener onBirthDayClickListener = v -> {
             Birthday birthday = vcardBeforeEdit.getBirthday();
@@ -122,11 +126,21 @@ public class EditContactActivity extends AppBaseActivity {
         fillNotes();
         fillWebsite();
         fillDateOfBirth();
+        fillGroups();
 
         if(addingNewContact) return;
 
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
+    }
+
+    private void fillGroups() {
+        groupsInputCollection.setFieldTypes(
+                U.chain(ContactGroupsDataStore.getAllGroups())
+                .map(ContactGroup::getName)
+                .value());
+        if(contact == null) return;
+        U.forEach(contact.getGroupNames(), groupName -> groupsInputCollection.addOneMoreView("", groupName));
     }
 
     private void fillDateOfBirth() {
@@ -150,7 +164,7 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillAddress() {
         List<Address> addresses = vcardBeforeEdit.getAddresses();
         if(U.isEmpty(addresses)) {
-            addressesInputCollection.addOneMoreView(null);
+            addressesInputCollection.addOneMoreView();
             return;
         }
         U.forEach(addresses, address -> addressesInputCollection.addOneMoreView(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), EditContactActivity.this)));
@@ -159,7 +173,7 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillEmails() {
         List<Email> emails = vcardBeforeEdit.getEmails();
         if(U.isEmpty(emails)) {
-            emailsInputCollection.addOneMoreView(null);
+            emailsInputCollection.addOneMoreView();
             return;
         }
         U.forEach(emails, email -> emailsInputCollection.addOneMoreView(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), EditContactActivity.this)));

@@ -59,6 +59,7 @@ public class ContactsDataStore {
         opencontacts.open.com.opencontacts.orm.Contact newContactWithDatabaseId = ContactsDBHelper.addContact(vCard, context);
         Contact addedDomainContact = ContactsDBHelper.getContact(newContactWithDatabaseId.getId());
         contacts.add(addedDomainContact);
+        ContactGroupsDataStore.handleNewContactAddition(addedDomainContact);
         notifyListenersAsync(ADDITION, addedDomainContact);
         CallLogDataStore.updateCallLogAsyncForNewContact(addedDomainContact);
     }

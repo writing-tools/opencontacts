@@ -29,7 +29,7 @@ public class ContactGroup {
     }
 
     public String getName(){
-        return name; // added this to make sure no one updates the name directly and messes T9 text
+        return name; // added this to make sure no one updates the name directly and leaves behind T9 text
     }
 
     @Override

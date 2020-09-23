@@ -9,6 +9,7 @@ import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.github.underscore.U;
 
@@ -16,6 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
+
+import static android.widget.Toast.LENGTH_SHORT;
 
 public abstract class InputFieldCollection<H extends FieldViewHolder> extends LinearLayout {
 
@@ -41,6 +44,14 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         addMoreButton.setOnClickListener(x -> addOneMoreView());
         consumeAttributes(context, attrs);
         processAttributesPassedThroughXML(context, attrs);
+    }
+
+    public void removeField(int index){
+        if(index >= fieldViewHoldersList.size()) {
+            Toast.makeText(getContext(), R.string.error, LENGTH_SHORT).show();
+            return;
+        }
+        fieldsHolderLayout.removeView(fieldViewHoldersList.remove(index).getView());
     }
 
     protected void consumeAttributes(Context context, @Nullable AttributeSet attrs){

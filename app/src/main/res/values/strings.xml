@@ -196,6 +196,9 @@
     <string name="Automerge">AutoMerge</string>
     <string name="no_groups_found">No groups found. Add one to start</string>
     <string name="add_group">Add group</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="group_deleted">Group deleted</string>
+    <string name="please_wait">Please wait...</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

@@ -229,6 +229,14 @@ public class AndroidUtils {
 
     }
 
+    public static void wrapInConfirmation(Runnable r, Context context) {
+        new AlertDialog.Builder(context)
+                .setMessage(R.string.are_you_sure)
+                .setPositiveButton(R.string.okay,
+                        (dialogInterface, i) -> r.run())
+                .show();
+    }
+
     public static void copyToClipboard(CharSequence text, boolean shouldShowToast, Context context){
         copyToClipboard(text, context);
         if(shouldShowToast) Toast.makeText(context, R.string.copied_to_clipboard, Toast.LENGTH_SHORT).show();
@@ -457,6 +465,17 @@ public class AndroidUtils {
 
     public static String getNumberToDial(Intent intent) {
         return intent.getData() == null ? "" : intent.getData().getSchemeSpecificPart();
+    }
+
+    public static void blockUIUntil(Runnable operation, Context context){
+        AlertDialog loadingDialog = new AlertDialog.Builder(context)
+                .setCancelable(false)
+                .setMessage(R.string.please_wait)
+                .show();
+        processAsync(() -> {
+            operation.run();
+            runOnMainDelayed(loadingDialog::dismiss, 0);
+        });
     }
 
 }

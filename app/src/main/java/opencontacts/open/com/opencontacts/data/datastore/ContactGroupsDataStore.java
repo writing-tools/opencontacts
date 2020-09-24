@@ -1,6 +1,9 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 
+import android.content.Context;
+import android.widget.Toast;
+
 import com.github.underscore.lodash.U;
 
 import org.jetbrains.annotations.Nullable;
@@ -13,12 +16,14 @@ import java.util.List;
 import java.util.Map;
 
 import ezvcard.VCard;
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 
 public class ContactGroupsDataStore {
@@ -134,6 +139,12 @@ public class ContactGroupsDataStore {
         U.chain(groupsMap.values())
                 .filter(group -> groupAssociations.contains(group.getName()))
                 .forEach(group -> group.addContact(contact));
+    }
+
+    public static void PROCESS_INTENSIVE_delete(ContactGroup selectedGroup, Context context) {
+        U.forEach(new ArrayList<>(selectedGroup.contacts), contact -> removeContactFromGroup(selectedGroup, contact));
+        groupsMap.remove(selectedGroup.getName());
+        toastFromNonUIThread(R.string.group_deleted, Toast.LENGTH_SHORT, context);
     }
 }
 

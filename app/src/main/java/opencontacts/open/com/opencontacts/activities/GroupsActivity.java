@@ -31,6 +31,9 @@ import static android.view.MenuItem.SHOW_AS_ACTION_IF_ROOM;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.activities.ContactGroupEditActivity.GROUP_NAME_INTENT_EXTRA;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.PROCESS_INTENSIVE_delete;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
@@ -74,6 +77,10 @@ public class GroupsActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
+        refreshContent();
+    }
+
+    private void refreshContent() {
         allGroups = ContactGroupsDataStore.getAllGroups();
         if(allGroups.isEmpty()) showEmptyGroupsMessage();
         else setupAndShowGroups();
@@ -174,7 +181,22 @@ public class GroupsActivity extends AppBaseActivity {
         menu.add(R.string.search)
                 .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
                 .setActionView(searchView);
+        menu.add(R.string.delete)
+                .setShowAsActionFlags(SHOW_AS_ACTION_IF_ROOM)
+                .setIcon(R.drawable.delete)
+                .setOnMenuItemClickListener(item -> {
+                    wrapInConfirmation(this::deleteGroupBlockingUI, this);
+                    return true;
+                });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void deleteGroupBlockingUI() {
+        ContactGroup selectedGroup = (ContactGroup) groupNameSpinner.getSelectedItem();
+        blockUIUntil(() -> {
+            PROCESS_INTENSIVE_delete(selectedGroup, this);
+            runOnUiThread(this::refreshContent);
+        }, this);
     }
 
     private void bindSearchViewToContacts(SearchView searchView) {

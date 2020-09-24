@@ -41,8 +41,8 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.carddavServersCheekyStuffMap;
@@ -112,14 +112,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
             Toast.makeText(this, R.string.input_username_and_password, LENGTH_SHORT).show();
             return;
         }
-        AlertDialog loadingDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setMessage("Please wait...")
-                .show();
-        processAsync(() -> {
-            sync(url, username, password, shouldIgnoreSSL, carddavServersCheekyStuffMap.get(carddavServerType));
-            runOnUiThread(loadingDialog::dismiss);
-        });
+        blockUIUntil(() -> sync(url, username, password, shouldIgnoreSSL, carddavServersCheekyStuffMap.get(carddavServerType)), this);
     }
 
     private void sync(String urlFromView, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType) {

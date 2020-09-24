@@ -37,11 +37,13 @@ import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
@@ -172,49 +174,38 @@ public class MainActivity extends AppBaseActivity {
             viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
             searchView.requestFocus();
         });
-        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(x -> {
-            startActivity(new Intent(this, CardDavSyncActivity.class));
-            return true;
-        });
-        menu.findItem(R.id.action_import).setOnMenuItemClickListener(x -> {
-            importContacts();
-            return true;
-        });
-        menu.findItem(R.id.action_merge).setOnMenuItemClickListener(x -> {
-            startActivity(new Intent(this, MergeContactsActivity.class));
-            return true;
-        });
+        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+            startActivity(new Intent(this, CardDavSyncActivity.class))
+        ));
+        menu.findItem(R.id.action_import).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::importContacts));
+        menu.findItem(R.id.action_merge).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            startActivity(new Intent(this, MergeContactsActivity.class))
+        ));
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
-        menu.findItem(R.id.action_about).setOnMenuItemClickListener(item -> {
-            startActivity(new Intent(MainActivity.this, AboutActivity.class));
-            return true;
-        });
+        menu.findItem(R.id.action_about).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+            startActivity(new Intent(MainActivity.this, AboutActivity.class))
+        ));
 
-        menu.findItem(R.id.action_groups).setOnMenuItemClickListener(item -> {
-            startActivity(new Intent(MainActivity.this, GroupsActivity.class));
-            return true;
-        });
-        menu.findItem(R.id.action_help).setOnMenuItemClickListener(item -> {
-            startActivity(new Intent(MainActivity.this, HelpActivity.class));
-            return true;
-        });
+        menu.findItem(R.id.action_groups).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            startActivity(new Intent(MainActivity.this, GroupsActivity.class))
+        ));
+        menu.findItem(R.id.action_help).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            startActivity(new Intent(MainActivity.this, HelpActivity.class))
+        ));
 
-        menu.findItem(R.id.action_preferences).setOnMenuItemClickListener(item -> {
-            startActivityForResult(new Intent(MainActivity.this, PreferencesActivity.class), PREFERENCES_ACTIVITY_RESULT);
-            return true;
-        });
+        menu.findItem(R.id.action_preferences).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            startActivityForResult(new Intent(MainActivity.this, PreferencesActivity.class), PREFERENCES_ACTIVITY_RESULT)
+        ));
 
-        menu.findItem(R.id.action_resync).setOnMenuItemClickListener(item -> {
-            CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this);
-            return true;
-        });
-        menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(item -> {
-            AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this);
-           return true;
-        });
+        menu.findItem(R.id.action_resync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this)
+        ));
+        menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+            AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this)
+        ));
         menu.findItem(R.id.action_export_call_log).setOnMenuItemClickListener(item -> {
             Toast.makeText(this, R.string.started_exporting_call_log, Toast.LENGTH_SHORT).show();
             try {
@@ -225,14 +216,9 @@ public class MainActivity extends AppBaseActivity {
             }
             return true;
         });
-        menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(item -> {
-            new AlertDialog.Builder(this)
-                    .setMessage(R.string.delete_all_contacts_question)
-                    .setPositiveButton(R.string.okay,
-                            (dialogInterface, i) -> ContactsDataStore.deleteAllContacts(MainActivity.this))
-                    .show();
-            return true;
-        });
+        menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+            wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
+        ));
     }
 
     private void importContacts() {

@@ -18,6 +18,7 @@ import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.createNewGroup;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.updateGroup;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 
@@ -61,19 +62,16 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
         menu.add(getString(R.string.save))
                 .setIcon(R.drawable.ic_save_black_24dp)
                 .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
-                .setOnMenuItemClickListener(item -> {
-                    save();
-                    finish();
-                    return true;
-                });
+                .setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::saveAndGoback));
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void save() {
+    private void saveAndGoback() {
         List<Contact> selectedContacts = getSelectedContacts();
         ContactGroup group = ContactGroupsDataStore.getGroup(groupNameFromPrevScreen);
         if(group == null) createNewGroup(selectedContacts, groupNameEditText.getText().toString());
         else updateGroup(selectedContacts, groupNameEditText.getText().toString(), group);
+        finish();
     }
 
     @Override

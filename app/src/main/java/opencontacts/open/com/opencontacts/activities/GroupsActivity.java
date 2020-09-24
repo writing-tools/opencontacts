@@ -33,6 +33,7 @@ import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.activities.ContactGroupEditActivity.GROUP_NAME_INTENT_EXTRA;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.PROCESS_INTENSIVE_delete;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
@@ -160,10 +161,9 @@ public class GroupsActivity extends AppBaseActivity {
         menu.add(R.string.add_group)
                 .setIcon(R.drawable.ic_add_24dp)
                 .setShowAsActionFlags(SHOW_AS_ACTION_IF_ROOM)
-                .setOnMenuItemClickListener(item -> {
-                    startActivity(new Intent(GroupsActivity.this, ContactGroupEditActivity.class));
-                    return true;
-                });
+                .setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
+                    startActivity(new Intent(GroupsActivity.this, ContactGroupEditActivity.class))
+                ));
         if(allGroups == null || allGroups.isEmpty()) return super.onCreateOptionsMenu(menu);
         menu.add(R.string.edit_group)
                 .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
@@ -184,18 +184,17 @@ public class GroupsActivity extends AppBaseActivity {
         menu.add(R.string.delete)
                 .setShowAsActionFlags(SHOW_AS_ACTION_IF_ROOM)
                 .setIcon(R.drawable.delete)
-                .setOnMenuItemClickListener(item -> {
-                    wrapInConfirmation(this::deleteGroupBlockingUI, this);
-                    return true;
-                });
+                .setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::confirmAndDeleteGroup));
         return super.onCreateOptionsMenu(menu);
     }
 
-    private void deleteGroupBlockingUI() {
-        ContactGroup selectedGroup = (ContactGroup) groupNameSpinner.getSelectedItem();
-        blockUIUntil(() -> {
-            PROCESS_INTENSIVE_delete(selectedGroup, this);
-            runOnUiThread(this::refreshContent);
+    private void confirmAndDeleteGroup() {
+        wrapInConfirmation(() -> {
+            ContactGroup selectedGroup = (ContactGroup) groupNameSpinner.getSelectedItem();
+            blockUIUntil(() -> {
+                PROCESS_INTENSIVE_delete(selectedGroup, this);
+                runOnUiThread(this::refreshContent);
+            }, this);
         }, this);
     }
 

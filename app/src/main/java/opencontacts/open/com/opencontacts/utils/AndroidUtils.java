@@ -27,6 +27,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -476,6 +477,13 @@ public class AndroidUtils {
             operation.run();
             runOnMainDelayed(loadingDialog::dismiss, 0);
         });
+    }
+
+    public static OnMenuItemClickListener getMenuItemClickHandlerFor(Runnable runnable){
+        return item -> {
+            runnable.run();
+            return true;
+        };
     }
 
 }

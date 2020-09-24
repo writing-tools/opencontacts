@@ -16,6 +16,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
 import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.mergeContacts;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.ContactsAutoMergeUtils.autoMergeByName;
 
 public class MergeContactsActivity extends ContactChooserActivityBase {
@@ -63,10 +64,7 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getString(R.string.Automerge))
-                .setOnMenuItemClickListener(item -> {
-                    launchAutoMergeOptions();
-                    return true;
-                });
+                .setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchAutoMergeOptions));
         return super.onCreateOptionsMenu(menu);
     }
 

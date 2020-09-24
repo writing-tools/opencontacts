@@ -3,7 +3,6 @@ package opencontacts.open.com.opencontacts.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
@@ -43,7 +42,9 @@ import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStor
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -264,27 +265,14 @@ public class ContactDetailsActivity extends AppBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         getMenuInflater().inflate(R.menu.contact_details_menu, menu);
-        menu.findItem(R.id.image_button_export_to_contacts_app).setOnMenuItemClickListener(item -> {
-            exportToContactsApp();
-            return true;
-        });
+        menu.findItem(R.id.image_button_export_to_contacts_app).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::exportToContactsApp));
         menu.findItem(R.id.image_button_edit_contact).setOnMenuItemClickListener(item -> {
             Intent editContact = new Intent(ContactDetailsActivity.this, EditContactActivity.class);
             editContact.putExtra(EditContactActivity.INTENT_EXTRA_CONTACT_CONTACT_DETAILS, contact);
             ContactDetailsActivity.this.startActivity(editContact);
             return true;
         });
-        menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(item -> {
-            new AlertDialog.Builder(ContactDetailsActivity.this)
-                    .setMessage(R.string.do_you_want_to_delete)
-                    .setPositiveButton(R.string.yes, (dialog, which) -> {
-                        ContactsDataStore.removeContact(contact);
-                        Toast.makeText(ContactDetailsActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
-                        finish();
-                    })
-                    .setNegativeButton(R.string.no, null).show();
-            return true;
-        });
+        menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::deleteContactAfterConfirmation));
         boolean isFavorite = isFavorite(contact);
         menu.add(isFavorite ? R.string.remove_favorite : R.string.add_to_favorites)
                 .setIcon(TintedDrawablesStore.getTintedDrawable(isFavorite ? R.drawable.ic_favorite_solid_24dp : R.drawable.ic_favorite_hollow_black_24dp, this))
@@ -296,5 +284,13 @@ public class ContactDetailsActivity extends AppBaseActivity {
                    return true;
                 });
         return super.onCreateOptionsMenu(menu);
+    }
+
+    private void deleteContactAfterConfirmation() {
+        wrapInConfirmation(() -> {
+            ContactsDataStore.removeContact(contact);
+            Toast.makeText(ContactDetailsActivity.this, R.string.deleted, Toast.LENGTH_SHORT).show();
+            finish();
+        }, this);
     }
 }

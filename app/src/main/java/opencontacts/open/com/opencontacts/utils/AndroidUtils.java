@@ -26,6 +26,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
@@ -33,8 +34,11 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 
+import com.github.underscore.U;
+
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import opencontacts.open.com.opencontacts.activities.AddToContactActivity;
@@ -158,11 +162,23 @@ public class AndroidUtils {
     }
 
     public static void message(String number, Context context){
-        context.startActivity(getMessageIntent(number));
+        context.startActivity(getIntentToMessage(number));
     }
 
-    public static Intent getMessageIntent(String number) {
+    public static void message(Collection<String> numbers, Context context){
+        context.startActivity(getIntentToMessage(numbers));
+    }
+
+    public static Intent getIntentToMessage(String number) {
         return new Intent(ACTION_VIEW, Uri.parse("sms:" + number)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+    }
+
+    public static Intent getIntentToMessage(Collection<String> numbers) {
+        String numbersSeperatedBySemiColon = U.chain(numbers)
+                .reject(TextUtils::isEmpty)
+                .join(";")
+                .item();
+        return new Intent(ACTION_VIEW, Uri.parse("sms:" + numbersSeperatedBySemiColon)).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
     }
 
     public static Intent getIntentToShowContactDetails(long contactId, Context context){

@@ -34,6 +34,7 @@ import static opencontacts.open.com.opencontacts.activities.ContactGroupEditActi
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.PROCESS_INTENSIVE_delete;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.message;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
@@ -174,6 +175,14 @@ public class GroupsActivity extends AppBaseActivity {
                             new Intent(GroupsActivity.this, ContactGroupEditActivity.class)
                                     .putExtra(GROUP_NAME_INTENT_EXTRA, selectedGroup == null ? "" : selectedGroup.getName())
                     );
+                    return true;
+                });
+        menu.add(R.string.message)
+                .setShowAsActionFlags(SHOW_AS_ACTION_IF_ROOM)
+                .setIcon(R.drawable.ic_chat_black_24dp)
+                .setOnMenuItemClickListener(item -> {
+                    ContactGroup selectedGroup = (ContactGroup) groupNameSpinner.getSelectedItem();
+                    message(U.map(selectedGroup.contacts, contact -> contact.primaryPhoneNumber.phoneNumber), this);
                     return true;
                 });
         SearchView searchView = new SearchView(this);

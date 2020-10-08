@@ -14,6 +14,11 @@ import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
+import static java.util.Collections.emptyList;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
@@ -23,6 +28,7 @@ public class CallLogDataStore {
     private static CallLogDBHelper callLogDBHelper = new CallLogDBHelper();
     private static List<CallLogEntry> callLogEntries = new ArrayList<>(0);
     private static List<DataStoreChangeListener<CallLogEntry>> dataChangeListeners = new ArrayList<>(3);
+    private static int currentState = NONE;
 
     public static synchronized void loadRecentCallLogEntriesAsync(Context context) {
         processAsync(() -> loadRecentCallLogEntries(context));
@@ -52,10 +58,12 @@ public class CallLogDataStore {
     }
 
     private synchronized static void refreshStore() {
+        if(currentState == LOADING || currentState == REFRESHING) return;
+        if(currentState == NONE) currentState = LOADING;
+        else currentState = REFRESHING;
         callLogEntries = CallLogDBHelper.getRecentCallLogEntriesFromDB();
-        if(!callLogEntries.isEmpty()) {
-            notifyRefreshStore();
-        }
+        currentState = LOADED;
+        notifyRefreshStore();
     }
 
     private static void notifyRefreshStore() {
@@ -70,10 +78,11 @@ public class CallLogDataStore {
     }
 
     public static List<CallLogEntry> getRecentCallLogEntries(Context context){
-        if(callLogEntries.isEmpty()){
+        if(currentState == NONE){
             processAsync(CallLogDataStore::refreshStore);
-            return new ArrayList<>(0);
+            return emptyList();
         }
+        if(currentState == LOADING) return emptyList();
         return new ArrayList<>(callLogEntries);
     }
 
@@ -194,6 +203,13 @@ public class CallLogDataStore {
         processAsync(() -> {
             callLogEntries = CallLogDBHelper.getCallLogEntriesFromDB(callLogEntries.size() + CALL_LOG_ENTRIES_CHUNK_SIZE);
             notifyRefreshStore();
+        });
+    }
+
+    public static void deleteCallLogEntries(List<CallLogEntry> entries){
+        processAsync(() -> {
+            CallLogEntry.deleteInTx(entries);
+            refreshStore();
         });
     }
 }

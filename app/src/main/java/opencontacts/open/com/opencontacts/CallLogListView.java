@@ -22,6 +22,7 @@ import android.widget.Toast;
 
 
 import com.github.underscore.Consumer;
+import com.github.underscore.U;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -349,6 +350,11 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     }
 
     private void deleteSelection() {
+        List<CallLogEntry> individualCallLogEntries = U.chain(selectedEntries)
+                .map(groupedCallLogEntry -> groupedCallLogEntry.callLogEntries)
+                .flatten()
+                .value();
+        CallLogDataStore.deleteCallLogEntries(individualCallLogEntries);
         selectedEntries.clear();
     }
 

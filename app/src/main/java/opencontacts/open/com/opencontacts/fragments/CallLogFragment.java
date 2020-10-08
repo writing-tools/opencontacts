@@ -42,7 +42,7 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
 
     @Override
     public void onUnSelect() {
-
+        callLogListView.exitSelectionMode();
     }
 
     @Override

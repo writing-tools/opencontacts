@@ -92,16 +92,19 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         inSelectionMode = false;
 
         final OnClickListener callContact = v -> {
+            if(inSelectionMode) return;
             CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
         };
 
         final OnClickListener whatsappContact = v -> {
+            if(inSelectionMode) return;
             CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.whatsapp(callLogEntry.getPhoneNumber(), context);
         };
 
         final OnClickListener messageContact = v -> {
+            if(inSelectionMode) return;
             CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
         };
@@ -110,8 +113,10 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             GroupedCallLogEntry groupedCallLogEntry = ((GroupedCallLogEntry) v.getTag());
             if(selectedEntries.contains(groupedCallLogEntry)) selectedEntries.remove(groupedCallLogEntry);
             else selectedEntries.add(groupedCallLogEntry);
-            adapter.notifyDataSetChanged();
+            if(selectedEntries.isEmpty()) exitSelectionMode();
+            else adapter.notifyDataSetChanged();
         };
+
         final OnClickListener showContactDetails = v -> {
             CallLogEntry callLogEntry = getLatestCallLogEntry(v);
             long contactId = callLogEntry.getContactId();
@@ -177,14 +182,15 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 }
 
                 reusableView.setTag(groupedCallLogEntry);
-                reusableView.setOnLongClickListener(callLogEntryLongClickListener);
                 if (inSelectionMode) {
                     reusableView.setOnClickListener(selectionModeTap);
+                    reusableView.setOnLongClickListener(null);
                     if (selectedEntries.contains(groupedCallLogEntry)) reusableView.setBackgroundColor(getHighlighColor(context));
                     else reusableView.setBackgroundColor(TRANSPARENT);
                 } else {
                     reusableView.setOnClickListener(showContactDetails);
                     reusableView.setBackgroundColor(TRANSPARENT);
+                    reusableView.setOnLongClickListener(callLogEntryLongClickListener);
                 }
                 return reusableView;
             }
@@ -319,6 +325,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     }
 
     public void exitSelectionMode(){
+        if(!inSelectionMode) return;
         inSelectionMode = false;
         removeView(findViewById(R.id.delete));
         adapter.notifyDataSetChanged();

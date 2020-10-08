@@ -10,6 +10,8 @@ import java.util.Map;
 
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
+
 public class TintedDrawablesStore {
     public static Map<Integer, Drawable> tintedDrawables = new HashMap<>();
 
@@ -21,7 +23,7 @@ public class TintedDrawablesStore {
     private static Drawable getDrawableFor(@DrawableRes int drawableRes, Context context) {
         Drawable drawable = ContextCompat.getDrawable(context, drawableRes);
         if(drawable == null) return null;
-        AndroidUtils.setColorFilterUsingColorAttribute(drawable, android.R.attr.textColorPrimary, context);
+        AndroidUtils.setColorFilterUsingColor(drawable, getPrimaryColor(context));
         tintedDrawables.put(drawableRes, drawable);
         return drawable;
     }

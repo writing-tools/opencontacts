@@ -199,6 +199,7 @@
     <string name="are_you_sure">Are you sure?</string>
     <string name="group_deleted">Group deleted</string>
     <string name="please_wait">Please wait...</string>
+    <string name="delete_multiple">Delete multiple</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

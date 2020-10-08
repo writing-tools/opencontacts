@@ -12,9 +12,8 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.applyOptedTheme;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColorAttribute;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSecondaryColor;
 
 public abstract class AppBaseActivity extends AppCompatActivity{
 
@@ -28,7 +27,7 @@ public abstract class AppBaseActivity extends AppCompatActivity{
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
-        setColorFilterUsingColorAttribute(toolbar.getOverflowIcon(), android.R.attr.textColorSecondary, this);
+        setColorFilterUsingColor(toolbar.getOverflowIcon(), getSecondaryColor(this));
         AndroidUtils.setBackButtonInToolBar(toolbar, this);
         super.onCreate(savedInstanceState);
     }
@@ -39,8 +38,7 @@ public abstract class AppBaseActivity extends AppCompatActivity{
     public boolean onCreateOptionsMenu(Menu menu) {
         if(!menu.hasVisibleItems())
             return super.onCreateOptionsMenu(menu);
-        int textColorPrimary = getThemeAttributeColor(android.R.attr.textColorSecondary, this);
-        processMenu(menu, textColorPrimary);
+        processMenu(menu, getSecondaryColor(this));
         return super.onCreateOptionsMenu(menu);
     }
 

@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.CallLog;
 import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatTextView;
@@ -14,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
+import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
@@ -39,19 +44,24 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CallLogGroupingUtil;
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static android.graphics.Color.TRANSPARENT;
+import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getHighlighColor;
 
 /**
  * Created by sultanm on 7/31/17.
  */
 
-public class CallLogListView extends ListView implements DataStoreChangeListener<CallLogEntry> {
+public class CallLogListView extends RelativeLayout implements DataStoreChangeListener<CallLogEntry> {
+    private boolean inSelectionMode;
     private String UNKNOWN;
     Context context;
     private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
@@ -61,6 +71,9 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
     private SimpleDateFormat timeStampFormat;
     private HashMap<String, Consumer<GroupedCallLogEntry>> longClickOptionsAndTheirActions;
+    private ListView listView;
+    private HashSet<GroupedCallLogEntry> selectedEntries;
+    private SwipeRefreshLayout swipeRefreshLayout;
 
 
     public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
@@ -68,11 +81,15 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.context = context;
         this.UNKNOWN = context.getString(R.string.unknown);
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
+        listView = new ListView(context);
+        listView.setId(android.R.id.list);
+        addView(getSwipeRefreshLayout(context));
         prepareLongClickActions();
         boolean shouldToggleContactActions = shouldToggleContactActions(context);
         isWhatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
         timeStampFormat = getTimestampPattern(context);
         List<CallLogEntry> callLogEntries = new ArrayList<>();
+        inSelectionMode = false;
 
         final OnClickListener callContact = v -> {
             CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
@@ -87,6 +104,13 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         final OnClickListener messageContact = v -> {
             CallLogEntry callLogEntry = getLatestCallLogEntry((View)v.getParent());
             AndroidUtils.message(callLogEntry.getPhoneNumber(), context);
+        };
+
+        final OnClickListener selectionModeTap = v -> {
+            GroupedCallLogEntry groupedCallLogEntry = ((GroupedCallLogEntry) v.getTag());
+            if(selectedEntries.contains(groupedCallLogEntry)) selectedEntries.remove(groupedCallLogEntry);
+            else selectedEntries.add(groupedCallLogEntry);
+            adapter.notifyDataSetChanged();
         };
         final OnClickListener showContactDetails = v -> {
             CallLogEntry callLogEntry = getLatestCallLogEntry(v);
@@ -153,8 +177,15 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 }
 
                 reusableView.setTag(groupedCallLogEntry);
-                reusableView.setOnClickListener(showContactDetails);
                 reusableView.setOnLongClickListener(callLogEntryLongClickListener);
+                if (inSelectionMode) {
+                    reusableView.setOnClickListener(selectionModeTap);
+                    if (selectedEntries.contains(groupedCallLogEntry)) reusableView.setBackgroundColor(getHighlighColor(context));
+                    else reusableView.setBackgroundColor(TRANSPARENT);
+                } else {
+                    reusableView.setOnClickListener(showContactDetails);
+                    reusableView.setBackgroundColor(TRANSPARENT);
+                }
                 return reusableView;
             }
 
@@ -175,7 +206,7 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
                 }
             }
         };
-        this.setAdapter(adapter);
+        listView.setAdapter(adapter);
         CallLogDataStore.addDataChangeListener(this);
         reload();
         //android has weakref to this listener and gets garbage collected hence we should have it here.
@@ -188,7 +219,21 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
             adapter.notifyDataSetChanged();
         };
         setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
-        addFooterView(getViewMoreButton());
+        listView.addFooterView(getViewMoreButton());
+    }
+
+    @NonNull
+    private SwipeRefreshLayout getSwipeRefreshLayout(Context context) {
+        swipeRefreshLayout = new SwipeRefreshLayout(context);
+        swipeRefreshLayout.addView(listView);
+        swipeRefreshLayout.setOnRefreshListener(() -> {
+            if(listView.getCount() == 0)
+                reload();
+            else
+                CallLogDataStore.loadRecentCallLogEntriesAsync(context);
+            swipeRefreshLayout.setRefreshing(false);
+        });
+        return swipeRefreshLayout;
     }
 
     @NonNull
@@ -201,6 +246,11 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
 
     private void prepareLongClickActions() {
         longClickOptionsAndTheirActions = new HashMap<>();
+        longClickOptionsAndTheirActions.put(context.getString(R.string.delete_multiple), groupedCallLogEntry ->{
+            enterSelectionMode();
+            selectedEntries.add(groupedCallLogEntry);
+            adapter.notifyDataSetChanged();
+        });
         longClickOptionsAndTheirActions.put(context.getString(R.string.copy_to_clipboard), groupedCallLogEntry -> {
             AndroidUtils.copyToClipboard(groupedCallLogEntry.latestCallLogEntry.getPhoneNumber(), context);
             Toast.makeText(context, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
@@ -260,4 +310,42 @@ public class CallLogListView extends ListView implements DataStoreChangeListener
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
     }
 
+    public void enterSelectionMode(){
+        inSelectionMode = true;
+        if(selectedEntries == null) selectedEntries = new HashSet<>(0);
+        else selectedEntries.clear();
+        addDeleteFABButton();
+        swipeRefreshLayout.setEnabled(false);
+    }
+
+    public void exitSelectionMode(){
+        inSelectionMode = false;
+        removeView(findViewById(R.id.delete));
+        adapter.notifyDataSetChanged();
+        swipeRefreshLayout.setEnabled(true);
+    }
+
+    private void addDeleteFABButton() {
+        FloatingActionButton deleteMultipleContacts = new FloatingActionButton(getContext());
+        deleteMultipleContacts.setImageDrawable(TintedDrawablesStore.getTintedDrawable(R.drawable.delete, getContext()));
+        deleteMultipleContacts.setId(R.id.delete);
+        RelativeLayout.LayoutParams deleteFABLayoutParams = new RelativeLayout.LayoutParams(WRAP_CONTENT, WRAP_CONTENT);
+        deleteFABLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
+        deleteFABLayoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+        deleteFABLayoutParams.rightMargin = (int) dpToPixels(12);
+        addView(deleteMultipleContacts, deleteFABLayoutParams);
+        deleteMultipleContacts.setTranslationY(-dpToPixels(16)); //plain old relative layout align parent bottom and bottom margin
+        deleteMultipleContacts.setOnClickListener(v -> {
+            deleteSelection();
+            exitSelectionMode();
+        });
+    }
+
+    private void deleteSelection() {
+        selectedEntries.clear();
+    }
+
+    public boolean isInSelectionMode() {
+        return inSelectionMode;
+    }
 }

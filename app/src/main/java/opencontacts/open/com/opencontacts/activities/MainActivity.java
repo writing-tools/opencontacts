@@ -28,6 +28,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
+import opencontacts.open.com.opencontacts.fragments.AppBaseFragment;
 import opencontacts.open.com.opencontacts.fragments.CallLogFragment;
 import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
 import opencontacts.open.com.opencontacts.fragments.DialerFragment;
@@ -51,9 +52,10 @@ import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_I
 
 
 public class MainActivity extends AppBaseActivity {
+    public static final int CALLLOG_TAB_INDEX = 0;
     public static final int CONTACTS_TAB_INDEX = 1;
-    public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
     public static final int DIALER_TAB_INDEX = 2;
+    public static final String INTENT_EXTRA_LONG_CONTACT_ID = "contact_id";
     private static final int PREFERENCES_ACTIVITY_RESULT = 773;
     private static final int IMPORT_FILE_CHOOSER_RESULT = 467;
     private ViewPager viewPager;
@@ -219,6 +221,16 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
         ));
+    }
+
+    @Override
+    public void onBackPressed() {
+        if(getCurrentFragment().handleBackPress()) return;
+        super.onBackPressed();
+    }
+
+    private AppBaseFragment getCurrentFragment() {
+        return (AppBaseFragment)((FragmentPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
     }
 
     private void importContacts() {

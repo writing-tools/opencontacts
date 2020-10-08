@@ -12,4 +12,8 @@ public class AppBaseFragment extends Fragment{
         AndroidUtils.applyOptedTheme(getContext());
         super.onCreate(savedInstanceState);
     }
+
+    public boolean handleBackPress() {
+        return false;
+    }
 }

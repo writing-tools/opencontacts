@@ -67,6 +67,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ge
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldUseSystemCallingApp;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 
 /**
  * Created by sultanm on 7/17/17.
@@ -264,7 +265,7 @@ public class AndroidUtils {
         Drawable navigationIcon = toolBar.getNavigationIcon();
         if(navigationIcon == null)
             return;
-        setColorFilterUsingColorAttribute(navigationIcon, android.R.attr.textColorPrimary, appCompatActivity);
+        setColorFilterUsingColor(navigationIcon, getPrimaryColor(appCompatActivity));
     }
 
     public static android.app.AlertDialog getAlertDialogToAddContact(final String phoneNumber, final Context context){
@@ -351,10 +352,6 @@ public class AndroidUtils {
         if(typedValue.resourceId == 0)
             return typedValue.data;
         return ContextCompat.getColor(context, typedValue.resourceId);
-    }
-
-    public static void setColorFilterUsingColorAttribute(Drawable drawable, int attribute, Context context){
-        drawable.setColorFilter(getThemeAttributeColor(attribute, context), PorterDuff.Mode.SRC_IN);
     }
 
     public static void setColorFilterUsingColor(Drawable drawable, int color){

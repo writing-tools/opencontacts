@@ -14,6 +14,7 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 
+import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.createNewGroup;
@@ -49,6 +50,7 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
         groupNameEditText = new TextInputEditText(this);
         groupNameEditText.setHint(R.string.group_name);
         groupNameEditText.setText(groupNameFromPrevScreen);
+        groupNameEditText.setInputType(TYPE_TEXT_FLAG_CAP_SENTENCES);
         TextInputLayout textInputLayout = new TextInputLayout(this);
         textInputLayout.addView(groupNameEditText);
         return textInputLayout;

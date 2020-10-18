@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.domain;
 
 import android.support.annotation.NonNull;
+import android.text.TextUtils;
 
 import com.github.underscore.U;
 
@@ -115,7 +116,7 @@ public class Contact implements Serializable{
     }
 
     public List<String> getGroupNames() {
-        if(groups == null) return Collections.emptyList();
+        if(TextUtils.isEmpty(groups)) return Collections.emptyList();
         return Arrays.asList(groups.split(GROUPS_SEPERATOR_CHAR));
     }
 

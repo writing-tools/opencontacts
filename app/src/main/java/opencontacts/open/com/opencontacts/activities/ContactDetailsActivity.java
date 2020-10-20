@@ -102,8 +102,10 @@ public class ContactDetailsActivity extends AppBaseActivity {
         invalidateOptionsMenu();
         contact = ContactsDataStore.getContactWithId(contactId);
         VCardData vcardData = ContactsDataStore.getVCardData(contactId);
-        if(contact == null)
+        if(contact == null){
             showInvalidContactErrorAndExit();
+            return;
+        }
         if(vcardData != null){
             try {
                 vcard = new VCardReader(vcardData.vcardDataAsString).readNext();

@@ -9,7 +9,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import java.util.List;
 
 public class MultiSpinnerUtil {
-    public static void setSelection(List<String> itemsToSelect, List<String> allItems, MultiSpinner multiSpinner) {
+    public static <T> void setSelection(List<T> itemsToSelect, List<T> allItems, MultiSpinner multiSpinner) {
         boolean[] selectionMatrix = ArrayUtils.toPrimitive(U.map(allItems, itemsToSelect::contains).toArray(new Boolean[]{}));
         multiSpinner.setSelected(selectionMatrix);
     }

@@ -150,11 +150,14 @@
                 android:id="@+id/groups_title"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="@string/groups"
                 android:layout_below="@id/date_of_birth_text_input_layout"
                 />
             <com.thomashaertel.widget.MultiSpinner
                 android:id="@+id/groups"
+                android:hint="@string/groups"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/groups_title"

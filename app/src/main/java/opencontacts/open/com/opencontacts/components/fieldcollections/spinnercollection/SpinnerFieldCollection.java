@@ -57,8 +57,7 @@ public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHol
     @NonNull
     private SpinnerFieldHolder createNewField(View inflatedView) {
         SpinnerFieldHolder fieldViewHolder = new SpinnerFieldHolder(options, editDisabled, inflatedView, getContext());
-        int indexOfNewField = fieldViewHoldersList.size();
-        fieldViewHolder.setOnDelete(v -> removeField(indexOfNewField));
+        fieldViewHolder.setOnDelete(v -> removeField(fieldViewHolder));
         return fieldViewHolder;
     }
 

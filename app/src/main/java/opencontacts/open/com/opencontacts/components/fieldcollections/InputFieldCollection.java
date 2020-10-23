@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldHolder;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -46,12 +47,13 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         processAttributesPassedThroughXML(context, attrs);
     }
 
-    public void removeField(int index){
-        if(index >= fieldViewHoldersList.size()) {
+    public void removeField(SpinnerFieldHolder fieldHolderToRemove){
+        if(!fieldViewHoldersList.contains(fieldHolderToRemove)) {
             Toast.makeText(getContext(), R.string.error, LENGTH_SHORT).show();
             return;
         }
-        fieldsHolderLayout.removeView(fieldViewHoldersList.remove(index).getView());
+        fieldsHolderLayout.removeView(fieldHolderToRemove.getView());
+        fieldViewHoldersList.remove(fieldHolderToRemove);
     }
 
     protected void consumeAttributes(Context context, @Nullable AttributeSet attrs){

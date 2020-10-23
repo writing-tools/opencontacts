@@ -146,16 +146,20 @@
                      />
             </android.support.design.widget.TextInputLayout>
 
-            <opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldCollection
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/groups_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/groups"
+                android:layout_below="@id/date_of_birth_text_input_layout"
+                />
+            <com.thomashaertel.widget.MultiSpinner
                 android:id="@+id/groups"
                 android:layout_width="match_parent"
-                android:title="@string/groups"
                 android:layout_height="wrap_content"
-                android:inputType="none"
-                android:layout_below="@id/date_of_birth_text_input_layout"
-                android:layout_marginTop="20dp"
-                 />
-
+                android:layout_below="@id/groups_title"
+                android:layout_marginTop="8dp"
+                />
         </RelativeLayout>
     </ScrollView>
 

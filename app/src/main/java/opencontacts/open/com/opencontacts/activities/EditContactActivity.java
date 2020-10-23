@@ -10,11 +10,13 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
 
 
 import com.github.underscore.U;
+import com.thomashaertel.widget.MultiSpinner;
 
 import java.io.IOException;
 import java.util.Calendar;
@@ -31,7 +33,6 @@ import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldCollection;
 import opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection.TextInputAndSpinnerFieldCollection;
 import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -39,6 +40,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
+import opencontacts.open.com.opencontacts.utils.MultiSpinnerUtil;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
@@ -65,7 +67,7 @@ public class EditContactActivity extends AppBaseActivity {
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
     private Date selectedBirthDay;
-    private SpinnerFieldCollection groupsInputCollection;
+    private MultiSpinner groupsSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,7 +80,7 @@ public class EditContactActivity extends AppBaseActivity {
         notesTextInputEditText = findViewById(R.id.notes);
         websiteTextInputEditText = findViewById(R.id.website);
         dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
-        groupsInputCollection = findViewById(R.id.groups);
+        groupsSpinner = findViewById(R.id.groups);
 
         View.OnClickListener onBirthDayClickListener = v -> {
             Birthday birthday = vcardBeforeEdit.getBirthday();
@@ -137,12 +139,18 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void fillGroups() {
-        groupsInputCollection.set(
-                U.chain(ContactGroupsDataStore.getAllGroups())
-                .map(ContactGroup::getName)
-                .value());
+        ArrayAdapter<String> groupsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
+        groupsSpinner.setAdapter(groupsAdapter, false, selected -> {});
+        List<String> allGroups = getAllGroupNames();
+        groupsAdapter.addAll(allGroups);
         if(contact == null) return;
-        groupsInputCollection.addFields(contact.getGroupNames());
+        MultiSpinnerUtil.setSelection(contact.getGroupNames(), allGroups, groupsSpinner);
+    }
+
+    private List<String> getAllGroupNames() {
+        return U.chain(ContactGroupsDataStore.getAllGroups())
+                .map(ContactGroup::getName)
+                .value();
     }
 
     private void fillDateOfBirth() {
@@ -231,7 +239,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void addGroupsToNewVCard(VCard newVCard) {
-        List<String> newGroupNames = groupsInputCollection.getValues();
+        List<String> newGroupNames = MultiSpinnerUtil.getSelectedItems(groupsSpinner, getAllGroupNames());
         if(newGroupNames.isEmpty()) return;
         VCardUtils.setCategories(newGroupNames, newVCard);
     }

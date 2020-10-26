@@ -62,7 +62,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
             callingContact = ContactsDataStore.getContact(incomingNumber);
             if(callingContact == null)
                 callingContact = new Contact(context.getString(R.string.unknown), incomingNumber);
-            drawContactID(context, callingContact);
+            drawCallerID(context, callingContact);
         }
         else if(state.equals(TelephonyManager.EXTRA_STATE_OFFHOOK)){
             removeCallerIdDrawing(context);
@@ -103,7 +103,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         notificationManager.notify(new Random().nextInt(), mBuilder.build());
     }
 
-    private void drawContactID(Context context, Contact callingContact) {
+    private void drawCallerID(Context context, Contact callingContact) {
         if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(context)) return;
         if(drawOverIncomingCallLayout != null) return;
         final WindowManager windowManager = (WindowManager) context.getSystemService(context.WINDOW_SERVICE);

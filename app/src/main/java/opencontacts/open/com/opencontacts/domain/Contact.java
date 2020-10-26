@@ -13,6 +13,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
+import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
 
 /**
@@ -67,6 +68,7 @@ public class Contact implements Serializable{
     public void setTextSearchTarget(){
         StringBuilder searchStringBuffer = new StringBuilder();
         searchStringBuffer.append(name).append(' ');
+        searchStringBuffer.append(replaceAccentedCharactersWithEnglish(name)).append(' ');// helps being able to search name by typing í or i - accented
         for(PhoneNumber phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
         searchStringBuffer.append(name);

@@ -19,8 +19,8 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 
 import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparator;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparatorBasedOnName;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
 
 /**
  * Created by sultanm on 3/25/17.
@@ -101,7 +101,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     @Override
     public void onStoreRefreshed() {
-        contacts = sortContacts(ContactsDataStore.getAllContacts(), context);
+        contacts = sortContactsBasedOnName(ContactsDataStore.getAllContacts(), context);
         moveFavoritesToTop();
         post(() -> {
             addContactsToAdapter();
@@ -112,7 +112,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
 
     private void moveFavoritesToTop() {
         List<Contact> favorites = ContactsDataStore.getFavorites();
-        Collections.sort(favorites, getContactComparator(context));
+        Collections.sort(favorites, getContactComparatorBasedOnName(context));
         U.forEach(favorites, contacts::remove);
         contacts.addAll(0, favorites);
     }

@@ -192,8 +192,8 @@ public class CallLogDataStore {
         U.forEach(callLogEntries, entry -> {
             if(entry.name != null) return;
             String phoneNumber = entry.getPhoneNumber();
-            String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
-            if(searchablePhoneNumber == null || !searchablePhoneNumber.contains(number)) return;
+            if(matchedEntries.containsKey(phoneNumber)) return; // making sure only recent entries make it so that sorting based on last called will not be impacted
+            if(!phoneNumber.contains(number)) return;
             matchedEntries.put(phoneNumber, entry);
         });
         return matchedEntries.values();

@@ -113,8 +113,10 @@ public class Contact implements Serializable{
         return new Contact(id);
     }
 
-    public static Contact createDummyContact(String firstName, String lastName, String number){
-        return new Contact(firstName, lastName, number);
+    public static Contact createDummyContact(String firstName, String lastName, String number, String lastAccessed){
+        Contact contact = new Contact(firstName, lastName, number);
+        contact.lastAccessed = lastAccessed;
+        return contact;
     }
 
     public List<String> getGroupNames() {

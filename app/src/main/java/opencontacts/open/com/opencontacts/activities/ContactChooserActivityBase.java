@@ -40,7 +40,7 @@ import opencontacts.open.com.opencontacts.utils.Common;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public abstract class ContactChooserActivityBase extends AppBaseActivity {
@@ -91,7 +91,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         if(shouldEnableMultiSelect()) contactsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         else
             contactsListView.setOnItemClickListener((parent, view, position, id) -> onContactSelect(adapter.getItem(position)));
-        contacts = sortContacts(getAllContacts(), this);
+        contacts = sortContactsBasedOnName(getAllContacts(), this);
         adapter = new ArrayAdapter<Contact>(this, shouldEnableMultiSelect() ?
                 R.layout.layout_simple_multi_select_contact : R.layout.layout_simple_contact_select
                 , R.id.contact_name, new ArrayList<>(contacts)) {

@@ -15,6 +15,8 @@ import android.widget.ListView;
 import com.github.underscore.Consumer;
 import com.github.underscore.U;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
@@ -23,6 +25,7 @@ import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
 import static android.view.View.INVISIBLE;
@@ -78,13 +81,14 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
                     return;
                 }
                 List<Contact> unLabelledCallLogEntriesMatchingText = new U<>(getUnLabelledCallLogEntriesMatching(t9Text))
-                        .map(callLogEntry -> createDummyContact(unknownContactString, "", callLogEntry.getPhoneNumber()));
+                        .map(callLogEntry -> createDummyContact(unknownContactString, "", callLogEntry.getPhoneNumber(), callLogEntry.getDate()));
                 List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
                 if(contactsMatchingT9.isEmpty() && unLabelledCallLogEntriesMatchingText.isEmpty()) hideSearchListAndUpdateUIForRest();
-                else{
+                else {
+                    List<Contact> finalListOfContacts = U.flatten(Arrays.asList(unLabelledCallLogEntriesMatchingText, contactsMatchingT9));
+                    Collections.sort(finalListOfContacts, DomainUtils.getContactComparatorBasedOnLastAccessed());
                     searchListAdapter.clear();
-                    searchListAdapter.addAll(unLabelledCallLogEntriesMatchingText);
-                    searchListAdapter.addAll(contactsMatchingT9);
+                    searchListAdapter.addAll(finalListOfContacts);
                     searchListAdapter.notifyDataSetChanged();
                     searchList.setVisibility(VISIBLE);
                     hideMultiSimDialingButtons();

@@ -9,6 +9,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparatorBasedOnLastAccessed;
 
 public abstract class ContactsListFilter extends Filter{
     private ArrayAdapter<Contact> adapter;
@@ -65,18 +66,7 @@ public abstract class ContactsListFilter extends Filter{
 
     public abstract List<Contact> filter(CharSequence searchText, List<Contact> contacts);
 
-    public void sortFilteredContacts(List<Contact> filteredContacts) {
-        Collections.sort(filteredContacts, (contact1, contact2) -> {
-            String lastAccessedDate1 = contact1.lastAccessed;
-            String lastAccessedDate2 = contact2.lastAccessed;
-            if(lastAccessedDate1 == null && lastAccessedDate2 == null)
-                return 0;
-            else if(lastAccessedDate1 == null)
-                return 1;
-            else if (lastAccessedDate2 == null)
-                return -1;
-            else
-                return lastAccessedDate2.compareTo(lastAccessedDate1);
-        });
+    protected void sortFilteredContacts(List<Contact> filteredContacts) {
+        Collections.sort(filteredContacts, getContactComparatorBasedOnLastAccessed());
     }
 }

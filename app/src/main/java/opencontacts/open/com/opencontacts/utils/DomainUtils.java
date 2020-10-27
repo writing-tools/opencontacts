@@ -321,18 +321,34 @@ public class DomainUtils {
         return ShortcutManagerCompat.requestPinShortcut(context, shortcutInfo, null);
     }
 
-    public static List<Contact> sortContacts(Collection<Contact> contacts, Context context) {
+    public static List<Contact> sortContactsBasedOnName(Collection<Contact> contacts, Context context) {
         List<Contact> newContactsList = U.copyOf(contacts);
-        Collections.sort(newContactsList, getContactComparator(context));
+        Collections.sort(newContactsList, getContactComparatorBasedOnName(context));
         return newContactsList;
     }
 
     @NonNull
-    public static Comparator<Contact> getContactComparator(Context context) {
+    public static Comparator<Contact> getContactComparatorBasedOnName(Context context) {
         if(shouldSortUsingFirstName(context))
             return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
         else
             return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
+    }
+
+    @NonNull
+    public static Comparator<Contact> getContactComparatorBasedOnLastAccessed() {
+        return (contact1, contact2) -> {
+            String lastAccessedDate1 = contact1.lastAccessed;
+            String lastAccessedDate2 = contact2.lastAccessed;
+            if(lastAccessedDate1 == null && lastAccessedDate2 == null)
+                return 0;
+            else if(lastAccessedDate1 == null)
+                return 1;
+            else if (lastAccessedDate2 == null)
+                return -1;
+            else
+                return lastAccessedDate2.compareTo(lastAccessedDate1);
+        };
     }
 
     public static List<Contact> filterContactsBasedOnT9Text(CharSequence t9Text, List<Contact> contacts) {

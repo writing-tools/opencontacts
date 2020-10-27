@@ -36,7 +36,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.message;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContacts;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public class GroupsActivity extends AppBaseActivity {
@@ -103,7 +103,7 @@ public class GroupsActivity extends AppBaseActivity {
 
     private void showContactsListOfSelectedGroup(int selectedGroupIndex) {
         currentlySelectedGroupContactsSorted = new ArrayList<>(
-                sortContacts(allGroups.get(selectedGroupIndex).contacts, this)
+                sortContactsBasedOnName(allGroups.get(selectedGroupIndex).contacts, this)
         );// these will be used in search as well hence keeping them in member variable
         if(contactsListAdapter == null) setupContactsListAdapter();
 

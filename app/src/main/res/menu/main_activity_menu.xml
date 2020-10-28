@@ -4,10 +4,10 @@
 
     <item
         android:id="@+id/action_search"
-        android:icon="@android:drawable/ic_menu_search"
+        android:icon="@drawable/ic_search_black_24dp"
         android:title="@string/search"
         app:actionViewClass="android.support.v7.widget.SearchView"
-        app:showAsAction="always" />
+        app:showAsAction="always|collapseActionView" />
     <item
         android:id="@+id/button_new"
         android:icon="@drawable/ic_add_circle_outline_24dp"

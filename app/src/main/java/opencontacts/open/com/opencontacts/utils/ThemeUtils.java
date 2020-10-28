@@ -13,7 +13,7 @@ public class ThemeUtils {
         return getThemeAttributeColor(android.R.attr.textColorPrimary, context);
     }
 
-    public static int getHighlighColor(Context context) {
+    public static int getHighlightColor(Context context) {
         return getThemeAttributeColor(android.R.attr.colorMultiSelectHighlight, context);
     }
 }

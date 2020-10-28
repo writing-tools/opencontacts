@@ -55,7 +55,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WH
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
-import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getHighlighColor;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getHighlightColor;
 
 /**
  * Created by sultanm on 7/31/17.
@@ -186,7 +186,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 if (inSelectionMode) {
                     reusableView.setOnClickListener(selectionModeTap);
                     reusableView.setOnLongClickListener(null);
-                    if (selectedEntries.contains(groupedCallLogEntry)) reusableView.setBackgroundColor(getHighlighColor(context));
+                    if (selectedEntries.contains(groupedCallLogEntry)) reusableView.setBackgroundColor(getHighlightColor(context));
                     else reusableView.setBackgroundColor(TRANSPARENT);
                 } else {
                     reusableView.setOnClickListener(showContactDetails);

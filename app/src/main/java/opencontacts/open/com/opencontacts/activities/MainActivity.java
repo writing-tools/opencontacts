@@ -11,10 +11,10 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.util.Pair;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -36,8 +36,13 @@ import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
+import pro.midev.expandedmenulibrary.ExpandedMenuItem;
+import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
+import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.View.VISIBLE;
+import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
@@ -47,7 +52,10 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilt
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
 
 
@@ -63,6 +71,7 @@ public class MainActivity extends AppBaseActivity {
     private CallLogFragment callLogFragment;
     private ContactsFragment contactsFragment;
     private DialerFragment dialerFragment;
+    private MenuItem searchItem;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -145,15 +154,35 @@ public class MainActivity extends AppBaseActivity {
         }
         else {
             setupTabs();
+            setupBottomMenu();
+            if(shouldKeyboardResizeViews(this)) getWindow().setSoftInputMode(SOFT_INPUT_ADJUST_RESIZE);
             if(handleIntent(getIntent())) ;
             else gotoDefaultTab();
         }
         markPermissionsAksed(this);
     }
 
+    private void setupBottomMenu() {
+        ExpandedMenuView bottomMenu = findViewById(R.id.bottom_menu);
+        ExpandedMenuItem searchItem = new ExpandedMenuItem(R.drawable.ic_search_black_24dp, "Search", getPrimaryColor(this));
+        ExpandedMenuItem groupItem = new ExpandedMenuItem(R.drawable.ic_group_merge_contacts_24dp, "Groups", getPrimaryColor(this));
+        ExpandedMenuItem dialpadItem = new ExpandedMenuItem(R.drawable.dial_pad, "Dial", getPrimaryColor(this));
+        bottomMenu.setIcons(searchItem, groupItem, dialpadItem, null);
+        bottomMenu.setOnItemClickListener(i -> {
+            switch (i){
+                case 0: searchContacts();
+                break;
+                case 1: launchGroupsActivity();
+                break;
+                case 2: viewPager.setCurrentItem(DIALER_TAB_INDEX);
+                break;
+            }
+        });
+    }
+
     @Override
     int getLayoutResource() {
-        return R.layout.activity_tabbed;
+        return R.layout.activity_main;
     }
 
     @Override
@@ -170,12 +199,9 @@ public class MainActivity extends AppBaseActivity {
             startActivity(addContact);
             return false;
         });
-        MenuItem searchItem = menu.findItem(R.id.action_search);
+        searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnSearchClickListener(v -> {
-            viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
-            searchView.requestFocus();
-        });
+        searchView.setOnSearchClickListener(v -> viewPager.setCurrentItem(CONTACTS_TAB_INDEX));
         menu.findItem(R.id.action_sync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
             startActivity(new Intent(this, CardDavSyncActivity.class))
         ));
@@ -191,9 +217,7 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(MainActivity.this, AboutActivity.class))
         ));
 
-        menu.findItem(R.id.action_groups).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
-            startActivity(new Intent(MainActivity.this, GroupsActivity.class))
-        ));
+        menu.findItem(R.id.action_groups).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchGroupsActivity));
         menu.findItem(R.id.action_help).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             startActivity(new Intent(MainActivity.this, HelpActivity.class))
         ));
@@ -209,7 +233,7 @@ public class MainActivity extends AppBaseActivity {
             AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this)
         ));
         menu.findItem(R.id.action_export_call_log).setOnMenuItemClickListener(item -> {
-            Toast.makeText(this, R.string.started_exporting_call_log, Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.started_exporting_call_log, LENGTH_SHORT).show();
             try {
                 DomainUtils.exportCallLog(this);
                 Toast.makeText(this, R.string.exported_call_log_successfully, Toast.LENGTH_LONG).show();
@@ -221,6 +245,15 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
         ));
+    }
+
+    private void launchGroupsActivity() {
+        startActivity(new Intent(MainActivity.this, GroupsActivity.class));
+    }
+
+    private void searchContacts() {
+        if(searchItem.isActionViewExpanded()) searchItem.collapseActionView();
+        searchItem.expandActionView();
     }
 
     @Override
@@ -327,6 +360,6 @@ public class MainActivity extends AppBaseActivity {
         return Pair.create(dialpadIconOnUnSelect, dialpadIconOnSelect);
     }
     public void collapseSearchView(){
-        if(searchView != null) searchView.onActionViewCollapsed(); // happens when app hasn't even got menu items callback
+        if(searchItem != null) searchItem.collapseActionView(); // happens when app hasn't even got menu items callback
     }
 }

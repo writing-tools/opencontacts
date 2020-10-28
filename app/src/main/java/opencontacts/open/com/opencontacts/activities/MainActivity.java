@@ -14,7 +14,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
 
@@ -39,7 +38,6 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import pro.midev.expandedmenulibrary.ExpandedMenuItem;
 import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
-import static android.view.MotionEvent.ACTION_DOWN;
 import static android.view.View.VISIBLE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -52,7 +50,6 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilt
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
@@ -167,14 +164,17 @@ public class MainActivity extends AppBaseActivity {
         ExpandedMenuItem searchItem = new ExpandedMenuItem(R.drawable.ic_search_black_24dp, "Search", getPrimaryColor(this));
         ExpandedMenuItem groupItem = new ExpandedMenuItem(R.drawable.ic_group_merge_contacts_24dp, "Groups", getPrimaryColor(this));
         ExpandedMenuItem dialpadItem = new ExpandedMenuItem(R.drawable.dial_pad, "Dial", getPrimaryColor(this));
-        bottomMenu.setIcons(searchItem, groupItem, dialpadItem, null);
+        ExpandedMenuItem addContactItem = new ExpandedMenuItem(R.drawable.ic_add_circle_outline_24dp, "Add contact", getPrimaryColor(this));
+        bottomMenu.setIcons(searchItem, groupItem, addContactItem, dialpadItem);
         bottomMenu.setOnItemClickListener(i -> {
             switch (i){
                 case 0: searchContacts();
                 break;
                 case 1: launchGroupsActivity();
                 break;
-                case 2: viewPager.setCurrentItem(DIALER_TAB_INDEX);
+                case 2: launchAddContact();
+                break;
+                case 3: viewPager.setCurrentItem(DIALER_TAB_INDEX);
                 break;
             }
         });
@@ -193,12 +193,7 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void setMenuItemsListeners(Menu menu) {
-        menu.findItem(R.id.button_new).setOnMenuItemClickListener(item -> {
-            Intent addContact = new Intent(MainActivity.this, EditContactActivity.class);
-            addContact.putExtra(EditContactActivity.INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, true);
-            startActivity(addContact);
-            return false;
-        });
+        menu.findItem(R.id.button_new).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchAddContact));
         searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(v -> viewPager.setCurrentItem(CONTACTS_TAB_INDEX));
@@ -245,6 +240,12 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
         ));
+    }
+
+    private void launchAddContact() {
+        Intent addContact = new Intent(MainActivity.this, EditContactActivity.class);
+        addContact.putExtra(EditContactActivity.INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, true);
+        startActivity(addContact);
     }
 
     private void launchGroupsActivity() {

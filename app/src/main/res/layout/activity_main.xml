@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/bottom_menu"
         app:em_menu_icon="@drawable/more_overflow_menu"
-        app:em_background_color="?android:textColorLink"
+        app:em_background_color="?colorBackgroundFloating"
         app:em_text_color="?android:textColorSecondary"
         android:layout_alignParentBottom="true"
         />

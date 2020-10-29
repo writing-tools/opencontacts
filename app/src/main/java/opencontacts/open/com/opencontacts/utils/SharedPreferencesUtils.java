@@ -51,8 +51,8 @@ public class SharedPreferencesUtils {
     public static final String DEFAULT_SIM_SELECTION_SIM_2 = "1";
     public static final String SHOULD_USE_SYSTEM_PHONE_APP = "SHOULD_USE_SYSTEM_PHONE_APP";
     public static final String SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY = "SHORTCUTS_ADDED_IN_VERSION";
-    public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY";
-    public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY";
+    public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
+    public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)

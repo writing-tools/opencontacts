@@ -53,6 +53,7 @@ public class SharedPreferencesUtils {
     public static final String SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY = "SHORTCUTS_ADDED_IN_VERSION";
     public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
+    public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -193,5 +194,13 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldBottomMenuOpenByDefault(Context context) {
         return getBoolean(BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY, true, context);
+    }
+
+    public static String getLastVisistedGroup(Context context) {
+        return getStringFromPreferences(LAST_VISITED_GROUP_SHARED_PREF_KEY, "", context);
+    }
+
+    public static void setLastVisistedGroup(String groupName, Context context) {
+        updatePreference(LAST_VISITED_GROUP_SHARED_PREF_KEY, groupName, context);
     }
 }

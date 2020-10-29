@@ -37,7 +37,9 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemC
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.message;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastVisistedGroup;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastVisistedGroup;
 
 public class GroupsActivity extends AppBaseActivity {
 
@@ -45,7 +47,6 @@ public class GroupsActivity extends AppBaseActivity {
     private List<ContactGroup> allGroups;
     private ArrayAdapter<Object> spinnerAdapter;
     private ListView contactsListView;
-    private String selectedGroupName;
     private ContactsListViewAdapter contactsListAdapter;
     private ArrayList<Contact> currentlySelectedGroupContactsSorted;
 
@@ -64,7 +65,7 @@ public class GroupsActivity extends AppBaseActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 ContactGroup selectedItem = (ContactGroup) groupNameSpinner.getSelectedItem();
                 if(selectedItem == null) return;
-                selectedGroupName = selectedItem.getName();
+                setLastVisistedGroup(selectedItem.getName(), GroupsActivity.this);
                 showContactsListOfSelectedGroup(position);
             }
 
@@ -96,8 +97,9 @@ public class GroupsActivity extends AppBaseActivity {
     }
 
     private int getSelectedGroupIndex() {
-        if(isEmpty(selectedGroupName)) return 0;
-        int selectedGroupIndex = U.findIndex(allGroups, group -> group.getName().equals(selectedGroupName));
+        String lastVisitedGroupName = getLastVisistedGroup(this);
+        if(isEmpty(lastVisitedGroupName)) return 0;
+        int selectedGroupIndex = U.findIndex(allGroups, group -> group.getName().equals(lastVisitedGroupName));
         return selectedGroupIndex == -1 ? 0 : selectedGroupIndex;
     }
 

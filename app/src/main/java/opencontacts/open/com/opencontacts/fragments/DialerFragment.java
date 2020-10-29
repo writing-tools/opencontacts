@@ -33,6 +33,7 @@ import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
@@ -106,6 +107,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
     private void setupSearchList(View view) {
         searchList = view.findViewById(R.id.search_list);
+        searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
         searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context){
             @Override

@@ -15,6 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -49,6 +50,7 @@ import static android.graphics.Color.TRANSPARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
@@ -226,7 +228,15 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             adapter.notifyDataSetChanged();
         };
         setSharedPreferencesChangeListener(sharedPreferenceChangeListener, context);
-        listView.addFooterView(getViewMoreButton());
+        listView.addFooterView(getFooterView());
+    }
+
+    private View getFooterView() {
+        LinearLayout linearLayout = new LinearLayout(context);
+        linearLayout.setOrientation(LinearLayout.VERTICAL);
+        linearLayout.addView(getViewMoreButton());
+        linearLayout.addView(getASpaceOfHeight(10, 56, context)); //56 is height of bottom menu, 10 is arbitrary
+        return linearLayout;
     }
 
     @NonNull

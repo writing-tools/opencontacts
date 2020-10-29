@@ -31,6 +31,7 @@ import android.util.TypedValue;
 import android.view.MenuItem.OnMenuItemClickListener;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Space;
 import android.widget.Toast;
 
 
@@ -62,6 +63,7 @@ import static android.provider.CalendarContract.Events.CONTENT_URI;
 import static android.provider.CalendarContract.Events.TITLE;
 import static android.provider.CalendarContract.Events.ALL_DAY;
 import static android.text.TextUtils.isEmpty;
+import static java.lang.Math.round;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
@@ -83,6 +85,10 @@ public class AndroidUtils {
 
     public static float dpToPixels(int dp) {
         return Resources.getSystem().getDisplayMetrics().density * dp;
+    }
+
+    public static int dpToPixelsClosestInt(int dp) {
+        return round(dpToPixels(dp));
     }
 
     public static void processAsync(final Runnable someRunnable){
@@ -499,4 +505,10 @@ public class AndroidUtils {
         };
     }
 
+    public static Space getASpaceOfHeight(int widthInDP, int heightInDP, Context context) {
+        Space space = new Space(context);
+        space.setMinimumHeight(dpToPixelsClosestInt(widthInDP));
+        space.setMinimumHeight(dpToPixelsClosestInt(heightInDP));
+        return space;
+    }
 }

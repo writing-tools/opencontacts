@@ -19,6 +19,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparatorBasedOnName;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
 
@@ -45,6 +46,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         adapter.setContactsListActionsListener(new DefaultContactsListActions(context));
         View headerView = inflate(context, R.layout.contacts_list_header, null);
         addHeaderView(headerView);
+        addFooterView(getASpaceOfHeight(10, 56, context)); //56 is height of bottom menu, 10 is arbitrary
         setAdapter(adapter);
         totalContactsTextView = headerView.findViewById(R.id.total_contacts);
         updateHeaderWithContactsCount();

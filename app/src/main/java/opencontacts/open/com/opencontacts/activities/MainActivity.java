@@ -50,6 +50,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilt
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
@@ -178,6 +179,8 @@ public class MainActivity extends AppBaseActivity {
                 break;
             }
         });
+        if(shouldBottomMenuOpenByDefault(this)) bottomMenu.expandMenu();
+        else bottomMenu.collapseMenu();
     }
 
     @Override

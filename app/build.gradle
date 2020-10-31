@@ -51,7 +51,7 @@ dependencies {
     implementation 'com.android.support:cardview-v7:28.0.0'
     implementation 'com.reginald:editspinner:1.1.0'
     implementation 'com.thomashaertel:multispinner:0.1.1@aar'
-    implementation 'com.github.sultanahamer:ExpandedMenuView:8991fd6b67d8cecd99ddd318d3a823739119f2df'
+    implementation 'com.github.sultanahamer:ExpandedMenuView:d57acc9096212a9fb0b9a593781d5d54354273fc'
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.10.5'
     implementation "com.squareup.okhttp3:okhttp:4.2.2"
     implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")

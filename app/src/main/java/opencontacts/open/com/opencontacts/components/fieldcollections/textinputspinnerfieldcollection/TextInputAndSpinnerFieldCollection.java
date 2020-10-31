@@ -25,18 +25,18 @@ public class TextInputAndSpinnerFieldCollection extends InputFieldCollection<Tex
     public int inputType;
 
     public TextInputAndSpinnerFieldCollection(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public TextInputAndSpinnerFieldCollection(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public TextInputAndSpinnerFieldCollection(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        processAttributesPassedThroughXML(context, attrs);
     }
 
-    @Override
     protected void processAttributesPassedThroughXML(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputFieldCollection);
         CharSequence[] fieldTypesArray = typedArray.getTextArray(R.styleable.InputFieldCollection_android_entries);
@@ -48,12 +48,9 @@ public class TextInputAndSpinnerFieldCollection extends InputFieldCollection<Tex
     }
 
     @Override
-    public TextInputAndSpinnerViewHolder addOneMoreView() {
+    public TextInputAndSpinnerViewHolder createNewField() {
         View inflatedView = layoutInflater.inflate(R.layout.layout_edit_field_and_type, fieldsHolderLayout, false);
-        fieldsHolderLayout.addView(inflatedView);
-        TextInputAndSpinnerViewHolder fieldViewHolder = new TextInputAndSpinnerViewHolder(hint, inputType, fieldTypes, inflatedView, getContext());
-        fieldViewHoldersList.add(fieldViewHolder);
-        return fieldViewHolder;
+        return new TextInputAndSpinnerViewHolder(hint, inputType, fieldTypes, inflatedView, getContext());
     }
 
     public List<Pair<String, String>> getValuesAndTypes() {

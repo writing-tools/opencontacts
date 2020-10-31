@@ -44,7 +44,6 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         fieldsHolderLayout = findViewById(R.id.fields_holder);
         addMoreButton.setOnClickListener(x -> addOneMoreView());
         consumeAttributes(context, attrs);
-        processAttributesPassedThroughXML(context, attrs);
     }
 
     public void removeField(SpinnerFieldHolder fieldHolderToRemove){
@@ -56,7 +55,7 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         fieldViewHoldersList.remove(fieldHolderToRemove);
     }
 
-    protected void consumeAttributes(Context context, @Nullable AttributeSet attrs){
+    private void consumeAttributes(Context context, @Nullable AttributeSet attrs){
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputFieldCollection);
         String title = typedArray.getString(R.styleable.InputFieldCollection_android_title);
         if(!TextUtils.isEmpty(title)) setupTitle(title);
@@ -69,9 +68,14 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         titleTextView.setVisibility(VISIBLE);
     }
 
-    protected abstract void processAttributesPassedThroughXML(Context context, @Nullable AttributeSet attrs);
+    public H addOneMoreView(){
+        H newField = createNewField();
+        fieldsHolderLayout.addView(newField.getView());
+        fieldViewHoldersList.add(newField);
+        return newField;
+    }
 
-    public abstract FieldViewHolder addOneMoreView();
+    public abstract H createNewField();
 
     public boolean isEmpty(){
         int childCount = fieldViewHoldersList.size();

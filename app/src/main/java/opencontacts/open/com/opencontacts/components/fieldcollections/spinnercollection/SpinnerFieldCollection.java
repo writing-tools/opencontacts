@@ -2,7 +2,6 @@ package opencontacts.open.com.opencontacts.components.fieldcollections.spinnerco
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
@@ -25,18 +24,18 @@ public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHol
     private boolean editDisabled;
 
     public SpinnerFieldCollection(Context context) {
-        super(context);
+        this(context, null);
     }
 
     public SpinnerFieldCollection(Context context, @Nullable AttributeSet attrs) {
-        super(context, attrs);
+        this(context, attrs, 0);
     }
 
     public SpinnerFieldCollection(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
+        processAttributesPassedThroughXML(context, attrs);
     }
 
-    @Override
     protected void processAttributesPassedThroughXML(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputFieldCollection);
         CharSequence[] options = typedArray.getTextArray(R.styleable.InputFieldCollection_android_entries);
@@ -46,16 +45,8 @@ public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHol
     }
 
     @Override
-    public SpinnerFieldHolder addOneMoreView() {
+    public SpinnerFieldHolder createNewField() {
         View inflatedView = layoutInflater.inflate(R.layout.component_fieldcollection_spinner_field, fieldsHolderLayout, false);
-        fieldsHolderLayout.addView(inflatedView);
-        SpinnerFieldHolder fieldViewHolder = createNewField(inflatedView);
-        fieldViewHoldersList.add(fieldViewHolder);
-        return fieldViewHolder;
-    }
-
-    @NonNull
-    private SpinnerFieldHolder createNewField(View inflatedView) {
         SpinnerFieldHolder fieldViewHolder = new SpinnerFieldHolder(options, editDisabled, inflatedView, getContext());
         fieldViewHolder.setOnDelete(v -> removeField(fieldViewHolder));
         return fieldViewHolder;

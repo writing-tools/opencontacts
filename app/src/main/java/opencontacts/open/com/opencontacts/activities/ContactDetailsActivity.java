@@ -40,11 +40,14 @@ import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.copyToClipboard;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -72,7 +75,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private View.OnClickListener whatsappContact = v -> AndroidUtils.whatsapp(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
 
     private View.OnLongClickListener copyPhoneNumberToClipboard = v -> {
-        AndroidUtils.copyToClipboard(getSelectedMobileNumber(v), ContactDetailsActivity.this);
+        copyToClipboard(getSelectedMobileNumber(v), ContactDetailsActivity.this);
         Toast.makeText(ContactDetailsActivity.this, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     };
@@ -193,7 +196,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         AppCompatTextView notesTextView = notesCard.findViewById(R.id.text_view);
         notesTextView.setText(note.getValue());
         notesTextView.setOnLongClickListener(v -> {
-            AndroidUtils.copyToClipboard(notesTextView.getText().toString(), true, this);
+            copyToClipboard(notesTextView.getText().toString(), true, this);
             return true;
         });
         notesCard.setVisibility(VISIBLE);
@@ -209,8 +212,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
         List<Address> addresses = vcard.getAddresses();
         ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
                 .withOnItemClickListener(index -> openMap(addresses.get(index).getStreetAddress(), this))
-                .withItems(U.map(addresses, address -> new Pair<>(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), this))))
-                .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(addresses.get(index).getStreetAddress(), true, this))
+                .withItems(U.map(addresses, address -> new Pair<>(formatAddressToAMultiLineString(address, this), getAddressTypeTranslatedText(address, this))))
+                .withOnItemLongClickListener(index -> copyToClipboard(formatAddressToAMultiLineString(addresses.get(index), this), true, this))
                 .build();
         addressLinearLayout.addView(addressesExpandedListView);
     }
@@ -226,7 +229,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
                 .withOnItemClickListener(index -> AndroidUtils.email(emails.get(index).getValue(), this))
                 .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
-                .withOnItemLongClickListener(index -> AndroidUtils.copyToClipboard(emails.get(index).getValue(),  true, this))
+                .withOnItemLongClickListener(index -> copyToClipboard(emails.get(index).getValue(),  true, this))
                 .build();
         emailAddressLinearLayout.addView(emailsExpandedListView);
     }

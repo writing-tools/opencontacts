@@ -201,6 +201,12 @@
     <string name="group_deleted">Group deleted</string>
     <string name="please_wait">Please wait...</string>
     <string name="delete_multiple">Delete multiple</string>
+    <string name="post_office_box">Post office box</string>
+    <string name="state_province">State or province</string>
+    <string name="city">City</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="country">Country</string>
+    <string name="extended_address">Extended address</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

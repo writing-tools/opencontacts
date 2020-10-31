@@ -15,6 +15,8 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
 
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+
 
 public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
     public TextInputEditText editText;
@@ -43,9 +45,7 @@ public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
 
     public void set(String value, String type) {
         editText.setText(value);
-        int indexOfType = types.indexOf(type);
-        if (indexOfType == -1) spinner.setText(type);
-        else spinner.selectItem(indexOfType);
+        setItem(type, types, spinner);
     }
 
     @Override

@@ -17,7 +17,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection.SpinnerFieldHolder;
 
 import static android.widget.Toast.LENGTH_SHORT;
 
@@ -26,6 +25,8 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
     protected LayoutInflater layoutInflater;
     public List<H> fieldViewHoldersList = new ArrayList<>();
     protected LinearLayout fieldsHolderLayout;
+    private View addMoreButton;
+    private Runnable onAddMoreClick;
 
     public InputFieldCollection(Context context) {
         this(context, null);
@@ -40,13 +41,16 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         setOrientation(VERTICAL);
         layoutInflater = LayoutInflater.from(context);
         layoutInflater.inflate(R.layout.layout_field_collection, this, true);
-        View addMoreButton = findViewById(R.id.add_more);
+        addMoreButton = findViewById(R.id.add_more);
         fieldsHolderLayout = findViewById(R.id.fields_holder);
-        addMoreButton.setOnClickListener(x -> addOneMoreView());
+        addMoreButton.setOnClickListener(x -> {
+            addOneMoreView();
+            if(onAddMoreClick != null) onAddMoreClick.run();
+        });
         consumeAttributes(context, attrs);
     }
 
-    public void removeField(SpinnerFieldHolder fieldHolderToRemove){
+    public void removeField(H fieldHolderToRemove){
         if(!fieldViewHoldersList.contains(fieldHolderToRemove)) {
             Toast.makeText(getContext(), R.string.error, LENGTH_SHORT).show();
             return;
@@ -82,6 +86,10 @@ public abstract class InputFieldCollection<H extends FieldViewHolder> extends Li
         if(childCount == 0)
             return true;
         return !U.any(fieldViewHoldersList, fieldViewHolder -> !TextUtils.isEmpty(fieldViewHolder.getValue()));
+    }
+
+    public void setOnAddMoreClick(Runnable onAddMoreClick) {
+        this.onAddMoreClick = onAddMoreClick;
     }
 
     public H getFieldAt(int index){

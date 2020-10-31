@@ -1,0 +1,116 @@
+package opencontacts.open.com.opencontacts.views;
+
+import android.content.Context;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.util.Consumer;
+import android.support.v7.app.AlertDialog;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.ArrayAdapter;
+
+import com.reginald.editspinner.EditSpinner;
+
+import java.util.List;
+
+import ezvcard.parameter.AddressType;
+import ezvcard.property.Address;
+import opencontacts.open.com.opencontacts.R;
+
+import static android.text.TextUtils.isEmpty;
+import static java.util.Arrays.asList;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressType;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+
+public class AddressPopup {
+
+    private final Address address;
+    private final Consumer<Address> onSave;
+    private Runnable onDismiss;
+    private final View inflatedView;
+    private Context context;
+    private TextInputEditText poBoxTextInput;
+    private TextInputEditText addressTextInput;
+    private TextInputEditText extendedAddressTextInput;
+    private TextInputEditText postalCodeTextInput;
+    private TextInputEditText cityTextInput;
+    private TextInputEditText stateTextInput;
+    private TextInputEditText countryTextInput;
+    private EditSpinner addressTypeSpinner;
+    private List<String> types;
+
+    public AddressPopup(Address address, Consumer<Address> onSave, Runnable onDismiss, Context context) {
+        this.address = address.copy();
+        this.onSave = onSave;
+        this.onDismiss = onDismiss;
+        inflatedView = LayoutInflater.from(context).inflate(R.layout.view_address_edit_popup, null);
+        this.context = context;
+        linkAllFields();
+        fillAddressIntoFields();
+    }
+
+    private void fillAddressIntoFields() {
+        poBoxTextInput.setText(address.getPoBox());
+        addressTextInput.setText(address.getStreetAddress());
+        extendedAddressTextInput.setText(address.getExtendedAddress());
+        postalCodeTextInput.setText(address.getPostalCode());
+        cityTextInput.setText(address.getLocality());
+        stateTextInput.setText(address.getRegion());
+        countryTextInput.setText(address.getCountry());
+
+        setItem(getAddressTypeTranslatedText(address, context), types, addressTypeSpinner);
+    }
+
+    private void computeAddressAndCallBack() {
+        computeNewAddressFromFields();
+        onSave.accept(address);
+    }
+
+    private void computeNewAddressFromFields() {
+        if(!isEmpty(poBoxTextInput.getText().toString())) address.setPoBox(poBoxTextInput.getText().toString());
+        if(!isEmpty(addressTextInput.getText().toString())) address.setStreetAddress(addressTextInput.getText().toString());
+        if(!isEmpty(extendedAddressTextInput.getText().toString())) address.setExtendedAddress(extendedAddressTextInput.getText().toString());
+        if(!isEmpty(postalCodeTextInput.getText().toString())) address.setPostalCode(postalCodeTextInput.getText().toString());
+        if(!isEmpty(cityTextInput.getText().toString())) address.setLocality(cityTextInput.getText().toString());
+        if(!isEmpty(stateTextInput.getText().toString())) address.setRegion(stateTextInput.getText().toString());
+        if(!isEmpty(countryTextInput.getText().toString())) address.setCountry(countryTextInput.getText().toString());
+
+        updateAddressType();
+    }
+
+    private void updateAddressType() {
+        AddressType addressType = getAddressType(addressTypeSpinner.getText().toString(), context);
+        List<AddressType> existingAddressTypes = address.getTypes();
+        if (existingAddressTypes.isEmpty()) existingAddressTypes.add(addressType);
+        else existingAddressTypes.set(0, addressType);
+    }
+
+    public void show() {
+        new AlertDialog.Builder(context)
+                .setView(inflatedView)
+                .setPositiveButton(R.string.okay, (dialog, which) -> computeAddressAndCallBack())
+                .setNegativeButton(R.string.cancel, (dialog, which) -> onDismiss.run())
+                .setOnCancelListener(dialog -> onDismiss.run())
+                .setCancelable(true)
+                .show();
+    }
+
+    private void linkAllFields() {
+        poBoxTextInput = inflatedView.findViewById(R.id.post_office_box);
+        addressTextInput = inflatedView.findViewById(R.id.street_address);
+        extendedAddressTextInput = inflatedView.findViewById(R.id.extended_address);
+        postalCodeTextInput = inflatedView.findViewById(R.id.postal_code);
+        cityTextInput = inflatedView.findViewById(R.id.city);
+        stateTextInput = inflatedView.findViewById(R.id.state);
+        countryTextInput = inflatedView.findViewById(R.id.country);
+        addressTypeSpinner = inflatedView.findViewById(R.id.address_types);
+
+        setupAddressTypeSpinner();
+    }
+
+    private void setupAddressTypeSpinner() {
+        types = asList(context.getResources().getStringArray(R.array.address_types));
+        addressTypeSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, types));
+        if (types.size() > 0) addressTypeSpinner.selectItem(0);
+    }
+}

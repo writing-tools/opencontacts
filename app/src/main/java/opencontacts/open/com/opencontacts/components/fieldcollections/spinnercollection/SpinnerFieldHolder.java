@@ -12,6 +12,8 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
 
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+
 public class SpinnerFieldHolder extends FieldViewHolder {
 
     private final EditSpinner spinner;
@@ -34,9 +36,7 @@ public class SpinnerFieldHolder extends FieldViewHolder {
     }
 
     public void set(String option) {
-        int indexOfType = options.indexOf(option);
-        if (indexOfType == -1) spinner.setText(option);
-        else spinner.selectItem(indexOfType);
+        setItem(option, options, spinner);
     }
 
     public void setOnDelete(View.OnClickListener onClickListener){

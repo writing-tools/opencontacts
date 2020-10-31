@@ -13,6 +13,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
+import static android.text.TextUtils.isEmpty;
+
 /**
  * Created by sultanm on 7/30/17.
  */
@@ -145,6 +147,10 @@ public class Common {
         return U.chain(getEmptyStringIfNull(stringPartsToBeSearchedFor).split(" "))
                 .reject(partOfString -> stringToBeSearchedInLowerCase.contains(partOfString.toLowerCase()))
                 .value();
+    }
+
+    public static String appendNewLineIfNotEmpty(String text) {
+        return isEmpty(text) ? "" : text + "\n";
     }
 
 }

@@ -35,6 +35,7 @@ import ezvcard.io.text.VCardWriter;
 import ezvcard.parameter.AddressType;
 import ezvcard.parameter.EmailType;
 import ezvcard.parameter.TelephoneType;
+import ezvcard.property.Address;
 import ezvcard.property.StructuredName;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -43,6 +44,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
+import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
@@ -233,8 +235,9 @@ public class DomainUtils {
         return addressTypeToTranslatedText;
     }
 
-    public static String getAddressTypeTranslatedText(List<AddressType> types, Context context){
+    public static String getAddressTypeTranslatedText(Address address, Context context){
         if(defaultAddressTypeTranslatedText == null) defaultAddressTypeTranslatedText = getAddressTypeToTranslatedTextMap(context).get(defaultAddressType);
+        List<AddressType> types = address.getTypes();
         if(types.isEmpty()) return defaultAddressTypeTranslatedText;
         return getOrDefault(getAddressTypeToTranslatedTextMap(context), U.first(types), U.first(types).getValue());
     }
@@ -362,5 +365,17 @@ public class DomainUtils {
             }
         }
         return filteredContacts;
+    }
+
+    public static String formatAddressToAMultiLineString(Address address, Context context) {
+        StringBuffer addressBuffer = new StringBuffer(6)
+                .append(appendNewLineIfNotEmpty(address.getPoBox()))
+                .append(appendNewLineIfNotEmpty(address.getStreetAddress()))
+                .append(appendNewLineIfNotEmpty(address.getExtendedAddress()))
+                .append(appendNewLineIfNotEmpty(address.getPostalCode()))
+                .append(appendNewLineIfNotEmpty(address.getLocality()))
+                .append(appendNewLineIfNotEmpty(address.getRegion()))
+                .append(appendNewLineIfNotEmpty(address.getCountry()));
+        return addressBuffer.toString();
     }
 }

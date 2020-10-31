@@ -33,6 +33,7 @@ import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
 import ezvcard.property.Url;
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.fieldcollections.addressfieldcollection.AddressFieldCollection;
 import opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection.TextInputAndSpinnerFieldCollection;
 import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
@@ -40,7 +41,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
-import opencontacts.open.com.opencontacts.utils.MultiSpinnerUtil;
+import opencontacts.open.com.opencontacts.utils.SpinnerUtil;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
@@ -62,7 +63,7 @@ public class EditContactActivity extends AppBaseActivity {
     private VCard vcardBeforeEdit;
     private TextInputAndSpinnerFieldCollection phoneNumbersInputCollection;
     private TextInputAndSpinnerFieldCollection emailsInputCollection;
-    private TextInputAndSpinnerFieldCollection addressesInputCollection;
+    private AddressFieldCollection addressesInputCollection;
     private TextInputEditText notesTextInputEditText;
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
@@ -144,7 +145,7 @@ public class EditContactActivity extends AppBaseActivity {
         List<String> allGroups = getAllGroupNames();
         groupsAdapter.addAll(allGroups);
         if(contact == null) return;
-        MultiSpinnerUtil.setSelection(contact.getGroupNames(), allGroups, groupsSpinner);
+        SpinnerUtil.setSelection(contact.getGroupNames(), allGroups, groupsSpinner);
     }
 
     private List<String> getAllGroupNames() {
@@ -172,12 +173,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void fillAddress() {
-        List<Address> addresses = vcardBeforeEdit.getAddresses();
-        if(U.isEmpty(addresses)) {
-            addressesInputCollection.addOneMoreView();
-            return;
-        }
-        U.forEach(addresses, address -> addressesInputCollection.addOneMoreView(address.getStreetAddress(), DomainUtils.getAddressTypeTranslatedText(address.getTypes(), EditContactActivity.this)));
+        addressesInputCollection.setAddresses(vcardBeforeEdit.getAddresses());
     }
 
     private void fillEmails() {
@@ -239,7 +235,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private void addGroupsToNewVCard(VCard newVCard) {
-        List<String> newGroupNames = MultiSpinnerUtil.getSelectedItems(groupsSpinner, getAllGroupNames());
+        List<String> newGroupNames = SpinnerUtil.getSelectedItems(groupsSpinner, getAllGroupNames());
         if(newGroupNames.isEmpty()) return;
         VCardUtils.setCategories(newGroupNames, newVCard);
     }
@@ -266,8 +262,7 @@ public class EditContactActivity extends AppBaseActivity {
 
     private void addAddressFromFieldsToNewVCard(VCard newVCard) {
         if(addressesInputCollection.isEmpty()) return;
-        U.chain(addressesInputCollection.getValuesAndTypes())
-                .mapIndexed(this::createAddress)
+        U.chain(addressesInputCollection.getAllAddresses())
                 .forEach(newVCard::addAddress);
     }
 

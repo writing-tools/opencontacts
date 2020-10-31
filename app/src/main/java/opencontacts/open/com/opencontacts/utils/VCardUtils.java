@@ -194,4 +194,11 @@ public class VCardUtils {
         vcard.setCategories(categories.toArray(new String[] {}));
     }
 
+    public static boolean isEmptyAddress(Address address) {
+        if(address == null) return true;
+        Address tempAddressToRemoveTypes = address.copy();
+        tempAddressToRemoveTypes.getTypes().clear();
+        return new Address().equals(tempAddressToRemoveTypes);
+    }
+
 }

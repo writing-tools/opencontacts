@@ -21,8 +21,6 @@ import android.widget.RelativeLayout;
 
 import com.github.underscore.lodash.U;
 
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -41,6 +39,7 @@ import opencontacts.open.com.opencontacts.utils.Common;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
+import static opencontacts.open.com.opencontacts.utils.PrimitiveDataTypeUtils.toPrimitiveLongs;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public abstract class ContactChooserActivityBase extends AppBaseActivity {
@@ -70,8 +69,8 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
             @Override
             public long[] getCheckedItemIds() {
-                return ArrayUtils.toPrimitive(
-                        U.map(selectedContactsSet, contact -> contact.id).toArray(new Long[]{})
+                return toPrimitiveLongs(
+                        U.map(new ArrayList<>(selectedContactsSet), contact -> contact.id)
                 );
             }
 

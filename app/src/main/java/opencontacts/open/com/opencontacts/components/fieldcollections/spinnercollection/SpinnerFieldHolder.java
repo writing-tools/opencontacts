@@ -13,6 +13,7 @@ import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
 
 import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 public class SpinnerFieldHolder extends FieldViewHolder {
 
@@ -27,12 +28,7 @@ public class SpinnerFieldHolder extends FieldViewHolder {
         this.fieldView = fieldView;
         if(editDisabled) spinner.setEditable(false);
         this.options = options;
-        setupSpinner(options, context);
-    }
-
-    private void setupSpinner(List<String> options, Context context) {
-        spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, this.options));
-        if (options.size() > 0) spinner.selectItem(0);
+        setupSpinner(options, spinner, context);
     }
 
     public void set(String option) {

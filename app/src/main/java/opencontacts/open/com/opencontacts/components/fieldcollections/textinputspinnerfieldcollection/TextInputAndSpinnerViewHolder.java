@@ -6,7 +6,6 @@ import android.support.design.widget.TextInputEditText;
 import android.support.design.widget.TextInputLayout;
 import android.support.v4.util.Pair;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import com.reginald.editspinner.EditSpinner;
 
@@ -16,6 +15,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
 
 import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 
 public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
@@ -30,12 +30,7 @@ public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
         this.types = types;
         this.fieldView = fieldView;
         setupTextInput(hint, inputType, fieldView);
-        setupSpinner(types, context);
-    }
-
-    private void setupSpinner(List<String> types, Context context) {
-        spinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, this.types));
-        if (types.size() > 0) spinner.selectItem(0);
+        setupSpinner(types, spinner, context);
     }
 
     private void setupTextInput(String hint, int inputType, View fieldView) {

@@ -21,6 +21,7 @@ import static java.util.Arrays.asList;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressType;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 public class AddressPopup {
 
@@ -110,7 +111,6 @@ public class AddressPopup {
 
     private void setupAddressTypeSpinner() {
         types = asList(context.getResources().getStringArray(R.array.address_types));
-        addressTypeSpinner.setAdapter(new ArrayAdapter<>(context, android.R.layout.simple_spinner_dropdown_item, types));
-        if (types.size() > 0) addressTypeSpinner.selectItem(0);
+        setupSpinner(types, addressTypeSpinner, context);
     }
 }

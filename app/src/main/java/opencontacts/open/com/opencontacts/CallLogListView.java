@@ -77,6 +77,8 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     private ListView listView;
     private HashSet<GroupedCallLogEntry> selectedEntries;
     private SwipeRefreshLayout swipeRefreshLayout;
+    private Runnable onEnteringMultiSelectMode;
+    private Runnable onExitingMultiSelectMode;
 
 
     public CallLogListView(final Context context, EditNumberBeforeCallHandler editNumberBeforeCallHandler) {
@@ -333,6 +335,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         else selectedEntries.clear();
         addDeleteFABButton();
         swipeRefreshLayout.setEnabled(false);
+        if(onEnteringMultiSelectMode != null) onEnteringMultiSelectMode.run();
     }
 
     public void exitSelectionMode(){
@@ -341,6 +344,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         removeView(findViewById(R.id.delete));
         adapter.notifyDataSetChanged();
         swipeRefreshLayout.setEnabled(true);
+        if(onExitingMultiSelectMode != null) onExitingMultiSelectMode.run();
     }
 
     private void addDeleteFABButton() {
@@ -366,6 +370,14 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 .value();
         CallLogDataStore.deleteCallLogEntries(individualCallLogEntries);
         selectedEntries.clear();
+    }
+
+    public void setOnEnteringMultiSelectMode(Runnable onEnteringMultiSelectMode) {
+        this.onEnteringMultiSelectMode = onEnteringMultiSelectMode;
+    }
+
+    public void setOnExitingMultiSelectMode(Runnable onExitingMultiSelectMode) {
+        this.onExitingMultiSelectMode = onExitingMultiSelectMode;
     }
 
     public boolean isInSelectionMode() {

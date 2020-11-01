@@ -9,6 +9,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
 import opencontacts.open.com.opencontacts.CallLogListView;
+import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.interfaces.EditNumberBeforeCallHandler;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 
@@ -20,6 +21,8 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         callLogListView = new CallLogListView(getContext(), editNumberBeforeCallHandler);
+        callLogListView.setOnEnteringMultiSelectMode(() -> ((MainActivity)getActivity()).hideBottomMenu());
+        callLogListView.setOnExitingMultiSelectMode(() -> ((MainActivity)getActivity()).showBottomMenu());
     }
 
     @Nullable

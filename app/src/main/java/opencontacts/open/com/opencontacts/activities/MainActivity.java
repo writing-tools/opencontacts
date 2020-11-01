@@ -38,6 +38,7 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import pro.midev.expandedmenulibrary.ExpandedMenuItem;
 import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
+import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -70,6 +71,7 @@ public class MainActivity extends AppBaseActivity {
     private ContactsFragment contactsFragment;
     private DialerFragment dialerFragment;
     private MenuItem searchItem;
+    private ExpandedMenuView bottomMenu;
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -161,7 +163,7 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void setupBottomMenu() {
-        ExpandedMenuView bottomMenu = findViewById(R.id.bottom_menu);
+        bottomMenu = findViewById(R.id.bottom_menu);
         ExpandedMenuItem searchItem = new ExpandedMenuItem(R.drawable.ic_search_black_24dp, "Search", getPrimaryColor(this));
         ExpandedMenuItem groupItem = new ExpandedMenuItem(R.drawable.ic_group_merge_contacts_24dp, "Groups", getPrimaryColor(this));
         ExpandedMenuItem dialpadItem = new ExpandedMenuItem(R.drawable.dial_pad, "Dial", getPrimaryColor(this));
@@ -365,5 +367,13 @@ public class MainActivity extends AppBaseActivity {
     }
     public void collapseSearchView(){
         if(searchItem != null) searchItem.collapseActionView(); // happens when app hasn't even got menu items callback
+    }
+
+    public void hideBottomMenu() {
+        bottomMenu.setVisibility(GONE);
+    }
+
+    public void showBottomMenu() {
+        bottomMenu.setVisibility(VISIBLE);
     }
 }

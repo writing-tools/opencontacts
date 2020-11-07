@@ -6,6 +6,7 @@ import android.support.design.widget.TextInputLayout;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import java.util.List;
 
@@ -17,6 +18,7 @@ import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import static android.text.InputType.TYPE_TEXT_FLAG_CAP_SENTENCES;
 import static android.text.TextUtils.isEmpty;
 import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
+import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.createNewGroup;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.updateGroup;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
@@ -69,10 +71,15 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
     }
 
     private void saveAndGoback() {
+        String groupName = groupNameEditText.getText().toString();
+        if(isEmpty(groupName)) {
+            Toast.makeText(this, R.string.no_group_name_error, LENGTH_SHORT).show();
+            return;
+        }
         List<Contact> selectedContacts = getSelectedContacts();
         ContactGroup group = ContactGroupsDataStore.getGroup(groupNameFromPrevScreen);
-        if(group == null) createNewGroup(selectedContacts, groupNameEditText.getText().toString());
-        else updateGroup(selectedContacts, groupNameEditText.getText().toString(), group);
+        if(group == null) createNewGroup(selectedContacts, groupName);
+        else updateGroup(selectedContacts, groupName, group);
         finish();
     }
 

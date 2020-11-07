@@ -74,12 +74,24 @@ public class ContactGroupsDataStore {
     }
 
     public static void updateGroup(List<Contact> newContacts, String newGroupName, ContactGroup group){
-        group.updateName(newGroupName);
-        Collection<Contact> onlyNewContacts = U.reject(newContacts, group.contacts::contains);
-        U.forEach(onlyNewContacts, newContact -> addContactToGroup(group, newContact));
-
+        if(!newGroupName.equals(group.getName())){
+            destroyGroup(group);
+            createNewGroup(newContacts, newGroupName);
+            return;
+        }
         Collection<Contact> removedContacts = U.reject(group.contacts, newContacts::contains);
         U.forEach(removedContacts, removedContact -> removeContactFromGroup(group, removedContact));
+
+        //removing based on group name hence it should happen first
+        group.updateName(newGroupName);
+
+        Collection<Contact> onlyNewContacts = U.reject(newContacts, group.contacts::contains);
+        U.forEach(onlyNewContacts, newContact -> addContactToGroup(group, newContact));
+    }
+
+    private static void destroyGroup(ContactGroup group) {
+        //new array list coz of concurrent modification of same array group.contacts
+        U.forEach(new ArrayList<>(group.contacts), contact -> removeContactFromGroup(group, contact));
     }
 
     private static void addContactToGroup(ContactGroup group, Contact contact) {

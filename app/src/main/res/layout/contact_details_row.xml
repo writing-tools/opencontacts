@@ -14,7 +14,7 @@
 
     <android.support.v7.widget.AppCompatImageButton
         style="@style/TransparentImageButton"
-        android:visibility="invisible"
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/whatsapp"
@@ -29,6 +29,7 @@
         android:layout_toLeftOf="@id/button_whatsapp"
         android:layout_marginLeft="4dp"
         android:textColor="?android:textColorPrimary"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/button_primary_number"

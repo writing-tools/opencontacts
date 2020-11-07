@@ -4,12 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedTheme;
 
 public class AppBaseFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        AndroidUtils.applyOptedTheme(getContext());
+        applyOptedTheme(getContext());
         super.onCreate(savedInstanceState);
     }
 

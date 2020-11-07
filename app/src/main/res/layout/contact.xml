@@ -23,6 +23,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/textview_full_name"
         android:text="name"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="?android:textColorPrimary"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/button_whatsapp"
@@ -56,6 +57,7 @@
     <TextView
         android:layout_below="@id/textview_full_name"
         android:text="phone_number"
+        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/textview_phone_number"

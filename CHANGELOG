@@ -1,3 +1,24 @@
+Implemented bottom menu helps in one hand usage of phone
+Fixed dropdown icons not following theme colors
+Full address is now supported in app
+Added groups support
+On normal keyboard users can now search for accented characters by typing their
+normal counterparts
+Fixed crashes reported
+Most of the input fields while adding contact now auto cap the first letter
+Multiple calllog entries can be deleted atonce
+T9 can now search dot with 1 and space with 0
+Redesigned main menu
+Primary numbers and Favorites are maintained during import export
+Dialer text size and letter spacing increased
+Dialer can now search contacts and calllog while dialing a number
+Crashes now report exact class name than encrypted junk
+Fixed tapping a contact showing a different contact details
+User can now choose OpenContacts to dial a number from other app like browser
+Calllog now has a view more button that loads older data
+Fixed double notifications coming up for missed calls in some versions of android
+
+
 V20.0
 Fixed build issue changelog is same as 19.0
 

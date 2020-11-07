@@ -348,10 +348,6 @@ public class AndroidUtils {
         return mainThreadHandler;
     }
 
-    public static void applyOptedTheme(Context context) {
-        context.getTheme().applyStyle(getCurrentTheme(context), true);
-    }
-
     public static int getThemeAttributeColor(int attribute, Context context){
         TypedValue typedValue = new TypedValue();
         context.getTheme().resolveAttribute(attribute, typedValue, true);

@@ -208,6 +208,7 @@
     <string name="postal_code">Postal Code</string>
     <string name="country">Country</string>
     <string name="extended_address">Extended address</string>
+    <string name="no_group_name_error">Enter valid group name</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

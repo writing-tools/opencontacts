@@ -11,8 +11,8 @@ import android.view.MenuItem;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.applyOptedTheme;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedTheme;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSecondaryColor;
 
 public abstract class AppBaseActivity extends AppCompatActivity{

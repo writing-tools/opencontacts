@@ -132,8 +132,10 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
                 Contact contact = getItem(position);
                 checkedTextView.setText(contact.name);
                 checkedTextView.setTag(contact);
-                checkedTextView.setOnClickListener(this::onItemSelect);
-                checkedTextView.setChecked(selectedContactsSet.contains(contact));
+                if(shouldEnableMultiSelect()){
+                    checkedTextView.setOnClickListener(this::onItemSelect);
+                    checkedTextView.setChecked(selectedContactsSet.contains(contact));
+                }
                 return convertView;
             }
         };

@@ -91,7 +91,9 @@ public class ContactGroupsDataStore {
 
     private static void destroyGroup(ContactGroup group) {
         //new array list coz of concurrent modification of same array group.contacts
-        U.forEach(new ArrayList<>(group.contacts), contact -> removeContactFromGroup(group, contact));
+        U.chain(group.contacts)
+                .forEach(contact -> removeContactFromGroup(group, contact));
+        groupsMap.remove(group.getName());
     }
 
     private static void addContactToGroup(ContactGroup group, Contact contact) {

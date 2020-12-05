@@ -66,7 +66,6 @@ import static android.text.TextUtils.isEmpty;
 import static java.lang.Math.round;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldUseSystemCallingApp;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
@@ -85,6 +84,10 @@ public class AndroidUtils {
 
     public static float dpToPixels(int dp) {
         return Resources.getSystem().getDisplayMetrics().density * dp;
+    }
+
+    public static float pixelsToSP(float px) {
+        return px / Resources.getSystem().getDisplayMetrics().scaledDensity;
     }
 
     public static int dpToPixelsClosestInt(int dp) {
@@ -402,6 +405,10 @@ public class AndroidUtils {
         return getAppsSharedPreferences(context).getString(key, defaultValue);
     }
 
+    public static float getFloatFromPreferences(String key, float defaultValue, Context context) {
+        return getAppsSharedPreferences(context).getFloat(key, defaultValue);
+    }
+
     public static void updatePreference(String key, String value, Context context) {
         getAppsSharedPreferences(context)
                 .edit()
@@ -420,6 +427,13 @@ public class AndroidUtils {
         getAppsSharedPreferences(context)
                 .edit()
                 .putLong(key, value)
+                .apply();
+    }
+
+    public static void updatePreference(String key, float value, Context context){
+        getAppsSharedPreferences(context)
+                .edit()
+                .putFloat(key, value)
                 .apply();
     }
 

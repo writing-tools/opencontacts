@@ -10,6 +10,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
@@ -25,7 +26,9 @@ import java.util.Arrays;
 import java.util.HashMap;
 
 import opencontacts.open.com.opencontacts.R;
+import opencontacts.open.com.opencontacts.components.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
+import opencontacts.open.com.opencontacts.utils.ThemeUtils;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
@@ -38,6 +41,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
@@ -74,7 +78,17 @@ public class PreferencesActivity extends AppBaseActivity {
             addPreferencesFromResource(R.xml.app_preferences);
             if(hasMultipleSims(getContext())) addSimPreference();
             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) addShouldUseSystemPhoneAppPreference();
+            initFontScalePreference();
             handlePreferenceUpdates();
+        }
+
+        private void initFontScalePreference() {
+            Preference fontScalPreference = ((PreferenceCategory) getPreferenceScreen().findPreference("General")).findPreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY);
+            fontScalPreference.setOnPreferenceClickListener(preference -> {
+                new FontScalePreferenceHandler(fontScalPreference.getContext())
+                        .open(newScale -> ThemeUtils.applyNewFontScaling(newScale, getActivity()));
+                return true;
+            });
         }
 
         private void addShouldUseSystemPhoneAppPreference() {

@@ -14,6 +14,7 @@ import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFloatFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getLong;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
@@ -54,6 +55,7 @@ public class SharedPreferencesUtils {
     public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
+    public static final String TEXT_SIZE_SCALING_SHARED_PREF_KEY = "TEXT_SIZE_SCALING";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -203,4 +205,13 @@ public class SharedPreferencesUtils {
     public static void setLastVisistedGroup(String groupName, Context context) {
         updatePreference(LAST_VISITED_GROUP_SHARED_PREF_KEY, groupName, context);
     }
+
+    public static void saveTextSizeScaling(float scale, Context context) {
+        updatePreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY, scale, context);
+    }
+
+    public static float getTextSizeScaling(Context context) {
+        return getFloatFromPreferences(TEXT_SIZE_SCALING_SHARED_PREF_KEY, 1f, context);
+    }
+
 }

@@ -56,6 +56,11 @@
             android:entryValues="@array/tabs_values"
             android:summary="@string/default_tab_summary"
             />
+        <Preference
+            android:title="Choose custom font size"
+            android:summary="Increase or decrease the size of text across app"
+            android:key="TEXT_SIZE_SCALING"
+            />
 
     </PreferenceCategory>
     <PreferenceCategory

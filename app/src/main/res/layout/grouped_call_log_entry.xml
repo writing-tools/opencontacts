@@ -90,9 +90,9 @@
         android:layout_toEndOf="@id/text_view_duration"
          />
 
-    <TextView
+    <android.support.v7.widget.AppCompatTextView
         android:text="phone_number"
-        android:textAppearance="@style/TextAppearance.AppCompat.Widget.ActionBar.Subtitle"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_marginTop="10dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

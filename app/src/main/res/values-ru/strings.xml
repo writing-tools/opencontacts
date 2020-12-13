@@ -9,7 +9,6 @@
     <string name="error_while_parsing_contact_details">Произошла ошибка при разборе контактных данных</string>
     <string name="copied_phonenumber_to_clipboard">Номер телефона скопирован в буфер обмена</string>
     <string name="unexpected_error_happened">Произошла непредвиденная ошибка</string>
-    <string name="title_activity_contact_details">ContactDetailsActivity</string>
     <string name="grant_read_call_logs_permission">Пожалуйста, предоставьте этому приложению разрешение на чтение журнала вызовов</string>
     <string name="exporting_contacts_complete">Экспорт контактов в корневой каталог внутреннего/внешнего хранилища завершен</string>
     <string name="exporting_contacts_started">Начат экспорт контактов</string>
@@ -98,6 +97,8 @@
     <string name="whatsapp_preferences">Настройки Whatsapp</string>
     <string name="do_you_want_to_import">Вы хотите импортировать</string>
     <string name="noname">Без имени</string>
+    <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
+    <string name="open_bottommenu_on_start">Open bottom menu on start</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Мобильный</string>
     <string name="work">Рабочий</string>
@@ -171,6 +172,37 @@
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Игнорировать ошибки сертификата http</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Сбой синхронизации</string>
     <string name="default_tab">Вкладка по умолчанию</string>
+    <string name="default_tab_summary">Вкладка, на которой приложение открывается по умолчанию</string>
+    <string name="save">Сохранить</string>
+    <string name="toggle_contact_actions">Переключить действия контактов</string>
+    <string name="toggle_contact_actions_summary">Переключить положение действий вызова и сообщения</string>
+    <string name="merge">Объединить</string>
+    <string name="failed_merging_a_contact">Не удалось объединить один из контактов</string>
+    <string name="choose_a_contact">Выберите контакт</string>
+    <string name="auto_merge_complete">Автослияние завершено, объединено %1$d</string>
+    <string name="should_use_system_app">Заставить системное приложение для вызова</string>
+    <string name="should_use_system_app_summary">Вызовы будут совершаться только приложением по умолчанию</string>
+    <string name="dialer">Dialer</string>
+    <string name="view_more">View more</string>
+    <string name="more">More</string>
+    <string name="groups">Groups</string>
+    <string name="group_name">Group name</string>
+    <string name="add_contacts">Add contacts</string>
+    <string name="edit_group">Edit group</string>
+    <string name="Automerge">AutoMerge</string>
+    <string name="no_groups_found">No groups found. Add one to start</string>
+    <string name="add_group">Add group</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="group_deleted">Group deleted</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="delete_multiple">Delete multiple</string>
+    <string name="post_office_box">Post office box</string>
+    <string name="state_province">State or province</string>
+    <string name="city">City</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="country">Country</string>
+    <string name="extended_address">Extended address</string>
+    <string name="no_group_name_error">Enter valid group name</string>
     <string-array name="phone_number_types">
         <item>Мобильный</item>
         <item>Рабочий</item>

@@ -9,7 +9,6 @@
     <string name="error_while_parsing_contact_details">Une erreur est survenue lors de l\'analyse des détails du fichier</string>
     <string name="copied_phonenumber_to_clipboard">Numéro de téléphone copié au presse-papier</string>
     <string name="unexpected_error_happened">Une erreur inattendue est survenue</string>
-    <string name="title_activity_contact_details">ContactDetailsActivity</string>
     <string name="grant_read_call_logs_permission">Permettez à l\'application de lire votre registre des appels</string>
     <string name="exporting_contacts_complete">Exportation des contacts terminée au dossier de base de votre mémoire de stockage interne/externe</string>
     <string name="exporting_contacts_started">Exportation des contacts en cours</string>
@@ -98,6 +97,8 @@
     <string name="whatsapp_preferences">Préférences Whatsapp</string>
     <string name="do_you_want_to_import">Voulez-vous importer?</string>
     <string name="noname">SANSNOM</string>
+    <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
+    <string name="open_bottommenu_on_start">Open bottom menu on start</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Téléphone</string>
     <string name="work">Bureau</string>
@@ -170,6 +171,37 @@
     <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
     <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
     <string name="default_tab">Default tab</string>
+    <string name="default_tab_summary">Tab on which app opens by default</string>
+    <string name="save">Save</string>
+    <string name="toggle_contact_actions">Toggle contact actions</string>
+    <string name="toggle_contact_actions_summary">Toggle call and message actions position</string>
+    <string name="merge">Merge</string>
+    <string name="failed_merging_a_contact">Not able to merge one of the contacts</string>
+    <string name="choose_a_contact">Choose a contact</string>
+    <string name="auto_merge_complete">Auto merge complete, merged %1$d</string>
+    <string name="should_use_system_app">Force system\'s phone app to call</string>
+    <string name="should_use_system_app_summary">Will call only using system\'s default phone app than giving options</string>
+    <string name="dialer">Dialer</string>
+    <string name="view_more">View more</string>
+    <string name="more">More</string>
+    <string name="groups">Groups</string>
+    <string name="group_name">Group name</string>
+    <string name="add_contacts">Add contacts</string>
+    <string name="edit_group">Edit group</string>
+    <string name="Automerge">AutoMerge</string>
+    <string name="no_groups_found">No groups found. Add one to start</string>
+    <string name="add_group">Add group</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="group_deleted">Group deleted</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="delete_multiple">Delete multiple</string>
+    <string name="post_office_box">Post office box</string>
+    <string name="state_province">State or province</string>
+    <string name="city">City</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="country">Country</string>
+    <string name="extended_address">Extended address</string>
+    <string name="no_group_name_error">Enter valid group name</string>
     <string-array name="phone_number_types">
         <item>Téléphone</item>
         <item>Bureau</item>

@@ -101,7 +101,7 @@
     <string name="do_you_want_to_import">Do you want to import</string>
     <string name="noname">NONAME</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
-    <string name="open_bottommenu_on_start">Open bottom on start</string>
+    <string name="open_bottommenu_on_start">Open bottom menu on start</string>
 
 
     <!--careful while editing below group. Each item in array should also be present in normal string-->

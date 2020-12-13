@@ -9,7 +9,6 @@
     <string name="error_while_parsing_contact_details">Fehler beim Laden der Kontaktdetails</string>
     <string name="copied_phonenumber_to_clipboard">Telefonnummer in die Zwischenablage kopiert</string>
     <string name="unexpected_error_happened">Unerwarteter Fehler</string>
-    <string name="title_activity_contact_details">ContactDetailsActivity</string>
     <string name="grant_read_call_logs_permission">Bitte erlaube der Anwendung die Anrufliste zu lesen</string>
     <string name="exporting_contacts_complete">Export der Kontakte in das interne/externe Stammverzeichnis fertiggestellt</string>
     <string name="exporting_contacts_started">Exportiere Kontakte</string>
@@ -98,6 +97,8 @@
     <string name="whatsapp_preferences">WhatsApp Einstellungen</string>
     <string name="do_you_want_to_import">Möchtest du die Kontakte wirklich importieren?</string>
     <string name="noname">NONAME</string>
+    <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
+    <string name="open_bottommenu_on_start">Open bottom menu on start</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Mobil</string>
     <string name="work">Geschäftlich</string>
@@ -167,9 +168,40 @@
     <string name="addshortcut_help_text">Das Hinzufügen einer Verknüpfung erstellt ein Symbol auf den Startbildschirm, mit dem Sie den Kontakt anrufen können. Dies wird auf Geräten mit Android 7.1(Noughat) oder höher unterstützt. \n\nZum Hinzufügen einer Verknüpfung wechseln Sie zur Kontaktliste, halten den entsprechenden Kontakt länger gedrückt und wählen zum Startbildschirm hinzufügen.          \n\nAuf Geräten mit älterem Android kann weiterhin ein Widget hinzugefügt werden. Zum Hinzufügen eines Widget halten Sie den Startbildschirm länger gedrückt, wählen Open Contacts aus und folgen den weiteren Schritten</string>
     <string name="start">Start</string>
     <string name="ask_permissions_again">Berechtigungen erneut anfragen</string>
-    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
-    <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
-    <string name="default_tab">Default tab</string>
+    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">SSL-Zertifikatsfehler ignorieren</string>
+    <string name="sync_failed" tools:ignore="MissingTranslation">Synchronisierung fehlgeschlagen</string>
+    <string name="default_tab">Standardreiter</string>
+    <string name="default_tab_summary">Beim Start der App geöffneter Reiter</string>
+    <string name="save">Speichern</string>
+    <string name="toggle_contact_actions">Toggle contact actions</string>
+    <string name="toggle_contact_actions_summary">Positionen der Anruf- und Nachrichtenschaltfläche tauschen</string>
+    <string name="merge">Zusammenführen</string>
+    <string name="failed_merging_a_contact">Fehler beim Zusammenführen von Kontaktinformationen</string>
+    <string name="choose_a_contact">Kontakt auswählen</string>
+    <string name="auto_merge_complete">Automatische Zusammenführung abgeschlossen, %1$d zusammengeführt</string>
+    <string name="should_use_system_app">Verwendung der System-Telefon-App zum Anrufen erzwingen</string>
+    <string name="should_use_system_app_summary">Will call only using system\'s default phone app than giving options</string>
+    <string name="dialer">Dialer</string>
+    <string name="view_more">View more</string>
+    <string name="more">More</string>
+    <string name="groups">Groups</string>
+    <string name="group_name">Group name</string>
+    <string name="add_contacts">Add contacts</string>
+    <string name="edit_group">Edit group</string>
+    <string name="Automerge">AutoMerge</string>
+    <string name="no_groups_found">No groups found. Add one to start</string>
+    <string name="add_group">Add group</string>
+    <string name="are_you_sure">Are you sure?</string>
+    <string name="group_deleted">Group deleted</string>
+    <string name="please_wait">Please wait...</string>
+    <string name="delete_multiple">Delete multiple</string>
+    <string name="post_office_box">Post office box</string>
+    <string name="state_province">State or province</string>
+    <string name="city">City</string>
+    <string name="postal_code">Postal Code</string>
+    <string name="country">Country</string>
+    <string name="extended_address">Extended address</string>
+    <string name="no_group_name_error">Enter valid group name</string>
     <string-array name="phone_number_types">
         <item>Mobil</item>
         <item>Geschäftlich</item>
@@ -197,9 +229,9 @@
         <item>1</item>
     </string-array>
     <string-array name="tabs_list">
-        <item>Call log</item>
-        <item>Contacts</item>
-        <item>Dialer</item>
+        <item>Anrufliste</item>
+        <item>Kontakte</item>
+        <item>Nummernwahl</item>
     </string-array>
     <string-array name="tabs_values">
         <item>0</item>

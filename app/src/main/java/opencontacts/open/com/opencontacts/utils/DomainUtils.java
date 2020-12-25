@@ -44,6 +44,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
+import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
@@ -330,12 +331,16 @@ public class DomainUtils {
         return newContactsList;
     }
 
+    public static String getLastNameOrFullInCaseEmpty(Contact contact) {
+        return contact.lastName == null || isEmpty(contact.lastName.trim()) ? contact.name : contact.lastName;
+    }
+
     @NonNull
     public static Comparator<Contact> getContactComparatorBasedOnName(Context context) {
         if(shouldSortUsingFirstName(context))
-            return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
+            return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.firstName);
         else
-            return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
+            return (contact1, contact2) -> getLastNameOrFullInCaseEmpty(contact1).compareToIgnoreCase(getLastNameOrFullInCaseEmpty(contact2));
     }
 
     @NonNull

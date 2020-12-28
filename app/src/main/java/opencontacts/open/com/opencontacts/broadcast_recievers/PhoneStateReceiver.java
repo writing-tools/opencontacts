@@ -35,6 +35,7 @@ import static opencontacts.open.com.opencontacts.OpenContactsApplication.MISSED_
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isScreenLocked;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCallerIdLocationOnScreen;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveCallerIdLocationOnScreen;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldAutoCancelMissedCallNotification;
 
 /**
  * Created by sultanm on 7/30/17.
@@ -94,6 +95,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
                 new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)
                         .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)
                         .setContentTitle(context.getString(R.string.missed_call))
+                        .setAutoCancel(shouldAutoCancelMissedCallNotification(context))
                         .setTicker(context.getString(R.string.missed_call_from, callingContact.firstName, callingContact.lastName))
                         .setContentText(callingContact.firstName + " " + callingContact.lastName)
                         .addAction(R.drawable.ic_call_black_24dp, context.getString(R.string.call), pendingIntentToCall)

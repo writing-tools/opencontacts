@@ -45,6 +45,11 @@
             />
         <SwitchPreference
             android:defaultValue="false"
+            android:key="SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF"
+            android:title="@string/auto_cancel_missed_call_notifs"
+            />
+        <SwitchPreference
+            android:defaultValue="false"
             android:key="KEYBOARD_RESIZE_VIEWS"
             android:title="@string/keyboard_adjusts_views"
             />

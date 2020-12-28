@@ -55,6 +55,7 @@ public class SharedPreferencesUtils {
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
+    private static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -207,6 +208,10 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldAutoCancelMissedCallNotification(Context context) {
         return getBoolean(SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY, false, context);
+    }
+
+    public static boolean shouldShowBottomMenu(Context context) {
+        return getBoolean(SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY, true, context);
     }
 
 }

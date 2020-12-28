@@ -54,6 +54,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ma
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldShowBottomMenu;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
 
@@ -164,6 +165,12 @@ public class MainActivity extends AppBaseActivity {
 
     private void setupBottomMenu() {
         bottomMenu = findViewById(R.id.bottom_menu);
+        if(!shouldShowBottomMenu(this)){
+            bottomMenu.setVisibility(GONE);
+            bottomMenu = null;
+            return;
+        }
+
         ExpandedMenuItem searchItem = new ExpandedMenuItem(R.drawable.ic_search_black_24dp, "Search", getPrimaryColor(this));
         ExpandedMenuItem groupItem = new ExpandedMenuItem(R.drawable.ic_group_merge_contacts_24dp, "Groups", getPrimaryColor(this));
         ExpandedMenuItem dialpadItem = new ExpandedMenuItem(R.drawable.dial_pad, "Dial", getPrimaryColor(this));
@@ -370,10 +377,12 @@ public class MainActivity extends AppBaseActivity {
     }
 
     public void hideBottomMenu() {
+        if(bottomMenu == null) return;
         bottomMenu.setVisibility(GONE);
     }
 
     public void showBottomMenu() {
+        if(bottomMenu == null || !shouldShowBottomMenu(this)) return;
         bottomMenu.setVisibility(VISIBLE);
     }
 }

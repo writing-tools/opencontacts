@@ -40,6 +40,11 @@
             />
         <SwitchPreference
             android:defaultValue="true"
+            android:key="SHOULD_SHOW_BOTTOM_MENU"
+            android:title="@string/should_show_bottom_menu"
+            />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="BOTTOM_MENU_OPEN_DEFAULT"
             android:title="@string/open_bottommenu_on_start"
             />

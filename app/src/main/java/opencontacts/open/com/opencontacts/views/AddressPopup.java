@@ -68,13 +68,13 @@ public class AddressPopup {
     }
 
     private void computeNewAddressFromFields() {
-        if(!isEmpty(poBoxTextInput.getText().toString())) address.setPoBox(poBoxTextInput.getText().toString());
-        if(!isEmpty(addressTextInput.getText().toString())) address.setStreetAddress(addressTextInput.getText().toString());
-        if(!isEmpty(extendedAddressTextInput.getText().toString())) address.setExtendedAddress(extendedAddressTextInput.getText().toString());
-        if(!isEmpty(postalCodeTextInput.getText().toString())) address.setPostalCode(postalCodeTextInput.getText().toString());
-        if(!isEmpty(cityTextInput.getText().toString())) address.setLocality(cityTextInput.getText().toString());
-        if(!isEmpty(stateTextInput.getText().toString())) address.setRegion(stateTextInput.getText().toString());
-        if(!isEmpty(countryTextInput.getText().toString())) address.setCountry(countryTextInput.getText().toString());
+        if(!poBoxTextInput.getText().toString().equals(address.getPoBox())) address.setPoBox(poBoxTextInput.getText().toString());
+        if(!addressTextInput.getText().toString().equals(address.getStreetAddress())) address.setStreetAddress(addressTextInput.getText().toString());
+        if(!extendedAddressTextInput.getText().toString().equals(address.getExtendedAddress())) address.setExtendedAddress(extendedAddressTextInput.getText().toString());
+        if(!postalCodeTextInput.getText().toString().equals(address.getPostalCode())) address.setPostalCode(postalCodeTextInput.getText().toString());
+        if(!cityTextInput.getText().toString().equals(address.getLocality())) address.setLocality(cityTextInput.getText().toString());
+        if(!stateTextInput.getText().toString().equals(address.getRegion())) address.setRegion(stateTextInput.getText().toString());
+        if(!countryTextInput.getText().toString().equals(address.getCountry())) address.setCountry(countryTextInput.getText().toString());
 
         updateAddressType();
     }

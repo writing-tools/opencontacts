@@ -22,6 +22,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
+import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
@@ -34,6 +35,7 @@ import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
@@ -110,6 +112,12 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
         searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context){
+            @Override
+            public void onShowDetails(Contact contact) {
+                if(contact.id == -1) ((MainActivity)getActivity()).showCallLogEntry(contact.primaryPhoneNumber.phoneNumber);
+                else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
+            }
+
             @Override
             public void onLongClick(Contact contact) {
             }

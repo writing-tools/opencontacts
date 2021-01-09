@@ -383,4 +383,12 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     public boolean isInSelectionMode() {
         return inSelectionMode;
     }
+
+    public void showCallLogEntry(String phoneNumber) {
+        Common.forEachIndexUntilFalseElseEndWithTrue(adapter.getCount(), currentPosition -> {
+            if(!adapter.getItem(currentPosition).latestCallLogEntry.getPhoneNumber().equals(phoneNumber)) return true;
+            listView.smoothScrollToPositionFromTop(currentPosition, 0);
+            return false;
+        });
+    }
 }

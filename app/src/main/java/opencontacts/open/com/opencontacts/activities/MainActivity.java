@@ -385,4 +385,9 @@ public class MainActivity extends AppBaseActivity {
         if(bottomMenu == null || !shouldShowBottomMenu(this)) return;
         bottomMenu.setVisibility(VISIBLE);
     }
+
+    public void showCallLogEntry(String phoneNumber) {
+        viewPager.setCurrentItem(CALLLOG_TAB_INDEX);
+        callLogFragment.showCallLogEntry(phoneNumber);
+    }
 }

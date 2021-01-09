@@ -192,7 +192,11 @@ public class ContactsDataStore {
             });
         }
     }
-
+    /**
+     * This method takes care of only removing contacts but there are other
+     * things to do as well when removing all contacts. Call below mentioned one instead
+     * @deprecated use {@link DomainUtils#deleteAllContacts(Context)} instead.
+     */
     public static void deleteAllContacts(Context context) {
         processAsync(() -> {
             ContactsDBHelper.deleteAllContactsAndRelatedStuff();

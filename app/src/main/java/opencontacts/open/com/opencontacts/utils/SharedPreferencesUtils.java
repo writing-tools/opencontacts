@@ -214,4 +214,8 @@ public class SharedPreferencesUtils {
         return getBoolean(SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY, true, context);
     }
 
+    public static void removeSyncProgress(Context context) {
+        updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, "", context);
+    }
+
 }

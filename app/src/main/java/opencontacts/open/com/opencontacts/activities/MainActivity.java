@@ -26,7 +26,6 @@ import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
-import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.fragments.AppBaseFragment;
 import opencontacts.open.com.opencontacts.fragments.CallLogFragment;
 import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
@@ -250,7 +249,7 @@ public class MainActivity extends AppBaseActivity {
             return true;
         });
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
-            wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
+            wrapInConfirmation(() -> DomainUtils.deleteAllContacts(this), this)
         ));
     }
 

@@ -383,4 +383,9 @@ public class DomainUtils {
                 .append(appendNewLineIfNotEmpty(address.getCountry()));
         return addressBuffer.toString();
     }
+
+    public static void deleteAllContacts(Context context) {
+        ContactsDataStore.deleteAllContacts(context);
+        SharedPreferencesUtils.removeSyncProgress(context);
+    }
 }

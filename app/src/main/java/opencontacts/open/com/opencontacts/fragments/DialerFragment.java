@@ -24,13 +24,16 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.domain.Contact;
+import opencontacts.open.com.opencontacts.domain.GroupedCallLogEntry;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
+import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
@@ -114,7 +117,10 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context){
             @Override
             public void onShowDetails(Contact contact) {
-                if(contact.id == -1) ((MainActivity)getActivity()).showCallLogEntry(contact.primaryPhoneNumber.phoneNumber);
+                if(contact.id == -1) {
+                    List<CallLogEntry> callLogEntries = CallLogEntry.getCallLogEntriesFor(contact.primaryPhoneNumber.phoneNumber);
+                    startActivity(getIntentToShowCallLogEntries(new GroupedCallLogEntry(callLogEntries, U.first(callLogEntries)), context));
+                }
                 else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
             }
 

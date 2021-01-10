@@ -96,4 +96,8 @@ public class CallLogEntry extends SugarRecord implements Serializable {
         return find(CallLogEntry.class, "contact_Id = ?", "" + contactId);
     }
 
+    public static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber){
+        return find(CallLogEntry.class, "phone_Number = ?", phoneNumber);
+    }
+
 }

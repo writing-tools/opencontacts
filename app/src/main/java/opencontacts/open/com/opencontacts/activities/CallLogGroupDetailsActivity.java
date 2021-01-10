@@ -24,7 +24,7 @@ import opencontacts.open.com.opencontacts.domain.GroupedCallLogEntry;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.Common;
 
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getFullDateTimestampPattern;
 
 public class CallLogGroupDetailsActivity extends AppBaseActivity {
 
@@ -49,7 +49,7 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
 
     private void addCallLogEntriesIntoView(List<CallLogEntry> callLogEntries) {
         LayoutInflater layoutInflater = getLayoutInflater();
-        SimpleDateFormat timeStampFormat = getTimestampPattern(this);
+        SimpleDateFormat timeStampFormat = getFullDateTimestampPattern(this);
         U.forEach(callLogEntries, callLogEntry -> {
             View callLogEntryView = layoutInflater.inflate(R.layout.call_log_entry, callLogHolder, false);
             ((AppCompatTextView)callLogEntryView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));

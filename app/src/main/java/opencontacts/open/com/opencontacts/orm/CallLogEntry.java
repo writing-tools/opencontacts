@@ -92,12 +92,12 @@ public class CallLogEntry extends SugarRecord implements Serializable {
         this.callType = callType;
     }
 
-    public static List<CallLogEntry> getCallLogEntriesFor(long contactId){
-        return find(CallLogEntry.class, "contact_Id = ?", "" + contactId);
+    public static List<CallLogEntry> getCallLogEntriesFor(long contactId) {
+        return find(CallLogEntry.class, "contact_Id = ?", new String[]{"" + contactId}, null, "date desc", null);
     }
 
-    public static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber){
-        return find(CallLogEntry.class, "phone_Number = ?", phoneNumber);
+    public static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber) {
+        return find(CallLogEntry.class, "phone_Number = ?", new String[]{phoneNumber}, null, "date desc", null);
     }
 
 }

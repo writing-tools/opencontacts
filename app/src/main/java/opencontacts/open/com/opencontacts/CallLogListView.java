@@ -48,7 +48,9 @@ import opencontacts.open.com.opencontacts.utils.Common;
 
 import static android.graphics.Color.TRANSPARENT;
 import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
+import static com.github.underscore.U.first;
 import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
+import static opencontacts.open.com.opencontacts.orm.CallLogEntry.getCallLogEntriesFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
@@ -284,7 +286,13 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             CallLogDataStore.delete(groupedCallLogEntry.latestCallLogEntry.getId());
         });
         longClickOptionsAndTheirActions.put(context.getString(R.string.show_details), groupedCallLogEntry ->{
-            context.startActivity(getIntentToShowCallLogEntries(groupedCallLogEntry, context));
+            if (groupedCallLogEntry.latestCallLogEntry.contactId == -1){
+                List<CallLogEntry> callLogEntriesWithContactHistory = getCallLogEntriesFor(groupedCallLogEntry.latestCallLogEntry.getPhoneNumber());
+                context.startActivity(getIntentToShowCallLogEntries(new GroupedCallLogEntry(callLogEntriesWithContactHistory, first(callLogEntriesWithContactHistory)), context));
+                return;
+            }
+            List<CallLogEntry> callLogEntriesWithContactHistory = getCallLogEntriesFor(groupedCallLogEntry.latestCallLogEntry.contactId);
+            context.startActivity(getIntentToShowCallLogEntries(new GroupedCallLogEntry(callLogEntriesWithContactHistory, first(callLogEntriesWithContactHistory)), context));
         });
 
     }

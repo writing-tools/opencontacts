@@ -274,6 +274,11 @@ public class DomainUtils {
         return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
+    @NonNull
+    public static SimpleDateFormat getFullDateTimestampPattern(Context context) {
+        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
+    }
+
     public static void exportCallLog(Context context) throws IOException{
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));

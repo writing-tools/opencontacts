@@ -37,6 +37,7 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import pro.midev.expandedmenulibrary.ExpandedMenuItem;
 import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
@@ -44,6 +45,7 @@ import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
@@ -218,7 +220,16 @@ public class MainActivity extends AppBaseActivity {
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
-        menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
+        menu.findItem(R.id.action_export).setOnMenuItemClickListener(item -> {
+            if(!hasPermission(WRITE_EXTERNAL_STORAGE, this)){
+                Toast.makeText(this, R.string.grant_storage_permisson_detail, Toast.LENGTH_LONG).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 123);
+                }
+                return true;
+            }
+            return new ExportMenuItemClickHandler(this).onMenuItemClick(item);
+        });
         menu.findItem(R.id.action_about).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
             startActivity(new Intent(MainActivity.this, AboutActivity.class))
         ));

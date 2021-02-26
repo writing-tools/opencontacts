@@ -149,7 +149,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
 
-        enableMultiSimDialingButtonsIfHavingMutipleSims();
+        if(searchListAdapter != null && !searchListAdapter.isEmpty()) hideMultiSimDialingButtons();
+        else enableMultiSimDialingButtonsIfHavingMutipleSims();
     }
 
     private void enableMultiSimDialingButtonsIfHavingMutipleSims() {

@@ -140,6 +140,7 @@ public class DomainUtils {
     private static byte[] getVCFExportBytes(List<Contact> allContacts, List<Contact> favorites) throws IOException {
         ByteArrayOutputStream contactsPlainTextExportStream = new ByteArrayOutputStream();
         VCardWriter vCardWriter = new VCardWriter(contactsPlainTextExportStream, VCardVersion.V4_0);
+        vCardWriter.setCaretEncodingEnabled(true);
         StructuredName structuredName = new StructuredName();
         for( Contact contact : allContacts){
             VCardData vCardData = ContactsDataStore.getVCardData(contact.id);

@@ -18,6 +18,7 @@ import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStor
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
 public class ContactsSyncHelper {
     public static void replaceContactWithServers(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vCardData, Context context) {
@@ -43,7 +44,7 @@ public class ContactsSyncHelper {
         dbContact.lastName = nameFromVCard.second;
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, hrefEtagAndVCard.z, getContact(vCardData.contact.getId()).primaryPhoneNumber.phoneNumber);
-        vCardData.vcardDataAsString = mergedCard.write();
+        vCardData.vcardDataAsString = writeVCardToString(mergedCard);
         vCardData.etag = hrefEtagAndVCard.y;
         vCardData.href = hrefEtagAndVCard.x;
         vCardData.uid = hrefEtagAndVCard.z.getUid().getValue();

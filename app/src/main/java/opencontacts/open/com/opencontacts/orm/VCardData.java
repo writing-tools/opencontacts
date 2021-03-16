@@ -5,16 +5,10 @@ import android.content.Context;
 import com.github.underscore.U;
 import com.orm.SugarRecord;
 
-import java.io.IOException;
-
 import ezvcard.VCard;
-import ezvcard.io.text.VCardReader;
-import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
-import static android.widget.Toast.LENGTH_SHORT;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.setFormattedNameIfNotPresent;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
 public class VCardData extends SugarRecord {
     public static final int   STATUS_NONE    = 0,
@@ -32,7 +26,7 @@ public class VCardData extends SugarRecord {
         VCardUtils.setFormattedNameIfNotPresent(vCard);
         VCardUtils.setUidIfNotPresent(vCard, uid);
         this.contact = contact;
-        this.vcardDataAsString = vCard.write();
+        this.vcardDataAsString = writeVCardToString(vCard);
         this.uid = uid;
         this.status = status;
         this.etag = etag;
@@ -42,7 +36,7 @@ public class VCardData extends SugarRecord {
         VCardUtils.setFormattedNameIfNotPresent(vCard);
         VCardUtils.setUidIfNotPresent(vCard, uid);
         this.contact = contact;
-        this.vcardDataAsString = vCard.write();
+        this.vcardDataAsString = writeVCardToString(vCard);
         this.uid = uid;
         this.status = status;
         this.etag = etag;
@@ -57,7 +51,7 @@ public class VCardData extends SugarRecord {
 
     public static void updateVCardData(VCard vCard, long contactId, Context context) {
         VCardData vCardDataInDB = VCardData.getVCardData(contactId);
-        vCardDataInDB.vcardDataAsString = vCard.write();
+        vCardDataInDB.vcardDataAsString = writeVCardToString(vCard);
         vCardDataInDB.status = vCardDataInDB.status == STATUS_CREATED ? STATUS_CREATED : STATUS_UPDATED;
         vCardDataInDB.save();
     }

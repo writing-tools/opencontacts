@@ -42,6 +42,7 @@ import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
@@ -290,14 +291,17 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void importContacts() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    .setType("*/*"),
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                .setType("*/*"),
+                        IMPORT_FILE_CHOOSER_RESULT);
+            } else startActivityForResult(
+                    new Intent(Intent.ACTION_PICK),
                     IMPORT_FILE_CHOOSER_RESULT);
+        } catch (Exception e) {
+            makeText(this, R.string.no_app_found_for_action_open_document, LENGTH_SHORT);
         }
-        else startActivityForResult(
-                new Intent(Intent.ACTION_PICK),
-                IMPORT_FILE_CHOOSER_RESULT);
     }
 
     private void refresh() {

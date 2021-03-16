@@ -213,6 +213,7 @@
     <string name="should_show_bottom_menu">Should show bottom menu</string>
     <string name="chat">Chat</string>
     <string name="chat_link" translatable="false">https://t.me/joinchat/CCdV7RFz8VE24KqFmhBWrg</string>
+    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

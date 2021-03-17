@@ -19,12 +19,16 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.widget.Toast.LENGTH_LONG;
+import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.CALL_LOG_ENTRIES_CHUNK_SIZE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastSavedCallLogDate;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastSavedCallLogDate;
 
@@ -66,12 +70,19 @@ class CallLogDBHelper {
     }
 
     public List<CallLogEntry> loadRecentCallLogEntriesIntoDB(Context context) {
-        List<CallLogEntry> callLogEntries = getRecentCallLogEntries(context);
-        CallLogEntry.saveInTx(callLogEntries);
-        return callLogEntries;
+        try {
+            List<CallLogEntry> callLogEntries = getRecentCallLogEntries(context);
+            CallLogEntry.saveInTx(callLogEntries);
+            return callLogEntries;
+        } catch (Exception e) {
+            e.printStackTrace();
+            toastFromNonUIThread(R.string.failed_fetching_recent_calllog, LENGTH_LONG, context);
+            return emptyList();
+        }
     }
 
-    private List<CallLogEntry> getRecentCallLogEntries(final Context context){
+    private List<CallLogEntry> getRecentCallLogEntries(final Context context) throws Exception{ // throwing exception coz anything can happen here while fetching call log from system.
+        if(1==1) throw new Exception("Blah");
         if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return new ArrayList<>(0);
         }

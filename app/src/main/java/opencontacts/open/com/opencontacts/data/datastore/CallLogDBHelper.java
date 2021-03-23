@@ -82,7 +82,6 @@ class CallLogDBHelper {
     }
 
     private List<CallLogEntry> getRecentCallLogEntries(final Context context) throws Exception{ // throwing exception coz anything can happen here while fetching call log from system.
-        if(1==1) throw new Exception("Blah");
         if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return new ArrayList<>(0);
         }

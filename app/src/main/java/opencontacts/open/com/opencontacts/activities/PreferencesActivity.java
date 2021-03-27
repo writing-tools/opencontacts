@@ -2,23 +2,27 @@ package opencontacts.open.com.opencontacts.activities;
 
 
 import android.app.Activity;
+import android.app.role.RoleManager;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.annotation.RequiresApi;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceFragmentCompat;
-import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.preference.SwitchPreferenceCompat;
+import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
 import android.util.TypedValue;
 import android.widget.Toast;
 
+import com.github.underscore.Supplier;
 import com.github.underscore.U;
 
 import java.util.Arrays;
@@ -27,6 +31,8 @@ import java.util.HashMap;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
+import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
+import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
@@ -34,12 +40,14 @@ import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipl
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
@@ -47,6 +55,9 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ge
 public class PreferencesActivity extends AppBaseActivity {
 
     public static final String PREFERENCE_FRAGMENT_TRANSACTION_TAG = "preference";
+    public static final int REQUEST_TO_BECOMING_CALL_SCREENER = 22557;
+    public static final String GENERAL_PREF_GROUP = "General";
+    public static final String CALL_FILTERING_PREF_GROUP = "CallFiltering";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,32 +76,31 @@ public class PreferencesActivity extends AppBaseActivity {
     }
 
 
-    public static class PreferencesFragment extends PreferenceFragmentCompat
-    {
+    public static class PreferencesFragment extends PreferenceFragmentCompat {
+        Activity activity = null;
+
+        @Override
+        public void onAttach(Context context) {
+            super.onAttach(context);
+            activity = getActivity();
+        }
 
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(COMMON_SHARED_PREFS_FILE_NAME);
             addPreferencesFromResource(R.xml.app_preferences);
-            if(hasMultipleSims(getContext())) addSimPreference();
-            if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) addShouldUseSystemPhoneAppPreference();
+            andConditionalPreferences();
+        }
+
+        private void andConditionalPreferences() {
+            if (hasMultipleSims(getContext())) addSimPreference();
+            enablePreferenceIf(SHOULD_USE_SYSTEM_PHONE_APP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N);
+            enablePreferenceIf(CALL_FILTERING_PREF_GROUP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q);
             handlePreferenceUpdates();
         }
 
-        private void addShouldUseSystemPhoneAppPreference() {
-            PreferenceScreen preferenceScreen = getPreferenceScreen();
-            SwitchPreferenceCompat forceCallUsingSystemApp = createForceCallUsingSystemAppPreference();
-            preferenceScreen.addPreference(forceCallUsingSystemApp);
-        }
-
-        @NonNull
-        private SwitchPreferenceCompat createForceCallUsingSystemAppPreference() {
-            SwitchPreferenceCompat forceCallUsingSystemApp = new SwitchPreferenceCompat(getContextThemeWrapper());
-            forceCallUsingSystemApp.setTitle(R.string.should_use_system_app);
-            forceCallUsingSystemApp.setSummary(R.string.should_use_system_app_summary);
-            forceCallUsingSystemApp.setKey(SHOULD_USE_SYSTEM_PHONE_APP);
-            forceCallUsingSystemApp.setDefaultValue(false);
-            return forceCallUsingSystemApp;
+        private void enablePreferenceIf(String preferenceKey, Supplier<Boolean> shouldEnable) {
+            if (shouldEnable.get()) findPreference(preferenceKey).setEnabled(true);
         }
 
         private boolean hasNoPreferredSim() {
@@ -112,7 +122,7 @@ public class PreferencesActivity extends AppBaseActivity {
             listPreference.setEntryValues(R.array.sim_selection_values);
             listPreference.setDefaultValue(DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT);
             listPreference.setKey(SIM_PREFERENCE_SHARED_PREF_KEY);
-            getPreferenceScreen().addPreference(listPreference);
+            ((PreferenceGroup) getPreferenceScreen().findPreference(GENERAL_PREF_GROUP)).addPreference(listPreference);
         }
 
         @NonNull
@@ -134,19 +144,34 @@ public class PreferencesActivity extends AppBaseActivity {
 
         @NonNull
         private HashMap<String, Preference.OnPreferenceChangeListener> getIndividualPreferenceHandlersMap() {
-            Activity activity = PreferencesFragment.this.getActivity();
             HashMap<String, Preference.OnPreferenceChangeListener> onPreferenceChangeHandlersMap = new HashMap<>();
-            onPreferenceChangeHandlersMap.put(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, (preference, newValue) -> {
-                TintedDrawablesStore.reset();
-                activity.recreate();
-                return true;
-            });
-            onPreferenceChangeHandlersMap.put(T9_SEARCH_ENABLED_SHARED_PREF_KEY, (preference, newValue) -> {
-                activity.recreate();
-                return true;
-            });
+            onPreferenceChangeHandlersMap.put(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, onThemeToggle());
+            onPreferenceChangeHandlersMap.put(T9_SEARCH_ENABLED_SHARED_PREF_KEY, onT9SearchToggle());
+            onPreferenceChangeHandlersMap.put(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, onWhatsappToggle());
+            onPreferenceChangeHandlersMap.put(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, onCallFilteringToggle());
+            return onPreferenceChangeHandlersMap;
+        }
 
-            onPreferenceChangeHandlersMap.put(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, (preference, newValue) -> {
+        @NonNull
+        private Preference.OnPreferenceChangeListener onCallFilteringToggle() {
+            return (preference, newValue) -> {
+                if (newValue.equals(false)) return true;
+                if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+                    Toast.makeText(getContext(), R.string.device_not_supported_call_filtering, LENGTH_SHORT).show();
+                    return false;
+                }
+                RoleManager roleManager = (RoleManager) getContext().getSystemService(ROLE_SERVICE);
+                if (roleManager.isRoleHeld(ROLE_CALL_SCREENING)) {
+                    return true;
+                }
+                askToBecomeCallScreeningApp(roleManager);
+                return false;
+            };
+        }
+
+        @NonNull
+        private Preference.OnPreferenceChangeListener onWhatsappToggle() {
+            return (preference, newValue) -> {
                 if(newValue.equals(false)) return true;
                 if(!isWhatsappInstalled(activity)) {
                     Toast.makeText(activity, R.string.whatsapp_not_installed, Toast.LENGTH_LONG).show();
@@ -154,8 +179,30 @@ public class PreferencesActivity extends AppBaseActivity {
                 }
                 showSetDefaultCountryCodeDialog(activity);
                 return true;
-            });
-            return onPreferenceChangeHandlersMap;
+            };
+        }
+
+        @NonNull
+        private Preference.OnPreferenceChangeListener onT9SearchToggle() {
+            return (preference, newValue) -> {
+                activity.recreate();
+                return true;
+            };
+        }
+
+        @NonNull
+        private Preference.OnPreferenceChangeListener onThemeToggle() {
+            return (preference, newValue) -> {
+                TintedDrawablesStore.reset();
+                activity.recreate();
+                return true;
+            };
+        }
+
+        @RequiresApi(api = Build.VERSION_CODES.Q)
+        private void askToBecomeCallScreeningApp(RoleManager roleManager) {
+            Intent intent = roleManager.createRequestRoleIntent(ROLE_CALL_SCREENING);
+            startActivityForResult(intent, REQUEST_TO_BECOMING_CALL_SCREENER);
         }
 
         private void showSetDefaultCountryCodeDialog(Context context) {
@@ -178,6 +225,15 @@ public class PreferencesActivity extends AppBaseActivity {
                         getActivity().recreate();// recreating coz preference fragment is not able to read the disabled preference and still shows enable.
                     })
                     .show();
+        }
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == REQUEST_TO_BECOMING_CALL_SCREENER) {
+            if (resultCode != android.app.Activity.RESULT_OK) return;
+            enableCallFiltering(this);
+            recreate();
         }
     }
 }

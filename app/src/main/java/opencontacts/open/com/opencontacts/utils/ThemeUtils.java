@@ -4,7 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
-import static fontscaling.FontScalingUtil.setCustomFontSizeOnViewCreated;
+import static open.fontscaling.FontScalingUtil.setCustomFontSizeOnViewCreated;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 

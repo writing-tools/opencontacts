@@ -55,7 +55,7 @@ public class SharedPreferencesUtils {
     public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
-    public static final String TEXT_SIZE_SCALING_SHARED_PREF_KEY = "TEXT_SIZE_SCALING";
+
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
     public static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
     public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
@@ -232,14 +232,6 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldBlockCalls(Context context) {
         return getBoolean(CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY, false, context);
-    }
-
-    public static void saveTextSizeScaling(float scale, Context context) {
-        updatePreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY, scale, context);
-    }
-
-    public static float getTextSizeScaling(Context context) {
-        return getFloatFromPreferences(TEXT_SIZE_SCALING_SHARED_PREF_KEY, 1f, context);
     }
 
 }

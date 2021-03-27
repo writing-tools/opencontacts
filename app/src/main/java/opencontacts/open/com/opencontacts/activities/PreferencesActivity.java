@@ -29,12 +29,13 @@ import com.github.underscore.U;
 import java.util.Arrays;
 import java.util.HashMap;
 
-import fontscaling.FontScalePreferenceHandler;
+import open.fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
 import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
+import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
@@ -47,7 +48,6 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;

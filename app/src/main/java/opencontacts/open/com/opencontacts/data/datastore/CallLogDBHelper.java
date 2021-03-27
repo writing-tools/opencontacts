@@ -26,6 +26,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.widget.Toast.LENGTH_LONG;
+import static com.orm.SugarRecord.find;
 import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.CALL_LOG_ENTRIES_CHUNK_SIZE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
@@ -159,5 +160,13 @@ class CallLogDBHelper {
     public static boolean delete(Long id) {
         CallLogEntry callLogEntryToBeDeleted = CallLogEntry.findById(CallLogEntry.class, id);
         return callLogEntryToBeDeleted != null && callLogEntryToBeDeleted.delete();
+    }
+
+    static List<CallLogEntry> getCallLogEntriesFor(long contactId) {
+        return find(CallLogEntry.class, "contact_Id = ?", new String[]{"" + contactId}, null, "date desc", null);
+    }
+
+    static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber) {
+        return find(CallLogEntry.class, "phone_Number = ?", new String[]{phoneNumber}, null, "date desc", null);
     }
 }

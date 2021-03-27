@@ -22,6 +22,7 @@ import opencontacts.open.com.opencontacts.utils.Triplet;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDBHelper.getCallLogEntriesFor;
 import static opencontacts.open.com.opencontacts.domain.Contact.createNewDomainContact;
 import static opencontacts.open.com.opencontacts.domain.Contact.getGroupsNamesCSVString;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
@@ -52,7 +53,7 @@ public class ContactsDBHelper {
         List<PhoneNumber> dbPhoneNumbers = dbContact.getAllPhoneNumbers();
         for(PhoneNumber dbPhoneNumber : dbPhoneNumbers)
             dbPhoneNumber.delete();
-        List<CallLogEntry> callLogEntries = CallLogEntry.getCallLogEntriesFor(contactId);
+        List<CallLogEntry> callLogEntries = getCallLogEntriesFor(contactId);
         for(CallLogEntry callLogEntry : callLogEntries){
             callLogEntry.setId((long) -1);
             callLogEntry.save();

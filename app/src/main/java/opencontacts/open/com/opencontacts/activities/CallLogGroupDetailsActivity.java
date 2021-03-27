@@ -5,46 +5,71 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.provider.CallLog;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.github.underscore.U;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.domain.GroupedCallLogEntry;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
+import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.utils.Common;
 
+import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getCallLogEntriesForContactWith;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContact;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getFullDateTimestampPattern;
 
 public class CallLogGroupDetailsActivity extends AppBaseActivity {
 
-    public static final String CALL_LOG_ENTRIES = "entries";
+    public static final String PHONE_NUMBER_INTENT_EXTRA = "phoneNumber";
     private LinearLayout callLogHolder;
-    private ArrayList<CallLogEntry> callLogEntries;
+    private List<CallLogEntry> callLogEntries;
 
     @Override
     int getLayoutResource() {
-        return R.layout.activity_call_log_group_entry;
+        return R.layout.activity_call_log_details;
     }
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         callLogHolder = findViewById(R.id.call_log_holder);
-        callLogEntries = (ArrayList<CallLogEntry>) getIntent().getSerializableExtra(CALL_LOG_ENTRIES);
+        FloatingActionButton infoButton = findViewById(R.id.info);
+        String phoneNumber = getIntent().getStringExtra(PHONE_NUMBER_INTENT_EXTRA);
+        if(phoneNumber == null) {
+            Toast.makeText(this, "No phone number present", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+        callLogEntries = getCallLogEntriesForContactWith(phoneNumber);
+        if(callLogEntries.isEmpty()) {
+            Toast.makeText(this, "No call log entries present for this number", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
         addCallLogEntriesIntoView(callLogEntries);
-        String name = U.first(callLogEntries).getName();
-        getSupportActionBar().setTitle(name == null ? getString(R.string.unknown) : name);
+        Contact contact = getContact(phoneNumber);
+        if (contact == null) {
+            getSupportActionBar().setTitle(getString(R.string.unknown));
+            infoButton.hide();
+            return;
+        }
+        getSupportActionBar().setTitle(contact.firstName);
+        setDrawableForFAB(R.drawable.ic_outline_info_24, infoButton, this);
+        infoButton.show();
+        infoButton.setOnClickListener(v -> startActivity(getIntentToShowContactDetails(contact.getId(), this)));
     }
 
     private void addCallLogEntriesIntoView(List<CallLogEntry> callLogEntries) {
@@ -69,8 +94,8 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
         });
     }
 
-    public static Intent getIntentToShowCallLogEntries(GroupedCallLogEntry groupedCallLogEntry, Context context){
+    public static Intent getIntentToShowCallLogEntries(String phoneNumber, Context context){
         return new Intent(context, CallLogGroupDetailsActivity.class)
-                .putExtra(CALL_LOG_ENTRIES, new ArrayList<>(groupedCallLogEntry.callLogEntries));
+                .putExtra(PHONE_NUMBER_INTENT_EXTRA, phoneNumber);
     }
 }

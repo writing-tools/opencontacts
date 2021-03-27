@@ -22,11 +22,8 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
-import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.domain.GroupedCallLogEntry;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
-import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
@@ -118,8 +115,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
             @Override
             public void onShowDetails(Contact contact) {
                 if(contact.id == -1) {
-                    List<CallLogEntry> callLogEntries = CallLogEntry.getCallLogEntriesFor(contact.primaryPhoneNumber.phoneNumber);
-                    startActivity(getIntentToShowCallLogEntries(new GroupedCallLogEntry(callLogEntries, U.first(callLogEntries)), context));
+                    startActivity(getIntentToShowCallLogEntries(contact.primaryPhoneNumber.phoneNumber, getContext()));
                 }
                 else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
             }

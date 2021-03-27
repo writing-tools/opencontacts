@@ -29,3 +29,15 @@ do comment on it saying this should be prioritized and fixed soon.
 
 In case you find a new issue / improvement / suggestion. Please do not hesitate to raise issue and we can together make our experience with this app great.
 In case you had to share some personal information to debug, you can use the [telegram group](https://t.me/joinchat/CCdV7RFz8VE24KqFmhBWrg) to share it. Or you can direct message me from the telegram group.
+
+# Contribute through code
+
+In case you want to write a feature, you can follow the steps below
+
+1. Open the codebase in Android studio
+2. Create a branch with feature name
+3. Write the feature
+4. Test it yourself
+5. Raise the merge request(pull request)
+
+Our community will test the feature, will have basic code review and voila your merge request will be merged

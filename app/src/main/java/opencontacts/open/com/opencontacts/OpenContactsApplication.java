@@ -18,7 +18,6 @@ import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.addSh
 public class OpenContactsApplication extends MultiDexApplication {
 
     public static final String MISSED_CALLS_CHANEL_ID = "6477";
-    public static boolean fontScalingSet = false;
 
     @Override
     public void onCreate() {

@@ -17,7 +17,6 @@ import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
-import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.view.ContextThemeWrapper;
 import android.support.v7.widget.AppCompatEditText;
 import android.text.InputType;
@@ -30,10 +29,9 @@ import com.github.underscore.U;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
-import opencontacts.open.com.opencontacts.utils.ThemeUtils;
 
 import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
@@ -94,11 +92,11 @@ public class PreferencesActivity extends AppBaseActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(COMMON_SHARED_PREFS_FILE_NAME);
             addPreferencesFromResource(R.xml.app_preferences);
-            andConditionalPreferences();
+            addConditionalPreferences();
             initFontScalePreference();
         }
 
-        private void andConditionalPreferences() {
+        private void addConditionalPreferences() {
             if (hasMultipleSims(getContext())) addSimPreference();
             enablePreferenceIf(SHOULD_USE_SYSTEM_PHONE_APP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N);
             enablePreferenceIf(CALL_FILTERING_PREF_GROUP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q);
@@ -106,22 +104,11 @@ public class PreferencesActivity extends AppBaseActivity {
         }
 
         private void initFontScalePreference() {
-            Preference fontScalPreference = ((PreferenceCategory) getPreferenceScreen().findPreference("General")).findPreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY);
+            Preference fontScalPreference = ((PreferenceCategory) getPreferenceScreen().findPreference(GENERAL_PREF_GROUP)).findPreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY);
             fontScalPreference.setOnPreferenceClickListener(preference -> {
-                new FontScalePreferenceHandler(fontScalPreference.getContext())
-                        .open(newScale -> ThemeUtils.applyNewFontScaling(newScale, getActivity()));
+                new FontScalePreferenceHandler(activity).open();
                 return true;
             });
-        }
-
-        @NonNull
-        private SwitchPreferenceCompat createForceCallUsingSystemAppPreference() {
-            SwitchPreferenceCompat forceCallUsingSystemApp = new SwitchPreferenceCompat(getContextThemeWrapper());
-            forceCallUsingSystemApp.setTitle(R.string.should_use_system_app);
-            forceCallUsingSystemApp.setSummary(R.string.should_use_system_app_summary);
-            forceCallUsingSystemApp.setKey(SHOULD_USE_SYSTEM_PHONE_APP);
-            forceCallUsingSystemApp.setDefaultValue(false);
-            return forceCallUsingSystemApp;
         }
 
         private void enablePreferenceIf(String preferenceKey, Supplier<Boolean> shouldEnable) {

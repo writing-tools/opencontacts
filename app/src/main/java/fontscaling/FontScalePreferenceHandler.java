@@ -1,7 +1,7 @@
-package opencontacts.open.com.opencontacts.components;
+package fontscaling;
 
-import android.content.Context;
-import android.support.v4.util.Consumer;
+import android.app.Activity;
+import android.content.res.Resources;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatSeekBar;
 import android.support.v7.widget.AppCompatTextView;
@@ -13,28 +13,33 @@ import opencontacts.open.com.opencontacts.R;
 
 import static android.util.TypedValue.COMPLEX_UNIT_PX;
 import static android.widget.LinearLayout.VERTICAL;
+import static fontscaling.FontScalingUtil.applyNewFontScaling;
+import static fontscaling.FontScalingUtil.getSystemScaledDensity;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getTextSizeScaling;
-import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSystemScaledDensity;
 
 public class FontScalePreferenceHandler {
     private float currentScale;
-    private final Context context;
+    private final Activity activity;
     private float originalTextSizeInSP;
     private final AppCompatSeekBar seekBar;
     private final AppCompatTextView contactNameExampleTextView;
+    private final AppCompatTextView currentScaleTextView;
     private final LinearLayout container;
 
-    public FontScalePreferenceHandler(Context context) {
-        this.currentScale = getTextSizeScaling(context);
-        this.context = context;
-        container = new LinearLayout(context);
+    public FontScalePreferenceHandler(Activity activity) {
+        this.currentScale = getTextSizeScaling(activity);
+        this.activity = activity;
+        container = new LinearLayout(activity);
         container.setOrientation(VERTICAL);
-        seekBar = new AppCompatSeekBar(context);
-        contactNameExampleTextView = new AppCompatTextView(context);
-        contactNameExampleTextView.setText("David Lou");
-
+        int containerMarginInPixels = (int)(Resources.getSystem().getDisplayMetrics().density * 16);
+        container.setPadding(containerMarginInPixels, containerMarginInPixels, containerMarginInPixels, containerMarginInPixels);
+        seekBar = new AppCompatSeekBar(activity);
+        contactNameExampleTextView = new AppCompatTextView(activity);
+        contactNameExampleTextView.setText("Sample text");
+        currentScaleTextView = new AppCompatTextView(activity);
         container.addView(seekBar);
         container.addView(contactNameExampleTextView);
+        container.addView(currentScaleTextView);
         seekBar.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -54,24 +59,22 @@ public class FontScalePreferenceHandler {
     private void updateScale(float newScale) {
         currentScale = newScale;
         contactNameExampleTextView.setTextSize(COMPLEX_UNIT_PX, getPixelsAtSystemScale(originalTextSizeInSP) * currentScale);
-        System.out.println("new scale yolo " + currentScale);
+        currentScaleTextView.setText(String.valueOf(currentScale));
     }
 
-    public void open(Consumer<Float> onScaleSave) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context)
+    public void open() {
+        AlertDialog alertDialog = new AlertDialog.Builder(activity)
                 .setView(container)
                 .setPositiveButton(R.string.okay, (dialog, which) -> {
-                    onScaleSave.accept(currentScale);
+                    applyNewFontScaling(currentScale, activity);
                 })
                 .setNegativeButton(R.string.cancel, null)
                 .create();
         alertDialog.setOnShowListener(dialog -> {
             int progress = (int) Math.ceil((currentScale - 1) * 100) + 50;
-            System.out.println("progress yolo " + progress);
             seekBar.setProgress(progress);
-            contactNameExampleTextView.setTextAppearance(context, R.style.TextAppearance_AppCompat_Medium);
+            contactNameExampleTextView.setTextAppearance(activity, R.style.TextAppearance_AppCompat_Medium);
             originalTextSizeInSP = getSPAtCurrentScale(contactNameExampleTextView.getTextSize());
-            System.out.println("sp we got yolo " + originalTextSizeInSP);
             updateScale(currentScale);
         });
         alertDialog.show();
@@ -82,7 +85,7 @@ public class FontScalePreferenceHandler {
     }
 
     private float getSPAtCurrentScale(float px) {
-        return px / context.getResources().getDisplayMetrics().scaledDensity;
+        return px / activity.getResources().getDisplayMetrics().scaledDensity;
     }
 
 }

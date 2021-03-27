@@ -14,6 +14,7 @@ import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFloatFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getLong;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
@@ -54,6 +55,7 @@ public class SharedPreferencesUtils {
     public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
+
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
     public static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
     public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
@@ -231,4 +233,5 @@ public class SharedPreferencesUtils {
     public static boolean shouldBlockCalls(Context context) {
         return getBoolean(CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY, false, context);
     }
+
 }

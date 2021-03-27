@@ -9,7 +9,7 @@ import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedThem
 public class AppBaseFragment extends Fragment{
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
-        applyOptedTheme(getContext());
+        applyOptedTheme(getActivity());
         super.onCreate(savedInstanceState);
     }
 

@@ -14,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceCategory;
 import android.support.v7.preference.PreferenceFragmentCompat;
 import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.view.ContextThemeWrapper;
@@ -28,11 +29,13 @@ import com.github.underscore.U;
 import java.util.Arrays;
 import java.util.HashMap;
 
+import open.fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 
 import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
+import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
@@ -89,14 +92,23 @@ public class PreferencesActivity extends AppBaseActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             getPreferenceManager().setSharedPreferencesName(COMMON_SHARED_PREFS_FILE_NAME);
             addPreferencesFromResource(R.xml.app_preferences);
-            andConditionalPreferences();
+            addConditionalPreferences();
+            initFontScalePreference();
         }
 
-        private void andConditionalPreferences() {
+        private void addConditionalPreferences() {
             if (hasMultipleSims(getContext())) addSimPreference();
             enablePreferenceIf(SHOULD_USE_SYSTEM_PHONE_APP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N);
             enablePreferenceIf(CALL_FILTERING_PREF_GROUP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q);
             handlePreferenceUpdates();
+        }
+
+        private void initFontScalePreference() {
+            Preference fontScalPreference = ((PreferenceCategory) getPreferenceScreen().findPreference(GENERAL_PREF_GROUP)).findPreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY);
+            fontScalPreference.setOnPreferenceClickListener(preference -> {
+                new FontScalePreferenceHandler(activity).open();
+                return true;
+            });
         }
 
         private void enablePreferenceIf(String preferenceKey, Supplier<Boolean> shouldEnable) {

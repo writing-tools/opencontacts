@@ -1,13 +1,10 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import android.app.Activity;
 import android.content.Context;
-import android.content.res.Configuration;
-import android.util.DisplayMetrics;
-import android.view.WindowManager;
+import android.os.Build;
 
-import opencontacts.open.com.opencontacts.activities.AppBaseActivity;
-
-import static android.content.Context.WINDOW_SERVICE;
+import static open.fontscaling.FontScalingUtil.setCustomFontSizeOnViewCreated;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCurrentTheme;
 
@@ -29,21 +26,15 @@ public class ThemeUtils {
     }
 
     public static int getBackgroundFloatingColor(Context context) {
-        return getThemeAttributeColor(android.R.attr.colorBackgroundFloating, context);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            return getThemeAttributeColor(android.R.attr.colorBackgroundFloating, context);
+        }
+        else return getThemeAttributeColor(android.R.attr.colorBackground, context);
     }
 
-    public static void applyOptedTheme(Context context) {
-        context.getTheme().applyStyle(getCurrentTheme(context), true);
-//        setCustomFontSize(context);
+    public static void applyOptedTheme(Activity activity) {
+        activity.getTheme().applyStyle(getCurrentTheme(activity), true);
+        setCustomFontSizeOnViewCreated(activity);
     }
 
-    private static void setCustomFontSize(Context context) {
-        Configuration configuration = context.getResources().getConfiguration();
-        configuration.fontScale = 1f;
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        WindowManager wm = (WindowManager) context.getSystemService(WINDOW_SERVICE);
-        wm.getDefaultDisplay().getMetrics(metrics);
-        metrics.scaledDensity = configuration.fontScale * metrics.density;
-        ((AppBaseActivity)context).getBaseContext().getResources().updateConfiguration(configuration, metrics);
-    }
 }

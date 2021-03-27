@@ -73,6 +73,11 @@
             android:summary="@string/should_use_system_app_summary"
             android:title="@string/should_use_system_app"
             />
+        <Preference
+            android:title="Choose custom font size"
+            android:summary="Increase or decrease the size of text across app"
+            android:key="TEXT_SIZE_SCALING"
+            />
 
     </PreferenceCategory>
     <PreferenceCategory

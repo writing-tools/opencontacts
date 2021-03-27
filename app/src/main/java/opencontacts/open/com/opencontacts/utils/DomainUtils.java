@@ -44,6 +44,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
+import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
@@ -139,6 +140,7 @@ public class DomainUtils {
     private static byte[] getVCFExportBytes(List<Contact> allContacts, List<Contact> favorites) throws IOException {
         ByteArrayOutputStream contactsPlainTextExportStream = new ByteArrayOutputStream();
         VCardWriter vCardWriter = new VCardWriter(contactsPlainTextExportStream, VCardVersion.V4_0);
+        vCardWriter.setCaretEncodingEnabled(true);
         StructuredName structuredName = new StructuredName();
         for( Contact contact : allContacts){
             VCardData vCardData = ContactsDataStore.getVCardData(contact.id);
@@ -273,6 +275,11 @@ public class DomainUtils {
         return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
     }
 
+    @NonNull
+    public static SimpleDateFormat getFullDateTimestampPattern(Context context) {
+        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
+    }
+
     public static void exportCallLog(Context context) throws IOException{
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
@@ -330,12 +337,16 @@ public class DomainUtils {
         return newContactsList;
     }
 
+    public static String getLastNameOrFullInCaseEmpty(Contact contact) {
+        return contact.lastName == null || isEmpty(contact.lastName.trim()) ? contact.name : contact.lastName;
+    }
+
     @NonNull
     public static Comparator<Contact> getContactComparatorBasedOnName(Context context) {
         if(shouldSortUsingFirstName(context))
-            return (contact1, contact2) -> contact1.firstName.compareToIgnoreCase(contact2.firstName);
+            return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.firstName);
         else
-            return (contact1, contact2) -> contact1.lastName.compareToIgnoreCase(contact2.lastName);
+            return (contact1, contact2) -> getLastNameOrFullInCaseEmpty(contact1).compareToIgnoreCase(getLastNameOrFullInCaseEmpty(contact2));
     }
 
     @NonNull
@@ -377,5 +388,10 @@ public class DomainUtils {
                 .append(appendNewLineIfNotEmpty(address.getRegion()))
                 .append(appendNewLineIfNotEmpty(address.getCountry()));
         return addressBuffer.toString();
+    }
+
+    public static void deleteAllContacts(Context context) {
+        ContactsDataStore.deleteAllContacts(context);
+        SharedPreferencesUtils.removeSyncProgress(context);
     }
 }

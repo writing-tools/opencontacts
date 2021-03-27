@@ -1,0 +1,5 @@
+Even though we are not having any problem sharing our mobile number with all third parties, people in our phone book might have. We should not be sharing their contact information online.
+
+This app saves contacts in its own database separate from android contacts. This way no other app would be able to access contacts.
+Can be used in place of your default phone(dialer) app. It can import contacts from vCard files. So we can export Android contacts and import into this app.
+Maintains call log as well. Also shows the person's name upon receiving call

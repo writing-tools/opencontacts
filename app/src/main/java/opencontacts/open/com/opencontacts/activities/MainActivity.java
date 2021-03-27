@@ -26,7 +26,6 @@ import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
-import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.fragments.AppBaseFragment;
 import opencontacts.open.com.opencontacts.fragments.CallLogFragment;
 import opencontacts.open.com.opencontacts.fragments.ContactsFragment;
@@ -38,13 +37,16 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import pro.midev.expandedmenulibrary.ExpandedMenuItem;
 import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 import static android.view.View.GONE;
 import static android.view.View.VISIBLE;
 import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
 import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
@@ -54,6 +56,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ma
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldShowBottomMenu;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
 
@@ -164,6 +167,12 @@ public class MainActivity extends AppBaseActivity {
 
     private void setupBottomMenu() {
         bottomMenu = findViewById(R.id.bottom_menu);
+        if(!shouldShowBottomMenu(this)){
+            bottomMenu.setVisibility(GONE);
+            bottomMenu = null;
+            return;
+        }
+
         ExpandedMenuItem searchItem = new ExpandedMenuItem(R.drawable.ic_search_black_24dp, "Search", getPrimaryColor(this));
         ExpandedMenuItem groupItem = new ExpandedMenuItem(R.drawable.ic_group_merge_contacts_24dp, "Groups", getPrimaryColor(this));
         ExpandedMenuItem dialpadItem = new ExpandedMenuItem(R.drawable.dial_pad, "Dial", getPrimaryColor(this));
@@ -212,7 +221,16 @@ public class MainActivity extends AppBaseActivity {
 
         if(contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
-        menu.findItem(R.id.action_export).setOnMenuItemClickListener(new ExportMenuItemClickHandler(this));
+        menu.findItem(R.id.action_export).setOnMenuItemClickListener(item -> {
+            if(!hasPermission(WRITE_EXTERNAL_STORAGE, this)){
+                Toast.makeText(this, R.string.grant_storage_permisson_detail, Toast.LENGTH_LONG).show();
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 123);
+                }
+                return true;
+            }
+            return new ExportMenuItemClickHandler(this).onMenuItemClick(item);
+        });
         menu.findItem(R.id.action_about).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
             startActivity(new Intent(MainActivity.this, AboutActivity.class))
         ));
@@ -243,7 +261,7 @@ public class MainActivity extends AppBaseActivity {
             return true;
         });
         menu.findItem(R.id.action_delete_all_contacts).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
-            wrapInConfirmation(() -> ContactsDataStore.deleteAllContacts(this), this)
+            wrapInConfirmation(() -> DomainUtils.deleteAllContacts(this), this)
         ));
     }
 
@@ -273,14 +291,17 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void importContacts() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
-                    .setType("*/*"),
+        try {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
+                                .setType("*/*"),
+                        IMPORT_FILE_CHOOSER_RESULT);
+            } else startActivityForResult(
+                    new Intent(Intent.ACTION_PICK),
                     IMPORT_FILE_CHOOSER_RESULT);
+        } catch (Exception e) {
+            makeText(this, R.string.no_app_found_for_action_open_document, LENGTH_SHORT);
         }
-        else startActivityForResult(
-                new Intent(Intent.ACTION_PICK),
-                IMPORT_FILE_CHOOSER_RESULT);
     }
 
     private void refresh() {
@@ -370,10 +391,12 @@ public class MainActivity extends AppBaseActivity {
     }
 
     public void hideBottomMenu() {
+        if(bottomMenu == null) return;
         bottomMenu.setVisibility(GONE);
     }
 
     public void showBottomMenu() {
+        if(bottomMenu == null || !shouldShowBottomMenu(this)) return;
         bottomMenu.setVisibility(VISIBLE);
     }
 }

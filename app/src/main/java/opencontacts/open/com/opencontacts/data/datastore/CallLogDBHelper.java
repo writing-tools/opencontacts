@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
@@ -19,12 +20,17 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 
 import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.widget.Toast.LENGTH_LONG;
+import static com.orm.SugarRecord.find;
+import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.CALL_LOG_ENTRIES_CHUNK_SIZE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getLastSavedCallLogDate;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setLastSavedCallLogDate;
 
@@ -50,13 +56,13 @@ class CallLogDBHelper {
             TelecomManager telecomManager = context.getSystemService(TelecomManager.class);
             if(telecomManager == null || !hasPermission(Manifest.permission.READ_PHONE_STATE, context)) return;
             //added permission check above using util intellij wasn't able to identify it
-            List<PhoneAccountHandle> callCapablePhoneAccounts = telecomManager.getCallCapablePhoneAccounts();
+            @SuppressLint("MissingPermission") List<PhoneAccountHandle> callCapablePhoneAccounts = telecomManager.getCallCapablePhoneAccounts();
             if(callCapablePhoneAccounts.size() < 2) return;
             U.forEachIndexed(callCapablePhoneAccounts, (index, phoneAccount) -> simsInfo.put(phoneAccount.getId(), index + 1));
             return;
         }
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.LOLLIPOP_MR1) {
-            List<SubscriptionInfo> activeSubscriptionInfoList = ((SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)).getActiveSubscriptionInfoList();
+            @SuppressLint("MissingPermission") List<SubscriptionInfo> activeSubscriptionInfoList = ((SubscriptionManager) context.getSystemService(Context.TELEPHONY_SUBSCRIPTION_SERVICE)).getActiveSubscriptionInfoList();
             if(activeSubscriptionInfoList == null)
                 return;
             for(SubscriptionInfo subscriptionInfo : activeSubscriptionInfoList){
@@ -66,12 +72,18 @@ class CallLogDBHelper {
     }
 
     public List<CallLogEntry> loadRecentCallLogEntriesIntoDB(Context context) {
-        List<CallLogEntry> callLogEntries = getRecentCallLogEntries(context);
-        CallLogEntry.saveInTx(callLogEntries);
-        return callLogEntries;
+        try {
+            List<CallLogEntry> callLogEntries = getRecentCallLogEntries(context);
+            CallLogEntry.saveInTx(callLogEntries);
+            return callLogEntries;
+        } catch (Exception e) {
+            e.printStackTrace();
+            toastFromNonUIThread(R.string.failed_fetching_recent_calllog, LENGTH_LONG, context);
+            return emptyList();
+        }
     }
 
-    private List<CallLogEntry> getRecentCallLogEntries(final Context context){
+    private List<CallLogEntry> getRecentCallLogEntries(final Context context) throws Exception{ // throwing exception coz anything can happen here while fetching call log from system.
         if (ActivityCompat.checkSelfPermission(context, READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED || ActivityCompat.checkSelfPermission(context, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             return new ArrayList<>(0);
         }
@@ -148,5 +160,13 @@ class CallLogDBHelper {
     public static boolean delete(Long id) {
         CallLogEntry callLogEntryToBeDeleted = CallLogEntry.findById(CallLogEntry.class, id);
         return callLogEntryToBeDeleted != null && callLogEntryToBeDeleted.delete();
+    }
+
+    static List<CallLogEntry> getCallLogEntriesFor(long contactId) {
+        return find(CallLogEntry.class, "contact_Id = ?", new String[]{"" + contactId}, null, "date desc", null);
+    }
+
+    static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber) {
+        return find(CallLogEntry.class, "phone_Number = ?", new String[]{phoneNumber}, null, "date desc", null);
     }
 }

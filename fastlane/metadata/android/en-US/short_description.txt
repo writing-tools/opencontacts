@@ -1,0 +1,1 @@
+A different database for contacts to keep them private only to you.

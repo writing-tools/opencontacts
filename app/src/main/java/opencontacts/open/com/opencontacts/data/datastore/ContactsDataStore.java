@@ -21,6 +21,7 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
@@ -46,12 +47,12 @@ public class ContactsDataStore {
     public synchronized static List<Contact> getAllContacts() {
         if(currentState == LOADING) {
             System.out.println("skipping the load yolo");
-            return Collections.emptyList();
+            return emptyList();
         }
         if (currentState == NONE ) {
             currentState = LOADING;
             refreshStoreAsync();
-            return Collections.emptyList();
+            return emptyList();
         }
         return new ArrayList<>(contacts);
     }
@@ -191,7 +192,11 @@ public class ContactsDataStore {
             });
         }
     }
-
+    /**
+     * This method takes care of only removing contacts but there are other
+     * things to do as well when removing all contacts. Call below mentioned one instead
+     * @deprecated use {@link DomainUtils#deleteAllContacts(Context)} instead.
+     */
     public static void deleteAllContacts(Context context) {
         processAsync(() -> {
             ContactsDBHelper.deleteAllContactsAndRelatedStuff();
@@ -284,6 +289,7 @@ public class ContactsDataStore {
     }
 
     public static List<Contact> getContactsMatchingT9(String t9Text) {
+        if(contacts == null) return emptyList();
         return DomainUtils.filterContactsBasedOnT9Text(t9Text, contacts);
     }
 }

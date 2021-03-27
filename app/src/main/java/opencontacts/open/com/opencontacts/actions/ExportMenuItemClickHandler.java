@@ -10,6 +10,7 @@ import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.CrashUtils.reportError;
 
 /**
@@ -44,11 +45,8 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
 
                         @Override
                         protected void onPostExecute(Boolean success) {
-                            if (Boolean.FALSE.equals(success))
-                                AndroidUtils.showAlert(context, context.getString(R.string.failed), context.getString(R.string.failed_exporting_contacts));
-                            else
-                                Toast.makeText(context, R.string.exporting_contacts_complete, Toast.LENGTH_LONG).show();
-
+                            if (Boolean.TRUE.equals(success)) Toast.makeText(context, R.string.exporting_contacts_complete, Toast.LENGTH_LONG).show();
+                            else showAlert(context, context.getString(R.string.failed), context.getString(R.string.failed_exporting_contacts));
                         }
                     }.execute();
                 }).setNegativeButton(R.string.no, null).show();

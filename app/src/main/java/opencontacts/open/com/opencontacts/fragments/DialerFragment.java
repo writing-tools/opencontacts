@@ -30,10 +30,12 @@ import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
 
 import static android.view.View.INVISIBLE;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
@@ -111,6 +113,14 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         searchListAdapter = new ContactsListViewAdapter(context);
         searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context){
             @Override
+            public void onShowDetails(Contact contact) {
+                if(contact.id == -1) {
+                    startActivity(getIntentToShowCallLogEntries(contact.primaryPhoneNumber.phoneNumber, getContext()));
+                }
+                else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
+            }
+
+            @Override
             public void onLongClick(Contact contact) {
             }
         });
@@ -135,7 +145,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
 
-        enableMultiSimDialingButtonsIfHavingMutipleSims();
+        if(searchListAdapter != null && !searchListAdapter.isEmpty()) hideMultiSimDialingButtons();
+        else enableMultiSimDialingButtonsIfHavingMutipleSims();
     }
 
     private void enableMultiSimDialingButtonsIfHavingMutipleSims() {

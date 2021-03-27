@@ -30,6 +30,14 @@ public class ThemeUtils {
         return getThemeAttributeColor(android.R.attr.colorMultiSelectHighlight, context);
     }
 
+    public static int getBackgroundColor(Context context) {
+        return getThemeAttributeColor(android.R.attr.colorBackground, context);
+    }
+
+    public static int getBackgroundFloatingColor(Context context) {
+        return getThemeAttributeColor(android.R.attr.colorBackgroundFloating, context);
+    }
+
     public static void applyOptedTheme(Context context) {
         context.getTheme().applyStyle(getCurrentTheme(context), true);
         if(!fontScalingSet)

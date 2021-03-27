@@ -60,4 +60,5 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
         if(callLogListView != null) callLogListView.setEditNumberBeforeCallHandler(editNumberBeforeCallHandler);
     }
+
 }

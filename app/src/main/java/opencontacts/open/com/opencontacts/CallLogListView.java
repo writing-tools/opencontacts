@@ -88,6 +88,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         this.editNumberBeforeCallHandler = editNumberBeforeCallHandler;
         listView = new ListView(context);
         listView.setId(android.R.id.list);
+        listView.setFastScrollEnabled(true);
         addView(getSwipeRefreshLayout(context));
         prepareLongClickActions();
         boolean shouldToggleContactActions = shouldToggleContactActions(context);
@@ -284,7 +285,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             CallLogDataStore.delete(groupedCallLogEntry.latestCallLogEntry.getId());
         });
         longClickOptionsAndTheirActions.put(context.getString(R.string.show_details), groupedCallLogEntry ->{
-            context.startActivity(getIntentToShowCallLogEntries(groupedCallLogEntry, context));
+            context.startActivity(getIntentToShowCallLogEntries(groupedCallLogEntry.latestCallLogEntry.getPhoneNumber(), context));
         });
 
     }
@@ -383,4 +384,5 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     public boolean isInSelectionMode() {
         return inSelectionMode;
     }
+
 }

@@ -38,6 +38,7 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     public ContactsListView(final Context context, Supplier<String> searchStringSupplier) {
         super(context);
         this.context = context;
+        this.setFastScrollEnabled(true);
         this.searchStringSupplier = searchStringSupplier;
         setTextFilterEnabled(false);
         ContactsDataStore.addDataChangeListener(this);

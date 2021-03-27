@@ -9,7 +9,6 @@
     <string name="error_while_parsing_contact_details">解析联系人细节时发生错误</string>
     <string name="copied_phonenumber_to_clipboard">复制电话号码到剪贴板</string>
     <string name="unexpected_error_happened">发生意外错误</string>
-    <string name="title_activity_contact_details">联系人动态细节</string>
     <string name="grant_read_call_logs_permission">请授权此应用读取通话记录的权限</string>
     <string name="exporting_contacts_complete">完成导出联络人到 内部/外部 存储空间的 root 目录</string>
     <string name="exporting_contacts_started">开始导出联系人信息</string>
@@ -98,6 +97,8 @@
     <string name="whatsapp_preferences">Whatsapp偏好设置</string>
     <string name="do_you_want_to_import">您想要导入吗？</string>
     <string name="noname">没有名称</string>
+    <string name="keyboard_adjusts_views">键盘调整视图</string>
+    <string name="open_bottommenu_on_start">启动时打开底部菜单</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">移动电话</string>
     <string name="work">工作电话</string>
@@ -168,9 +169,40 @@
         \n\n在 安卓7.1(Noughat) 之前的设备中，您仍然可以通过添加一个小部件实现以上功能。 若要添加小部件，长按主屏幕并点击添加小部件然后选择 \'开源通讯录\' 小部件，之后按照系统提示操作完成快捷方式设置。</string>
     <string name="start">开始</string>
     <string name="ask_permissions_again">再次询问授权</string>
-    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
-    <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
-    <string name="default_tab">Default tab</string>
+    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">忽略 ssl http 证书错误</string>
+    <string name="sync_failed" tools:ignore="MissingTranslation">同步失败</string>
+    <string name="default_tab">默认选项卡</string>
+    <string name="default_tab_summary">应用程序默认打开的标签</string>
+    <string name="save">保存</string>
+    <string name="toggle_contact_actions">切换联系人动作</string>
+    <string name="toggle_contact_actions_summary">切换通话和消息动作位置</string>
+    <string name="merge">合并</string>
+    <string name="failed_merging_a_contact">无法合并其中一个联系人</string>
+    <string name="choose_a_contact">选择一个联系人</string>
+    <string name="auto_merge_complete">自动合并已完成，合并了 %1$d个联系人</string>
+    <string name="should_use_system_app">强制使用系统的电话应用程序拨打电话</string>
+    <string name="should_use_system_app_summary">仅使用系统的默认电话应用程序拨打电话，而不提供选项</string>
+    <string name="dialer">拨号盘</string>
+    <string name="view_more">查看更多</string>
+    <string name="more">更多</string>
+    <string name="groups">小组</string>
+    <string name="group_name">组名</string>
+    <string name="add_contacts">添加联系人</string>
+    <string name="edit_group">编辑组</string>
+    <string name="Automerge">自动合并</string>
+    <string name="no_groups_found">未找到组，添加一个以开始</string>
+    <string name="add_group">添加组</string>
+    <string name="are_you_sure">您确定吗？</string>
+    <string name="group_deleted">小组已删除</string>
+    <string name="please_wait">请稍等...</string>
+    <string name="delete_multiple">删除多个项目</string>
+    <string name="post_office_box">邮局信箱</string>
+    <string name="state_province">州或省</string>
+    <string name="city">城市</string>
+    <string name="postal_code">邮政编码</string>
+    <string name="country">国家</string>
+    <string name="extended_address">扩展地址</string>
+    <string name="no_group_name_error">Enter valid group name</string>
     <string-array name="phone_number_types">
         <item>移动电话</item>
         <item>工作电话</item>
@@ -198,9 +230,9 @@
         <item>1</item>
     </string-array>
     <string-array name="tabs_list">
-        <item>Call log</item>
-        <item>Contacts</item>
-        <item>Dialer</item>
+        <item>通话记录</item>
+        <item>联系人</item>
+        <item>拨号盘</item>
     </string-array>
     <string-array name="tabs_values">
         <item>0</item>

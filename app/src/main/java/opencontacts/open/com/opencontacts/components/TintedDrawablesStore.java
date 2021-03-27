@@ -1,8 +1,10 @@
 package opencontacts.open.com.opencontacts.components;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.DrawableRes;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
 
 import java.util.HashMap;
@@ -10,6 +12,7 @@ import java.util.Map;
 
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getBackgroundFloatingColor;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 
 public class TintedDrawablesStore {
@@ -26,6 +29,11 @@ public class TintedDrawablesStore {
         AndroidUtils.setColorFilterUsingColor(drawable, getPrimaryColor(context));
         tintedDrawables.put(drawableRes, drawable);
         return drawable;
+    }
+
+    public static void setDrawableForFAB(@DrawableRes int drawableRes, FloatingActionButton fab, Context context) {
+        fab.setImageDrawable(getTintedDrawable(drawableRes, context));
+        fab.setBackgroundTintList(ColorStateList.valueOf(getBackgroundFloatingColor(context)));
     }
 
     public static void reset(){

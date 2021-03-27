@@ -15,6 +15,7 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static java.util.Collections.emptyList;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDBHelper.getCallLogEntriesFor;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
@@ -212,4 +213,11 @@ public class CallLogDataStore {
             refreshStore();
         });
     }
+
+    public static List<CallLogEntry> getCallLogEntriesForContactWith(String phoneNumber) {
+        opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(phoneNumber);
+        if(contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber);
+        return getCallLogEntriesFor(contact.getId());
+    }
+
 }

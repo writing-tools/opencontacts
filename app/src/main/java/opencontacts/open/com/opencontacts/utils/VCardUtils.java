@@ -31,6 +31,7 @@ import ezvcard.property.VCardProperty;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
+import static ezvcard.Ezvcard.write;
 import static ezvcard.util.StringUtils.join;
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 import static opencontacts.open.com.opencontacts.utils.Common.getPartsThatAreNotPresentCaseInSensitive;
@@ -90,7 +91,7 @@ public class VCardUtils {
         VCard mergedCard = null;
 
         try {
-            mergedCard = new VCardReader(primaryVCard.write()).readNext();
+            mergedCard = new VCardReader(writeVCardToString(primaryVCard)).readNext();
         } catch (IOException e) {
             e.printStackTrace();
 //            TODO: this will crash. Throw this exception and let consumers handle this
@@ -143,6 +144,10 @@ public class VCardUtils {
 
     public static VCard getVCardFromString(String vcardAsString) throws IOException {
         return new VCardReader(vcardAsString).readNext();
+    }
+
+    public static String writeVCardToString(VCard vcard) {
+        return write(vcard).caretEncoding(true).go();
     }
 
     public static VCard mergeVCardStrings(String primaryVCardString, String secondaryVCardString, Context context) throws IOException {

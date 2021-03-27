@@ -25,6 +25,7 @@ import opencontacts.open.com.opencontacts.utils.VCardUtils;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
 public class ContactGroupsDataStore {
 
@@ -115,7 +116,7 @@ public class ContactGroupsDataStore {
             VCardData vCardData = ContactsDBHelper.getVCard(contact.id);
             VCard vcard = VCardUtils.getVCardFromString(vCardData.vcardDataAsString);
             vcard.setCategories(allGroupsOfContact.toArray(new String[]{}));
-            vCardData.vcardDataAsString = vcard.write();
+            vCardData.vcardDataAsString = writeVCardToString(vcard);
             vCardData.save();
         } catch (IOException e) {
             e.printStackTrace();

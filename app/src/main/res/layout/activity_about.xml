@@ -84,6 +84,20 @@
 
                     <TextView
                         android:padding="3dp"
+                        android:text="@string/chat"
+                        android:textAppearance="?android:textAppearanceSearchResultTitle"
+                        android:textSize="18sp" />
+
+                    <TextView
+                        android:autoLink="web"
+                        android:padding="3dp"
+                        android:text="@string/chat_link" />
+                </TableRow>
+
+                <TableRow android:gravity="fill">
+
+                    <TextView
+                        android:padding="3dp"
                         android:text="@string/more_apps"
                         android:textAppearance="?android:textAppearanceSearchResultTitle"
                         android:textSize="18sp" />

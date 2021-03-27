@@ -9,12 +9,12 @@ import android.widget.RelativeLayout;
 
 
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
 import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
+import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.mergeContacts;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
 import static opencontacts.open.com.opencontacts.utils.ContactsAutoMergeUtils.autoMergeByName;
@@ -40,7 +40,7 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
 
     private void addFABMergeButton() {
         FloatingActionButton fabMergeButton = new FloatingActionButton(this);
-        fabMergeButton.setImageDrawable(TintedDrawablesStore.getTintedDrawable(R.drawable.ic_group_merge_contacts_24dp, this));
+        setDrawableForFAB(R.drawable.ic_group_merge_contacts_24dp, fabMergeButton, this);
         int sizeOfFabInPixels = (int) AndroidUtils.dpToPixels(100);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(sizeOfFabInPixels, sizeOfFabInPixels);
         layoutParams.rightMargin = (int) AndroidUtils.dpToPixels(20);

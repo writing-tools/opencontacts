@@ -56,6 +56,10 @@ public class SharedPreferencesUtils {
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
     public static final String TEXT_SIZE_SCALING_SHARED_PREF_KEY = "TEXT_SIZE_SCALING";
+    public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
+    public static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
+    public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
+    public static final String CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY = "rejectCalls";
 
     public static String getDefaultWhatsAppCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -204,6 +208,30 @@ public class SharedPreferencesUtils {
 
     public static void setLastVisistedGroup(String groupName, Context context) {
         updatePreference(LAST_VISITED_GROUP_SHARED_PREF_KEY, groupName, context);
+    }
+
+    public static boolean shouldAutoCancelMissedCallNotification(Context context) {
+        return getBoolean(SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY, false, context);
+    }
+
+    public static boolean shouldShowBottomMenu(Context context) {
+        return getBoolean(SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY, true, context);
+    }
+
+    public static void removeSyncProgress(Context context) {
+        updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, "", context);
+    }
+
+    public static void enableCallFiltering(Context context) {
+        updatePreference(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, true, context);
+    }
+
+    public static boolean isCallFilteringEnabled(Context context) {
+        return getBoolean(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, false, context);
+    }
+
+    public static boolean shouldBlockCalls(Context context) {
+        return getBoolean(CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY, false, context);
     }
 
     public static void saveTextSizeScaling(float scale, Context context) {

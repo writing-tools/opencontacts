@@ -1,13 +1,13 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 28
+    compileSdkVersion 29
     defaultConfig {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 14
-        targetSdkVersion 28
-        versionCode 20
-        versionName "20.0"
+        targetSdkVersion 29
+        versionCode 21
+        versionName "21.0"
         multiDexEnabled true
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
@@ -40,11 +40,11 @@ configurations {
 dependencies {
     implementation 'com.android.support:multidex:1.0.3'
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    testImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
+    testImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.2.2'
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.0'
+    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.6.4'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.3'
     implementation 'com.android.support:appcompat-v7:28.0.0'
     implementation 'com.android.support:preference-v14:28.0.0'
     implementation 'com.android.support:design:28.0.0'
@@ -52,10 +52,10 @@ dependencies {
     implementation 'com.reginald:editspinner:1.1.0'
     implementation 'com.thomashaertel:multispinner:0.1.1@aar'
     implementation 'com.github.sultanahamer:ExpandedMenuView:d57acc9096212a9fb0b9a593781d5d54354273fc'
-    implementation 'com.googlecode.ez-vcard:ez-vcard:0.11.1'
-    implementation "com.squareup.okhttp3:okhttp:4.2.2"
-    implementation("com.squareup.okhttp3:logging-interceptor:4.2.1")
+    implementation 'com.googlecode.ez-vcard:ez-vcard:0.11.2'
+    implementation 'com.squareup.okhttp3:okhttp:4.9.0'
+    implementation('com.squareup.okhttp3:logging-interceptor:4.9.0')
     implementation 'com.github.satyan:sugar:1.5'
     implementation 'com.github.javadev:underscore:1.39'
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.1'
 }

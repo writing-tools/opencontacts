@@ -6,6 +6,5 @@
 /build
 /captures
 .externalNativeBuild
-gradle/
 app/release/
 zanata.xml

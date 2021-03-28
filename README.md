@@ -20,7 +20,9 @@ Also shows the person name upon recieving call
 
 # Latest debug app
 
-Latest debug app can be found in #113
+Latest debug app can be found in #113 with description of new feature added - Will deprecate this after the below link starts working.
+
+Also can be downloaded directly [here](https://gitlab.com/sultanahamer/OpenContacts/-/jobs/artifacts/master/raw/app/build/outputs/apk/debug/app-debug.apk?job=assembleDebug)
 
 # Issues management
 

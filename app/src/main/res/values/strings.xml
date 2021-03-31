@@ -227,6 +227,7 @@
     <string name="call_filtering_reject_calls_title">Block calls behavior</string>
     <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
     <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
+    <string name="contributors_title">Contributors</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

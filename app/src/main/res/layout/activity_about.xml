@@ -18,7 +18,7 @@
             app:title="@string/about" />
     </android.support.design.widget.AppBarLayout>
 
-    <ScrollView
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/content_about" />
 
-            <TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"
@@ -108,7 +108,19 @@
                         android:text="@string/more_apps_link" />
                 </TableRow>
             </TableLayout>
+            <android.support.v7.widget.AppCompatTextView
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:textAppearanceSearchResultTitle"
+                android:text="@string/contributors_title"
+                />
+            <ListView
+                android:nestedScrollingEnabled="true"
+                android:id="@+id/contributors_list"
+                android:layout_width="match_parent"
+                android:layout_marginBottom="16dp"
+                android:layout_height="100dp" />
         </LinearLayout>
-
-    </ScrollView>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>

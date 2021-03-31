@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="contributor_names">
+        <item>Nat</item>
+        <item>Sultanahamer</item>
+        <item>slim dillen</item>
+        <item>Udo Schwientek</item>
+        <item>0xlne</item>
+        <item>Onel Harrison</item>
+        <item>B M</item>
+        <item>J</item>
+        <item>Thilo E</item>
+        <item>Althog Albor</item>
+        <item>OpenWarp</item>
+        <item>mondlicht-und-sterne</item>
+        <item>Lama IRC</item>
+        <item>Sumit Chaudhari</item>
+        <item>Sudeep Duggal</item>
+        <item>redchilis</item>
+        <item>gitoffthelawn</item>
+        <item>Pat Hind</item>
+        <item>AbangL</item>
+        <item>Gustavo J. Acosta</item>
+        <item>stephen1864</item>
+        <item>Lane Merge</item>
+        <item>Sylvain Le Bourhis</item>
+        <item>txtsd</item>
+        <item>ploufffff</item>
+        <item>neb</item>
+        <item>meximan</item>
+        <item>Yuriy Bak</item>
+        <item>Ghost User</item>
+        <item>Awal Garg</item>
+        <item>Gabor Lab</item>
+        <item>AlexeiSlavin</item>
+        <item>Siltaar</item>
+        <item>BasilTomato</item>
+        <item>st sch</item>
+        <item>Andrea Callia D\'Iddio</item>
+        <item>Jan Hafer</item>
+        <item>Ricardo Campos</item>
+        <item>githi</item>
+        <item>adlisval</item>
+        <item>ha we</item>
+        <item>Mohammed Rafiuddin</item>
+        <item>letkan</item>
+        <item>Ad Am</item>
+        <item>cris mueller</item>
+        <item>Leo Bar</item>
+        <item>Mary</item>
+        <item>Thomas</item>
+        <item>M</item>
+        <item>Aqζ</item>
+        <item>4tip</item>
+        <item>schrei@vcon.at</item>
+        <item>Einzell</item>
+        <item>Jorge Gutiérrez</item>
+        <item>Marcel</item>
+        <item>Gerald Söllinger</item>
+        <item>temp warp</item>
+        <item>DuMuT6p</item>
+        <item>Lukas Bukas</item>
+        <item>Jer Sapin</item>
+        <item>johnnydvc</item>
+        <item>Steve Ashcroft </item>
+        <item>Doug Webb</item>
+        <item>gafarma89</item>
+        <item>Manu</item>
+        <item>Nicolas Kauffmann</item>
+        <item>Sultan ahamar</item>
+        <item>Matt Kay</item>
+        <item>Aoi Seaghdha</item>
+        <item>Arthur</item>
+        <item>Filo Roland</item>
+        <item>David Babcock</item>
+        <item>Intense Red</item>
+        <item>Matteo Cossu</item>
+        <item>Finn Krein</item>
+        <item>VG</item>
+        <item>vi</item>
+        <item>Karsten Dreifus</item>
+        <item>Ramyar Seyednezhadian</item>
+        <item>Vahid Ramazani</item>
+        <item>PoundXI</item>
+        <item>Sylvain Viart </item>
+        <item>Cretu Lucian Emil</item>
+        <item>Simon Laux</item>
+        <item>bin pong</item>
+        <item>A User</item>
+        <item>Shawn Thompson</item>
+        <item>mr smith</item>
+        <item>Rousseau Alexandre</item>
+        <item>sharkler</item>
+        <item>Gitlab</item>
+        <item>lil5</item>
+        <item>Forza Property</item>
+        <item>tacticalDevC</item>
+        <item>tryagain</item>
+        <item>Web Master</item>
+        <item>Booteille</item>
+        <item>Ashraf</item>
+        <item>Ger Carra</item>
+        <item>Rbagman</item>
+        <item>AA</item>
+        <item>Katschibi Ajudu</item>
+        <item>LKV</item>
+        <item>maxmoon</item>
+        <item>Nikhil Warke</item>
+        <item>Gabor Haden</item>
+        <item>Coffee</item>
+        <item>Licaon_Kter</item>
+    </string-array>
+    <string-array name="contributor_urls">
+        <item>https://gitlab.com/abusr</item>
+        <item>https://gitlab.com/sultanahamer</item>
+        <item>https://gitlab.com/user0934</item>
+        <item>https://gitlab.com/UdoSchwientek</item>
+        <item>https://gitlab.com/0xlne</item>
+        <item>https://gitlab.com/onelharrison</item>
+        <item>https://gitlab.com/brigitt.marques</item>
+        <item>https://gitlab.com/t.jimenez</item>
+        <item>https://gitlab.com/thiloteE</item>
+        <item>https://gitlab.com/elyos</item>
+        <item>https://gitlab.com/OpenWarp</item>
+        <item>https://gitlab.com/mondlicht-und-sterne</item>
+        <item>https://gitlab.com/lama.irc</item>
+        <item>https://gitlab.com/sumitch</item>
+        <item>https://gitlab.com/duggalsu</item>
+        <item>https://gitlab.com/redchilis</item>
+        <item>https://gitlab.com/gitoffthelawn</item>
+        <item>https://gitlab.com/phind431</item>
+        <item>https://gitlab.com/AbangL</item>
+        <item>https://gitlab.com/tawhk</item>
+        <item>https://gitlab.com/stephen1864</item>
+        <item>https://gitlab.com/LiftsAllShips</item>
+        <item>https://gitlab.com/itsanogo</item>
+        <item>https://gitlab.com/txtsd</item>
+        <item>https://gitlab.com/ploufffff</item>
+        <item>https://gitlab.com/NitroNilz</item>
+        <item>https://gitlab.com/meximan</item>
+        <item>https://gitlab.com/yuroktemp</item>
+        <item>https://gitlab.com/ghost1</item>
+        <item>https://gitlab.com/awalgarg</item>
+        <item>https://gitlab.com/gaborlab</item>
+        <item>https://gitlab.com/AlexeiSlavin</item>
+        <item>https://gitlab.com/Siltaer</item>
+        <item>https://gitlab.com/BasilTomato</item>
+        <item>https://gitlab.com/brudertacc</item>
+        <item>https://gitlab.com/AndreaCallia</item>
+        <item>https://gitlab.com/matu3ba</item>
+        <item>https://gitlab.com/RMCampos1</item>
+        <item>https://gitlab.com/githi</item>
+        <item>https://gitlab.com/adlisval</item>
+        <item>https://gitlab.com/haweemd</item>
+        <item>https://gitlab.com/moexalter</item>
+        <item>https://gitlab.com/letkan</item>
+        <item>https://gitlab.com/Ad_Am</item>
+        <item>https://gitlab.com/crimu</item>
+        <item>https://gitlab.com/leobar</item>
+        <item>https://gitlab.com/antiseptic</item>
+        <item>https://gitlab.com/thomassth</item>
+        <item>https://gitlab.com/itmike</item>
+        <item>https://gitlab.com/Aq32</item>
+        <item>https://gitlab.com/4tip</item>
+        <item>https://gitlab.com/judoheli</item>
+        <item>https://gitlab.com/uli-on</item>
+        <item>https://gitlab.com/Jagutsol</item>
+        <item>https://gitlab.com/MarcelTUC</item>
+        <item>https://gitlab.com/geraldco</item>
+        <item>https://gitlab.com/warpty</item>
+        <item>https://gitlab.com/DuMuT6p</item>
+        <item>https://gitlab.com/lukasbukas</item>
+        <item>https://gitlab.com/monbosapin</item>
+        <item>https://gitlab.com/johnnydvc</item>
+        <item>https://gitlab.com/valenman</item>
+        <item>https://gitlab.com/DougInAMug</item>
+        <item>https://gitlab.com/gafarma89</item>
+        <item>https://gitlab.com/manulambda</item>
+        <item>https://gitlab.com/j-nicolas</item>
+        <item>https://gitlab.com/sultanahamar</item>
+        <item>https://gitlab.com/kewbey</item>
+        <item>https://gitlab.com/AoiSeaghdha</item>
+        <item>https://gitlab.com/arthurhfli</item>
+        <item>https://gitlab.com/feeleepino</item>
+        <item>https://gitlab.com/locuturus</item>
+        <item>https://gitlab.com/intnsred</item>
+        <item>https://gitlab.com/M_C</item>
+        <item>https://gitlab.com/eulenteufel</item>
+        <item>https://gitlab.com/visiongaming</item>
+        <item>https://gitlab.com/vi0oss</item>
+        <item>https://gitlab.com/kar.dre.2017</item>
+        <item>https://gitlab.com/anthropoidea</item>
+        <item>https://gitlab.com/vahidri</item>
+        <item>https://gitlab.com/PoundXI</item>
+        <item>https://gitlab.com/Sylvain404</item>
+        <item>https://gitlab.com/luciemicr</item>
+        <item>https://gitlab.com/SimonLaux</item>
+        <item>https://gitlab.com/binpong</item>
+        <item>https://gitlab.com/asilentuser</item>
+        <item>https://gitlab.com/shawn1thompson</item>
+        <item>https://gitlab.com/mentoree</item>
+        <item>https://gitlab.com/alexandre.rousseau</item>
+        <item>https://gitlab.com/sharkler</item>
+        <item>https://gitlab.com/gitlabuser18</item>
+        <item>https://gitlab.com/lil5</item>
+        <item>https://gitlab.com/forzapropertygroup</item>
+        <item>https://gitlab.com/tacticalDevC</item>
+        <item>https://gitlab.com/tryagain</item>
+        <item>https://gitlab.com/interweb2020</item>
+        <item>https://gitlab.com/Booteille</item>
+        <item>https://gitlab.com/sidd.ashraf</item>
+        <item>https://gitlab.com/sefer</item>
+        <item>https://gitlab.com/Rbagman</item>
+        <item>https://gitlab.com/URnown</item>
+        <item>https://gitlab.com/Ajudu</item>
+        <item>https://gitlab.com/likivik</item>
+        <item>https://gitlab.com/maxmoon</item>
+        <item>https://gitlab.com/nickdex</item>
+        <item>https://gitlab.com/ghaden</item>
+        <item>https://gitlab.com/Matrixcoffee</item>
+        <item>https://gitlab.com/licaon-kter</item>
+    </string-array>
+</resources>

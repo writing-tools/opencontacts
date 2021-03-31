@@ -1,11 +1,21 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatTextView;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.ListView;
+
+import java.util.List;
 
 import opencontacts.open.com.opencontacts.BuildConfig;
 import opencontacts.open.com.opencontacts.R;
+
+import static java.util.Arrays.asList;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.goToUrl;
 
 public class AboutActivity extends AppBaseActivity{
     @Override
@@ -17,5 +27,18 @@ public class AboutActivity extends AppBaseActivity{
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AppCompatTextView)findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
+        ListView contributorsList = findViewById(R.id.contributors_list);
+        List<String> names = asList(getResources().getStringArray(R.array.contributor_names));
+        List<String> urls = asList(getResources().getStringArray(R.array.contributor_urls));
+        contributorsList.setAdapter(new ArrayAdapter<String>(this, R.layout.layout_clickable_text_view_item, names){
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                AppCompatTextView textView = (AppCompatTextView) super.getView(position, convertView, parent);
+                textView.setText(names.get(position));
+                textView.setOnClickListener(v -> goToUrl(urls.get(position), AboutActivity.this));
+                return textView;
+            }
+        });
     }
 }

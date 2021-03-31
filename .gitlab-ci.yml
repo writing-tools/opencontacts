@@ -64,3 +64,6 @@ assembleDebug:
   artifacts:
     paths:
       - app/build/outputs/apk/debug/app-debug.apk
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+

@@ -17,7 +17,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -255,7 +254,8 @@ public class MainActivity extends AppBaseActivity {
             try {
                 DomainUtils.exportCallLog(this);
                 Toast.makeText(this, R.string.exported_call_log_successfully, Toast.LENGTH_LONG).show();
-            } catch (IOException e) {
+            } catch (Exception e) {
+                e.printStackTrace();
                 Toast.makeText(this, R.string.failed_exporting_call_log, Toast.LENGTH_LONG).show();
             }
             return true;

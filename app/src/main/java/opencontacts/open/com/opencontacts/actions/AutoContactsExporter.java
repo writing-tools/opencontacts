@@ -3,8 +3,6 @@ package opencontacts.open.com.opencontacts.actions;
 import android.Manifest;
 import android.content.Context;
 
-import java.io.IOException;
-
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
@@ -51,7 +49,7 @@ public class AutoContactsExporter {
         try {
             DomainUtils.exportAllContacts(context);
             markAutoExportComplete(context);
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
             toastFromNonUIThread(R.string.failed_exporting_contacts, LENGTH_LONG, context);
         }

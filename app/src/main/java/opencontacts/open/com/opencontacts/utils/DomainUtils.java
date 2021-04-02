@@ -45,6 +45,7 @@ import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 
 import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
@@ -80,6 +81,7 @@ public class DomainUtils {
     public static TelephoneType defaultPhoneNumberType = TelephoneType.CELL;
     public static AddressType defaultAddressType = AddressType.HOME;
     public static EmailType defaultEmailType = EmailType.HOME;
+    public static String STORAGE_DIRECTORY_NAME = DEBUG ? "DOpenContacts" : "OpenContacts";
 
     static {
         characterToIntegerMappingForKeyboardLayout = new HashMap<>();
@@ -100,7 +102,7 @@ public class DomainUtils {
         stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.OUTGOING_TYPE), context.getString(R.string.outgoing_call));
         stringValueOfCallTypeIntToTextMapping.put(String.valueOf(CallLog.Calls.REJECTED_TYPE), context.getString(R.string.rejected_call));
     }
-    public static void exportAllContacts(Context context) throws IOException {
+    public static void exportAllContacts(Context context) throws Exception {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
             return;
@@ -113,16 +115,17 @@ public class DomainUtils {
         else exportAsPlainTextVCFFile(plainTextExportBytes, simpleDateFormat);
     }
 
-    private static void createOpenContactsDirectoryIfItDoesNotExist() {
-        File openContactsDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts");
+    private static void createOpenContactsDirectoryIfItDoesNotExist() throws Exception {
+        File openContactsDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME);
         if(openContactsDirectory.exists()) return;
-        openContactsDirectory.mkdir();
+        boolean directoryCreated = openContactsDirectory.mkdir();
+        if(!directoryCreated) throw new Exception("Directory creation has failed...");
     }
 
     private static void exportAsPlainTextVCFFile(byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat) throws IOException {
         FileOutputStream fileOutputStream = null;
         try {
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts", "Contacts_" + simpleDateFormat.format(new Date()) + ".vcf");
+            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME, "/Contacts_" + simpleDateFormat.format(new Date()) + ".vcf");
             file.createNewFile();
             fileOutputStream = new FileOutputStream(file);
             fileOutputStream.write(plainTextExportBytes);
@@ -133,7 +136,7 @@ public class DomainUtils {
     }
 
     private static void exportAsEncryptedZip(Context context, byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat) throws IOException {
-        String exportFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts/Contacts_" + simpleDateFormat.format(new Date()) + ".zip";
+        String exportFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME + "/Contacts_" + simpleDateFormat.format(new Date()) + ".zip";
         ZipUtils.exportZip(getEncryptingContactsKey(context), plainTextExportBytes, exportFilePath);
     }
 
@@ -280,7 +283,7 @@ public class DomainUtils {
         return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
     }
 
-    public static void exportCallLog(Context context) throws IOException{
+    public static void exportCallLog(Context context) throws Exception {
         if(!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)){
             AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
             return;
@@ -288,7 +291,7 @@ public class DomainUtils {
         createCallTypeIntToTextMapping(context);
         createOpenContactsDirectoryIfItDoesNotExist();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/OpenContacts", "CallLog_" + simpleDateFormat.format(new Date()) + ".csv");
+        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME, "/CallLog_" + simpleDateFormat.format(new Date()) + ".csv");
         ICSVWriter csvWriter = null;
         try{
             file.createNewFile();

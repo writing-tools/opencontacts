@@ -98,8 +98,9 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="whatsapp_preferences">Whatsapp voorkeuren</string>
     <string name="do_you_want_to_import">Wilt u importeren</string>
     <string name="noname">NONAME</string>
-    <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
-    <string name="open_bottommenu_on_start">Open bottom menu on start</string>
+    <string name="keyboard_adjusts_views">Toetsenbord past weergave aan</string>
+    <string name="open_bottommenu_on_start">Open onderste menu bij opstarten</string>
+    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Mobiel</string>
     <string name="work">Werk</string>
@@ -170,40 +171,56 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
         \n\nBij apparaten ouder dan Nougat, kunt u nog steeds een widget toevoegen. Om een widget toe te voegen, druk lang op het startscherm en klik op een widget toevoegen en selecteer OpenContacts</string>
     <string name="start">Begin</string>
     <string name="ask_permissions_again">Machtigingen opnieuw vragen</string>
-    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Ignore ssl http certificate errors</string>
-    <string name="sync_failed" tools:ignore="MissingTranslation">Sync failed</string>
-    <string name="default_tab">Default tab</string>
-    <string name="default_tab_summary">Tab on which app opens by default</string>
-    <string name="save">Save</string>
-    <string name="toggle_contact_actions">Toggle contact actions</string>
-    <string name="toggle_contact_actions_summary">Toggle call and message actions position</string>
-    <string name="merge">Merge</string>
-    <string name="failed_merging_a_contact">Not able to merge one of the contacts</string>
-    <string name="choose_a_contact">Choose a contact</string>
-    <string name="auto_merge_complete">Auto merge complete, merged %1$d</string>
-    <string name="should_use_system_app">Force system\'s phone app to call</string>
-    <string name="should_use_system_app_summary">Will call only using system\'s default phone app than giving options</string>
-    <string name="dialer">Dialer</string>
-    <string name="view_more">View more</string>
-    <string name="more">More</string>
-    <string name="groups">Groups</string>
-    <string name="group_name">Group name</string>
-    <string name="add_contacts">Add contacts</string>
-    <string name="edit_group">Edit group</string>
-    <string name="Automerge">AutoMerge</string>
-    <string name="no_groups_found">No groups found. Add one to start</string>
-    <string name="add_group">Add group</string>
-    <string name="are_you_sure">Are you sure?</string>
-    <string name="group_deleted">Group deleted</string>
-    <string name="please_wait">Please wait...</string>
-    <string name="delete_multiple">Delete multiple</string>
-    <string name="post_office_box">Post office box</string>
-    <string name="state_province">State or province</string>
-    <string name="city">City</string>
-    <string name="postal_code">Postal Code</string>
-    <string name="country">Country</string>
-    <string name="extended_address">Extended address</string>
-    <string name="no_group_name_error">Enter valid group name</string>
+    <string name="ignore_ssl_http_certificate_errors" tools:ignore="MissingTranslation">Negeer ssl http certificaatfouten</string>
+    <string name="sync_failed" tools:ignore="MissingTranslation">Synchroniseren mislukt</string>
+    <string name="default_tab">Standaard tabblad</string>
+    <string name="default_tab_summary">Tab waarop de app standaard opent</string>
+    <string name="save">Opslaan</string>
+    <string name="toggle_contact_actions">Wissel contactacties</string>
+    <string name="toggle_contact_actions_summary">Schakelen tussen oproep- en berichtacties</string>
+    <string name="merge">Samenvoegen</string>
+    <string name="failed_merging_a_contact">Niet in staat om één van de contacten samen te voegen</string>
+    <string name="choose_a_contact">Een contact kiezen</string>
+    <string name="auto_merge_complete">Automatisch samenvoegen voltooid, %1$d samengevoegd</string>
+    <string name="should_use_system_app">Forceer bellen met Telefoonapp van het systeem</string>
+    <string name="should_use_system_app_summary">Zal alleen bellen met systeem Telefoon-app dan opties geven</string>
+    <string name="dialer">Telefoon</string>
+    <string name="view_more">Bekijk meer</string>
+    <string name="more">Meer</string>
+    <string name="groups">Groepen</string>
+    <string name="group_name">Groepsnaam</string>
+    <string name="add_contacts">Contactpersonen toevoegen</string>
+    <string name="edit_group">Groep aanpassen</string>
+    <string name="Automerge">AutoSamenvoegen</string>
+    <string name="no_groups_found">Geen groepen gevonden. Voeg een toe om te beginnen</string>
+    <string name="add_group">Groep toevoegen</string>
+    <string name="are_you_sure">Zeker weten?</string>
+    <string name="group_deleted">Groep verwijderd</string>
+    <string name="please_wait">Even geduld...</string>
+    <string name="delete_multiple">Verwijder meerdere</string>
+    <string name="post_office_box">Postbus</string>
+    <string name="state_province">Staat of Provincie</string>
+    <string name="city">Woonplaats</string>
+    <string name="postal_code">Postcode</string>
+    <string name="country">Land</string>
+    <string name="extended_address">Uitgebreid adres</string>
+    <string name="no_group_name_error">Voer geldige groepsnaam in</string>
+    <string name="should_show_bottom_menu">Should show bottom menu</string>
+    <string name="chat">Chat</string>
+    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
+    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
+    <string name="auto_export_contacts_title">Auto export contacts</string>
+    <string name="auto_export_contacts_summary">Will export contacts every week</string>
+    <string name="encrypt_contacts_export_password_title">Encryption password</string>
+    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
+    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
+    <string name="call_filtering_category_title">Filter calls</string>
+    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
+    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
+    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
+    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
+    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
+    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
     <string-array name="phone_number_types">
         <item>Mobiel</item>
         <item>Werk</item>
@@ -231,9 +248,9 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
         <item>1</item>
     </string-array>
     <string-array name="tabs_list">
-        <item>Call log</item>
-        <item>Contacts</item>
-        <item>Dialer</item>
+        <item>Belhistorie</item>
+        <item>Contacten</item>
+        <item>Telefoon</item>
     </string-array>
     <string-array name="tabs_values">
         <item>0</item>

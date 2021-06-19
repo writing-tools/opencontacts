@@ -99,6 +99,7 @@
     <string name="noname">没有名称</string>
     <string name="keyboard_adjusts_views">键盘调整视图</string>
     <string name="open_bottommenu_on_start">启动时打开底部菜单</string>
+    <string name="auto_cancel_missed_call_notifs">应当自动取消未接来电提通知</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">移动电话</string>
     <string name="work">工作电话</string>
@@ -202,7 +203,23 @@
     <string name="postal_code">邮政编码</string>
     <string name="country">国家</string>
     <string name="extended_address">扩展地址</string>
-    <string name="no_group_name_error">Enter valid group name</string>
+    <string name="no_group_name_error">输入有效的组名</string>
+    <string name="should_show_bottom_menu">应该显示底部菜单</string>
+    <string name="chat">聊天</string>
+    <string name="no_app_found_for_action_open_document">找不到可以查找文件的文件管理器应用程序</string>
+    <string name="failed_fetching_recent_calllog">无法获取最近通话记录</string>
+    <string name="auto_export_contacts_title">自动导出联系人</string>
+    <string name="auto_export_contacts_summary">将每周导出联系人</string>
+    <string name="encrypt_contacts_export_password_title">加密密码</string>
+    <string name="encrypt_contacts_export_password_summary">将使用此密码加密联系人导出</string>
+    <string name="call_filtering_category_summary">在 Android 10 及以上版本上启用</string>
+    <string name="call_filtering_category_title">过滤来电</string>
+    <string name="call_filtering_enable_call_filtering_title">启用来电过滤</string>
+    <string name="call_filtering_enable_call_filtering_summary">应该拦截来电</string>
+    <string name="call_filtering_reject_calls_summary">开启将拒绝来电，关闭将使来电静音</string>
+    <string name="call_filtering_reject_calls_title">阻止来电行为</string>
+    <string name="device_not_supported_call_filtering">你的设备不支持来电过滤</string>
+    <string name="call_filtering_help_text">从现在起，来电过滤将静音所有不在你的联系人中出现的呼叫。你也可以选择拦截它们，手机会为你拒绝它们</string>
     <string-array name="phone_number_types">
         <item>移动电话</item>
         <item>工作电话</item>

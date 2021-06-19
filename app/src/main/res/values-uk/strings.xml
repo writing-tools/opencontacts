@@ -99,6 +99,7 @@
     <string name="noname">БЕЗ ІМЕНІ</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
     <string name="open_bottommenu_on_start">Open bottom menu on start</string>
+    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Мобільний</string>
     <string name="work">Службовий</string>
@@ -203,6 +204,22 @@
     <string name="country">Country</string>
     <string name="extended_address">Extended address</string>
     <string name="no_group_name_error">Enter valid group name</string>
+    <string name="should_show_bottom_menu">Should show bottom menu</string>
+    <string name="chat">Chat</string>
+    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
+    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
+    <string name="auto_export_contacts_title">Auto export contacts</string>
+    <string name="auto_export_contacts_summary">Will export contacts every week</string>
+    <string name="encrypt_contacts_export_password_title">Encryption password</string>
+    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
+    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
+    <string name="call_filtering_category_title">Filter calls</string>
+    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
+    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
+    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
+    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
+    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
+    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
     <string-array name="phone_number_types">
         <item>Мобільний</item>
         <item>Службовий</item>

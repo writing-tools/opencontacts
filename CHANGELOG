@@ -1,3 +1,28 @@
+V22.0
+Fixed crash where if dialer was trying to fetch contacts as soon as launched and contacts were null by that time
+Fixed sorting of contacts where first name or lastname is absent
+User can now choose to auto cancel missed call notifications
+User can now choose to remove bottom menu
+Added chat link in about page
+Fixed clearing fields in address is not considered an update
+Implement single click on dialer search list - shows call details for calllog entry and contact details for contact
+Calllog list's show details now shows history of calls between that
+contact/number
+Removed margin between name and number in call log list
+Fixed sync token being present even after delete all contacts
+Bumped all dependant library versions
+App will now ask permission than crash when exporting contacts
+Fixed multisim buttons showing up underneath search list of dialer on launch
+Fixed issue where caret encoding was required to parse address fields with quotes present
+Fixed issue where not having app file manager that supports ACTION_OPEN_DOCUMENT crashes the import from app
+Scrollbars in the contacts, call log lists are draggable now
+If recent call log loading fails, will show a toast message rather than crash
+Added call filtering
+From detailed call log of a contact, we can now goto contact details
+Contributions from issues raised have been added to app and readme
+User can now choose to scale font size
+Fixed exporting failing in Android 11
+
 V21.0
 Implemented bottom menu helps in one hand usage of phone
 Fixed dropdown icons not following theme colors

@@ -347,7 +347,7 @@ public class DomainUtils {
     @NonNull
     public static Comparator<Contact> getContactComparatorBasedOnName(Context context) {
         if(shouldSortUsingFirstName(context))
-            return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.firstName);
+            return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.name);
         else
             return (contact1, contact2) -> getLastNameOrFullInCaseEmpty(contact1).compareToIgnoreCase(getLastNameOrFullInCaseEmpty(contact2));
     }

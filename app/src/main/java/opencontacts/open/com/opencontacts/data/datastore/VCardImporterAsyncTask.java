@@ -3,6 +3,7 @@ package opencontacts.open.com.opencontacts.data.datastore;
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
 import android.widget.Toast;
 
@@ -18,10 +19,11 @@ import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
+import opencontacts.open.com.opencontacts.utils.ZipUtils;
 
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
-import static opencontacts.open.com.opencontacts.utils.ZipUtils.getPlainTextInputStreamFromZip;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasEncryptingContactsKey;
 
 public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VCard, Throwable>>> {
     private final String PROGRESS_TOTAL_NUMBER_OF_VCARDS = "total_vcards";
@@ -42,7 +44,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
         List<Pair<VCard, Throwable>> vcardsAndTheirExceptions = new ArrayList<>();
         try {
             InputStream vcardInputStream = contextWeakReference.get().getContentResolver().openInputStream(fileUri);
-            if(fileUri.toString().endsWith(".zip")) vcardInputStream = getPlainTextInputStreamFromZip(getEncryptingContactsKey(contextWeakReference.get()), vcardInputStream);
+            if(fileUri.toString().endsWith(".zip")) vcardInputStream = getPlainTextInputStreamFromZip(vcardInputStream);
             List<VCard> vCards = Ezvcard.parse(vcardInputStream).all();
             publishProgress(PROGRESS_TOTAL_NUMBER_OF_VCARDS, vCards.size());
             int numberOfvCardsImported = 0, numberOfCardsIgnored = 0;
@@ -68,12 +70,22 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
             e.printStackTrace();
             AndroidUtils.toastFromNonUIThread(R.string.error_while_parsing_vcard_file, Toast.LENGTH_LONG, contextWeakReference.get());
             CrashUtils.reportError(e, contextWeakReference.get());
+        }catch (NoPasswordFoundException e) {
+            e.printStackTrace();
+            AndroidUtils.toastFromNonUIThread(R.string.set_password_before_import, Toast.LENGTH_LONG, contextWeakReference.get());
+            CrashUtils.reportError(e, contextWeakReference.get());
         } catch (Exception e) {
             e.printStackTrace();
             AndroidUtils.toastFromNonUIThread(R.string.unexpected_error_happened, Toast.LENGTH_LONG, contextWeakReference.get());
             CrashUtils.reportError(e, contextWeakReference.get());
         }
         return vcardsAndTheirExceptions;
+    }
+
+    @NonNull
+    private InputStream getPlainTextInputStreamFromZip(InputStream vcardInputStream) throws Exception {
+        if(!hasEncryptingContactsKey(contextWeakReference.get())) throw new NoPasswordFoundException();
+        return ZipUtils.getPlainTextInputStreamFromZip(getEncryptingContactsKey(contextWeakReference.get()), vcardInputStream);
     }
 
     private boolean processVCard(VCard vcard) {
@@ -127,5 +139,9 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
         void onNumberOfCardsProcessedUpdate(int imported, int ignored);
         void onFinish(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions);
     }
+
+}
+
+class NoPasswordFoundException extends Exception{
 
 }

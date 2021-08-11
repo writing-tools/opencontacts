@@ -1,3 +1,7 @@
+V23.0
+Fixed app crashing during importing contacts
+Fixed app crashing when there is no password in store and importing encrypted contacts
+
 V22.0
 Fixed crash where if dialer was trying to fetch contacts as soon as launched and contacts were null by that time
 Fixed sorting of contacts where first name or lastname is absent

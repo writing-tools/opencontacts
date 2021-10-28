@@ -74,6 +74,10 @@ public class ImportVcardActivity extends AppCompatActivity {
             public void onFinish(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
                 progressBarComponent.setProgress(progressBarComponent.getMax());
                 if(vCardsAndTheirExceptions.isEmpty()) return;
+                if(vCardsAndTheirExceptions.get(0).first == null) {
+                    finish();
+                    return;
+                }
                 View reportErrorsButton = findViewById(R.id.report_errors);
                 reportErrorsButton.setVisibility(View.VISIBLE);
                 reportErrorsButton.setOnClickListener(v -> CrashUtils.reportError(formatImportErrorsAsString(vCardsAndTheirExceptions), ImportVcardActivity.this));

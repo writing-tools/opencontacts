@@ -73,6 +73,7 @@ public class VCardImporterAsyncTask extends AsyncTask<Void, Object, List<Pair<VC
         }catch (NoPasswordFoundException e) {
             e.printStackTrace();
             AndroidUtils.toastFromNonUIThread(R.string.set_password_before_import, Toast.LENGTH_LONG, contextWeakReference.get());
+            vcardsAndTheirExceptions.add(new Pair<>(null, e));
         } catch (Exception e) {
             e.printStackTrace();
             AndroidUtils.toastFromNonUIThread(R.string.unexpected_error_happened, Toast.LENGTH_LONG, contextWeakReference.get());

@@ -17,6 +17,7 @@ import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.updateContact;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.*;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
@@ -42,6 +43,7 @@ public class ContactsSyncHelper {
         Pair<String, String> nameFromVCard = getNameFromVCard(mergedCard, context);
         dbContact.firstName = nameFromVCard.first;
         dbContact.lastName = nameFromVCard.second;
+        dbContact.pinyinName = getPinyinTextFromChinese(dbContact.getFullName());
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, hrefEtagAndVCard.z, getContact(vCardData.contact.getId()).primaryPhoneNumber.phoneNumber);
         vCardData.vcardDataAsString = writeVCardToString(mergedCard);

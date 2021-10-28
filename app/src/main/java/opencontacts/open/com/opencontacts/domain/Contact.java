@@ -10,6 +10,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
@@ -26,6 +27,7 @@ public class Contact implements Serializable{
     public String lastName;
     public List<PhoneNumber> phoneNumbers;
     public String name;
+    public String pinyinName;
     public PhoneNumber primaryPhoneNumber;
 
     public String lastAccessed;
@@ -38,7 +40,7 @@ public class Contact implements Serializable{
         this.id = id;
     }
 
-    private Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed, PhoneNumber primaryPhoneNumber) {
+    private Contact(long id, String firstName, String lastName, List<PhoneNumber> phoneNumbers, String lastAccessed, PhoneNumber primaryPhoneNumber, String pinyinName) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -46,6 +48,7 @@ public class Contact implements Serializable{
         this.name = getName(firstName, lastName);
         this.lastAccessed = lastAccessed;
         this.primaryPhoneNumber = primaryPhoneNumber;
+        this.pinyinName = pinyinName;
     }
 
     private Contact(String firstName, String lastName, String number) {
@@ -58,10 +61,10 @@ public class Contact implements Serializable{
 
     public void setT9Text() {
         StringBuilder searchStringBuffer = new StringBuilder();
-        searchStringBuffer.append(name).append(' ');
+        String nameForT9 = ContactsDataStore.getT9NameSupplier().apply(this);
         for(PhoneNumber phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
-        searchStringBuffer.append(getNumericKeyPadNumberForString(name));
+        searchStringBuffer.append(getNumericKeyPadNumberForString(nameForT9));
         t9Text = searchStringBuffer.toString().toUpperCase();
     }
 
@@ -71,7 +74,6 @@ public class Contact implements Serializable{
         searchStringBuffer.append(replaceAccentedCharactersWithEnglish(name)).append(' ');// helps being able to search name by typing í or i - accented
         for(PhoneNumber phoneNumber : phoneNumbers)
             searchStringBuffer.append(phoneNumber.numericPhoneNumber).append(' ');
-        searchStringBuffer.append(name);
         textSearchTarget = searchStringBuffer.toString().toUpperCase();
     }
 
@@ -96,7 +98,7 @@ public class Contact implements Serializable{
         List<PhoneNumber> safePhoneNumbersList = dbPhoneNumbers == null ? Collections.emptyList() : dbPhoneNumbers;
         return new opencontacts.open.com.opencontacts.domain.Contact(contact.getId(), contact.firstName,
                 contact.lastName, safePhoneNumbersList, contact.lastAccessed,
-                getPrimaryPhoneNumber(safePhoneNumbersList))
+                getPrimaryPhoneNumber(safePhoneNumbersList), contact.pinyinName)
                 .setGroups(contact.groups);
     }
 

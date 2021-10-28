@@ -124,12 +124,14 @@ public class MainActivity extends AppBaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-//        recreate();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+//        String textblah = "丁丁";
+//        String pinyinTextFromChinese = DomainUtils.getPinyinTextFromChinese(textblah);
+//        System.out.println(pinyinTextFromChinese + "blah" + textblah.codePointAt(0));
         refresh();
         if(shouldLaunchDefaultTab(this)) gotoDefaultTab();
     }

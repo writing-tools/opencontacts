@@ -33,6 +33,7 @@ public class SharedPreferencesUtils {
     public static final String PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY = "preftimeformat12hours";//also hard coded in xml
     public static final String SYNC_TOKEN_SHARED_PREF_KEY = "sync_token";
     public static final String T9_SEARCH_ENABLED_SHARED_PREF_KEY = "t9searchenabled";//also hard coded in xml
+    public static final String T9_PINYIN_ENABLED_SHARED_PREF_KEY = "T9_PINYIN_ENABLED";//also hard coded in xml
     public static final String LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY = "preference_last_call_log_saved_date";
     public static final String COMMON_SHARED_PREFS_FILE_NAME = "OpenContacts";
     public static final String SIM_PREFERENCE_SHARED_PREF_KEY = "defaultCallingSim";
@@ -121,6 +122,10 @@ public class SharedPreferencesUtils {
 
     public static boolean isT9SearchEnabled(Context context){
         return getBoolean(T9_SEARCH_ENABLED_SHARED_PREF_KEY, true, context);
+    }
+
+    public static boolean isT9PinyinEnabled(Context context){
+        return getBoolean(T9_PINYIN_ENABLED_SHARED_PREF_KEY, false, context);
     }
 
     public static String getLastSavedCallLogDate(Context context) {

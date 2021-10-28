@@ -92,6 +92,14 @@ public class Common {
         }
     }
 
+    public static <T, R> List<R> map(T[] array, Function<T, R> function){
+        ArrayList<R> list = new ArrayList<>(0);
+        for (T item : array) {
+            list.add(function.apply(item));
+        }
+        return list;
+    }
+
     public interface TimesFunction<T>{
         T apply(int index);
     }

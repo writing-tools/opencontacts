@@ -23,7 +23,7 @@ public class OpenContactsApplication extends MultiDexApplication {
     public void onCreate() {
         super.onCreate();
         SugarContext.init(this);
-        ContactsDataStore.init();
+        ContactsDataStore.init(getApplicationContext());
         CallLogDataStore.init(getApplicationContext());
         createNotificationChannels();
         CrashUtils.setUpCrashHandler(getApplicationContext());

@@ -7,10 +7,13 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.content.pm.ShortcutInfoCompat;
 import android.support.v4.content.pm.ShortcutManagerCompat;
+import android.text.TextUtils;
 
 import com.github.underscore.U;
 import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
+
+import net.sourceforge.pinyin4j.PinyinHelper;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -48,6 +51,7 @@ import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
+import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasEncryptingContactsKey;
@@ -190,10 +194,29 @@ public class DomainUtils {
         return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
     }
 
+    public static List<String> cross(List<String> firstSetOfWords, String[] secondSetOfWords) {
+        return U.flatten(
+                U.map(firstSetOfWords, wordFromFirstSet -> Common.map(secondSetOfWords, wordFromSecondSet -> wordFromFirstSet.concat(" ").concat(wordFromSecondSet)))
+        );
+    }
+
+    public static String getPinyinTextFromChinese(String text) {
+        char[] chineseCharacters = text.toCharArray();
+        if(isEmpty(text)) return "";
+        List<String[]> pinyinFormsForEachCharacter = U.filter(
+                mapIndexes(chineseCharacters.length, index -> PinyinHelper.toHanyuPinyinStringArray(chineseCharacters[index]))
+                , it -> it != null);
+        if(pinyinFormsForEachCharacter.isEmpty()) return "";
+        return U.join(
+                U.reduce(pinyinFormsForEachCharacter, DomainUtils::cross, Collections.singletonList(new String())),
+         " ");
+    }
+
     public static String getNumericKeyPadNumberForString(String string){
-        String nonAccentedText = replaceAccentedCharactersWithEnglish(string);
+        String nonAccentedCharacters = replaceAccentedCharactersWithEnglish(string);
+        String finalString = nonAccentedCharacters + " " + getInitialsOfEachWord(nonAccentedCharacters);
         StringBuffer numericString = new StringBuffer();
-        for(char c: nonAccentedText.toCharArray()){
+        for(char c: finalString.toCharArray()){
             if(Character.isSpaceChar(c)){
                 numericString.append(0);
                 continue;
@@ -203,6 +226,11 @@ public class DomainUtils {
                 numericString.append(characterToIntegerMappingForKeyboardLayout.get(Character.toUpperCase(c)));
         }
         return numericString.toString();
+    }
+
+    private static String getInitialsOfEachWord(String text) {
+        if(TextUtils.isEmpty(text)) return "";
+        return U.join(Common.map(text.split(" "), word -> TextUtils.isEmpty(word) ? "" : word.charAt(0)), "");
     }
 
     private static Map<TelephoneType, String> getMobileNumberTypeToTranslatedTextMap(Context context){

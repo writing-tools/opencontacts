@@ -23,7 +23,6 @@ import java.util.Map;
 import java.util.Set;
 
 import ezvcard.VCard;
-import opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;

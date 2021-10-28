@@ -17,6 +17,8 @@ public class Contact extends SugarRecord implements Serializable{
 
     public String groups;
 
+    public String pinyinName;
+
     public Contact(){
         super();
     }

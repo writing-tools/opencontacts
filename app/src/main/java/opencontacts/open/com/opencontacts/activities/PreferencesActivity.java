@@ -32,11 +32,15 @@ import java.util.HashMap;
 import open.fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
+import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
+import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
 import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
@@ -47,6 +51,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.EN
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
@@ -161,7 +166,19 @@ public class PreferencesActivity extends AppBaseActivity {
             onPreferenceChangeHandlersMap.put(T9_SEARCH_ENABLED_SHARED_PREF_KEY, onT9SearchToggle());
             onPreferenceChangeHandlersMap.put(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, onWhatsappToggle());
             onPreferenceChangeHandlersMap.put(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, onCallFilteringToggle());
+            onPreferenceChangeHandlersMap.put(T9_PINYIN_ENABLED_SHARED_PREF_KEY, onT9PinyinEnabled());
             return onPreferenceChangeHandlersMap;
+        }
+
+        @NonNull
+        private Preference.OnPreferenceChangeListener onT9PinyinEnabled() {
+            return (preference, pinyinEnabled) -> {
+                if (pinyinEnabled.equals(true)){
+                    blockUIUntil(() -> ContactsDataStore.writePinyinToDb(getContext()), getContext());
+                }
+                runOnMainDelayed(() -> ContactsDataStore.updateT9Supplier(getContext()), 500); // when disabled, this method should return true for the prefs to be updated
+                return true;
+            };
         }
 
         @NonNull

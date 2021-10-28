@@ -229,6 +229,8 @@
     <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
     <string name="contributors_title">Contributors</string>
     <string name="set_password_before_import">Please set password in preferences before import</string>
+    <string name="t9_pinyin_title">T9 for Chinese using Pinyin</string>
+    <string name="t9_pinyin_summary">Translate chinese to pinyin english to support T9</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

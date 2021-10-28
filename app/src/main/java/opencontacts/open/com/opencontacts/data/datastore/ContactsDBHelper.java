@@ -28,6 +28,7 @@ import static opencontacts.open.com.opencontacts.domain.Contact.getGroupsNamesCS
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getCategories;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -97,6 +98,7 @@ public class ContactsDBHelper {
         dbContact.firstName = nameFromVCard.first;
         dbContact.lastName = nameFromVCard.second;
         dbContact.groups = getGroupsNamesCSVString(getCategories(vCard));
+        dbContact.pinyinName = getPinyinTextFromChinese(dbContact.getFullName());
         dbContact.save();
         replacePhoneNumbersInDB(dbContact, vCard, primaryNumber);
         updateVCardData(vCard, dbContact.getId(), context);
@@ -226,6 +228,7 @@ public class ContactsDBHelper {
         Pair<String, String> name = getNameFromVCard(vcard, context);
         Contact contact = new Contact(name.first, name.second);
         contact.groups = getGroupsNamesCSVString(getCategories(vcard));
+        contact.pinyinName = getPinyinTextFromChinese(contact.getFullName());
         contact.save();
         return contact;
     }

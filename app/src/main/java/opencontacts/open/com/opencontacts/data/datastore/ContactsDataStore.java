@@ -2,8 +2,10 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.text.TextUtils;
 import android.widget.Toast;
 
+import com.github.underscore.Function;
 import com.github.underscore.U;
 
 import java.io.IOException;
@@ -34,6 +36,8 @@ import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListe
 import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.mergeVCardStrings;
 
@@ -43,6 +47,9 @@ public class ContactsDataStore {
     private static List<Contact> favorites = new ArrayList<>(0);
     private static boolean pauseUpdates;
     private static int currentState;
+    private static Function<Contact, String> pinyinName = contact -> TextUtils.isEmpty(contact.pinyinName) ? contact.name : contact.pinyinName;
+    private static Function<Contact, String> defaultName = contact -> contact.name;
+    private static Function<Contact, String> t9NameSupplier = defaultName; //will be dealt in init
 
     public synchronized static List<Contact> getAllContacts() {
         if(currentState == LOADING) {
@@ -210,7 +217,26 @@ public class ContactsDataStore {
         return ContactsDBHelper.getVCard(contactId);
     }
 
-    public static void init() {
+    public static void init(Context context) {
+        updateT9Supplier(context);
+        refreshStoreAsync();
+    }
+
+    public static Function<Contact, String> getT9NameSupplier() {
+        return t9NameSupplier;
+    }
+
+    public static void updateT9Supplier(Context context) {
+        boolean pinyinEnabled = isT9PinyinEnabled(context);
+        t9NameSupplier = pinyinEnabled ? pinyinName : defaultName;
+    }
+
+    public static void writePinyinToDb(Context context) {
+        List<opencontacts.open.com.opencontacts.orm.Contact> dbContacts = opencontacts.open.com.opencontacts.orm.Contact.listAll(opencontacts.open.com.opencontacts.orm.Contact.class);
+        U.forEach(dbContacts, dbContact -> {
+            dbContact.pinyinName = getPinyinTextFromChinese(dbContact.getFullName());
+            dbContact.save();
+        });
         refreshStoreAsync();
     }
 

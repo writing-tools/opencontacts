@@ -14,6 +14,10 @@ import com.opencsv.CSVWriterBuilder;
 import com.opencsv.ICSVWriter;
 
 import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -22,14 +26,17 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 import ezvcard.VCard;
@@ -79,6 +86,7 @@ public class DomainUtils {
     private static Map<EmailType, String> emailTypeToTranslatedText;
     private static Map<String, EmailType> translatedTextToEmailType;
     private static Map<String, String> stringValueOfCallTypeIntToTextMapping;
+    private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
     public static String defaultPhoneNumberTypeTranslatedText;
     public static String defaultAddressTypeTranslatedText;
     public static String defaultEmailTypeTranslatedText;
@@ -88,6 +96,16 @@ public class DomainUtils {
     public static String STORAGE_DIRECTORY_NAME = DEBUG ? "DOpenContacts" : "OpenContacts";
 
     static {
+        initializeT9Mapping();
+        initPinyinOutputFormat();
+    }
+
+    private static void initPinyinOutputFormat() {
+        hanyuPinyinOutputFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        hanyuPinyinOutputFormat.setVCharType(HanyuPinyinVCharType.WITH_V);
+    }
+
+    private static void initializeT9Mapping() {
         characterToIntegerMappingForKeyboardLayout = new HashMap<>();
         int[] numericsMappingForAlphabetsInNumberKeypad = { 2, 2, 2, 3, 3, 3, 4, 4, 4, 5, 5, 5, 6, 6, 6, 7, 7, 7, 7, 8, 8, 8, 9, 9, 9, 9};
         for(int i=0, charCodeForA = 65; i<26; i++){
@@ -194,7 +212,7 @@ public class DomainUtils {
         return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
     }
 
-    public static List<String> cross(List<String> firstSetOfWords, String[] secondSetOfWords) {
+    public static List<String> cross(List<String> firstSetOfWords, Set<String> secondSetOfWords) {
         return U.flatten(
                 U.map(firstSetOfWords, wordFromFirstSet -> Common.map(secondSetOfWords, wordFromSecondSet -> wordFromFirstSet.concat(" ").concat(wordFromSecondSet)))
         );
@@ -203,13 +221,25 @@ public class DomainUtils {
     public static String getPinyinTextFromChinese(String text) {
         char[] chineseCharacters = text.toCharArray();
         if(isEmpty(text)) return "";
-        List<String[]> pinyinFormsForEachCharacter = U.filter(
-                mapIndexes(chineseCharacters.length, index -> PinyinHelper.toHanyuPinyinStringArray(chineseCharacters[index]))
+        List<Set<String>> pinyinFormsForEachCharacter = U.filter(
+                mapIndexes(chineseCharacters.length, index -> getPinyinRepresentations(chineseCharacters[index]))
                 , it -> it != null);
         if(pinyinFormsForEachCharacter.isEmpty()) return "";
         return U.join(
-                U.reduce(pinyinFormsForEachCharacter, DomainUtils::cross, Collections.singletonList(new String())),
+                U.reduce(pinyinFormsForEachCharacter, DomainUtils::cross, Collections.singletonList("")),
          " ");
+    }
+
+    @Nullable
+    private static Set<String> getPinyinRepresentations(char chineseCharacter) {
+        try {
+            String[] pinyinRepresentations = PinyinHelper.toHanyuPinyinStringArray(chineseCharacter, hanyuPinyinOutputFormat);
+            if(pinyinRepresentations == null) return null;
+            return new LinkedHashSet<>(Arrays.asList(pinyinRepresentations));
+        } catch (BadHanyuPinyinOutputFormatCombination e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public static String getNumericKeyPadNumberForString(String string){

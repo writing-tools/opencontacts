@@ -1,5 +1,11 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getCallLogEntriesForContactWith;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContact;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getFullDateTimestampPattern;
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -25,12 +31,6 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.utils.Common;
 
-import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
-import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getCallLogEntriesForContactWith;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContact;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getFullDateTimestampPattern;
-
 public class CallLogGroupDetailsActivity extends AppBaseActivity {
 
     public static final String PHONE_NUMBER_INTENT_EXTRA = "phoneNumber";
@@ -48,13 +48,13 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
         callLogHolder = findViewById(R.id.call_log_holder);
         FloatingActionButton infoButton = findViewById(R.id.info);
         String phoneNumber = getIntent().getStringExtra(PHONE_NUMBER_INTENT_EXTRA);
-        if(phoneNumber == null) {
+        if (phoneNumber == null) {
             Toast.makeText(this, "No phone number present", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
         callLogEntries = getCallLogEntriesForContactWith(phoneNumber);
-        if(callLogEntries.isEmpty()) {
+        if (callLogEntries.isEmpty()) {
             Toast.makeText(this, "No call log entries present for this number", Toast.LENGTH_SHORT).show();
             finish();
             return;
@@ -77,25 +77,25 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
         SimpleDateFormat timeStampFormat = getFullDateTimestampPattern(this);
         U.forEach(callLogEntries, callLogEntry -> {
             View callLogEntryView = layoutInflater.inflate(R.layout.call_log_entry, callLogHolder, false);
-            ((AppCompatTextView)callLogEntryView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
-            ((AppCompatTextView)callLogEntryView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
-            if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
-                ((ImageView)callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
-            else if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))
-                ((ImageView)callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_made_black_24dp);
-            else if(callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
-                ((ImageView)callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_missed_outgoing_black_24dp);
-            ((TextView)callLogEntryView.findViewById(R.id.text_view_duration)).setText(Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())));
-            ((TextView)callLogEntryView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
+            ((AppCompatTextView) callLogEntryView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
+            ((AppCompatTextView) callLogEntryView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
+            if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
+                ((ImageView) callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
+            else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))
+                ((ImageView) callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_made_black_24dp);
+            else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
+                ((ImageView) callLogEntryView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_missed_outgoing_black_24dp);
+            ((TextView) callLogEntryView.findViewById(R.id.text_view_duration)).setText(Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())));
+            ((TextView) callLogEntryView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
             String timeStampOfCall = timeStampFormat.format(new Date(Long.parseLong(callLogEntry.getDate())));
-            ((TextView)callLogEntryView.findViewById(R.id.text_view_timestamp)).setText(timeStampOfCall);
+            ((TextView) callLogEntryView.findViewById(R.id.text_view_timestamp)).setText(timeStampOfCall);
             callLogHolder.addView(callLogEntryView);
 
         });
     }
 
-    public static Intent getIntentToShowCallLogEntries(String phoneNumber, Context context){
+    public static Intent getIntentToShowCallLogEntries(String phoneNumber, Context context) {
         return new Intent(context, CallLogGroupDetailsActivity.class)
-                .putExtra(PHONE_NUMBER_INTENT_EXTRA, phoneNumber);
+            .putExtra(PHONE_NUMBER_INTENT_EXTRA, phoneNumber);
     }
 }

@@ -1,6 +1,11 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
+
 import android.content.Context;
 import android.widget.Toast;
 
@@ -22,11 +27,6 @@ import opencontacts.open.com.opencontacts.domain.ContactGroup;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
-import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
-
 public class ContactGroupsDataStore {
 
     private static Map<String, ContactGroup> groupsMap = new HashMap<>();
@@ -35,47 +35,49 @@ public class ContactGroupsDataStore {
     public static void COMPUTE_INTENSIVE_computeGroups() {
         List<Contact> allContacts = ContactsDataStore.getAllContacts();
         groupsMap = new HashMap<>();
-        for(Contact contact : allContacts) {
+        for (Contact contact : allContacts) {
             U.chain(contact.getGroupNames())
-                    .map(groupName -> getOrDefault(groupsMap, groupName, new ContactGroup(groupName)))
-                    .map(group -> group.addContact(contact))
-                    .forEach(group -> groupsMap.put(group.getName(), group));
+                .map(groupName -> getOrDefault(groupsMap, groupName, new ContactGroup(groupName)))
+                .map(group -> group.addContact(contact))
+                .forEach(group -> groupsMap.put(group.getName(), group));
         }
     }
 
     public static List<ContactGroup> getGroupsOf(Contact contact) {
         return U.chain(contact.getGroupNames())
-                .map(groupsMap::get)
-                .reject(U::isNull)
-                .value();
+            .map(groupsMap::get)
+            .reject(U::isNull)
+            .value();
     }
 
-    public static void initInCaseHasNot(){
-        if(init) return;
+    public static void initInCaseHasNot() {
+        if (init) return;
         computeGroupsAsync();
         init = true;
     }
 
-    public static void invalidateGroups(){
+    public static void invalidateGroups() {
         init = false;
         groupsMap = new HashMap<>(0);
     }
 
-    public static void computeGroupsAsync(){
+    public static void computeGroupsAsync() {
         processAsync(ContactGroupsDataStore::COMPUTE_INTENSIVE_computeGroups);
     }
 
-    public static List<ContactGroup> getAllGroups() { return new ArrayList<>(groupsMap.values()); }
+    public static List<ContactGroup> getAllGroups() {
+        return new ArrayList<>(groupsMap.values());
+    }
 
 
-    public static void createNewGroup(List<Contact> contacts , String groupName) {
+    public static void createNewGroup(List<Contact> contacts, String groupName) {
         ContactGroup newContactGroup = new ContactGroup(groupName);
         groupsMap.put(groupName, newContactGroup);
         U.forEach(contacts, contact -> addContactToGroup(newContactGroup, contact));
     }
 
-    public static void updateGroup(List<Contact> newContacts, String newGroupName, ContactGroup group){
-        if(!newGroupName.equals(group.getName())){
+    public static void updateGroup(List<Contact> newContacts, String newGroupName, ContactGroup group) {
+        if (!newGroupName.equals(group.getName())) {
             destroyGroup(group);
             createNewGroup(newContacts, newGroupName);
             return;
@@ -93,7 +95,7 @@ public class ContactGroupsDataStore {
     private static void destroyGroup(ContactGroup group) {
         //new array list coz of concurrent modification of same array group.contacts
         U.chain(group.contacts)
-                .forEach(contact -> removeContactFromGroup(group, contact));
+            .forEach(contact -> removeContactFromGroup(group, contact));
         groupsMap.remove(group.getName());
     }
 
@@ -130,14 +132,14 @@ public class ContactGroupsDataStore {
     }
 
     @Nullable
-    public static ContactGroup getGroup(String name){
+    public static ContactGroup getGroup(String name) {
         return groupsMap.get(name);
     }
 
     public static void handleContactDeletion(Contact contact) {
         U.chain(groupsMap.values())
-                .map(group -> group.contacts)
-                .forEach(contactsList -> contactsList.remove(contact));
+            .map(group -> group.contacts)
+            .forEach(contactsList -> contactsList.remove(contact));
     }
 
     public static void handleContactUpdate(Contact contact) {
@@ -150,10 +152,10 @@ public class ContactGroupsDataStore {
 
     public static void handleNewContactAddition(Contact contact) {
         List<String> groupAssociations = contact.getGroupNames();
-        if(groupAssociations.isEmpty()) return;
+        if (groupAssociations.isEmpty()) return;
         U.chain(groupsMap.values())
-                .filter(group -> groupAssociations.contains(group.getName()))
-                .forEach(group -> group.addContact(contact));
+            .filter(group -> groupAssociations.contains(group.getName()))
+            .forEach(group -> group.addContact(contact));
     }
 
     public static void PROCESS_INTENSIVE_delete(ContactGroup selectedGroup, Context context) {

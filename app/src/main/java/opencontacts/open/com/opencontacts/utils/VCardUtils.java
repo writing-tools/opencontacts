@@ -1,6 +1,11 @@
 package opencontacts.open.com.opencontacts.utils;
 
 
+import static ezvcard.Ezvcard.write;
+import static ezvcard.util.StringUtils.join;
+import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
+import static opencontacts.open.com.opencontacts.utils.Common.getPartsThatAreNotPresentCaseInSensitive;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v4.util.Pair;
@@ -31,11 +36,6 @@ import ezvcard.property.VCardProperty;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
-import static ezvcard.Ezvcard.write;
-import static ezvcard.util.StringUtils.join;
-import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
-import static opencontacts.open.com.opencontacts.utils.Common.getPartsThatAreNotPresentCaseInSensitive;
-
 public class VCardUtils {
 
     private static String noNameString;
@@ -46,7 +46,7 @@ public class VCardUtils {
 
     @NonNull
     public static Pair<String, String> getNameFromVCard(VCard vcard, Context context) {
-        if(noNameString == null) noNameString = context.getString(R.string.noname);
+        if (noNameString == null) noNameString = context.getString(R.string.noname);
         Pair<String, String> name;
         StructuredName structuredName = vcard.getStructuredName();
         FormattedName formattedName = vcard.getFormattedName();
@@ -70,21 +70,21 @@ public class VCardUtils {
         return new Pair<>(getEmptyStringIfNull(structuredName.getGiven()), lastName);
     }
 
-    public static String getMobileNumber(Telephone telephone){
+    public static String getMobileNumber(Telephone telephone) {
         String telephoneText = telephone.getText();
         return telephoneText == null ? telephone.getUri().getNumber() : telephoneText;
     }
 
     public static void setFormattedNameIfNotPresent(VCard vcard) {
-        if(vcard.getFormattedName() != null) return;
+        if (vcard.getFormattedName() != null) return;
         StructuredName structuredName = vcard.getStructuredName();
-        if(structuredName == null) vcard.setFormattedName("");
-        else vcard.setFormattedName(structuredName.getGiven() + " "  + structuredName.getFamily());
+        if (structuredName == null) vcard.setFormattedName("");
+        else vcard.setFormattedName(structuredName.getGiven() + " " + structuredName.getFamily());
     }
 
     public static void setUidIfNotPresent(VCard vCard, String uid) {
         Uid existingUid = vCard.getUid();
-        if(existingUid == null) vCard.setUid(new Uid(uid));
+        if (existingUid == null) vCard.setUid(new Uid(uid));
     }
 
     public static VCard mergeVCards(VCard secondaryVcard, VCard primaryVCard, Context context) {
@@ -111,19 +111,19 @@ public class VCardUtils {
         return mergedCard;
     }
 
-    private static <T extends TextProperty> List<T> getExtraVCardTextProperties(VCard primaryVCard, VCard secondaryVCard, Class<T> propertyClass){
+    private static <T extends TextProperty> List<T> getExtraVCardTextProperties(VCard primaryVCard, VCard secondaryVCard, Class<T> propertyClass) {
         List<T> propertiesInPrimaryVCardCard = primaryVCard.getProperties(propertyClass);
         List<String> propertiesInPrimaryVCardAsStrings = U.map(propertiesInPrimaryVCardCard, SimpleProperty::getValue);
         return U.chain(secondaryVCard.getProperties(propertyClass))
-                .reject(property -> propertiesInPrimaryVCardAsStrings.contains(property.getValue()))
-                .value();
+            .reject(property -> propertiesInPrimaryVCardAsStrings.contains(property.getValue()))
+            .value();
     }
 
-    private static <T extends VCardProperty> List<T> getExtraVCardProperties(VCard primaryVCard, VCard secondaryVCard, Class<T> propertyClass){
+    private static <T extends VCardProperty> List<T> getExtraVCardProperties(VCard primaryVCard, VCard secondaryVCard, Class<T> propertyClass) {
         List<T> propertiesInPrimaryVCardCard = primaryVCard.getProperties(propertyClass);
         return U.chain(secondaryVCard.getProperties(propertyClass))
-                .reject(propertiesInPrimaryVCardCard::contains)
-                .value();
+            .reject(propertiesInPrimaryVCardCard::contains)
+            .value();
     }
 
     @NonNull
@@ -160,7 +160,7 @@ public class VCardUtils {
 
     public static void markFavoriteInVCard(boolean isFavorite, String vCardAsString) throws IOException {
         getVCardFromString(vCardAsString)
-                .setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(isFavorite));
+            .setExtendedProperty(X_FAVORITE_EXTENDED_VCARD_PROPERTY, String.valueOf(isFavorite));
     }
 
     public static boolean isFavorite(VCard vcard) {
@@ -170,10 +170,11 @@ public class VCardUtils {
 
     public static void markPrimaryPhoneNumberInVCard(Contact contact, VCard vcard) {
         U.forEach(vcard.getTelephoneNumbers(),
-                telephoneNumber -> {
-                    if(contact.primaryPhoneNumber.phoneNumber.equals(telephoneNumber.getText())) telephoneNumber.setPref(PRIMARY_PHONE_NUMBER_PREF);
-                    else  telephoneNumber.setPref(NON_PRIMARY_PHONE_NUMBER_PREF);
-                }
+            telephoneNumber -> {
+                if (contact.primaryPhoneNumber.phoneNumber.equals(telephoneNumber.getText()))
+                    telephoneNumber.setPref(PRIMARY_PHONE_NUMBER_PREF);
+                else telephoneNumber.setPref(NON_PRIMARY_PHONE_NUMBER_PREF);
+            }
         );
     }
 
@@ -185,9 +186,9 @@ public class VCardUtils {
         }
     }
 
-    public static boolean isPrimaryPhoneNumber(Telephone telephone){
+    public static boolean isPrimaryPhoneNumber(Telephone telephone) {
         Integer telephonePref = telephone.getPref();
-        return telephonePref != null &&  telephone.getPref() == PRIMARY_PHONE_NUMBER_PREF;
+        return telephonePref != null && telephone.getPref() == PRIMARY_PHONE_NUMBER_PREF;
     }
 
     public static List<String> getCategories(VCard vcard) {
@@ -196,11 +197,11 @@ public class VCardUtils {
     }
 
     public static void setCategories(List<String> categories, VCard vcard) {
-        vcard.setCategories(categories.toArray(new String[] {}));
+        vcard.setCategories(categories.toArray(new String[]{}));
     }
 
     public static boolean isEmptyAddress(Address address) {
-        if(address == null) return true;
+        if (address == null) return true;
         Address tempAddressToRemoveTypes = address.copy();
         tempAddressToRemoveTypes.getTypes().clear();
         return new Address().equals(tempAddressToRemoveTypes);

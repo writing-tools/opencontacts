@@ -30,21 +30,21 @@ public class ImportVcardActivity extends AppCompatActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if(permissionGranted()) {
+        if (permissionGranted()) {
             parser.execute();
-        }
-        else
+        } else
             new AlertDialog.Builder(this)
-                    .setTitle(R.string.error)
-                    .setMessage(R.string.could_not_process_import_without_storage_permission)
-                    .setNeutralButton(R.string.okay, null)
-                    .setOnDismissListener(dialog -> finish())
-                    .create()
-                    .show();
+                .setTitle(R.string.error)
+                .setMessage(R.string.could_not_process_import_without_storage_permission)
+                .setNeutralButton(R.string.okay, null)
+                .setOnDismissListener(dialog -> finish())
+                .create()
+                .show();
     }
 
     private ProgressBar progressBarComponent;
     private TextView textView_vCardsIgnored, textView_vCardsImported;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,8 +73,8 @@ public class ImportVcardActivity extends AppCompatActivity {
             @Override
             public void onFinish(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
                 progressBarComponent.setProgress(progressBarComponent.getMax());
-                if(vCardsAndTheirExceptions.isEmpty()) return;
-                if(vCardsAndTheirExceptions.get(0).first == null) {
+                if (vCardsAndTheirExceptions.isEmpty()) return;
+                if (vCardsAndTheirExceptions.get(0).first == null) {
                     finish();
                     return;
                 }
@@ -84,21 +84,21 @@ public class ImportVcardActivity extends AppCompatActivity {
             }
         }, this);
         new AlertDialog.Builder(this)
-                .setTitle(R.string.import_contacts)
-                .setMessage(R.string.do_you_want_to_import)
-                .setPositiveButton(R.string.okay, (x, y) -> {
-                    if(permissionGranted())
-                        parser.execute();
-                    else
-                        requestPermission();
-                })
-                .setOnCancelListener(x -> finish())
-                .show();
+            .setTitle(R.string.import_contacts)
+            .setMessage(R.string.do_you_want_to_import)
+            .setPositiveButton(R.string.okay, (x, y) -> {
+                if (permissionGranted())
+                    parser.execute();
+                else
+                    requestPermission();
+            })
+            .setOnCancelListener(x -> finish())
+            .show();
     }
 
     private String formatImportErrorsAsString(List<Pair<VCard, Throwable>> vCardsAndTheirExceptions) {
         return U.reduce(vCardsAndTheirExceptions, (accumulatingStringBuffer, currentvCardAndException) ->
-                accumulatingStringBuffer.append(currentvCardAndException.first.write())
+            accumulatingStringBuffer.append(currentvCardAndException.first.write())
                 .append("\n\n")
                 .append(Log.getStackTraceString(currentvCardAndException.second))
                 .append("\n\n\n\n"), new StringBuffer()).toString();
@@ -107,17 +107,17 @@ public class ImportVcardActivity extends AppCompatActivity {
     private void requestPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             new AlertDialog.Builder(this)
-                    .setTitle(R.string.grant_storage_permission)
-                    .setMessage(R.string.grant_storage_permisson_detail)
-                    .setNeutralButton(R.string.okay, null)
-                    .setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123))
-                    .create()
-                    .show();
+                .setTitle(R.string.grant_storage_permission)
+                .setMessage(R.string.grant_storage_permisson_detail)
+                .setNeutralButton(R.string.okay, null)
+                .setOnDismissListener(dialog -> requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, 123))
+                .create()
+                .show();
         }
     }
 
     private boolean permissionGranted() {
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
             return true;
         return checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
     }

@@ -1,5 +1,15 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import static java.util.Collections.emptyList;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDBHelper.getCallLogEntriesFor;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+
 import android.content.Context;
 import android.support.v4.util.ArrayMap;
 
@@ -14,16 +24,6 @@ import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 
-import static java.util.Collections.emptyList;
-import static opencontacts.open.com.opencontacts.data.datastore.CallLogDBHelper.getCallLogEntriesFor;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
-
 public class CallLogDataStore {
     public static final int CALL_LOG_ENTRIES_CHUNK_SIZE = 100;
     private static CallLogDBHelper callLogDBHelper = new CallLogDBHelper();
@@ -37,21 +37,20 @@ public class CallLogDataStore {
 
     public static synchronized void loadRecentCallLogEntries(Context context) {
         final List<CallLogEntry> recentCallLogEntries = callLogDBHelper.loadRecentCallLogEntriesIntoDB(context);
-        if(recentCallLogEntries.isEmpty())
+        if (recentCallLogEntries.isEmpty())
             return;
         ContactsDataStore.updateContactsAccessedDateAsync(recentCallLogEntries);
         addRecentCallLogEntriesToStore(recentCallLogEntries);
     }
 
     private static void addRecentCallLogEntriesToStore(final List<CallLogEntry> recentCallLogEntries) {
-        if(recentCallLogEntries.size() > 1){
+        if (recentCallLogEntries.size() > 1) {
             refreshStore();
-        }
-        else if(recentCallLogEntries.size() == 1){
+        } else if (recentCallLogEntries.size() == 1) {
             CallLogEntry callLogEntry = recentCallLogEntries.get(0);
             callLogEntries.add(0, callLogEntry);
             processAsync(() -> {
-                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                for (DataStoreChangeListener<CallLogEntry> dataStoreChangeListener : dataChangeListeners) {
                     dataStoreChangeListener.onAdd(callLogEntry);
                 }
             });
@@ -59,8 +58,8 @@ public class CallLogDataStore {
     }
 
     private synchronized static void refreshStore() {
-        if(currentState == LOADING || currentState == REFRESHING) return;
-        if(currentState == NONE) currentState = LOADING;
+        if (currentState == LOADING || currentState == REFRESHING) return;
+        if (currentState == NONE) currentState = LOADING;
         else currentState = REFRESHING;
         callLogEntries = CallLogDBHelper.getRecentCallLogEntriesFromDB();
         currentState = LOADED;
@@ -78,12 +77,12 @@ public class CallLogDataStore {
         return callLogEntries.isEmpty() ? null : callLogEntries.get(0);
     }
 
-    public static List<CallLogEntry> getRecentCallLogEntries(Context context){
-        if(currentState == NONE){
+    public static List<CallLogEntry> getRecentCallLogEntries(Context context) {
+        if (currentState == NONE) {
             processAsync(CallLogDataStore::refreshStore);
             return emptyList();
         }
-        if(currentState == LOADING) return emptyList();
+        if (currentState == LOADING) return emptyList();
         return new ArrayList<>(callLogEntries);
     }
 
@@ -95,15 +94,15 @@ public class CallLogDataStore {
         dataChangeListeners.remove(changeListener);
     }
 
-    public static void updateCallLogAsyncForNewContact(final Contact newContact){
+    public static void updateCallLogAsyncForNewContact(final Contact newContact) {
         processAsync(new Runnable() {
             @Override
             public void run() {
                 List<CallLogEntry> callLogEntriesToWorkWith = getCallLogEntriesToWorkWith();
-                if(callLogEntriesToWorkWith.isEmpty())
+                if (callLogEntriesToWorkWith.isEmpty())
                     return;
                 int numberOfEntriesUpdated = 0;
-                for(PhoneNumber phoneNumber : newContact.phoneNumbers) {
+                for (PhoneNumber phoneNumber : newContact.phoneNumbers) {
                     String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber.phoneNumber);
                     if (searchablePhoneNumber == null)
                         continue;
@@ -111,16 +110,16 @@ public class CallLogDataStore {
                         if (callLogEntry.getContactId() != -1)
                             continue;
                         String allNumericPhoneNumberOfCallLogEntry = getAllNumericPhoneNumber(callLogEntry.getPhoneNumber());
-                        if(allNumericPhoneNumberOfCallLogEntry.contains(searchablePhoneNumber)){
+                        if (allNumericPhoneNumberOfCallLogEntry.contains(searchablePhoneNumber)) {
                             callLogEntry.setContactId(newContact.id);
                             callLogEntry.setName(newContact.name);
                             callLogEntry.save();
-                            numberOfEntriesUpdated ++;
+                            numberOfEntriesUpdated++;
                             break;
                         }
                     }
                 }
-                if(numberOfEntriesUpdated == 0)
+                if (numberOfEntriesUpdated == 0)
                     return;
                 notifyRefreshStore();
             }
@@ -131,40 +130,40 @@ public class CallLogDataStore {
         });
     }
 
-    public static void updateCallLogAsyncForAllContacts(final Context context){
+    public static void updateCallLogAsyncForAllContacts(final Context context) {
         processAsync(() -> updateCallLogForAllContacts(context));
     }
 
     public static void updateCallLogForAllContacts(Context context) {
-        if(callLogEntries == null)
+        if (callLogEntries == null)
             callLogEntries = getRecentCallLogEntries(context);
         int numberOfEntriesUpdated = 0;
-        for(CallLogEntry callLogEntry : callLogEntries){
-            if(callLogEntry.getContactId() != -1)
+        for (CallLogEntry callLogEntry : callLogEntries) {
+            if (callLogEntry.getContactId() != -1)
                 continue;
             opencontacts.open.com.opencontacts.orm.Contact contactFromDB = ContactsDBHelper.getContactFromDB(callLogEntry.getPhoneNumber());
-            if(contactFromDB == null)
+            if (contactFromDB == null)
                 continue;
             callLogEntry.setName(contactFromDB.firstName + " " + contactFromDB.lastName);
             callLogEntry.setContactId(contactFromDB.getId());
             callLogEntry.save();
-            numberOfEntriesUpdated ++;
+            numberOfEntriesUpdated++;
         }
-        if(numberOfEntriesUpdated == 0)
+        if (numberOfEntriesUpdated == 0)
             return;
         notifyRefreshStore();
     }
 
     public static void delete(Long id) {
         boolean hasBeenDeleted = CallLogDBHelper.delete(id);
-        if(!hasBeenDeleted)
+        if (!hasBeenDeleted)
             return;
-        for(CallLogEntry callLogEntryToBeRemoved : callLogEntries){
-            if(!callLogEntryToBeRemoved.getId().equals(id))
+        for (CallLogEntry callLogEntryToBeRemoved : callLogEntries) {
+            if (!callLogEntryToBeRemoved.getId().equals(id))
                 continue;
             callLogEntries.remove(callLogEntryToBeRemoved);
             processAsync(() -> {
-                for(DataStoreChangeListener<CallLogEntry> dataStoreChangeListener: dataChangeListeners){
+                for (DataStoreChangeListener<CallLogEntry> dataStoreChangeListener : dataChangeListeners) {
                     dataStoreChangeListener.onRemove(callLogEntryToBeRemoved);
                 }
             });
@@ -191,10 +190,11 @@ public class CallLogDataStore {
     public static Collection<CallLogEntry> getUnLabelledCallLogEntriesMatching(String number) {
         ArrayMap<String, CallLogEntry> matchedEntries = new ArrayMap<>();
         U.forEach(callLogEntries, entry -> {
-            if(entry.name != null) return;
+            if (entry.name != null) return;
             String phoneNumber = entry.getPhoneNumber();
-            if(matchedEntries.containsKey(phoneNumber)) return; // making sure only recent entries make it so that sorting based on last called will not be impacted
-            if(!phoneNumber.contains(number)) return;
+            if (matchedEntries.containsKey(phoneNumber))
+                return; // making sure only recent entries make it so that sorting based on last called will not be impacted
+            if (!phoneNumber.contains(number)) return;
             matchedEntries.put(phoneNumber, entry);
         });
         return matchedEntries.values();
@@ -207,7 +207,7 @@ public class CallLogDataStore {
         });
     }
 
-    public static void deleteCallLogEntries(List<CallLogEntry> entries){
+    public static void deleteCallLogEntries(List<CallLogEntry> entries) {
         processAsync(() -> {
             CallLogEntry.deleteInTx(entries);
             refreshStore();
@@ -216,7 +216,7 @@ public class CallLogDataStore {
 
     public static List<CallLogEntry> getCallLogEntriesForContactWith(String phoneNumber) {
         opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(phoneNumber);
-        if(contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber);
+        if (contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber);
         return getCallLogEntriesFor(contact.getId());
     }
 

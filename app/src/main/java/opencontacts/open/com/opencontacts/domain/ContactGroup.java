@@ -18,17 +18,17 @@ public class ContactGroup {
         this.t9Name = DomainUtils.getNumericKeyPadNumberForString(name);
     }
 
-    public ContactGroup addContact(Contact contact){
+    public ContactGroup addContact(Contact contact) {
         contacts.add(contact);
         return this;
     }
 
-    public ContactGroup removeContact(Contact contact){
+    public ContactGroup removeContact(Contact contact) {
         contacts.remove(contact);
         return this;
     }
 
-    public String getName(){
+    public String getName() {
         return name; // added this to make sure no one updates the name directly and leaves behind T9 text
     }
 

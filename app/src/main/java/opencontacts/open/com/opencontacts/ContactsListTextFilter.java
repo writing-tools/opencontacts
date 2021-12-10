@@ -7,7 +7,7 @@ import java.util.List;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
 
-public class ContactsListTextFilter extends ContactsListFilter{
+public class ContactsListTextFilter extends ContactsListFilter {
     public ContactsListTextFilter(ArrayAdapter<Contact> adapter, AllContactsHolder allContactsHolder) {
         super(adapter, allContactsHolder);
     }
@@ -20,7 +20,7 @@ public class ContactsListTextFilter extends ContactsListFilter{
     @Override
     public void createDataMapping(List<Contact> contacts) {
         List<Contact> threadSafeContacts = new ArrayList<>(contacts);
-        for(Contact contact : threadSafeContacts){
+        for (Contact contact : threadSafeContacts) {
             contact.setTextSearchTarget();
         }
     }
@@ -29,7 +29,7 @@ public class ContactsListTextFilter extends ContactsListFilter{
     public List<Contact> filter(CharSequence searchText, List<Contact> contacts) {
         ArrayList<Contact> filteredContacts = new ArrayList<>();
         for (Contact contact : contacts) {
-            if(contact.textSearchTarget == null){
+            if (contact.textSearchTarget == null) {
                 contact.setTextSearchTarget();
             }
             if (contact.textSearchTarget.contains(searchText.toString().toUpperCase())) {

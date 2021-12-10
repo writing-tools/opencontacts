@@ -1,5 +1,13 @@
 package opencontacts.open.com.opencontacts;
 
+import static android.view.View.GONE;
+import static android.view.View.OnClickListener;
+import static android.view.View.OnLongClickListener;
+import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
@@ -14,12 +22,7 @@ import java.util.ArrayList;
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
-import static android.view.View.*;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
-
-public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
+public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
     private boolean shouldToggleContactActions;
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
@@ -45,11 +48,11 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
 
     public void createContactsListFilter(ContactsListFilter.AllContactsHolder allContactsHolder) {
         contactsListFilter = isT9SearchEnabled(getContext()) ? new ContactsListT9Filter(this, allContactsHolder)
-                : new ContactsListTextFilter(this, allContactsHolder);
+            : new ContactsListTextFilter(this, allContactsHolder);
     }
 
     private final OnLongClickListener onLongClicked = v -> {
-        if(contactsListActionsListener == null)
+        if (contactsListActionsListener == null)
             return false;
         Contact contact = (Contact) v.getTag();
         contactsListActionsListener.onLongClick(contact);
@@ -57,58 +60,56 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
     };
 
     private final OnClickListener callContact = v -> {
-            if(contactsListActionsListener == null)
-                return;
-            Contact contact = (Contact) ((View)v.getParent()).getTag();
-            contactsListActionsListener.onCallClicked(contact);
+        if (contactsListActionsListener == null)
+            return;
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
+        contactsListActionsListener.onCallClicked(contact);
     };
     private final OnClickListener messageContact = v -> {
-            if(contactsListActionsListener == null)
-                return;
-            Contact contact = (Contact) ((View)v.getParent()).getTag();
-            contactsListActionsListener.onMessageClicked(contact);
+        if (contactsListActionsListener == null)
+            return;
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
+        contactsListActionsListener.onMessageClicked(contact);
     };
     private final OnClickListener showContactDetails = v -> {
-            if(contactsListActionsListener == null)
-                return;
-            Contact contact = (Contact) v.getTag();
-            contactsListActionsListener.onShowDetails(contact);
+        if (contactsListActionsListener == null)
+            return;
+        Contact contact = (Contact) v.getTag();
+        contactsListActionsListener.onShowDetails(contact);
     };
     private final OnClickListener whatsappContact = v -> {
-            if(contactsListActionsListener == null)
-                return;
-            Contact contact = (Contact) ((View)v.getParent()).getTag();
-            contactsListActionsListener.onWhatsappClicked(contact);
+        if (contactsListActionsListener == null)
+            return;
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
+        contactsListActionsListener.onWhatsappClicked(contact);
     };
 
     @NonNull
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         Contact contact = getItem(position);
-        if(convertView == null)
+        if (convertView == null)
             convertView = layoutInflater.inflate(R.layout.contact, parent, false);
         ((TextView) convertView.findViewById(R.id.textview_full_name)).setText(contact.name);
         ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(contact.primaryPhoneNumber.phoneNumber);
         ImageButtonWithTint actionButton1 = convertView.findViewById(R.id.button_action1);
         ImageButtonWithTint actionButton2 = convertView.findViewById(R.id.button_action2);
-        if(shouldToggleContactActions){
+        if (shouldToggleContactActions) {
             actionButton1.setOnClickListener(messageContact);
             actionButton1.setImageResource(R.drawable.ic_chat_black_24dp);
             actionButton2.setOnClickListener(callContact);
             actionButton2.setImageResource(R.drawable.ic_call_black_24dp);
-        }
-        else {
+        } else {
             actionButton1.setOnClickListener(callContact);
             actionButton1.setImageResource(R.drawable.ic_call_black_24dp);
             actionButton2.setOnClickListener(messageContact);
             actionButton2.setImageResource(R.drawable.ic_chat_black_24dp);
         }
         View whatsappIcon = convertView.findViewById(R.id.button_whatsapp);
-        if(whatsappIntegrationEnabled){
+        if (whatsappIntegrationEnabled) {
             whatsappIcon.setOnClickListener(whatsappContact);
             whatsappIcon.setVisibility(VISIBLE);
-        }
-        else whatsappIcon.setVisibility(GONE);
+        } else whatsappIcon.setVisibility(GONE);
         convertView.setTag(contact);
         convertView.setOnClickListener(showContactDetails);
         convertView.setOnLongClickListener(onLongClicked);
@@ -121,15 +122,19 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact>{
         return contactsListFilter;
     }
 
-    public void setContactsListActionsListener(ContactsListActionsListener contactsListActionsListener){
+    public void setContactsListActionsListener(ContactsListActionsListener contactsListActionsListener) {
         this.contactsListActionsListener = contactsListActionsListener;
     }
 
     public interface ContactsListActionsListener {
         void onCallClicked(Contact contact);
+
         void onMessageClicked(Contact contact);
+
         void onShowDetails(Contact contact);
+
         void onWhatsappClicked(Contact contact);
+
         void onLongClick(Contact contact);
     }
 }

@@ -13,7 +13,7 @@ import opencontacts.open.com.opencontacts.components.fieldcollections.InputField
 public class TextViewFieldCollection extends InputFieldCollection<TextViewViewHolder> {
     private Consumer<Integer> onClickForTextView;
 
-    public TextViewFieldCollection(Context context){
+    public TextViewFieldCollection(Context context) {
         this(context, null);
     }
 
@@ -30,7 +30,7 @@ public class TextViewFieldCollection extends InputFieldCollection<TextViewViewHo
         View inflatedView = LayoutInflater.from(getContext()).inflate(R.layout.component_fieldcollection_textview, null);
         TextViewViewHolder fieldHolder = new TextViewViewHolder(inflatedView);
         fieldHolder.setOnEdit(v -> {
-            if(onClickForTextView == null) return;
+            if (onClickForTextView == null) return;
             onClickForTextView.accept(fieldViewHoldersList.indexOf(fieldHolder)); //index is calculated everytime coz fields might be deleted runtime
         });
         fieldHolder.setOnDelete(() -> removeField(fieldHolder));

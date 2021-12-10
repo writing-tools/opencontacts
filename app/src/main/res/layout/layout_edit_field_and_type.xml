@@ -2,6 +2,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/text_input_layout"
         android:layout_toLeftOf="@id/type_spinner"
@@ -10,11 +11,11 @@
         android:layout_alignParentStart="true"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
+
         <android.support.design.widget.TextInputEditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/edit_field"
-            />
+            android:id="@+id/edit_field" />
     </android.support.design.widget.TextInputLayout>
 
     <com.reginald.editspinner.EditSpinner
@@ -25,6 +26,5 @@
         android:id="@+id/type_spinner"
         android:spinnerMode="dropdown"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 </RelativeLayout>

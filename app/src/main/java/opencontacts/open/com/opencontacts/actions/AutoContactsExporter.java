@@ -1,5 +1,13 @@
 package opencontacts.open.com.opencontacts.actions;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasItBeenAWeekSinceLastExportOfContacts;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markAutoExportComplete;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldExportContactsEveryWeek;
+
 import android.Manifest;
 import android.content.Context;
 
@@ -9,14 +17,6 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SampleDataStoreChangeListener;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
-import static android.widget.Toast.LENGTH_LONG;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasItBeenAWeekSinceLastExportOfContacts;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markAutoExportComplete;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldExportContactsEveryWeek;
-
 public class AutoContactsExporter {
     private Context context;
 
@@ -24,17 +24,17 @@ public class AutoContactsExporter {
         this.context = context;
     }
 
-    public void exportContactsAsPerPreferences(){
-        if(shouldExportContactsEveryWeek(context) && hasItBeenAWeekSinceLastExportOfContacts(context))
+    public void exportContactsAsPerPreferences() {
+        if (shouldExportContactsEveryWeek(context) && hasItBeenAWeekSinceLastExportOfContacts(context))
             loadAndExportContacts();
     }
 
     private void loadAndExportContacts() {
-        if(ContactsDataStore.getAllContacts().isEmpty())//loading contacts meanwhile
+        if (ContactsDataStore.getAllContacts().isEmpty())//loading contacts meanwhile
             ContactsDataStore.addDataChangeListener(new SampleDataStoreChangeListener<Contact>() {
                 @Override
                 public void onStoreRefreshed() {
-                    if(!ContactsDataStore.getAllContacts().isEmpty())
+                    if (!ContactsDataStore.getAllContacts().isEmpty())
                         processAsync(AutoContactsExporter.this::exportContactsAndUpdateLastExportTimeStamp);
                     ContactsDataStore.removeDataChangeListener(this);
                 }
@@ -43,7 +43,7 @@ public class AutoContactsExporter {
     }
 
     private void exportContactsAndUpdateLastExportTimeStamp() {
-        if(!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context)) {
+        if (!hasPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE, context)) {
             return;
         }
         try {

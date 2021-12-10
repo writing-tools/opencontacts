@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:background="?selectableItemBackground"
     android:paddingTop="10dp"
     android:paddingBottom="10dp"
@@ -51,8 +52,7 @@
         android:layout_marginRight="10dp"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@id/button_action2"
-        android:layout_toStartOf="@id/button_action2"
-        />
+        android:layout_toStartOf="@id/button_action2" />
 
     <TextView
         android:layout_below="@id/textview_full_name"

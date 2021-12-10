@@ -5,18 +5,18 @@
     android:clickable="true"
     android:focusable="true"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    >
-<android.support.v7.widget.AppCompatTextView
-    android:id="@+id/textview_content"
-    android:text="test"
-    android:textColor="?android:textColorPrimary"
-    android:gravity="center_horizontal"
-    android:clickable="false"
-    android:focusable="false"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    />
+    android:layout_height="wrap_content">
+
+    <android.support.v7.widget.AppCompatTextView
+        android:id="@+id/textview_content"
+        android:text="test"
+        android:textColor="?android:textColorPrimary"
+        android:gravity="center_horizontal"
+        android:clickable="false"
+        android:focusable="false"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
     <android.support.v7.widget.AppCompatTextView
         android:layout_below="@id/textview_content"
         android:textColor="?android:textColorSecondary"
@@ -26,6 +26,5 @@
         android:clickable="false"
         android:focusable="false"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
 </RelativeLayout>

@@ -33,10 +33,11 @@ public class CallLogEntry extends SugarRecord implements Serializable {
         this.date = date;
     }
 
-    public CallLogEntry(){
+    public CallLogEntry() {
         super();
     }
-    public CallLogEntry(long id){
+
+    public CallLogEntry(long id) {
         super();
         setId(id);
     }

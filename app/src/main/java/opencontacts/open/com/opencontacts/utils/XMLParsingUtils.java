@@ -30,7 +30,7 @@ public class XMLParsingUtils {
         return null;
     }
 
-    public static String getText(String tag, String namespace, Node node){
-        return ((Element)node).getElementsByTagNameNS(namespace, tag).item(0).getTextContent();
+    public static String getText(String tag, String namespace, Node node) {
+        return ((Element) node).getElementsByTagNameNS(namespace, tag).item(0).getTextContent();
     }
 }

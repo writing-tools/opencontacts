@@ -1,5 +1,8 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection;
 
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
+
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.design.widget.TextInputEditText;
@@ -13,9 +16,6 @@ import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
-
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 
 public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
@@ -57,7 +57,7 @@ public class TextInputAndSpinnerViewHolder extends FieldViewHolder {
     public Pair<String, String> getValueAndTypeAsPair() {
         int indexOfSelectedValue = spinner.getListSelection();
         return new Pair<>(getValue(), indexOfSelectedValue == -1 ?
-                spinner.getText().toString()
-                : types.get(indexOfSelectedValue));
+            spinner.getText().toString()
+            : types.get(indexOfSelectedValue));
     }
 }

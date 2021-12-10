@@ -1,5 +1,11 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
+import static opencontacts.open.com.opencontacts.utils.PrimitiveDataTypeUtils.toPrimitiveLongs;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -36,12 +42,6 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SampleDataStoreChangeListener;
 import opencontacts.open.com.opencontacts.utils.Common;
 
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getAllContacts;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeDataChangeListener;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
-import static opencontacts.open.com.opencontacts.utils.PrimitiveDataTypeUtils.toPrimitiveLongs;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
-
 public abstract class ContactChooserActivityBase extends AppBaseActivity {
     protected ListView contactsListView;
     private ArrayAdapter<Contact> adapter;
@@ -53,11 +53,11 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        contactsListView = new ListView(this){
+        contactsListView = new ListView(this) {
             @Override
             public void setItemChecked(int position, boolean isChecked) {
                 Contact contact = (Contact) getItemAtPosition(position);
-                if(isChecked) selectedContactsSet.add(contact);
+                if (isChecked) selectedContactsSet.add(contact);
                 else selectedContactsSet.remove(contact);
                 super.setItemChecked(position, isChecked);
             }
@@ -70,7 +70,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
             @Override
             public long[] getCheckedItemIds() {
                 return toPrimitiveLongs(
-                        U.map(new ArrayList<>(selectedContactsSet), contact -> contact.id)
+                    U.map(new ArrayList<>(selectedContactsSet), contact -> contact.id)
                 );
             }
 
@@ -87,19 +87,20 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
             }
         };
         contactsListView.setTextFilterEnabled(false);
-        if(shouldEnableMultiSelect()) contactsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
+        if (shouldEnableMultiSelect())
+            contactsListView.setChoiceMode(AbsListView.CHOICE_MODE_MULTIPLE);
         else
             contactsListView.setOnItemClickListener((parent, view, position, id) -> onContactSelect(adapter.getItem(position)));
         contacts = sortContactsBasedOnName(getAllContacts(), this);
         adapter = new ArrayAdapter<Contact>(this, shouldEnableMultiSelect() ?
-                R.layout.layout_simple_multi_select_contact : R.layout.layout_simple_contact_select
-                , R.id.contact_name, new ArrayList<>(contacts)) {
+            R.layout.layout_simple_multi_select_contact : R.layout.layout_simple_contact_select
+            , R.id.contact_name, new ArrayList<>(contacts)) {
             @NonNull
             @Override
             public Filter getFilter() {
                 return isT9SearchEnabled(getContext()) ?
-                        new ContactsListT9Filter(this, () -> contacts)
-                        : new ContactsListTextFilter(this, () -> contacts);
+                    new ContactsListT9Filter(this, () -> contacts)
+                    : new ContactsListTextFilter(this, () -> contacts);
             }
 
             @Override
@@ -109,17 +110,16 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
             @Override
             public long getItemId(int position) {
-                try{
+                try {
                     return getItem(position).id;
-                }
-                catch (Exception e){
+                } catch (Exception e) {
                     return -1; // happening as we add and remove entities.
                 }
             }
 
-            public void onItemSelect(View v){
+            public void onItemSelect(View v) {
                 Contact contact = (Contact) v.getTag();
-                if(selectedContactsSet.contains(contact)) selectedContactsSet.remove(contact);
+                if (selectedContactsSet.contains(contact)) selectedContactsSet.remove(contact);
                 else selectedContactsSet.add(contact);
                 adapter.notifyDataSetChanged();
             }
@@ -132,7 +132,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
                 Contact contact = getItem(position);
                 checkedTextView.setText(contact.name);
                 checkedTextView.setTag(contact);
-                if(shouldEnableMultiSelect()){
+                if (shouldEnableMultiSelect()) {
                     checkedTextView.setOnClickListener(this::onItemSelect);
                     checkedTextView.setChecked(selectedContactsSet.contains(contact));
                 }
@@ -141,9 +141,9 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         };
         adapter.setNotifyOnChange(true);
         contactsListView.setAdapter(adapter);
-        ((RelativeLayout)findViewById(R.id.contacts_list)).addView(contactsListView);
+        ((RelativeLayout) findViewById(R.id.contacts_list)).addView(contactsListView);
 
-        ((Toolbar)findViewById(R.id.toolbar)).setTitle(getTitleResource());
+        ((Toolbar) findViewById(R.id.toolbar)).setTitle(getTitleResource());
 
         contactsDataChangeListener = new SampleDataStoreChangeListener<Contact>() {
             @Override
@@ -192,21 +192,21 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
     private void setFilterInCaseExisting() {
         CharSequence query = searchView.getQuery();
-        if(TextUtils.isEmpty(query)) return;
+        if (TextUtils.isEmpty(query)) return;
         adapter.getFilter().filter(query);
     }
 
-    public int getTitleResource(){
+    public int getTitleResource() {
         return R.string.choose_a_contact;
     }
 
     public abstract void onContactSelect(Contact selectedContact);
 
-    public boolean shouldEnableMultiSelect(){
+    public boolean shouldEnableMultiSelect() {
         return false;
     }
 
-    public ListView getContactsListView(){
+    public ListView getContactsListView() {
         return contactsListView;
     }
 
@@ -220,8 +220,8 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         searchView = new SearchView(this);
         bindSearchViewToContacts(searchView);
         menu.add(R.string.search)
-                .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
-                .setActionView(searchView);
+            .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
+            .setActionView(searchView);
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -240,7 +240,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                ((ArrayAdapter)contactsListView.getAdapter()).getFilter().filter(newText);
+                ((ArrayAdapter) contactsListView.getAdapter()).getFilter().filter(newText);
                 return true;
             }
         });
@@ -258,10 +258,10 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         return new ArrayList<>(selectedContactsSet);
     }
 
-    protected void setSelectedContacts(Collection<Contact> contactsToBeSelected){
+    protected void setSelectedContacts(Collection<Contact> contactsToBeSelected) {
         Common.forEachIndex(contactsListView.getCount(), index -> {
-            if(contactsToBeSelected.contains(contactsListView.getItemAtPosition(index)))
-            contactsListView.setItemChecked(index, true);
+            if (contactsToBeSelected.contains(contactsListView.getItemAtPosition(index)))
+                contactsListView.setItemChecked(index, true);
         });
 
     }

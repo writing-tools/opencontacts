@@ -1,8 +1,10 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection;
 
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
+
 import android.content.Context;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import com.reginald.editspinner.EditSpinner;
 
@@ -11,9 +13,6 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
-
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 public class SpinnerFieldHolder extends FieldViewHolder {
 
@@ -26,7 +25,7 @@ public class SpinnerFieldHolder extends FieldViewHolder {
         spinner = fieldView.findViewById(R.id.spinner);
         deleteButton = fieldView.findViewById(R.id.delete);
         this.fieldView = fieldView;
-        if(editDisabled) spinner.setEditable(false);
+        if (editDisabled) spinner.setEditable(false);
         this.options = options;
         setupSpinner(options, spinner, context);
     }
@@ -35,7 +34,7 @@ public class SpinnerFieldHolder extends FieldViewHolder {
         setItem(option, options, spinner);
     }
 
-    public void setOnDelete(View.OnClickListener onClickListener){
+    public void setOnDelete(View.OnClickListener onClickListener) {
         deleteButton.setOnClickListener(onClickListener);
     }
 

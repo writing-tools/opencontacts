@@ -1,5 +1,15 @@
 package opencontacts.open.com.opencontacts.fragments;
 
+import static android.view.View.INVISIBLE;
+import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
+import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
+import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -27,16 +37,6 @@ import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
-
-import static android.view.View.INVISIBLE;
-import static android.view.View.VISIBLE;
-import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
-import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.getUnLabelledCallLogEntriesMatching;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
-import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
-import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
     private Context context;
@@ -71,22 +71,25 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         dialPadEditText = view.findViewById(R.id.editText_dialpad_number);
         dialPadEditText.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+            }
 
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
 
             @Override
             public void afterTextChanged(Editable searchText) {
                 String t9Text = searchText.toString();
-                if(TextUtils.isEmpty(t9Text)){
+                if (TextUtils.isEmpty(t9Text)) {
                     hideSearchListAndUpdateUIForRest();
                     return;
                 }
                 List<Contact> unLabelledCallLogEntriesMatchingText = new U<>(getUnLabelledCallLogEntriesMatching(t9Text))
-                        .map(callLogEntry -> createDummyContact(unknownContactString, "", callLogEntry.getPhoneNumber(), callLogEntry.getDate()));
+                    .map(callLogEntry -> createDummyContact(unknownContactString, "", callLogEntry.getPhoneNumber(), callLogEntry.getDate()));
                 List<Contact> contactsMatchingT9 = getContactsMatchingT9(t9Text);
-                if(contactsMatchingT9.isEmpty() && unLabelledCallLogEntriesMatchingText.isEmpty()) hideSearchListAndUpdateUIForRest();
+                if (contactsMatchingT9.isEmpty() && unLabelledCallLogEntriesMatchingText.isEmpty())
+                    hideSearchListAndUpdateUIForRest();
                 else {
                     List<Contact> finalListOfContacts = U.flatten(Arrays.asList(unLabelledCallLogEntriesMatchingText, contactsMatchingT9));
                     Collections.sort(finalListOfContacts, DomainUtils.getContactComparatorBasedOnLastAccessed());
@@ -111,13 +114,12 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         searchList = view.findViewById(R.id.search_list);
         searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
-        searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context){
+        searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context) {
             @Override
             public void onShowDetails(Contact contact) {
-                if(contact.id == -1) {
+                if (contact.id == -1) {
                     startActivity(getIntentToShowCallLogEntries(contact.primaryPhoneNumber.phoneNumber, getContext()));
-                }
-                else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
+                } else startActivity(getIntentToShowContactDetails(contact.id, getContext()));
             }
 
             @Override
@@ -145,12 +147,12 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
 
-        if(searchListAdapter != null && !searchListAdapter.isEmpty()) hideMultiSimDialingButtons();
+        if (searchListAdapter != null && !searchListAdapter.isEmpty()) hideMultiSimDialingButtons();
         else enableMultiSimDialingButtonsIfHavingMutipleSims();
     }
 
     private void enableMultiSimDialingButtonsIfHavingMutipleSims() {
-        if(hasMultipleSims(getContext())) showMultiSimDialingButtons();
+        if (hasMultipleSims(getContext())) showMultiSimDialingButtons();
         else hideMultiSimDialingButtons();
     }
 
@@ -171,7 +173,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
     private void performActionIfPhoneNumberIsValidElseShowError(Consumer<String> action) {
         String phoneNumber = dialPadEditText.getText().toString();
-        if(isInvalid(phoneNumber))
+        if (isInvalid(phoneNumber))
             dialPadEditText.setError(getString(R.string.invalid_number));
         else
             action.accept(phoneNumber);
@@ -184,7 +186,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
     @Override
     public void onSelect() {
-        if(this.view == null) return;
+        if (this.view == null) return;
         EditText editText = dialPadEditText == null ? (EditText) view.findViewById(R.id.editText_dialpad_number) : dialPadEditText;
         AndroidUtils.showSoftKeyboard(editText, context);
     }

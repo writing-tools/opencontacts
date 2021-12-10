@@ -1,5 +1,8 @@
 package opencontacts.open.com.opencontacts;
 
+import static android.app.NotificationManager.IMPORTANCE_HIGH;
+import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.addShortcutsIfNotAddedAlreadyAsync;
+
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.os.Build;
@@ -11,9 +14,6 @@ import opencontacts.open.com.opencontacts.actions.AutoContactsExporter;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
-
-import static android.app.NotificationManager.IMPORTANCE_HIGH;
-import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.addShortcutsIfNotAddedAlreadyAsync;
 
 public class OpenContactsApplication extends MultiDexApplication {
 

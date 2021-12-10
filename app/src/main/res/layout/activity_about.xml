@@ -33,7 +33,7 @@
                 android:layout_height="wrap_content"
                 android:text="@string/content_about" />
 
-        <TableLayout
+            <TableLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginTop="30dp"
@@ -62,8 +62,7 @@
 
                     <android.support.v7.widget.AppCompatTextView
                         android:id="@+id/version"
-                        android:padding="3dp"
-                        />
+                        android:padding="3dp" />
                 </TableRow>
 
                 <TableRow android:gravity="fill">
@@ -108,13 +107,14 @@
                         android:text="@string/more_apps_link" />
                 </TableRow>
             </TableLayout>
+
             <android.support.v7.widget.AppCompatTextView
                 android:layout_marginTop="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAppearance="?android:textAppearanceSearchResultTitle"
-                android:text="@string/contributors_title"
-                />
+                android:text="@string/contributors_title" />
+
             <ListView
                 android:nestedScrollingEnabled="true"
                 android:id="@+id/contributors_list"

@@ -1,12 +1,12 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static opencontacts.open.com.opencontacts.activities.EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
-
-import static opencontacts.open.com.opencontacts.activities.EditContactActivity.INTENT_EXTRA_STRING_PHONE_NUMBER;
 
 public class AddToContactActivity extends ContactChooserActivityBase {
 

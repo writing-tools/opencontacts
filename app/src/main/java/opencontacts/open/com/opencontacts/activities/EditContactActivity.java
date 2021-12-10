@@ -1,5 +1,13 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static android.text.TextUtils.isEmpty;
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
+import static opencontacts.open.com.opencontacts.utils.Common.getCalendarInstanceAt;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.defaultPhoneNumberTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.os.Bundle;
@@ -13,7 +21,6 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Toast;
-
 
 import com.github.underscore.U;
 import com.thomashaertel.widget.MultiSpinner;
@@ -43,14 +50,6 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.SpinnerUtil;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
-
-import static android.text.TextUtils.isEmpty;
-import static java.util.Calendar.DAY_OF_MONTH;
-import static java.util.Calendar.MONTH;
-import static java.util.Calendar.YEAR;
-import static opencontacts.open.com.opencontacts.utils.Common.getCalendarInstanceAt;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.defaultPhoneNumberTypeTranslatedText;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
@@ -86,25 +85,26 @@ public class EditContactActivity extends AppBaseActivity {
         View.OnClickListener onBirthDayClickListener = v -> {
             Birthday birthday = vcardBeforeEdit.getBirthday();
             Calendar dateOfBirthInstance = Calendar.getInstance();
-            if(selectedBirthDay != null) dateOfBirthInstance = getCalendarInstanceAt(selectedBirthDay.getTime());
-            else if(birthday != null) dateOfBirthInstance = getCalendarInstanceAt(birthday.getDate().getTime());
+            if (selectedBirthDay != null)
+                dateOfBirthInstance = getCalendarInstanceAt(selectedBirthDay.getTime());
+            else if (birthday != null)
+                dateOfBirthInstance = getCalendarInstanceAt(birthday.getDate().getTime());
             new DatePickerDialog(this, (view, year, month, dayOfMonth) -> {
                 Calendar selectedCalendar = getCalendarInstanceAt(year, month, dayOfMonth);
-                ((TextInputEditText)v).setText(AndroidUtils.getFormattedDate(selectedCalendar.getTime()));
+                ((TextInputEditText) v).setText(AndroidUtils.getFormattedDate(selectedCalendar.getTime()));
                 selectedBirthDay = selectedCalendar.getTime();
             }, dateOfBirthInstance.get(YEAR), dateOfBirthInstance.get(MONTH), dateOfBirthInstance.get(DAY_OF_MONTH)).show();
         };
         findViewById(R.id.date_of_birth).setOnClickListener(onBirthDayClickListener);
 
         Intent intent = getIntent();
-        if(intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
+        if (intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
             addingNewContact = true;
             toolbar.setTitle(R.string.new_contact);
             vcardBeforeEdit = new VCard();
-        }
-        else{
+        } else {
             contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
-            if(contact.id == -1){
+            if (contact.id == -1) {
                 Toast.makeText(this, R.string.error_while_loading_contact, Toast.LENGTH_LONG).show();
                 setResult(RESULT_CANCELED);
                 finish();
@@ -133,7 +133,7 @@ public class EditContactActivity extends AppBaseActivity {
         fillDateOfBirth();
         fillGroups();
 
-        if(addingNewContact) return;
+        if (addingNewContact) return;
 
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
@@ -141,34 +141,35 @@ public class EditContactActivity extends AppBaseActivity {
 
     private void fillGroups() {
         ArrayAdapter<String> groupsAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item);
-        groupsSpinner.setAdapter(groupsAdapter, false, selected -> {});
+        groupsSpinner.setAdapter(groupsAdapter, false, selected -> {
+        });
         List<String> allGroups = getAllGroupNames();
         groupsAdapter.addAll(allGroups);
-        if(contact == null) return;
+        if (contact == null) return;
         SpinnerUtil.setSelection(contact.getGroupNames(), allGroups, groupsSpinner);
     }
 
     private List<String> getAllGroupNames() {
         return U.chain(ContactGroupsDataStore.getAllGroups())
-                .map(ContactGroup::getName)
-                .value();
+            .map(ContactGroup::getName)
+            .value();
     }
 
     private void fillDateOfBirth() {
         Birthday birthday = vcardBeforeEdit.getBirthday();
-        if(birthday == null) return;
+        if (birthday == null) return;
         dateOfBirthTextInputEditText.setText(AndroidUtils.getFormattedDate(birthday.getDate()));
     }
 
     private void fillWebsite() {
         Url url = U.firstOrNull(vcardBeforeEdit.getUrls());
-        if(url == null) return;
+        if (url == null) return;
         websiteTextInputEditText.setText(url.getValue());
     }
 
     private void fillNotes() {
         Note note = U.firstOrNull(vcardBeforeEdit.getNotes());
-        if(note == null) return;
+        if (note == null) return;
         notesTextInputEditText.setText(note.getValue());
     }
 
@@ -178,7 +179,7 @@ public class EditContactActivity extends AppBaseActivity {
 
     private void fillEmails() {
         List<Email> emails = vcardBeforeEdit.getEmails();
-        if(U.isEmpty(emails)) {
+        if (U.isEmpty(emails)) {
             emailsInputCollection.addOneMoreView();
             return;
         }
@@ -188,12 +189,13 @@ public class EditContactActivity extends AppBaseActivity {
     private void fillTelephoneNumbers() {
         List<Telephone> telephoneNumbers = vcardBeforeEdit.getTelephoneNumbers();
         String newPhoneNumberToBeAdded = getIntent().getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER);
-        if(U.isEmpty(telephoneNumbers)) {
+        if (U.isEmpty(telephoneNumbers)) {
             phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, defaultPhoneNumberTypeTranslatedText);
             return;
         }
         U.forEach(telephoneNumbers, telephoneNumber -> phoneNumbersInputCollection.addOneMoreView(getMobileNumber(telephoneNumber), DomainUtils.getMobileNumberTypeTranslatedText(telephoneNumber.getTypes(), EditContactActivity.this)));
-        if(newPhoneNumberToBeAdded != null) phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, defaultPhoneNumberTypeTranslatedText);
+        if (newPhoneNumberToBeAdded != null)
+            phoneNumbersInputCollection.addOneMoreView(newPhoneNumberToBeAdded, defaultPhoneNumberTypeTranslatedText);
     }
 
     public void saveContact(View view) {
@@ -202,10 +204,9 @@ public class EditContactActivity extends AppBaseActivity {
         if (warnIfMandatoryFieldsAreNotFilled(firstName, lastName)) return;
 
         VCard vcardAfterEdit = createVCardFromInputFields(firstName, lastName);
-        if(addingNewContact) {
+        if (addingNewContact) {
             ContactsDataStore.addContact(vcardAfterEdit, this);
-        }
-        else{
+        } else {
             ContactsDataStore.updateContact(contact.id, contact.primaryPhoneNumber.phoneNumber, vcardAfterEdit, this);
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
@@ -213,7 +214,7 @@ public class EditContactActivity extends AppBaseActivity {
     }
 
     private boolean warnIfMandatoryFieldsAreNotFilled(String firstName, String lastName) {
-        if(isEmpty(firstName) && isEmpty(lastName)){
+        if (isEmpty(firstName) && isEmpty(lastName)) {
             editText_firstName.setError(getString(R.string.required_firstname_or_lastname));
             return true;
         }
@@ -236,12 +237,12 @@ public class EditContactActivity extends AppBaseActivity {
 
     private void addGroupsToNewVCard(VCard newVCard) {
         List<String> newGroupNames = SpinnerUtil.getSelectedItems(groupsSpinner, getAllGroupNames());
-        if(newGroupNames.isEmpty()) return;
+        if (newGroupNames.isEmpty()) return;
         VCardUtils.setCategories(newGroupNames, newVCard);
     }
 
     private void addDateOfBirthFromFieldsToNewVCard(VCard newVCard) {
-        if(selectedBirthDay == null){
+        if (selectedBirthDay == null) {
             newVCard.setBirthday(vcardBeforeEdit == null ? null : vcardBeforeEdit.getBirthday());
             return;
         }
@@ -250,34 +251,34 @@ public class EditContactActivity extends AppBaseActivity {
 
     private void addWebsiteFromFieldsToNewVCard(VCard newVCard) {
         String website = websiteTextInputEditText.getText().toString();
-        if(TextUtils.isEmpty(website)) return;
+        if (TextUtils.isEmpty(website)) return;
         newVCard.addUrl(new Url(website));
     }
 
     private void addNotesFromFieldsToNewVCard(VCard newVCard) {
         String notes = notesTextInputEditText.getText().toString();
-        if(TextUtils.isEmpty(notes)) return;
+        if (TextUtils.isEmpty(notes)) return;
         newVCard.addNote(notes);
     }
 
     private void addAddressFromFieldsToNewVCard(VCard newVCard) {
-        if(addressesInputCollection.isEmpty()) return;
+        if (addressesInputCollection.isEmpty()) return;
         U.chain(addressesInputCollection.getAllAddresses())
-                .forEach(newVCard::addAddress);
+            .forEach(newVCard::addAddress);
     }
 
     private void addEmailsFromFieldsToNewVCard(VCard newVCard) {
-        if(emailsInputCollection.isEmpty()) return;
+        if (emailsInputCollection.isEmpty()) return;
         U.chain(emailsInputCollection.getValuesAndTypes())
-                .map(this::createEmail)
-                .forEach(newVCard::addEmail);
+            .map(this::createEmail)
+            .forEach(newVCard::addEmail);
     }
 
     private void addTelephoneNumbersFromFieldsToNewVCard(VCard newVCard) {
-        if(phoneNumbersInputCollection.isEmpty()) return;
+        if (phoneNumbersInputCollection.isEmpty()) return;
         U.chain(phoneNumbersInputCollection.getValuesAndTypes())
-                .map(this::createTelephone)
-                .forEach(newVCard::addTelephoneNumber);
+            .map(this::createTelephone)
+            .forEach(newVCard::addTelephoneNumber);
     }
 
     @NonNull
@@ -310,12 +311,12 @@ public class EditContactActivity extends AppBaseActivity {
     @Override
     public boolean onCreateOptionsMenu(final Menu menu) {
         menu.add(R.string.save)
-                .setIcon(R.drawable.ic_save_black_24dp)
-                .setOnMenuItemClickListener(item -> {
-                    saveContact(null);
-                    return true;
-                })
-                .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+            .setIcon(R.drawable.ic_save_black_24dp)
+            .setOnMenuItemClickListener(item -> {
+                saveContact(null);
+                return true;
+            })
+            .setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
         return super.onCreateOptionsMenu(menu);
     }
 

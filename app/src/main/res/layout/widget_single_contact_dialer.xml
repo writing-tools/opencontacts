@@ -3,12 +3,14 @@
     android:id="@+id/entire_single_contact_widget"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
+
     <ImageView
         android:layout_centerHorizontal="true"
         android:id="@+id/contact_image"
         android:src="@mipmap/ic_launcher"
         android:layout_width="48dp"
         android:layout_height="48dp" />
+
     <TextView
         android:layout_centerHorizontal="true"
         android:textAlignment="center"

@@ -1,6 +1,31 @@
 package opencontacts.open.com.opencontacts.activities;
 
 
+import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
+import static android.widget.Toast.LENGTH_SHORT;
+import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
+import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
+
 import android.app.Activity;
 import android.app.role.RoleManager;
 import android.content.Context;
@@ -33,32 +58,6 @@ import open.fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-
-import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
-import static android.widget.Toast.LENGTH_SHORT;
-import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
-import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
-import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
 
 public class PreferencesActivity extends AppBaseActivity {
 
@@ -71,11 +70,11 @@ public class PreferencesActivity extends AppBaseActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         FragmentManager supportFragmentManager = getSupportFragmentManager();
-        if(!supportFragmentManager.getFragments().isEmpty()) return;
+        if (!supportFragmentManager.getFragments().isEmpty()) return;
         supportFragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_container, new PreferencesFragment(), PREFERENCE_FRAGMENT_TRANSACTION_TAG)
-                .commit();
+            .beginTransaction()
+            .add(R.id.fragment_container, new PreferencesFragment(), PREFERENCE_FRAGMENT_TRANSACTION_TAG)
+            .commit();
     }
 
     @Override
@@ -153,10 +152,10 @@ public class PreferencesActivity extends AppBaseActivity {
         private void handlePreferenceUpdates() {
             HashMap<String, Preference.OnPreferenceChangeListener> onPreferenceChangeHandlersMap = getIndividualPreferenceHandlersMap();
             U.forEach(onPreferenceChangeHandlersMap.keySet(),
-                    preferenceKey -> findPreference(preferenceKey)
-                            .setOnPreferenceChangeListener(
-                                    onPreferenceChangeHandlersMap.get(preferenceKey)
-                            ));
+                preferenceKey -> findPreference(preferenceKey)
+                    .setOnPreferenceChangeListener(
+                        onPreferenceChangeHandlersMap.get(preferenceKey)
+                    ));
         }
 
         @NonNull
@@ -173,7 +172,7 @@ public class PreferencesActivity extends AppBaseActivity {
         @NonNull
         private Preference.OnPreferenceChangeListener onT9PinyinEnabled() {
             return (preference, pinyinEnabled) -> {
-                if (pinyinEnabled.equals(true)){
+                if (pinyinEnabled.equals(true)) {
                     blockUIUntil(() -> ContactsDataStore.writePinyinToDb(getContext()), getContext());
                 }
                 runOnMainDelayed(() -> ContactsDataStore.updateT9Supplier(getContext()), 500); // when disabled, this method should return true for the prefs to be updated
@@ -201,8 +200,8 @@ public class PreferencesActivity extends AppBaseActivity {
         @NonNull
         private Preference.OnPreferenceChangeListener onWhatsappToggle() {
             return (preference, newValue) -> {
-                if(newValue.equals(false)) return true;
-                if(!isWhatsappInstalled(activity)) {
+                if (newValue.equals(false)) return true;
+                if (!isWhatsappInstalled(activity)) {
                     Toast.makeText(activity, R.string.whatsapp_not_installed, Toast.LENGTH_LONG).show();
                     return false;
                 }
@@ -239,21 +238,21 @@ public class PreferencesActivity extends AppBaseActivity {
             countryCodeEditText.setText(getDefaultWhatsAppCountryCode(context));
             countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
             new AlertDialog.Builder(context)
-                    .setView(countryCodeEditText)
-                    .setTitle(R.string.input_country_calling_code_title)
-                    .setMessage(R.string.input_country_calling_code_description)
-                    .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> {
-                        if(!isWhatsappInstalled(context)) {
-                            showAlert(context, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
-                            return;
-                        }
-                        enableWhatsappIntegration(countryCodeEditText.getText().toString(), context);
-                    })
-                    .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> {
-                        disableWhatsappIntegration(context);
-                        getActivity().recreate();// recreating coz preference fragment is not able to read the disabled preference and still shows enable.
-                    })
-                    .show();
+                .setView(countryCodeEditText)
+                .setTitle(R.string.input_country_calling_code_title)
+                .setMessage(R.string.input_country_calling_code_description)
+                .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> {
+                    if (!isWhatsappInstalled(context)) {
+                        showAlert(context, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
+                        return;
+                    }
+                    enableWhatsappIntegration(countryCodeEditText.getText().toString(), context);
+                })
+                .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> {
+                    disableWhatsappIntegration(context);
+                    getActivity().recreate();// recreating coz preference fragment is not able to read the disabled preference and still shows enable.
+                })
+                .show();
         }
     }
 

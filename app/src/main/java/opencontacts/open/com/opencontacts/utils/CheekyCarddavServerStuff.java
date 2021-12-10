@@ -6,7 +6,7 @@ public class CheekyCarddavServerStuff {
     String addressBookUrlSuffix;
     String validateServerUrlSuffix;
 
-    public CheekyCarddavServerStuff(String name){
+    public CheekyCarddavServerStuff(String name) {
         this(name, "", "", "");
     }
 

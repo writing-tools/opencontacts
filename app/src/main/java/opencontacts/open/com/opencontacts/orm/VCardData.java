@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.orm;
 
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
+
 import android.content.Context;
 
 import com.github.underscore.U;
@@ -8,13 +10,11 @@ import com.orm.SugarRecord;
 import ezvcard.VCard;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
-
 public class VCardData extends SugarRecord {
-    public static final int   STATUS_NONE    = 0,
-                              STATUS_CREATED = 1,
-                              STATUS_UPDATED = 2,
-                              STATUS_DELETED = 3;
+    public static final int STATUS_NONE = 0,
+        STATUS_CREATED = 1,
+        STATUS_UPDATED = 2,
+        STATUS_DELETED = 3;
     public Contact contact;
     public String vcardDataAsString;
     public String uid;
@@ -43,9 +43,10 @@ public class VCardData extends SugarRecord {
         this.href = href;
     }
 
-    public VCardData(){}
+    public VCardData() {
+    }
 
-    public static VCardData getVCardData(long contactId){
+    public static VCardData getVCardData(long contactId) {
         return U.firstOrNull(find(VCardData.class, "contact = ?", "" + contactId));
     }
 
@@ -57,11 +58,10 @@ public class VCardData extends SugarRecord {
     }
 
     private static void addNotesToVCard(VCard vCard, VCard dbVCard) {
-        if(vCard.getNotes().isEmpty()){
-            if(!dbVCard.getNotes().isEmpty()) dbVCard.getNotes().remove(0);
-        }
-        else{
-            if(dbVCard.getNotes().isEmpty()) dbVCard.getNotes().addAll(vCard.getNotes());
+        if (vCard.getNotes().isEmpty()) {
+            if (!dbVCard.getNotes().isEmpty()) dbVCard.getNotes().remove(0);
+        } else {
+            if (dbVCard.getNotes().isEmpty()) dbVCard.getNotes().addAll(vCard.getNotes());
             else dbVCard.getNotes().set(0, vCard.getNotes().get(0));
         }
     }

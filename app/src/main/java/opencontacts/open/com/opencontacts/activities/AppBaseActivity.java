@@ -1,5 +1,9 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedTheme;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSecondaryColor;
+
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -11,11 +15,7 @@ import android.view.MenuItem;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
-import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedTheme;
-import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSecondaryColor;
-
-public abstract class AppBaseActivity extends AppCompatActivity{
+public abstract class AppBaseActivity extends AppCompatActivity {
 
     protected Toolbar toolbar;
 
@@ -36,17 +36,17 @@ public abstract class AppBaseActivity extends AppCompatActivity{
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        if(!menu.hasVisibleItems())
+        if (!menu.hasVisibleItems())
             return super.onCreateOptionsMenu(menu);
         processMenu(menu, getSecondaryColor(this));
         return super.onCreateOptionsMenu(menu);
     }
 
     private void processMenu(Menu menu, int textColorPrimary) {
-        for(int i = 0, totalItems = menu.size(); i < totalItems; i++){
+        for (int i = 0, totalItems = menu.size(); i < totalItems; i++) {
             MenuItem menuItem = menu.getItem(i);
-            if(menuItem.hasSubMenu()) processMenu(menuItem.getSubMenu(), textColorPrimary);
-            if(menuItem.getIcon() == null) continue;
+            if (menuItem.hasSubMenu()) processMenu(menuItem.getSubMenu(), textColorPrimary);
+            if (menuItem.getIcon() == null) continue;
             setColorFilterUsingColor(menuItem.getIcon(), textColorPrimary);
         }
     }

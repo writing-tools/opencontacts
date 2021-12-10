@@ -1,5 +1,23 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import static java.util.Collections.emptyList;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
+import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
+import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
+import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.mergeVCardStrings;
+
 import android.content.Context;
 import android.os.AsyncTask;
 import android.text.TextUtils;
@@ -23,24 +41,6 @@ import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
-import static java.util.Collections.emptyList;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
-import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.REFRESHING;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
-import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
-import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.ADDITION;
-import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.DELETION;
-import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.REFRESH;
-import static opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener.UPDATION;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.mergeVCardStrings;
-
 public class ContactsDataStore {
     private static List<Contact> contacts = null;
     private static final List<DataStoreChangeListener<Contact>> dataChangeListeners = Collections.synchronizedList(new ArrayList<>(3));
@@ -52,11 +52,11 @@ public class ContactsDataStore {
     private static Function<Contact, String> t9NameSupplier = defaultName; //will be dealt in init
 
     public synchronized static List<Contact> getAllContacts() {
-        if(currentState == LOADING) {
+        if (currentState == LOADING) {
             System.out.println("skipping the load yolo");
             return emptyList();
         }
-        if (currentState == NONE ) {
+        if (currentState == NONE) {
             currentState = LOADING;
             refreshStoreAsync();
             return emptyList();
@@ -112,14 +112,14 @@ public class ContactsDataStore {
     }
 
     public static void addDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
-        synchronized (dataChangeListeners){
+        synchronized (dataChangeListeners) {
             dataChangeListeners.add(changeListener);
         }
     }
 
     public static void removeDataChangeListener(DataStoreChangeListener<Contact> changeListener) {
         processAsync(() -> { //for those listeners who want to deregister inside the registered listener callback
-            synchronized (dataChangeListeners){
+            synchronized (dataChangeListeners) {
                 dataChangeListeners.remove(changeListener);
             }
         });
@@ -129,7 +129,7 @@ public class ContactsDataStore {
         return ContactsDBHelper.getContactFromDB(phoneNumber);
     }
 
-    public static Contact cautiouslyGetContactFromDatabase(long contactId) throws Exception{
+    public static Contact cautiouslyGetContactFromDatabase(long contactId) throws Exception {
         return U.checkNotNull(ContactsDBHelper.getContact(contactId));
     }
 
@@ -148,7 +148,7 @@ public class ContactsDataStore {
             protected Void doInBackground(Void... params) {
                 for (CallLogEntry callLogEntry : newCallLogEntries) {
                     long contactId = callLogEntry.getContactId();
-                    if(getContactWithId(contactId) == null)
+                    if (getContactWithId(contactId) == null)
                         continue;
                     ContactsDBHelper.updateLastAccessed(contactId, callLogEntry.getDate());
                 }
@@ -176,32 +176,34 @@ public class ContactsDataStore {
         notifyListeners(REFRESH, null);
     }
 
-    private static void notifyListenersAsync(final int type, final Contact contact){
-        if(dataChangeListeners.isEmpty() || pauseUpdates)
+    private static void notifyListenersAsync(final int type, final Contact contact) {
+        if (dataChangeListeners.isEmpty() || pauseUpdates)
             return;
         processAsync(() -> notifyListeners(type, contact));
     }
 
     private static void notifyListeners(int type, Contact contact) {
-        if(dataChangeListeners.isEmpty() || pauseUpdates)
+        if (dataChangeListeners.isEmpty() || pauseUpdates)
             return;
-        synchronized (dataChangeListeners){
+        synchronized (dataChangeListeners) {
             U.forEach(dataChangeListeners, listener -> {
-                if(listener == null) return;
-                if(type == ADDITION)
+                if (listener == null) return;
+                if (type == ADDITION)
                     listener.onAdd(contact);
-                else if(type == DELETION)
+                else if (type == DELETION)
                     listener.onRemove(contact);
-                else if(type == UPDATION)
+                else if (type == UPDATION)
                     listener.onUpdate(contact);
                 else if (type == REFRESH)
                     listener.onStoreRefreshed();
             });
         }
     }
+
     /**
      * This method takes care of only removing contacts but there are other
      * things to do as well when removing all contacts. Call below mentioned one instead
+     *
      * @deprecated use {@link DomainUtils#deleteAllContacts(Context)} instead.
      */
     public static void deleteAllContacts(Context context) {
@@ -213,7 +215,7 @@ public class ContactsDataStore {
         });
     }
 
-    public static VCardData getVCardData(long contactId){
+    public static VCardData getVCardData(long contactId) {
         return ContactsDBHelper.getVCard(contactId);
     }
 
@@ -240,23 +242,23 @@ public class ContactsDataStore {
         refreshStoreAsync();
     }
 
-    public static void updateFavoritesList(){
+    public static void updateFavoritesList() {
         favorites = U.chain(Favorite.listAll(Favorite.class))
-                .map(favoriteFromDB -> favoriteFromDB.contact.getId())
-                .map(ContactsDataStore::getContactWithId)
-                .filterFalse(U::isNull)
-                .value();
+            .map(favoriteFromDB -> favoriteFromDB.contact.getId())
+            .map(ContactsDataStore::getContactWithId)
+            .filterFalse(U::isNull)
+            .value();
     }
 
-    public static List<Contact> getFavorites(){
-        if(favorites.size() != 0 || Favorite.count(Favorite.class) == 0)
+    public static List<Contact> getFavorites() {
+        if (favorites.size() != 0 || Favorite.count(Favorite.class) == 0)
             return favorites;
         updateFavoritesList();
         return favorites;
     }
 
     public static void addFavorite(Contact contact) {
-        if(getFavorites().contains(contact)) return;
+        if (getFavorites().contains(contact)) return;
         new Favorite(ContactsDBHelper.getDBContactWithId(contact.id)).save();
         favorites.add(contact);
         markAsFavoriteInVCard(contact.id);
@@ -273,7 +275,7 @@ public class ContactsDataStore {
 
     public static void addFavorite(opencontacts.open.com.opencontacts.orm.Contact contact) {
         Contact dummyContactMatchingId = createDummyContact(contact.getId());
-        if(getFavorites().contains(dummyContactMatchingId)) return;
+        if (getFavorites().contains(dummyContactMatchingId)) return;
         new Favorite(ContactsDBHelper.getDBContactWithId(dummyContactMatchingId.id)).save();
         favorites.add(ContactsDBHelper.getContact(dummyContactMatchingId.id));
         markAsFavoriteInVCard(dummyContactMatchingId.id);
@@ -286,7 +288,7 @@ public class ContactsDataStore {
         notifyListenersAsync(REFRESH, null);
     }
 
-    public static boolean isFavorite(Contact contact){
+    public static boolean isFavorite(Contact contact) {
         return getFavorites().contains(contact);
     }
 
@@ -298,24 +300,24 @@ public class ContactsDataStore {
         updateContact(primaryContact.id, primaryContact.primaryPhoneNumber.phoneNumber, mergedVCard, context);
     }
 
-    public static void mergeContacts(List<Contact> contactsToMerge, Context context){
+    public static void mergeContacts(List<Contact> contactsToMerge, Context context) {
         if (contactsToMerge == null || contactsToMerge.size() < 2) return;
         final Contact firstContact = U.first(contactsToMerge);
         U.chain(contactsToMerge)
-                .rest()
-                .forEach(contactToMerge -> {
-                    try {
-                        mergeContacts(firstContact, contactToMerge, context);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        AndroidUtils.toastFromNonUIThread(R.string.failed_merging_a_contact, Toast.LENGTH_SHORT, context);
-                        // this happened coz of not being able to read contact data from vcard table. So, its fine if its not merged finally
-                    }
-                });
+            .rest()
+            .forEach(contactToMerge -> {
+                try {
+                    mergeContacts(firstContact, contactToMerge, context);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                    AndroidUtils.toastFromNonUIThread(R.string.failed_merging_a_contact, Toast.LENGTH_SHORT, context);
+                    // this happened coz of not being able to read contact data from vcard table. So, its fine if its not merged finally
+                }
+            });
     }
 
     public static List<Contact> getContactsMatchingT9(String t9Text) {
-        if(contacts == null) return emptyList();
+        if (contacts == null) return emptyList();
         return DomainUtils.filterContactsBasedOnT9Text(t9Text, contacts);
     }
 }

@@ -1,6 +1,9 @@
 package opencontacts.open.com.opencontacts.utils;
 
 
+import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.getTintedDrawable;
+import static opencontacts.open.com.opencontacts.utils.PrimitiveDataTypeUtils.toPrimitiveBools;
+
 import android.content.Context;
 import android.widget.ArrayAdapter;
 
@@ -11,9 +14,6 @@ import com.thomashaertel.widget.MultiSpinner;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
-
-import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.getTintedDrawable;
-import static opencontacts.open.com.opencontacts.utils.PrimitiveDataTypeUtils.toPrimitiveBools;
 
 public class SpinnerUtil {
     public static <T> void setSelection(List<T> itemsToSelect, List<T> allItems, MultiSpinner multiSpinner) {

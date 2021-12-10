@@ -1,5 +1,8 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static java.util.Arrays.asList;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.goToUrl;
+
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,10 +17,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.BuildConfig;
 import opencontacts.open.com.opencontacts.R;
 
-import static java.util.Arrays.asList;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.goToUrl;
-
-public class AboutActivity extends AppBaseActivity{
+public class AboutActivity extends AppBaseActivity {
     @Override
     int getLayoutResource() {
         return R.layout.activity_about;
@@ -26,11 +26,11 @@ public class AboutActivity extends AppBaseActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ((AppCompatTextView)findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
+        ((AppCompatTextView) findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);
         ListView contributorsList = findViewById(R.id.contributors_list);
         List<String> names = asList(getResources().getStringArray(R.array.contributor_names));
         List<String> urls = asList(getResources().getStringArray(R.array.contributor_urls));
-        contributorsList.setAdapter(new ArrayAdapter<String>(this, R.layout.layout_clickable_text_view_item, names){
+        contributorsList.setAdapter(new ArrayAdapter<String>(this, R.layout.layout_clickable_text_view_item, names) {
             @NonNull
             @Override
             public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {

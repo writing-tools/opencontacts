@@ -2,7 +2,7 @@ package opencontacts.open.com.opencontacts.activities;
 
 import opencontacts.open.com.opencontacts.R;
 
-public class HelpActivity extends AppBaseActivity{
+public class HelpActivity extends AppBaseActivity {
 
     @Override
     int getLayoutResource() {

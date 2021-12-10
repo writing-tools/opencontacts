@@ -1,5 +1,28 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
+import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldShowBottomMenu;
+import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
+import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
+
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
@@ -36,29 +59,6 @@ import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import pro.midev.expandedmenulibrary.ExpandedMenuItem;
 import pro.midev.expandedmenulibrary.ExpandedMenuView;
 
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static android.view.WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE;
-import static android.widget.Toast.LENGTH_SHORT;
-import static android.widget.Toast.makeText;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getNumberToDial;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getThemeAttributeColor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDialIntent;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultTab;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.markPermissionsAksed;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldBottomMenuOpenByDefault;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldKeyboardResizeViews;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLaunchDefaultTab;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldShowBottomMenu;
-import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
-import static opencontacts.open.com.opencontacts.utils.domain.AppShortcuts.TAB_INDEX_INTENT_EXTRA;
-
 
 public class MainActivity extends AppBaseActivity {
     public static final int CALLLOG_TAB_INDEX = 0;
@@ -78,15 +78,15 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == IMPORT_FILE_CHOOSER_RESULT){
-            if(data == null) return;
+        if (requestCode == IMPORT_FILE_CHOOSER_RESULT) {
+            if (data == null) return;
             startActivity(
-                    new Intent(this, ImportVcardActivity.class)
+                new Intent(this, ImportVcardActivity.class)
                     .setData(data.getData())
             );
             return;
         }
-        if(requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
+        if (requestCode == PREFERENCES_ACTIVITY_RESULT) recreate();
     }
 
     @Override
@@ -96,12 +96,11 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private boolean handleIntent(Intent intent) {
-        if(isValidDialIntent(intent)) {
+        if (isValidDialIntent(intent)) {
             showDialerWithNumber(getNumberToDial(intent));
-        } else if(isTabSpecified(intent)){
+        } else if (isTabSpecified(intent)) {
             gotoTabSpecified(intent);
-        }
-        else return false;
+        } else return false;
         return true;
     }
 
@@ -130,34 +129,34 @@ public class MainActivity extends AppBaseActivity {
     protected void onResume() {
         super.onResume();
         refresh();
-        if(shouldLaunchDefaultTab(this)) gotoDefaultTab();
+        if (shouldLaunchDefaultTab(this)) gotoDefaultTab();
     }
 
     private void gotoDefaultTab() {
         // post delayed as view pager is prioritising the fragment launched first as fragment 0 in the list
         // affecting the fragments order etc resulting in cast exception when recreating activity while reusing fragments
         runOnMainDelayed(() -> {
-                if(viewPager == null) return;
-                viewPager.setCurrentItem(getDefaultTab(this));
-            }, 100);
+            if (viewPager == null) return;
+            viewPager.setCurrentItem(getDefaultTab(this));
+        }, 100);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(SharedPreferencesUtils.shouldAskForPermissions(this)){
+        if (SharedPreferencesUtils.shouldAskForPermissions(this)) {
             AndroidUtils.askForPermissionsIfNotGranted(this);
             View startButton = findViewById(R.id.start_button);
             startButton.setVisibility(VISIBLE);
             startButton.setOnClickListener(x -> this.recreate());
             markPermissionsAksed(this);
             return;
-        }
-        else {
+        } else {
             setupTabs();
             setupBottomMenu();
-            if(shouldKeyboardResizeViews(this)) getWindow().setSoftInputMode(SOFT_INPUT_ADJUST_RESIZE);
-            if(handleIntent(getIntent())) ;
+            if (shouldKeyboardResizeViews(this))
+                getWindow().setSoftInputMode(SOFT_INPUT_ADJUST_RESIZE);
+            if (handleIntent(getIntent())) ;
             else gotoDefaultTab();
         }
         markPermissionsAksed(this);
@@ -165,7 +164,7 @@ public class MainActivity extends AppBaseActivity {
 
     private void setupBottomMenu() {
         bottomMenu = findViewById(R.id.bottom_menu);
-        if(!shouldShowBottomMenu(this)){
+        if (!shouldShowBottomMenu(this)) {
             bottomMenu.setVisibility(GONE);
             bottomMenu = null;
             return;
@@ -177,18 +176,22 @@ public class MainActivity extends AppBaseActivity {
         ExpandedMenuItem addContactItem = new ExpandedMenuItem(R.drawable.ic_add_circle_outline_24dp, "Add contact", getPrimaryColor(this));
         bottomMenu.setIcons(searchItem, groupItem, addContactItem, dialpadItem);
         bottomMenu.setOnItemClickListener(i -> {
-            switch (i){
-                case 0: searchContacts();
-                break;
-                case 1: launchGroupsActivity();
-                break;
-                case 2: launchAddContact();
-                break;
-                case 3: viewPager.setCurrentItem(DIALER_TAB_INDEX);
-                break;
+            switch (i) {
+                case 0:
+                    searchContacts();
+                    break;
+                case 1:
+                    launchGroupsActivity();
+                    break;
+                case 2:
+                    launchAddContact();
+                    break;
+                case 3:
+                    viewPager.setCurrentItem(DIALER_TAB_INDEX);
+                    break;
             }
         });
-        if(shouldBottomMenuOpenByDefault(this)) bottomMenu.expandMenu();
+        if (shouldBottomMenuOpenByDefault(this)) bottomMenu.expandMenu();
         else bottomMenu.collapseMenu();
     }
 
@@ -209,7 +212,7 @@ public class MainActivity extends AppBaseActivity {
         searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
         searchView.setOnSearchClickListener(v -> viewPager.setCurrentItem(CONTACTS_TAB_INDEX));
-        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+        menu.findItem(R.id.action_sync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             startActivity(new Intent(this, CardDavSyncActivity.class))
         ));
         menu.findItem(R.id.action_import).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::importContacts));
@@ -217,10 +220,10 @@ public class MainActivity extends AppBaseActivity {
             startActivity(new Intent(this, MergeContactsActivity.class))
         ));
 
-        if(contactsFragment != null)
+        if (contactsFragment != null)
             contactsFragment.configureSearchInMenu(searchView);
         menu.findItem(R.id.action_export).setOnMenuItemClickListener(item -> {
-            if(!hasPermission(WRITE_EXTERNAL_STORAGE, this)){
+            if (!hasPermission(WRITE_EXTERNAL_STORAGE, this)) {
                 Toast.makeText(this, R.string.grant_storage_permisson_detail, Toast.LENGTH_LONG).show();
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     requestPermissions(new String[]{WRITE_EXTERNAL_STORAGE}, 123);
@@ -229,7 +232,7 @@ public class MainActivity extends AppBaseActivity {
             }
             return new ExportMenuItemClickHandler(this).onMenuItemClick(item);
         });
-        menu.findItem(R.id.action_about).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+        menu.findItem(R.id.action_about).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             startActivity(new Intent(MainActivity.this, AboutActivity.class))
         ));
 
@@ -245,7 +248,7 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.action_resync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             CallLogDataStore.updateCallLogAsyncForAllContacts(MainActivity.this)
         ));
-        menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(getMenuItemClickHandlerFor(()->
+        menu.findItem(R.id.action_whats_new).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             AndroidUtils.goToUrl(getString(R.string.gitlab_repo_tags_url), MainActivity.this)
         ));
         menu.findItem(R.id.action_export_call_log).setOnMenuItemClickListener(item -> {
@@ -275,34 +278,34 @@ public class MainActivity extends AppBaseActivity {
     }
 
     private void searchContacts() {
-        if(searchItem.isActionViewExpanded()) searchItem.collapseActionView();
+        if (searchItem.isActionViewExpanded()) searchItem.collapseActionView();
         searchItem.expandActionView();
     }
 
     @Override
     public void onBackPressed() {
         AppBaseFragment currentFragment = getCurrentFragment();
-        if(currentFragment == null) {
+        if (currentFragment == null) {
             super.onBackPressed();
             return;
         }
-        if(currentFragment.handleBackPress()) return;
+        if (currentFragment.handleBackPress()) return;
         super.onBackPressed();
     }
 
     private AppBaseFragment getCurrentFragment() {
-        return (AppBaseFragment)((FragmentPagerAdapter)viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
+        return (AppBaseFragment) ((FragmentPagerAdapter) viewPager.getAdapter()).getItem(viewPager.getCurrentItem());
     }
 
     private void importContacts() {
         try {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
                 startActivityForResult(new Intent(Intent.ACTION_OPEN_DOCUMENT)
-                                .setType("*/*"),
-                        IMPORT_FILE_CHOOSER_RESULT);
-            } else startActivityForResult(
-                    new Intent(Intent.ACTION_PICK),
+                        .setType("*/*"),
                     IMPORT_FILE_CHOOSER_RESULT);
+            } else startActivityForResult(
+                new Intent(Intent.ACTION_PICK),
+                IMPORT_FILE_CHOOSER_RESULT);
         } catch (Exception e) {
             makeText(this, R.string.no_app_found_for_action_open_document, LENGTH_SHORT);
         }
@@ -315,12 +318,11 @@ public class MainActivity extends AppBaseActivity {
     private void setupTabs() {
         viewPager = findViewById(R.id.view_pager);
         List<Fragment> fragmentsList = getSupportFragmentManager().getFragments();
-        if(!fragmentsList.isEmpty()){
+        if (!fragmentsList.isEmpty()) {
             callLogFragment = (CallLogFragment) fragmentsList.get(0);
             contactsFragment = (ContactsFragment) fragmentsList.get(1);
             dialerFragment = (DialerFragment) fragmentsList.get(2);
-        }
-        else{
+        } else {
             callLogFragment = new CallLogFragment();
             contactsFragment = new ContactsFragment();
             dialerFragment = new DialerFragment();
@@ -361,7 +363,7 @@ public class MainActivity extends AppBaseActivity {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 fragments.get(tab.getPosition()).onSelect();
-                if(tab.getPosition() == DIALER_TAB_INDEX){
+                if (tab.getPosition() == DIALER_TAB_INDEX) {
                     tab.setIcon(dialerTabDrawables.second);
                 }
             }
@@ -369,7 +371,7 @@ public class MainActivity extends AppBaseActivity {
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
                 fragments.get(tab.getPosition()).onUnSelect();
-                if(tab.getPosition() == DIALER_TAB_INDEX){
+                if (tab.getPosition() == DIALER_TAB_INDEX) {
                     tab.setIcon(dialerTabDrawables.first);
                 }
             }
@@ -381,7 +383,7 @@ public class MainActivity extends AppBaseActivity {
         });
     }
 
-    private Pair<Drawable, Drawable> getDialerTabDrawables(){
+    private Pair<Drawable, Drawable> getDialerTabDrawables() {
         int tabSelectedColor = getThemeAttributeColor(android.R.attr.textColorPrimary, MainActivity.this);
         int tabUnSelectedColor = getThemeAttributeColor(android.R.attr.textColorSecondary, MainActivity.this);
         Drawable dialpadIconOnUnSelect = ContextCompat.getDrawable(this, R.drawable.dial_pad).mutate();
@@ -390,17 +392,19 @@ public class MainActivity extends AppBaseActivity {
         setColorFilterUsingColor(dialpadIconOnUnSelect, tabUnSelectedColor);
         return Pair.create(dialpadIconOnUnSelect, dialpadIconOnSelect);
     }
-    public void collapseSearchView(){
-        if(searchItem != null) searchItem.collapseActionView(); // happens when app hasn't even got menu items callback
+
+    public void collapseSearchView() {
+        if (searchItem != null)
+            searchItem.collapseActionView(); // happens when app hasn't even got menu items callback
     }
 
     public void hideBottomMenu() {
-        if(bottomMenu == null) return;
+        if (bottomMenu == null) return;
         bottomMenu.setVisibility(GONE);
     }
 
     public void showBottomMenu() {
-        if(bottomMenu == null || !shouldShowBottomMenu(this)) return;
+        if (bottomMenu == null || !shouldShowBottomMenu(this)) return;
         bottomMenu.setVisibility(VISIBLE);
     }
 }

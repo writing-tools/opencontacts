@@ -4,6 +4,7 @@
     android:layout_marginTop="16dp"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="?selectableItemBackground">
+
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -33,8 +34,7 @@
         android:layout_marginStart="10dp"
         android:layout_alignBaseline="@id/text_view_duration"
         android:layout_toRightOf="@id/text_view_duration"
-        android:layout_toEndOf="@id/text_view_duration"
-        />
+        android:layout_toEndOf="@id/text_view_duration" />
 
     <android.support.v7.widget.AppCompatTextView
         android:text="00:00"
@@ -45,8 +45,7 @@
         android:layout_marginStart="10dp"
         android:layout_alignBottom="@+id/image_view_sim"
         android:layout_toRightOf="@+id/text_view_sim"
-        android:layout_toEndOf="@+id/text_view_sim"
-        />
+        android:layout_toEndOf="@+id/text_view_sim" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image_view_sim"
@@ -58,8 +57,8 @@
         android:layout_alignLeft="@id/textview_phone_number"
         app:srcCompat="@drawable/ic_sim_card_black_24dp"
         android:src="@drawable/ic_sim_card_black_24dp"
-        app:tint="?colorControlNormal"
-        />
+        app:tint="?colorControlNormal" />
+
     <android.support.v7.widget.AppCompatTextView
         android:text="1"
         android:textSize="15sp"
@@ -70,7 +69,6 @@
         android:layout_toRightOf="@+id/image_view_sim"
         android:layout_toEndOf="@+id/image_view_sim"
         android:layout_below="@id/textview_phone_number"
-        android:layout_marginTop="10dp"
-        />
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

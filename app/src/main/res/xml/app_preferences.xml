@@ -41,48 +41,40 @@
             android:defaultValue="false"
             android:key="TOGGLE_CONTACT_ACTIONS"
             android:title="@string/toggle_contact_actions"
-            android:summary="@string/toggle_contact_actions_summary"
-            />
+            android:summary="@string/toggle_contact_actions_summary" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="SHOULD_SHOW_BOTTOM_MENU"
-            android:title="@string/should_show_bottom_menu"
-            />
+            android:title="@string/should_show_bottom_menu" />
         <SwitchPreference
             android:defaultValue="true"
             android:key="BOTTOM_MENU_OPEN_DEFAULT"
-            android:title="@string/open_bottommenu_on_start"
-            />
+            android:title="@string/open_bottommenu_on_start" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF"
-            android:title="@string/auto_cancel_missed_call_notifs"
-            />
+            android:title="@string/auto_cancel_missed_call_notifs" />
         <SwitchPreference
             android:defaultValue="false"
             android:key="KEYBOARD_RESIZE_VIEWS"
-            android:title="@string/keyboard_adjusts_views"
-            />
+            android:title="@string/keyboard_adjusts_views" />
 
         <ListPreference
             android:title="@string/default_tab"
             android:key="DEFAULT_TAB"
             android:entries="@array/tabs_list"
             android:entryValues="@array/tabs_values"
-            android:summary="@string/default_tab_summary"
-            />
+            android:summary="@string/default_tab_summary" />
         <SwitchPreference
             android:enabled="false"
             android:defaultValue="false"
             android:key="SHOULD_USE_SYSTEM_PHONE_APP"
             android:summary="@string/should_use_system_app_summary"
-            android:title="@string/should_use_system_app"
-            />
+            android:title="@string/should_use_system_app" />
         <Preference
             android:title="Choose custom font size"
             android:summary="Increase or decrease the size of text across app"
-            android:key="TEXT_SIZE_SCALING"
-            />
+            android:key="TEXT_SIZE_SCALING" />
 
     </PreferenceCategory>
     <PreferenceCategory

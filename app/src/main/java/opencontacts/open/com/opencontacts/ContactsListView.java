@@ -1,5 +1,10 @@
 package opencontacts.open.com.opencontacts;
 
+import static android.text.TextUtils.isEmpty;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparatorBasedOnName;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
+
 import android.content.Context;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -18,17 +23,12 @@ import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 
-import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactComparatorBasedOnName;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
-
 /**
  * Created by sultanm on 3/25/17.
  */
 
-public class ContactsListView extends ListView implements DataStoreChangeListener<Contact>{
-    private List <Contact> contacts;
+public class ContactsListView extends ListView implements DataStoreChangeListener<Contact> {
+    private List<Contact> contacts;
     private Context context;
     private Supplier<String> searchStringSupplier;
     private ContactsListViewAdapter adapter;
@@ -120,11 +120,11 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
         contacts.addAll(0, favorites);
     }
 
-    public void onDestroy(){
+    public void onDestroy() {
         ContactsDataStore.removeDataChangeListener(this);
     }
 
-    public void filter(CharSequence filterText){
-        ((HeaderViewListAdapter)getAdapter()).getFilter().filter(filterText);
+    public void filter(CharSequence filterText) {
+        ((HeaderViewListAdapter) getAdapter()).getFilter().filter(filterText);
     }
 }

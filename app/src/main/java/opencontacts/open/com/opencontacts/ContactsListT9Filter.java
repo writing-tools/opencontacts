@@ -8,7 +8,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
-public class ContactsListT9Filter extends ContactsListFilter{
+public class ContactsListT9Filter extends ContactsListFilter {
     public ContactsListT9Filter(ArrayAdapter<Contact> adapter, AllContactsHolder allContactsHolder) {
         super(adapter, allContactsHolder);
     }
@@ -19,7 +19,7 @@ public class ContactsListT9Filter extends ContactsListFilter{
 
     public void createDataMapping(List<Contact> contacts) {
         List<Contact> threadSafeContacts = new ArrayList<>(contacts);
-        for(Contact contact : threadSafeContacts){
+        for (Contact contact : threadSafeContacts) {
             contact.setT9Text();
         }
     }

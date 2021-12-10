@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical" android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
     android:background="?selectableItemBackground"
     android:paddingTop="5dp"
     android:paddingBottom="5dp"
@@ -63,8 +64,8 @@
         android:layout_below="@+id/textview_phone_number"
         android:layout_alignLeft="@id/textview_phone_number"
         android:layout_alignStart="@id/textview_phone_number"
-        android:layout_marginTop="5dp"
-        />
+        android:layout_marginTop="5dp" />
+
     <android.support.v7.widget.AppCompatTextView
         android:id="@+id/call_repeat_count"
         android:visibility="gone"
@@ -75,8 +76,7 @@
         android:layout_alignTop="@id/image_view_call_type"
         android:text="(5)"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-         />
+        android:layout_height="wrap_content" />
 
     <TextView
         android:text="00:00:00"
@@ -87,8 +87,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_toRightOf="@id/text_view_duration"
-        android:layout_toEndOf="@id/text_view_duration"
-         />
+        android:layout_toEndOf="@id/text_view_duration" />
 
     <android.support.v7.widget.AppCompatTextView
         android:text="phone_number"
@@ -109,8 +108,7 @@
         android:layout_marginStart="10dp"
         android:layout_alignBottom="@+id/image_view_call_type"
         android:layout_toRightOf="@+id/text_view_sim"
-        android:layout_toEndOf="@+id/text_view_sim"
-         />
+        android:layout_toEndOf="@+id/text_view_sim" />
 
     <android.support.v7.widget.AppCompatImageView
         android:id="@+id/image_view_sim"
@@ -124,8 +122,8 @@
         android:layout_toEndOf="@id/image_view_call_type"
         app:srcCompat="@drawable/ic_sim_card_black_24dp"
         android:src="@drawable/ic_sim_card_black_24dp"
-        app:tint="?colorControlNormal"
-        />
+        app:tint="?colorControlNormal" />
+
     <TextView
         android:text="1"
         android:textSize="15sp"
@@ -136,7 +134,6 @@
         android:layout_toRightOf="@+id/image_view_sim"
         android:layout_toEndOf="@+id/image_view_sim"
         android:layout_below="@id/textview_phone_number"
-        android:layout_marginTop="10dp"
-        />
+        android:layout_marginTop="10dp" />
 
 </RelativeLayout>

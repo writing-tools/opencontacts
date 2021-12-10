@@ -1,5 +1,29 @@
 package opencontacts.open.com.opencontacts;
 
+import static android.widget.Toast.LENGTH_SHORT;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.merge;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.replaceContactWithServers;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
+import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.carddavServersCheekyStuffMap;
+import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.otherServerConstants;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidDetails;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getBaseURL;
+import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getChangesSinceSyncToken;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SYNC_TOKEN_SHARED_PREF_KEY;
+
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Pair;
@@ -32,30 +56,6 @@ import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.CheekyCarddavServerStuff;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
-import static android.widget.Toast.LENGTH_SHORT;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.merge;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsSyncHelper.replaceContactWithServers;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
-import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.carddavServersCheekyStuffMap;
-import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.otherServerConstants;
-import static opencontacts.open.com.opencontacts.utils.CardDavUtils.areNotValidDetails;
-import static opencontacts.open.com.opencontacts.utils.CardDavUtils.downloadAddressBook;
-import static opencontacts.open.com.opencontacts.utils.CardDavUtils.figureOutAddressBookUrl;
-import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getBaseURL;
-import static opencontacts.open.com.opencontacts.utils.CardDavUtils.getChangesSinceSyncToken;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ADDRESSBOOK_URL_SHARED_PREFS_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.BASE_SYNC_URL_SHARED_PREFS_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SYNC_TOKEN_SHARED_PREF_KEY;
-
 public class CardDavSyncActivity extends AppCompatActivity {
 
     private String savedBaseUrl;
@@ -70,10 +70,10 @@ public class CardDavSyncActivity extends AppCompatActivity {
         setupServerTypeDropdown(carddavServerTypeSpinner, urlTextInputEditTextView);
         ((TextInputEditText) findViewById(R.id.url)).setText(savedBaseUrl);
         new AlertDialog.Builder(this)
-                .setTitle("Warning!")
-                .setMessage("Sync is experimental yet, please use this only if you have read the issue status in gitlab")
-                .setPositiveButton("Okay", null)
-                .show();
+            .setTitle("Warning!")
+            .setMessage("Sync is experimental yet, please use this only if you have read the issue status in gitlab")
+            .setPositiveButton("Okay", null)
+            .show();
     }
 
     private void setupServerTypeDropdown(AppCompatSpinner carddavServerTypeSpinner, TextInputEditText urlTextInputEditTextView) {
@@ -86,7 +86,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 Object selectedCarddavServer = carddavServerTypeSpinner.getSelectedItem();
                 String defaultUrl = carddavServersCheekyStuffMap.get(selectedCarddavServer).defaultUrl;
-                if(!defaultUrl.equals("")) urlTextInputEditTextView.setText(defaultUrl);
+                if (!defaultUrl.equals("")) urlTextInputEditTextView.setText(defaultUrl);
             }
 
             @Override
@@ -96,7 +96,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         });
 
         int lastSavedCarddavServerTypeIndex = U.indexOf(cardDavServerNames.toArray(),
-                getStringFromPreferences(CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY, otherServerConstants.name, this));
+            getStringFromPreferences(CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY, otherServerConstants.name, this));
         carddavServerTypeSpinner.setSelection(lastSavedCarddavServerTypeIndex);
     }
 
@@ -107,7 +107,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
         boolean shouldIgnoreSSL = ((SwitchCompat) findViewById(R.id.ignore_ssl)).isChecked();
         String carddavServerType = (String) ((AppCompatSpinner) findViewById(R.id.carddav_server_type)).getSelectedItem();
         AndroidUtils.hideSoftKeyboard(findViewById(R.id.username), this);
-        if(TextUtils.isEmpty(username) || TextUtils.isEmpty(password)){
+        if (TextUtils.isEmpty(username) || TextUtils.isEmpty(password)) {
             Toast.makeText(this, R.string.input_username_and_password, LENGTH_SHORT).show();
             return;
         }
@@ -139,8 +139,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
                 fullSync(baseURL, username, password, addressBookUrl);
             else
                 partialSync(baseURL, username, password, addressBookUrl, syncToken);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             showError(R.string.sync_failed);
             return;
         }
@@ -158,13 +157,13 @@ public class CardDavSyncActivity extends AppCompatActivity {
     }
 
     private void deleteContactsLocallyAsTheyWereDeletedOnServer(List<String> hrefsDeleted) {
-        if(hrefsDeleted.isEmpty()) return;
+        if (hrefsDeleted.isEmpty()) return;
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
         Map<String, VCardData> allVCardsAsHREFMap = getAllVCardsAsHREFMap(allVCardDataList);
 
         U.forEach(hrefsDeleted, href -> {
             VCardData vCardData = allVCardsAsHREFMap.get(href);
-            if(vCardData == null) return;
+            if (vCardData == null) return;
             ContactsDataStore.removeContact(vCardData.contact.getId());
             vCardData.delete();
         });
@@ -177,7 +176,7 @@ public class CardDavSyncActivity extends AppCompatActivity {
 
     private void syncChanges(String urlFromView, String username, String password, String addressBookUrl, List<Triplet<String, String, VCard>> hrefEtagAndVCardList, boolean syncFromLastCheckPoint) {
         List<VCardData> allVCardDataList = VCardData.listAll(VCardData.class);
-        if(!hrefEtagAndVCardList.isEmpty()) updateLocal(hrefEtagAndVCardList, allVCardDataList);
+        if (!hrefEtagAndVCardList.isEmpty()) updateLocal(hrefEtagAndVCardList, allVCardDataList);
         updateServer(allVCardDataList, syncFromLastCheckPoint, username, password, addressBookUrl);
         updatePreference(SYNC_TOKEN_SHARED_PREF_KEY, CardDavUtils.getSyncToken(urlFromView, addressBookUrl), this);
     }
@@ -186,12 +185,11 @@ public class CardDavSyncActivity extends AppCompatActivity {
         Map<String, VCardData> allVCardsAsHREFMap = getAllVCardsAsHREFMap(allVCardDataList);
         U.forEach(hrefEtagAndVCardList, hrefEtagAndVCard -> {
             String href = hrefEtagAndVCard.x;
-            if(allVCardsAsHREFMap.containsKey(href)) {
+            if (allVCardsAsHREFMap.containsKey(href)) {
                 VCardData vcardDataFromDB = allVCardsAsHREFMap.get(href);
-                if(hrefEtagAndVCard.y.equals(vcardDataFromDB.etag)) return;
+                if (hrefEtagAndVCard.y.equals(vcardDataFromDB.etag)) return;
                 processExistingVCard(hrefEtagAndVCard, vcardDataFromDB);
-            }
-            else createContact(hrefEtagAndVCard);
+            } else createContact(hrefEtagAndVCard);
         });
     }
 
@@ -205,38 +203,38 @@ public class CardDavSyncActivity extends AppCompatActivity {
     private void updateServer(List<VCardData> allVCardDataList, boolean syncFromLastCheckPoint, String username, String password, String addressBookUrl) {
         String baseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
         U.forEach(allVCardDataList, vcardData -> {
-            switch (vcardData.status){
+            switch (vcardData.status) {
                 case STATUS_NONE:
-                    if(syncFromLastCheckPoint) break;
+                    if (syncFromLastCheckPoint) break;
                 case STATUS_CREATED:
                     Pair<String, String> hrefAndEtag = CardDavUtils.createContactOnServer(vcardData, addressBookUrl, baseUrl);
-                    if(hrefAndEtag == null) break;
+                    if (hrefAndEtag == null) break;
                     vcardData.href = hrefAndEtag.first;
                     vcardData.etag = hrefAndEtag.second;
                     vcardData.status = STATUS_NONE;
                     vcardData.save();
                     break;
                 case STATUS_UPDATED:
-                    String etag= CardDavUtils.updateContactOnServer(vcardData, baseUrl);
-                    if(etag == null) break;
+                    String etag = CardDavUtils.updateContactOnServer(vcardData, baseUrl);
+                    if (etag == null) break;
                     vcardData.etag = etag;
                     vcardData.status = STATUS_NONE;
                     vcardData.save();
                     break;
                 case STATUS_DELETED:
                     boolean deletionOnServerSuccessful = CardDavUtils.deleteVCardOnServer(vcardData, baseUrl);
-                    if(deletionOnServerSuccessful) vcardData.delete();
+                    if (deletionOnServerSuccessful) vcardData.delete();
                     break;
             }
         });
     }
 
     private void processExistingVCard(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vcardDataFromDB) {
-        if(vcardDataFromDB.status == STATUS_DELETED) {
+        if (vcardDataFromDB.status == STATUS_DELETED) {
             vcardDataFromDB.href = hrefEtagAndVCard.x;
             return;
         }
-        if(vcardDataFromDB.status == STATUS_NONE) {
+        if (vcardDataFromDB.status == STATUS_NONE) {
             replaceContactWithServers(hrefEtagAndVCard, vcardDataFromDB, this);
             return;
         }
@@ -248,20 +246,20 @@ public class CardDavSyncActivity extends AppCompatActivity {
     }
 
 
-    private static Map<String, VCardData> getAllVCardsAsUIDMap(List<VCardData> allVCardDataList){
-        if(allVCardDataList.isEmpty())
+    private static Map<String, VCardData> getAllVCardsAsUIDMap(List<VCardData> allVCardDataList) {
+        if (allVCardDataList.isEmpty())
             return new HashMap<>(0);
 
         List<Tuple<String, VCardData>> listOfTuples = U.map(allVCardDataList, vCardData -> new Tuple<>(vCardData.uid, vCardData));
         return U.toMap(listOfTuples);
     }
 
-    private static Map<String, VCardData> getAllVCardsAsHREFMap(List<VCardData> allVCardDataList){
-        if(allVCardDataList.isEmpty())
+    private static Map<String, VCardData> getAllVCardsAsHREFMap(List<VCardData> allVCardDataList) {
+        if (allVCardDataList.isEmpty())
             return new HashMap<>(0);
 
         return U.reduce(allVCardDataList, (hashMap, VCardData) -> {
-            if(VCardData.href == null)
+            if (VCardData.href == null)
                 return hashMap;
             hashMap.put(VCardData.href, VCardData);
             return hashMap;

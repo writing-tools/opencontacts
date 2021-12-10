@@ -1,5 +1,14 @@
 package opencontacts.open.com.opencontacts.data.datastore;
 
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.getContact;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.replacePhoneNumbersInDB;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.updateContact;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
+import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
+
 import android.content.Context;
 import android.support.v4.util.Pair;
 
@@ -11,15 +20,6 @@ import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
-
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.getContact;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.replacePhoneNumbersInDB;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.updateContact;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
-import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.*;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
 public class ContactsSyncHelper {
     public static void replaceContactWithServers(Triplet<String, String, VCard> hrefEtagAndVCard, VCardData vCardData, Context context) {

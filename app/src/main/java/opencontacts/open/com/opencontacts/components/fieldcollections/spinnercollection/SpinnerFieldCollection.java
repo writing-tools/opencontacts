@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections.spinnercollection;
 
+import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
@@ -16,8 +18,6 @@ import java.util.List;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.InputFieldCollection;
-
-import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHolder> {
     private List<String> options = new ArrayList<>(0);
@@ -39,7 +39,8 @@ public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHol
     protected void processAttributesPassedThroughXML(Context context, @Nullable AttributeSet attrs) {
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.InputFieldCollection);
         CharSequence[] options = typedArray.getTextArray(R.styleable.InputFieldCollection_android_entries);
-        if (options != null) this.options = mapIndexes(options.length, index -> options[index].toString());
+        if (options != null)
+            this.options = mapIndexes(options.length, index -> options[index].toString());
         editDisabled = typedArray.getInt(R.styleable.InputFieldCollection_android_inputType, InputType.TYPE_NULL) == InputType.TYPE_NULL;
         typedArray.recycle();
     }
@@ -56,15 +57,15 @@ public class SpinnerFieldCollection extends InputFieldCollection<SpinnerFieldHol
         int childCount = fieldViewHoldersList.size();
         if (childCount == 0) return Collections.emptyList();
         return U.chain(mapIndexes(childCount, index -> fieldViewHoldersList.get(index).getValue()))
-                .reject(TextUtils::isEmpty)
-                .value();
+            .reject(TextUtils::isEmpty)
+            .value();
     }
 
     public void set(List<String> options) {
         this.options = options;
     }
 
-    public void addFields(List<String> values){
+    public void addFields(List<String> values) {
         U.forEach(values, this::addOneMoreView);
     }
 

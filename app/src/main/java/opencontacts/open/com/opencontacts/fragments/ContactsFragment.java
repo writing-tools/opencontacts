@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.fragments;
 
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.SearchView;
@@ -14,10 +16,6 @@ import com.github.underscore.Supplier;
 import opencontacts.open.com.opencontacts.ContactsListView;
 import opencontacts.open.com.opencontacts.activities.MainActivity;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
-import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-
-import static android.text.TextUtils.isEmpty;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     private LinearLayout linearLayout;
@@ -38,7 +36,7 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         linearLayout = new LinearLayout(getContext());
         mainActivity = (MainActivity) getActivity();
-        if(contactsListView != null) {
+        if (contactsListView != null) {
             linearLayout.removeAllViews();
             linearLayout.addView(contactsListView);
         }
@@ -46,7 +44,8 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     }
 
     @Override
-    public void onSelect() {}
+    public void onSelect() {
+    }
 
     @Override
     public void onUnSelect() {
@@ -57,7 +56,7 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
     public void configureSearchInMenu(SearchView searchView) {
         this.searchView = searchView;
         this.searchView.setOnCloseListener(() -> {
-            if(contactsListView != null)
+            if (contactsListView != null)
                 contactsListView.clearTextFilter();
             return false;
         });
@@ -71,7 +70,7 @@ public class ContactsFragment extends AppBaseFragment implements SelectableTab {
 
             @Override
             public boolean onQueryTextChange(String newText) {
-                if(contactsListView != null)
+                if (contactsListView != null)
                     contactsListView.filter(newText);
                 return true;
             }

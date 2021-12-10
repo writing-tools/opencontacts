@@ -51,8 +51,8 @@
     <item
         android:id="@+id/action_more"
         android:title="@string/more"
-        app:showAsAction="ifRoom" >
-        <menu >
+        app:showAsAction="ifRoom">
+        <menu>
             <item
                 android:id="@+id/action_export_call_log"
                 android:icon="@drawable/import_export"

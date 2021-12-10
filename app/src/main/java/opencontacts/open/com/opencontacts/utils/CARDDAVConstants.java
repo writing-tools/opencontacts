@@ -23,16 +23,16 @@ public interface CARDDAVConstants {
     String XML_NAMESPACE_CARDDAV = "urn:ietf:params:xml:ns:carddav";
 
     CheekyCarddavServerStuff mailboxServerConstants = new CheekyCarddavServerStuff(
-            "Mailbox",
-            "https://dav.mailbox.org",
-            "/carddav/32",
-            "/carddav/32");
+        "Mailbox",
+        "https://dav.mailbox.org",
+        "/carddav/32",
+        "/carddav/32");
 
     CheekyCarddavServerStuff radicaleServerConstants = new CheekyCarddavServerStuff(
-            "Radicale",
-            "",
-            "/",
-            "/"){
+        "Radicale",
+        "",
+        "/",
+        "/") {
         @Override
         public String getAddressBookUrl(String baseUrl, String username) {
             return baseUrl + addressBookUrlSuffix + username;
@@ -45,10 +45,10 @@ public interface CARDDAVConstants {
     };
 
     CheekyCarddavServerStuff nextCloudConstants = new CheekyCarddavServerStuff(
-            "Nextcloud",
-            "",
-            "/remote.php/dav/addressbooks/users/",
-            ""){
+        "Nextcloud",
+        "",
+        "/remote.php/dav/addressbooks/users/",
+        "") {
         @Override
         public String getAddressBookUrl(String baseUrl, String username) {
             return baseUrl + addressBookUrlSuffix + username;
@@ -61,10 +61,10 @@ public interface CARDDAVConstants {
     };
 
     CheekyCarddavServerStuff sogoConstants = new CheekyCarddavServerStuff(
-            "Sogo",
-            "",
-            "/SOGo/dav/",
-            "/SOGo/dav/"){
+        "Sogo",
+        "",
+        "/SOGo/dav/",
+        "/SOGo/dav/") {
         @Override
         public String getAddressBookUrl(String baseUrl, String username) {
             return baseUrl + addressBookUrlSuffix + username + "/Contacts/personal/";
@@ -78,13 +78,13 @@ public interface CARDDAVConstants {
     CheekyCarddavServerStuff otherServerConstants = new CheekyCarddavServerStuff("Other");
 
     Map<String, CheekyCarddavServerStuff> carddavServersCheekyStuffMap = U.toMap(
-            Arrays.asList(
-                    new Tuple<>(mailboxServerConstants.name, mailboxServerConstants),
-                    new Tuple<>(radicaleServerConstants.name, radicaleServerConstants),
-                    new Tuple<>(nextCloudConstants.name, nextCloudConstants),
-                    new Tuple<>(sogoConstants.name, sogoConstants),
-                    new Tuple<>(otherServerConstants.name, otherServerConstants)
-            )
+        Arrays.asList(
+            new Tuple<>(mailboxServerConstants.name, mailboxServerConstants),
+            new Tuple<>(radicaleServerConstants.name, radicaleServerConstants),
+            new Tuple<>(nextCloudConstants.name, nextCloudConstants),
+            new Tuple<>(sogoConstants.name, sogoConstants),
+            new Tuple<>(otherServerConstants.name, otherServerConstants)
+        )
     );
 }
 

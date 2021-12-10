@@ -1,5 +1,12 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
+import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
+import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.mergeContacts;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
+import static opencontacts.open.com.opencontacts.utils.ContactsAutoMergeUtils.autoMergeByName;
+
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.FloatingActionButton;
@@ -7,17 +14,9 @@ import android.support.v7.app.AlertDialog;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 
-
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
-
-import static android.widget.RelativeLayout.ALIGN_PARENT_BOTTOM;
-import static android.widget.RelativeLayout.ALIGN_PARENT_RIGHT;
-import static opencontacts.open.com.opencontacts.components.TintedDrawablesStore.setDrawableForFAB;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.mergeContacts;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
-import static opencontacts.open.com.opencontacts.utils.ContactsAutoMergeUtils.autoMergeByName;
 
 public class MergeContactsActivity extends ContactChooserActivityBase {
     @Override
@@ -46,7 +45,7 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
         layoutParams.rightMargin = (int) AndroidUtils.dpToPixels(20);
         layoutParams.addRule(ALIGN_PARENT_RIGHT);
         layoutParams.addRule(ALIGN_PARENT_BOTTOM);
-        ((RelativeLayout)findViewById(R.id.contacts_list)).addView(fabMergeButton, layoutParams);
+        ((RelativeLayout) findViewById(R.id.contacts_list)).addView(fabMergeButton, layoutParams);
 
         fabMergeButton.setOnClickListener(v -> mergeContacts(getSelectedContacts(), MergeContactsActivity.this));
     }
@@ -64,15 +63,15 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         menu.add(getString(R.string.Automerge))
-                .setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchAutoMergeOptions));
+            .setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchAutoMergeOptions));
         return super.onCreateOptionsMenu(menu);
     }
 
     private void launchAutoMergeOptions() {
         AlertDialog pleaseWaitDialog = new AlertDialog.Builder(this)
-                .setCancelable(false)
-                .setMessage("Please wait...")
-                .show();
+            .setCancelable(false)
+            .setMessage("Please wait...")
+            .show();
         autoMergeByName(this);
         pleaseWaitDialog.dismiss();
     }

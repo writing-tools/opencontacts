@@ -1,12 +1,17 @@
 package opencontacts.open.com.opencontacts.views;
 
+import static java.util.Arrays.asList;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressType;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
+import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
+
 import android.content.Context;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.util.Consumer;
 import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ArrayAdapter;
 
 import com.reginald.editspinner.EditSpinner;
 
@@ -15,13 +20,6 @@ import java.util.List;
 import ezvcard.parameter.AddressType;
 import ezvcard.property.Address;
 import opencontacts.open.com.opencontacts.R;
-
-import static android.text.TextUtils.isEmpty;
-import static java.util.Arrays.asList;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressType;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
-import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 public class AddressPopup {
 
@@ -68,13 +66,20 @@ public class AddressPopup {
     }
 
     private void computeNewAddressFromFields() {
-        if(!poBoxTextInput.getText().toString().equals(address.getPoBox())) address.setPoBox(poBoxTextInput.getText().toString());
-        if(!addressTextInput.getText().toString().equals(address.getStreetAddress())) address.setStreetAddress(addressTextInput.getText().toString());
-        if(!extendedAddressTextInput.getText().toString().equals(address.getExtendedAddress())) address.setExtendedAddress(extendedAddressTextInput.getText().toString());
-        if(!postalCodeTextInput.getText().toString().equals(address.getPostalCode())) address.setPostalCode(postalCodeTextInput.getText().toString());
-        if(!cityTextInput.getText().toString().equals(address.getLocality())) address.setLocality(cityTextInput.getText().toString());
-        if(!stateTextInput.getText().toString().equals(address.getRegion())) address.setRegion(stateTextInput.getText().toString());
-        if(!countryTextInput.getText().toString().equals(address.getCountry())) address.setCountry(countryTextInput.getText().toString());
+        if (!poBoxTextInput.getText().toString().equals(address.getPoBox()))
+            address.setPoBox(poBoxTextInput.getText().toString());
+        if (!addressTextInput.getText().toString().equals(address.getStreetAddress()))
+            address.setStreetAddress(addressTextInput.getText().toString());
+        if (!extendedAddressTextInput.getText().toString().equals(address.getExtendedAddress()))
+            address.setExtendedAddress(extendedAddressTextInput.getText().toString());
+        if (!postalCodeTextInput.getText().toString().equals(address.getPostalCode()))
+            address.setPostalCode(postalCodeTextInput.getText().toString());
+        if (!cityTextInput.getText().toString().equals(address.getLocality()))
+            address.setLocality(cityTextInput.getText().toString());
+        if (!stateTextInput.getText().toString().equals(address.getRegion()))
+            address.setRegion(stateTextInput.getText().toString());
+        if (!countryTextInput.getText().toString().equals(address.getCountry()))
+            address.setCountry(countryTextInput.getText().toString());
 
         updateAddressType();
     }
@@ -88,12 +93,12 @@ public class AddressPopup {
 
     public void show() {
         new AlertDialog.Builder(context)
-                .setView(inflatedView)
-                .setPositiveButton(R.string.okay, (dialog, which) -> computeAddressAndCallBack())
-                .setNegativeButton(R.string.cancel, (dialog, which) -> onDismiss.run())
-                .setOnCancelListener(dialog -> onDismiss.run())
-                .setCancelable(true)
-                .show();
+            .setView(inflatedView)
+            .setPositiveButton(R.string.okay, (dialog, which) -> computeAddressAndCallBack())
+            .setNegativeButton(R.string.cancel, (dialog, which) -> onDismiss.run())
+            .setOnCancelListener(dialog -> onDismiss.run())
+            .setCancelable(true)
+            .show();
     }
 
     private void linkAllFields() {

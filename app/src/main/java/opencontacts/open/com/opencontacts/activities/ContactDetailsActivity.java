@@ -1,5 +1,23 @@
 package opencontacts.open.com.opencontacts.activities;
 
+import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
+import static android.view.View.GONE;
+import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.copyToClipboard;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.util.Pair;
@@ -34,24 +52,6 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
-import static android.view.MenuItem.SHOW_AS_ACTION_ALWAYS;
-import static android.view.View.GONE;
-import static android.view.View.VISIBLE;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
-import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.copyToClipboard;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getFormattedDate;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddFullDayEventOnCalendar;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemClickHandlerFor;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.openMap;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
-
 
 public class ContactDetailsActivity extends AppBaseActivity {
     private long contactId;
@@ -65,14 +65,14 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private View.OnClickListener callContact = v -> AndroidUtils.call(getSelectedMobileNumber(v), ContactDetailsActivity.this);
 
     private View.OnClickListener togglePrimaryNumber = v -> {
-        ContactsDataStore.togglePrimaryNumber(getSelectedMobileNumber((View)v.getParent()), contactId);
+        ContactsDataStore.togglePrimaryNumber(getSelectedMobileNumber((View) v.getParent()), contactId);
         contact = ContactsDataStore.getContactWithId(contactId);
         fillPhoneNumbers();
     };
 
-    private View.OnClickListener messageContact = v -> AndroidUtils.message(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
+    private View.OnClickListener messageContact = v -> AndroidUtils.message(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
 
-    private View.OnClickListener whatsappContact = v -> AndroidUtils.whatsapp(getSelectedMobileNumber((View)v.getParent()), ContactDetailsActivity.this);
+    private View.OnClickListener whatsappContact = v -> AndroidUtils.whatsapp(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
 
     private View.OnLongClickListener copyPhoneNumberToClipboard = v -> {
         copyToClipboard(getSelectedMobileNumber(v), ContactDetailsActivity.this);
@@ -81,15 +81,16 @@ public class ContactDetailsActivity extends AppBaseActivity {
     };
     private boolean shouldShowWhatsappIcon;
 
-    private String getSelectedMobileNumber(View v){
+    private String getSelectedMobileNumber(View v) {
         return v.getTag().toString();
     }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
-        if(contactId == -1) showInvalidContactErrorAndExit();
+        if (contactId == -1) showInvalidContactErrorAndExit();
         contact = ContactsDataStore.getContactWithId(contactId);
         shouldShowWhatsappIcon = isWhatsappIntegrationEnabled(this);
     }
@@ -105,11 +106,11 @@ public class ContactDetailsActivity extends AppBaseActivity {
         invalidateOptionsMenu();
         contact = ContactsDataStore.getContactWithId(contactId);
         VCardData vcardData = ContactsDataStore.getVCardData(contactId);
-        if(contact == null){
+        if (contact == null) {
             showInvalidContactErrorAndExit();
             return;
         }
-        if(vcardData != null){
+        if (vcardData != null) {
             try {
                 vcard = new VCardReader(vcardData.vcardDataAsString).readNext();
             } catch (IOException e) {
@@ -133,7 +134,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         emailAddressLinearLayout = findViewById(R.id.email_address_list);
         addressLinearLayout = findViewById(R.id.address_list);
         layoutInflater = getLayoutInflater();
-        if(vcard == null) return;
+        if (vcard == null) return;
         fillPhoneNumbers();
         fillEmailAddress();
         fillAddress();
@@ -146,7 +147,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private void fillGroups() {
         List<String> categories = VCardUtils.getCategories(vcard);
         View groupsCard = findViewById(R.id.groups_card);
-        if(categories.isEmpty()) {
+        if (categories.isEmpty()) {
             groupsCard.setVisibility(GONE);
             return;
         }
@@ -159,7 +160,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private void fillWebsite() {
         Url url = U.firstOrNull(vcard.getUrls());
         View websiteCard = findViewById(R.id.website_card);
-        if(url == null) {
+        if (url == null) {
             websiteCard.setVisibility(GONE);
             return;
         }
@@ -172,7 +173,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     private void fillDateOfBirth() {
         Birthday birthday = vcard.getBirthday();
         View birthDayCard = findViewById(R.id.date_of_birth_card);
-        if(birthday == null || birthday.getDate() == null) {
+        if (birthday == null || birthday.getDate() == null) {
             birthDayCard.setVisibility(GONE);
             return;
         }
@@ -188,8 +189,8 @@ public class ContactDetailsActivity extends AppBaseActivity {
 
     private void fillNotes() {
         Note note = U.firstOrNull(vcard.getNotes());
-        View notesCard  = findViewById(R.id.notes_card);
-        if(note == null) {
+        View notesCard = findViewById(R.id.notes_card);
+        if (note == null) {
             notesCard.setVisibility(GONE);
             return;
         }
@@ -203,7 +204,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     private void fillAddress() {
-        if(U.isEmpty(vcard.getAddresses())) {
+        if (U.isEmpty(vcard.getAddresses())) {
             findViewById(R.id.address_card).setVisibility(GONE);
             return;
         }
@@ -211,15 +212,15 @@ public class ContactDetailsActivity extends AppBaseActivity {
         addressLinearLayout.removeAllViews();
         List<Address> addresses = vcard.getAddresses();
         ExpandedList addressesExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener(index -> openMap(addresses.get(index).getStreetAddress(), this))
-                .withItems(U.map(addresses, address -> new Pair<>(formatAddressToAMultiLineString(address, this), getAddressTypeTranslatedText(address, this))))
-                .withOnItemLongClickListener(index -> copyToClipboard(formatAddressToAMultiLineString(addresses.get(index), this), true, this))
-                .build();
+            .withOnItemClickListener(index -> openMap(addresses.get(index).getStreetAddress(), this))
+            .withItems(U.map(addresses, address -> new Pair<>(formatAddressToAMultiLineString(address, this), getAddressTypeTranslatedText(address, this))))
+            .withOnItemLongClickListener(index -> copyToClipboard(formatAddressToAMultiLineString(addresses.get(index), this), true, this))
+            .build();
         addressLinearLayout.addView(addressesExpandedListView);
     }
 
     private void fillEmailAddress() {
-        if(U.isEmpty(vcard.getEmails())) {
+        if (U.isEmpty(vcard.getEmails())) {
             findViewById(R.id.email_card).setVisibility(GONE);
             return;
         }
@@ -227,15 +228,15 @@ public class ContactDetailsActivity extends AppBaseActivity {
         emailAddressLinearLayout.removeAllViews();
         List<Email> emails = vcard.getEmails();
         ExpandedList emailsExpandedListView = new ExpandedList.Builder(this)
-                .withOnItemClickListener(index -> AndroidUtils.email(emails.get(index).getValue(), this))
-                .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
-                .withOnItemLongClickListener(index -> copyToClipboard(emails.get(index).getValue(),  true, this))
-                .build();
+            .withOnItemClickListener(index -> AndroidUtils.email(emails.get(index).getValue(), this))
+            .withItems(U.map(emails, email -> new Pair<>(email.getValue(), DomainUtils.getEmailTypeTranslatedText(email.getTypes(), this))))
+            .withOnItemLongClickListener(index -> copyToClipboard(emails.get(index).getValue(), true, this))
+            .build();
         emailAddressLinearLayout.addView(emailsExpandedListView);
     }
 
     private void fillPhoneNumbers() {
-        if(U.isEmpty(vcard.getTelephoneNumbers())) {
+        if (U.isEmpty(vcard.getTelephoneNumbers())) {
             findViewById(R.id.phone_card).setVisibility(GONE);
             return;
         }
@@ -250,11 +251,11 @@ public class ContactDetailsActivity extends AppBaseActivity {
             primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
             inflatedView.findViewById(R.id.button_message).setOnClickListener(messageContact);
             View whatsappIcon = inflatedView.findViewById(R.id.button_whatsapp);
-            if(shouldShowWhatsappIcon){
+            if (shouldShowWhatsappIcon) {
                 whatsappIcon.setOnClickListener(whatsappContact);
                 whatsappIcon.setVisibility(VISIBLE);
             }
-            ((AppCompatTextView)inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(),this));
+            ((AppCompatTextView) inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(), this));
             inflatedView.setOnClickListener(callContact);
             inflatedView.setOnLongClickListener(copyPhoneNumberToClipboard);
             inflatedView.setTag(telephoneText);
@@ -280,14 +281,14 @@ public class ContactDetailsActivity extends AppBaseActivity {
         menu.findItem(R.id.image_button_delete_contact).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::deleteContactAfterConfirmation));
         boolean isFavorite = isFavorite(contact);
         menu.add(isFavorite ? R.string.remove_favorite : R.string.add_to_favorites)
-                .setIcon(TintedDrawablesStore.getTintedDrawable(isFavorite ? R.drawable.ic_favorite_solid_24dp : R.drawable.ic_favorite_hollow_black_24dp, this))
-                .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
-                .setOnMenuItemClickListener(item -> {
-                    if(isFavorite) removeFavorite(contact);
-                    else addFavorite(contact);
-                    invalidateOptionsMenu();
-                   return true;
-                });
+            .setIcon(TintedDrawablesStore.getTintedDrawable(isFavorite ? R.drawable.ic_favorite_solid_24dp : R.drawable.ic_favorite_hollow_black_24dp, this))
+            .setShowAsActionFlags(SHOW_AS_ACTION_ALWAYS)
+            .setOnMenuItemClickListener(item -> {
+                if (isFavorite) removeFavorite(contact);
+                else addFavorite(contact);
+                invalidateOptionsMenu();
+                return true;
+            });
         return super.onCreateOptionsMenu(menu);
     }
 

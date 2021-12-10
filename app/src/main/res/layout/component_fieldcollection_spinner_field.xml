@@ -2,6 +2,7 @@
     android:layout_height="wrap_content"
     android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <com.reginald.editspinner.EditSpinner
         android:layout_centerVertical="true"
         app:dropDownDrawable="@drawable/ic_arrow_drop_down_black_24dp"
@@ -10,8 +11,8 @@
         android:id="@+id/spinner"
         android:spinnerMode="dropdown"
         android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        />
+        android:layout_height="wrap_content" />
+
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:id="@+id/delete"
         android:layout_toRightOf="@id/spinner"

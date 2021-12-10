@@ -1,6 +1,8 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections.textinputspinnerfieldcollection;
 
 
+import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
+
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.support.annotation.Nullable;
@@ -16,8 +18,6 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.InputFieldCollection;
 import opencontacts.open.com.opencontacts.utils.Common;
-
-import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 public class TextInputAndSpinnerFieldCollection extends InputFieldCollection<TextInputAndSpinnerViewHolder> {
     public List<String> fieldTypes;
@@ -57,8 +57,8 @@ public class TextInputAndSpinnerFieldCollection extends InputFieldCollection<Tex
         int childCount = fieldViewHoldersList.size();
         if (childCount == 0) return null;
         return U.chain(mapIndexes(childCount, index -> fieldViewHoldersList.get(index).getValueAndTypeAsPair()))
-                .reject(valueAndTypePair -> TextUtils.isEmpty(valueAndTypePair.first))
-                .value();
+            .reject(valueAndTypePair -> TextUtils.isEmpty(valueAndTypePair.first))
+            .value();
     }
 
     public void set(String hint, int inputType, List<String> fieldTypes) {

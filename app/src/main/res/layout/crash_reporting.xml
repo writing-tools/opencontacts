@@ -3,6 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
@@ -15,6 +16,7 @@
             android:minHeight="?attr/actionBarSize"
             app:title="@string/report_crash_screen_title" />
     </android.support.design.widget.AppBarLayout>
+
     <ScrollView
         android:layout_below="@id/app_bar_layout"
         android:layout_width="wrap_content"

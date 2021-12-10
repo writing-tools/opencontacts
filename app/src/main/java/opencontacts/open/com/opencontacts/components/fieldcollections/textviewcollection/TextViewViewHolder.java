@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections.textviewcollection;
 
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
+
 import android.support.annotation.NonNull;
 import android.support.v7.widget.AppCompatTextView;
 import android.view.View;
@@ -8,8 +10,6 @@ import android.view.View.OnClickListener;
 import ezvcard.property.Address;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.components.fieldcollections.FieldViewHolder;
-
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
 
 public class TextViewViewHolder extends FieldViewHolder {
 

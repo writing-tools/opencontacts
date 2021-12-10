@@ -1,5 +1,7 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import static android.text.TextUtils.isEmpty;
+
 import com.github.underscore.Consumer;
 import com.github.underscore.Function;
 import com.github.underscore.U;
@@ -13,8 +15,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import static android.text.TextUtils.isEmpty;
-
 /**
  * Created by sultanm on 7/30/17.
  */
@@ -25,42 +25,42 @@ public class Common {
 
 
     public static String replaceAccentedCharactersWithEnglish(String string) {
-        if(string == null) return "";
+        if (string == null) return "";
         String normalizedString = Normalizer.normalize(string, Normalizer.Form.NFD);
         return NON_ASCII_REGEX_MATCHER.matcher(normalizedString).replaceAll("");
     }
 
-    public static String getDurationInMinsAndSecs(int duration){
+    public static String getDurationInMinsAndSecs(int duration) {
         twoDigitFormat.setMinimumIntegerDigits(2);
         return twoDigitFormat.format(duration / 60) + ":" + twoDigitFormat.format(duration % 60);
     }
 
-    public static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue){
+    public static <K, V> V getOrDefault(Map<K, V> map, K key, V defaultValue) {
         V v = map.get(key);
-        return (v == null)? defaultValue : v;
+        return (v == null) ? defaultValue : v;
     }
 
-    public static <T> List<T> mapIndexes(int count, TimesFunction<T> timesFunction){
+    public static <T> List<T> mapIndexes(int count, TimesFunction<T> timesFunction) {
         ArrayList<T> list = new ArrayList<>(count);
-        for(int i=0; i < count; i++){
+        for (int i = 0; i < count; i++) {
             list.add(timesFunction.apply(i));
         }
         return list;
     }
 
-    public static void forEachIndex(int count, ForEachIndexFunction function){
+    public static void forEachIndex(int count, ForEachIndexFunction function) {
         forEachIndex(0, count, function);
     }
 
-    public static void forEachIndex(int start, int end, ForEachIndexFunction function){
-        for(int i = start; i < end; i++){
+    public static void forEachIndex(int start, int end, ForEachIndexFunction function) {
+        for (int i = start; i < end; i++) {
             function.apply(i);
         }
     }
 
-    public static boolean forEachIndexUntilFalseElseEndWithTrue(int count, ForEachIndexUntilFalseFunction function){
-        for(int i=0; i < count; i++){
-            if(!function.apply(i))
+    public static boolean forEachIndexUntilFalseElseEndWithTrue(int count, ForEachIndexUntilFalseFunction function) {
+        for (int i = 0; i < count; i++) {
+            if (!function.apply(i))
                 return false;
         }
         return true;
@@ -78,7 +78,7 @@ public class Common {
         return finalList;
     }
 
-    public static <F, T> List<T> map(Iterable<F> iterable, Function<F, T> function){
+    public static <F, T> List<T> map(Iterable<F> iterable, Function<F, T> function) {
         ArrayList<T> list = new ArrayList<>(0);
         for (F item : iterable) {
             list.add(function.apply(item));
@@ -86,13 +86,13 @@ public class Common {
         return list;
     }
 
-    public static void forEach(int[] integers, Consumer<Integer> consumer){
-        for(int i : integers){
+    public static void forEach(int[] integers, Consumer<Integer> consumer) {
+        for (int i : integers) {
             consumer.accept(i);
         }
     }
 
-    public static <T, R> List<R> map(T[] array, Function<T, R> function){
+    public static <T, R> List<R> map(T[] array, Function<T, R> function) {
         ArrayList<R> list = new ArrayList<>(0);
         for (T item : array) {
             list.add(function.apply(item));
@@ -100,11 +100,11 @@ public class Common {
         return list;
     }
 
-    public interface TimesFunction<T>{
+    public interface TimesFunction<T> {
         T apply(int index);
     }
 
-    public interface ForEachIndexFunction{
+    public interface ForEachIndexFunction {
         void apply(int index);
     }
 
@@ -112,49 +112,49 @@ public class Common {
         boolean apply(int index);
     }
 
-    public static boolean hasItBeen(int offset, int timeUnit, long since){
+    public static boolean hasItBeen(int offset, int timeUnit, long since) {
         return getCalendarInstanceAt(since).before(getCalendarOffset(-offset, timeUnit));
     }
 
-    public static Calendar getCalendarInstanceAt(long timestamp){
+    public static Calendar getCalendarInstanceAt(long timestamp) {
         Calendar instance = Calendar.getInstance();
         instance.setTime(new Date(timestamp));
         return instance;
     }
 
-    public static Calendar getCalendarInstanceAt(int year, int month, int date){
+    public static Calendar getCalendarInstanceAt(int year, int month, int date) {
         Calendar instance = Calendar.getInstance();
         instance.set(year, month, date);
         return instance;
     }
 
-    public static Calendar getCalendarOffset(int offset, int timeUnit){
+    public static Calendar getCalendarOffset(int offset, int timeUnit) {
         Calendar instance = Calendar.getInstance();
         instance.add(timeUnit, offset);
         return instance;
     }
 
-    public static Calendar getCalendarOffset(int offset, int timeUnit, Date date){
+    public static Calendar getCalendarOffset(int offset, int timeUnit, Date date) {
         Calendar instance = Calendar.getInstance();
         instance.setTime(date);
         instance.add(timeUnit, offset);
         return instance;
     }
 
-    public static String getEmptyStringIfNull(String string){
+    public static String getEmptyStringIfNull(String string) {
         return string == null ? "" : string;
     }
 
     public static <T> T checkNotNull(T object) throws Exception {
-        if(object == null) throw new Exception("Found a null");
+        if (object == null) throw new Exception("Found a null");
         return object;
     }
 
-    public static List<String> getPartsThatAreNotPresentCaseInSensitive(String stringToBeSearchedIn, String stringPartsToBeSearchedFor){
+    public static List<String> getPartsThatAreNotPresentCaseInSensitive(String stringToBeSearchedIn, String stringPartsToBeSearchedFor) {
         final String stringToBeSearchedInLowerCase = stringToBeSearchedIn.toLowerCase();
         return U.chain(getEmptyStringIfNull(stringPartsToBeSearchedFor).split(" "))
-                .reject(partOfString -> stringToBeSearchedInLowerCase.contains(partOfString.toLowerCase()))
-                .value();
+            .reject(partOfString -> stringToBeSearchedInLowerCase.contains(partOfString.toLowerCase()))
+            .value();
     }
 
     public static String appendNewLineIfNotEmpty(String text) {

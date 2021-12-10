@@ -21,7 +21,7 @@ public class ImageButtonWithTint extends android.support.v7.widget.AppCompatImag
         TypedArray typedArray = context.obtainStyledAttributes(attrs, R.styleable.ImageButtonWithTint);
         int resourceId = typedArray.getResourceId(R.styleable.ImageButtonWithTint_android_src, -1);
         typedArray.recycle();
-        if(resourceId == -1) return;
+        if (resourceId == -1) return;
         Drawable drawable = TintedDrawablesStore.getTintedDrawable(resourceId, context);
         setImageDrawable(drawable);
     }

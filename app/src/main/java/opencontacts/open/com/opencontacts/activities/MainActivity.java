@@ -129,9 +129,6 @@ public class MainActivity extends AppBaseActivity {
     @Override
     protected void onResume() {
         super.onResume();
-//        String textblah = "丁丁";
-//        String pinyinTextFromChinese = DomainUtils.getPinyinTextFromChinese(textblah);
-//        System.out.println(pinyinTextFromChinese + "blah" + textblah.codePointAt(0));
         refresh();
         if(shouldLaunchDefaultTab(this)) gotoDefaultTab();
     }

@@ -137,20 +137,22 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         layoutParams.horizontalMargin = 0;
 
         drawOverIncomingCallLayout.setOnTouchListener(new View.OnTouchListener() {
-            private float initialTouchX = -1;
-            private float initialTouchY = -1;
+            private float previousX = -1;
+            private float previousY = -1;
 
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                 if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    layoutParams.x = (int) (layoutParams.x + (event.getX() - initialTouchX));
-                    layoutParams.y = (int) (layoutParams.y + (event.getY() - initialTouchY));
-                    windowManager.updateViewLayout(drawOverIncomingCallLayout, layoutParams);
+                    layoutParams.x = (int) (layoutParams.x + (event.getRawX() - previousX));
+                    layoutParams.y = (int) (layoutParams.y + (event.getRawY() - previousY));
+                    if(drawOverIncomingCallLayout != null) windowManager.updateViewLayout(drawOverIncomingCallLayout, layoutParams);
+                    previousX = event.getRawX();
+                    previousY = event.getRawY();
                     return true;
                 }
                 if (MotionEvent.ACTION_DOWN == event.getAction()) {
-                    initialTouchX = event.getX();
-                    initialTouchY = event.getY();
+                    previousX = event.getRawX();
+                    previousY = event.getRawY();
                     return true;
                 }
                 return false;

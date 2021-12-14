@@ -175,9 +175,6 @@ public class DomainUtils {
             else {
                 try {
                     VCard vcard = getVCardFromString(vCardData.vcardDataAsString);
-                    if (contact.primaryPhoneNumber.isPrimaryNumber)
-                        markPrimaryPhoneNumberInVCard(contact, vcard); //TODO: remove this after two release 22 - this is present for compatibility in 20
-                    markFavoriteInVCard(favorites.contains(contact), vcard); //TODO: remove this after two release 22 - this is present for compatibility in 20
                     vCardWriter.write(vcard);
                 } catch (IOException e) {
                     e.printStackTrace();

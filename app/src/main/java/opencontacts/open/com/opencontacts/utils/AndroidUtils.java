@@ -378,9 +378,11 @@ public class AndroidUtils {
 
     public static boolean isWhatsappInstalled(Context context) {
         String whatsappPackageName = "com.whatsapp";
+        String whatsappBusinessPackageName = "com.whatsapp.w4b";
         PackageManager pm = context.getPackageManager();
         try {
             pm.getPackageInfo(whatsappPackageName, PackageManager.GET_ACTIVITIES);
+            pm.getPackageInfo(whatsappBusinessPackageName, PackageManager.GET_ACTIVITIES);
             return true;
         } catch (PackageManager.NameNotFoundException ignored) {
         }

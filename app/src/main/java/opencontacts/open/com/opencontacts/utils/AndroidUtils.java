@@ -142,6 +142,16 @@ public class AndroidUtils {
         }
     }
 
+    public static boolean isAppInstalled(String packageName, Context context) {
+        PackageManager pm = context.getPackageManager();
+        try {
+            pm.getPackageInfo(packageName, PackageManager.GET_ACTIVITIES);
+            return true;
+        } catch (PackageManager.NameNotFoundException ignored) {
+        }
+        return false;
+    }
+
     @NonNull
     private static Intent getWhatsappIntent(String number, Context context) {
         String numberWithCountryCode = number.contains("+") ? number : getDefaultWhatsAppCountryCode(context) + number;
@@ -379,14 +389,7 @@ public class AndroidUtils {
     public static boolean isWhatsappInstalled(Context context) {
         String whatsappPackageName = "com.whatsapp";
         String whatsappBusinessPackageName = "com.whatsapp.w4b";
-        PackageManager pm = context.getPackageManager();
-        try {
-            pm.getPackageInfo(whatsappPackageName, PackageManager.GET_ACTIVITIES);
-            pm.getPackageInfo(whatsappBusinessPackageName, PackageManager.GET_ACTIVITIES);
-            return true;
-        } catch (PackageManager.NameNotFoundException ignored) {
-        }
-        return false;
+        return isAppInstalled(whatsappPackageName, context) || isAppInstalled(whatsappBusinessPackageName, context);
     }
 
     public static void toastFromNonUIThread(int messageRes, int length, Context context) {

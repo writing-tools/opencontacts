@@ -52,6 +52,7 @@ public class VCardData extends SugarRecord {
 
     public static void updateVCardData(VCard vCard, long contactId, Context context) {
         VCardData vCardDataInDB = VCardData.getVCardData(contactId);
+        VCardUtils.setFormattedNameIfNotPresent(vCard);
         vCardDataInDB.vcardDataAsString = writeVCardToString(vCard);
         vCardDataInDB.status = vCardDataInDB.status == STATUS_CREATED ? STATUS_CREATED : STATUS_UPDATED;
         vCardDataInDB.save();

@@ -5,7 +5,9 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
@@ -139,8 +141,13 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             GroupedCallLogEntry groupedCallLogEntry = (GroupedCallLogEntry) v.getTag();
             CallLogEntry callLogEntry = groupedCallLogEntry.latestCallLogEntry;
             List<String> longClickOptions = new ArrayList<>(Arrays.asList(longClickOptionsAndTheirActions.keySet().toArray(new String[0])));
-            if (callLogEntry.contactId != -1)
+            if (callLogEntry.contactId != -1) {
                 longClickOptions.remove(context.getString(R.string.add_contact));
+            }
+            else {
+                longClickOptions.remove(context.getString(R.string.share_menu_item));
+                longClickOptions.remove(context.getString(R.string.share_as_text));
+            }
             String[] dynamicListOfLongClickActions = longClickOptions.toArray(new String[0]);
             new AlertDialog.Builder(context)
                 .setItems(dynamicListOfLongClickActions, (dialog, which) -> {
@@ -288,7 +295,12 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         longClickOptionsAndTheirActions.put(context.getString(R.string.show_details), groupedCallLogEntry -> {
             context.startActivity(getIntentToShowCallLogEntries(groupedCallLogEntry.latestCallLogEntry.getPhoneNumber(), context));
         });
-
+        longClickOptionsAndTheirActions.put(context.getString(R.string.share_menu_item), groupedCallLogEntry -> {
+            shareContact(groupedCallLogEntry.latestCallLogEntry.contactId, context);
+        });
+        longClickOptionsAndTheirActions.put(context.getString(R.string.share_as_text), groupedCallLogEntry -> {
+            shareContactAsText(groupedCallLogEntry.latestCallLogEntry.contactId, context);
+        });
     }
 
     private CallLogEntry getLatestCallLogEntry(View v) {

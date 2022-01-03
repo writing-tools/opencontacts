@@ -1,6 +1,7 @@
 package opencontacts.open.com.opencontacts.activities;
 
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.sharePlainText;
+
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.shareText;
 
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -39,7 +40,7 @@ public class CrashReportingActivity extends AppCompatActivity {
             .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS)
             .setIcon(android.R.drawable.ic_menu_share)
             .setOnMenuItemClickListener(item -> {
-                sharePlainText(crashLog.getText().toString(), this);
+                shareText(crashLog.getText().toString(), this);
                 return true;
             });
         return super.onCreateOptionsMenu(menu);

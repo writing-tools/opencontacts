@@ -122,6 +122,16 @@
 
         <activity android:name=".CardDavSyncActivity" />
         <activity android:name=".activities.PreferencesActivity" />
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="opencontacts.open.com.opencontacts.fileprovider"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider_paths" />
+        </provider>
+
     </application>
 
 </manifest>

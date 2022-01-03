@@ -231,6 +231,8 @@
     <string name="set_password_before_import">Please set password in preferences before import</string>
     <string name="t9_pinyin_title">T9 for Chinese using Pinyin</string>
     <string name="t9_pinyin_summary">Translate chinese to pinyin english to support T9</string>
+    <string name="share_as_text">Share as text</string>
+    <string name="name">Name</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

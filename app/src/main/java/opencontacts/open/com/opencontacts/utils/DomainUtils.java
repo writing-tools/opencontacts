@@ -459,4 +459,18 @@ public class DomainUtils {
         ContactsDataStore.deleteAllContacts(context);
         SharedPreferencesUtils.removeSyncProgress(context);
     }
+
+    public static void shareContact(long contactId, Context context) {
+        AndroidUtils.shareContact(ContactsDataStore.getVCardData(contactId).vcardDataAsString, context);
+    }
+
+    public static void shareContactAsText(long contactId, Context context) {
+        Contact contactToShare = ContactsDataStore.getContactWithId(contactId);
+        StringBuffer contactAsText = new StringBuffer();
+        contactAsText.append(String.format("%s: %s\n", context.getString(R.string.name), contactToShare.name));
+        U.chain(contactToShare.phoneNumbers)
+            .map(phoneNumber -> phoneNumber.phoneNumber)
+            .forEach(numberAsString -> contactAsText.append(numberAsString + "\n"));
+        AndroidUtils.shareText(contactAsText.toString(), context);
+    }
 }

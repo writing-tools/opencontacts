@@ -3,6 +3,8 @@ package opencontacts.open.com.opencontacts.actions;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
 
 import android.content.Context;
 import androidx.appcompat.app.AlertDialog;
@@ -49,7 +51,9 @@ public class DefaultContactsListActions implements ContactsListViewAdapter.Conta
         new AlertDialog.Builder(context)
             .setItems(new String[]{
                 context.getString(favoritesResource),
-                context.getString(R.string.add_shortcut)
+                context.getString(R.string.add_shortcut),
+                context.getString(R.string.share_menu_item),
+                context.getString(R.string.share_as_text),
             }, (dialog, which) -> {
                 switch (which) {
                     case 0:
@@ -61,6 +65,12 @@ public class DefaultContactsListActions implements ContactsListViewAdapter.Conta
                         Toast.makeText(context,
                             added ? context.getString(R.string.added_shortcut) : context.getString(R.string.failed_adding_shortcut),
                             Toast.LENGTH_LONG).show();
+                        break;
+                    case 2:
+                        shareContact(contact.id, context);
+                        break;
+                    case 3:
+                        shareContactAsText(contact.id, context);
                         break;
                 }
             }).show();

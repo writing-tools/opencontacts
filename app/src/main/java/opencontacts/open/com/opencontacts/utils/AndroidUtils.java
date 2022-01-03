@@ -58,6 +58,10 @@ import android.widget.Toast;
 
 import com.github.underscore.U;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.Writer;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -481,9 +485,29 @@ public class AndroidUtils {
             Toast.makeText(context, R.string.no_app_found_to_open, Toast.LENGTH_SHORT).show();
     }
 
-    public static void sharePlainText(String text, Activity activity) {
-        activity.startActivity(ShareCompat.IntentBuilder
-            .from(activity)
+    public static void shareContact(String vcardAsString, Context context) {
+        File tempFile;
+        try {
+            tempFile = File.createTempFile("tempcontact", ".vcf");
+            Writer fileWriter = new FileWriter(tempFile)
+                .append(vcardAsString);
+            fileWriter.flush();
+            fileWriter.close();
+            tempFile.deleteOnExit();
+        } catch (IOException e) {
+            toastFromNonUIThread("Error sharing a contact", Toast.LENGTH_LONG, context);
+            return;
+        }
+        context.startActivity(new ShareCompat.IntentBuilder(context)
+            .addStream(FileProvider.getUriForFile(context, "opencontacts.open.com.opencontacts.fileprovider", tempFile))
+            .setType("text/x-vcard")
+            .getIntent()
+            .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+        );
+    }
+
+    public static void shareText(String text, Context context) {
+        context.startActivity(new ShareCompat.IntentBuilder(context)
             .setText(text)
             .setType("text/plain")
             .getIntent());

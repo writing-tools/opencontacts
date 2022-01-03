@@ -3,8 +3,8 @@ package opencontacts.open.com.opencontacts.fragments;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v7.widget.SearchView;
+import androidx.annotation.Nullable;
+import androidx.appcompat.widget.SearchView;
 import android.text.InputType;
 import android.view.LayoutInflater;
 import android.view.View;

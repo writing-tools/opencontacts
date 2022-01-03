@@ -12,7 +12,7 @@ import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipl
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;

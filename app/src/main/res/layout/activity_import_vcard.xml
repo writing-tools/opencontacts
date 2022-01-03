@@ -32,7 +32,7 @@
         android:layout_marginTop="20dp"
         android:id="@+id/textview_vcards_ignored" />
 
-    <android.support.v7.widget.AppCompatButton
+    <androidx.appcompat.widget.AppCompatButton
         android:visibility="invisible"
         android:id="@+id/report_errors"
         android:text="@string/report_errors"

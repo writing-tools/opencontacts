@@ -11,7 +11,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumeric
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
 
 import android.content.Context;
-import android.support.v4.util.ArrayMap;
+import androidx.collection.ArrayMap;
 
 import com.github.underscore.U;
 

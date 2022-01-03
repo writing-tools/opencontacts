@@ -4,10 +4,10 @@ import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
 import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import androidx.core.util.Pair;
 import android.view.View;
 
 import com.reginald.editspinner.EditSpinner;

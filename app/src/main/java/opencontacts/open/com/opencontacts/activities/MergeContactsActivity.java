@@ -8,9 +8,9 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getMenuItemC
 import static opencontacts.open.com.opencontacts.utils.ContactsAutoMergeUtils.autoMergeByName;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import androidx.annotation.Nullable;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.appcompat.app.AlertDialog;
 import android.view.Menu;
 import android.widget.RelativeLayout;
 

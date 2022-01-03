@@ -6,11 +6,12 @@ import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStor
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_NONE;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_UPDATED;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToString;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import java.io.IOException;
 

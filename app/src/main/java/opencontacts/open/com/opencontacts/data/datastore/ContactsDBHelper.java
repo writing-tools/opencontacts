@@ -9,6 +9,7 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getCategories;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
@@ -17,7 +18,7 @@ import static opencontacts.open.com.opencontacts.utils.VCardUtils.isPrimaryPhone
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.markPrimaryPhoneNumberInVCard;
 
 import android.content.Context;
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.github.underscore.U;
 
@@ -34,6 +35,7 @@ import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.Favorite;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
 import opencontacts.open.com.opencontacts.orm.VCardData;
+import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 

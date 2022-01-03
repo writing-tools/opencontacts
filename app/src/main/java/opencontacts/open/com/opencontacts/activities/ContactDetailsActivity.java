@@ -20,9 +20,9 @@ import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumbe
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.AppCompatImageButton;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.core.util.Pair;
+import androidx.appcompat.widget.AppCompatImageButton;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;

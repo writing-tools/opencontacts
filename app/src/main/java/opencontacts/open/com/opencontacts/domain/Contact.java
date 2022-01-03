@@ -4,7 +4,7 @@ import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNu
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getNumericKeyPadNumberForString;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 
 import com.github.underscore.U;

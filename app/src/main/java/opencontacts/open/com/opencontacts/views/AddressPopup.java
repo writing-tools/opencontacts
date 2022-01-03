@@ -7,9 +7,9 @@ import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setItem;
 import static opencontacts.open.com.opencontacts.utils.SpinnerUtil.setupSpinner;
 
 import android.content.Context;
-import android.support.design.widget.TextInputEditText;
-import android.support.v4.util.Consumer;
-import android.support.v7.app.AlertDialog;
+import com.google.android.material.textfield.TextInputEditText;
+import androidx.core.util.Consumer;
+import androidx.appcompat.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 

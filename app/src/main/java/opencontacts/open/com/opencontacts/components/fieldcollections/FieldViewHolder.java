@@ -1,6 +1,6 @@
 package opencontacts.open.com.opencontacts.components.fieldcollections;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.View;
 
 public abstract class FieldViewHolder {

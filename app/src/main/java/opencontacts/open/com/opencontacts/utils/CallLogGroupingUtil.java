@@ -2,7 +2,7 @@ package opencontacts.open.com.opencontacts.utils;
 
 import static java.util.Calendar.MINUTE;
 
-import android.support.v4.util.Pair;
+import androidx.core.util.Pair;
 
 import com.github.underscore.U;
 

@@ -19,7 +19,7 @@ import android.os.Build;
 import android.os.Handler;
 import android.provider.CallLog;
 import android.provider.Settings;
-import android.support.v4.app.NotificationCompat;
+import androidx.core.app.NotificationCompat;
 import android.telephony.TelephonyManager;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;

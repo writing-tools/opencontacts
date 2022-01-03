@@ -4,7 +4,7 @@ import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.InputType;
 import android.text.TextUtils;
 import android.util.AttributeSet;

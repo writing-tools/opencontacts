@@ -14,13 +14,14 @@ import static opencontacts.open.com.opencontacts.utils.VCardUtils.getVCardFromSt
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.markPrimaryPhoneNumberInVCard;
 
+import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.provider.CallLog;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.content.pm.ShortcutInfoCompat;
-import android.support.v4.content.pm.ShortcutManagerCompat;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.core.content.pm.ShortcutInfoCompat;
+import androidx.core.content.pm.ShortcutManagerCompat;
 import android.text.TextUtils;
 
 import com.github.underscore.U;

@@ -11,8 +11,8 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDel
 import static opencontacts.open.com.opencontacts.utils.Common.getEmptyStringIfNull;
 
 import android.os.Bundle;
-import android.support.design.widget.TextInputEditText;
-import android.support.design.widget.TextInputLayout;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;

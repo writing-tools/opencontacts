@@ -12,7 +12,7 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <android.support.v7.widget.AppCompatImageButton
+    <androidx.appcompat.widget.AppCompatImageButton
         style="@style/TransparentImageButton"
         android:visibility="gone"
         android:layout_width="wrap_content"
@@ -25,7 +25,7 @@
         android:layout_toStartOf="@id/button_message" />
 
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_toLeftOf="@id/button_whatsapp"
         android:layout_marginLeft="4dp"
         android:textColor="?android:textColorPrimary"
@@ -38,7 +38,7 @@
         android:layout_toEndOf="@id/button_primary_number"
         android:layout_toStartOf="@id/button_whatsapp" />
 
-    <android.support.v7.widget.AppCompatTextView
+    <androidx.appcompat.widget.AppCompatTextView
         android:layout_marginLeft="4dp"
         android:textColor="?android:textColorSecondary"
         android:id="@+id/phone_number_type"

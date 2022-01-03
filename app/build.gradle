@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 29
+    compileSdkVersion 31
     defaultConfig {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 14
@@ -9,7 +9,7 @@ android {
         versionCode 23
         versionName "23.0"
         multiDexEnabled true
-        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
     signingConfigs {
         debug {
@@ -47,17 +47,18 @@ configurations {
 }
 
 dependencies {
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    testImplementation('com.android.support.test.espresso:espresso-core:3.0.2', {
+    testImplementation('androidx.test.espresso:espresso-core:3.1.0', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
     implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.6.4'
     implementation group: 'com.opencsv', name: 'opencsv', version: '5.3'
-    implementation 'com.android.support:appcompat-v7:28.0.0'
-    implementation 'com.android.support:preference-v14:28.0.0'
-    implementation 'com.android.support:design:28.0.0'
-    implementation 'com.android.support:cardview-v7:28.0.0'
+    implementation 'androidx.appcompat:appcompat:1.4.0'
+    implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
+    implementation 'com.google.android.material:material:1.4.0'
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
+    implementation 'androidx.cardview:cardview:1.0.0'
     implementation 'com.reginald:editspinner:1.1.0'
     implementation 'com.thomashaertel:multispinner:0.1.1@aar'
     implementation 'com.github.sultanahamer:ExpandedMenuView:d57acc9096212a9fb0b9a593781d5d54354273fc'

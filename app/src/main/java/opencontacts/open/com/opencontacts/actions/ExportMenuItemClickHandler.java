@@ -5,7 +5,7 @@ import static opencontacts.open.com.opencontacts.utils.CrashUtils.reportError;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.support.v7.app.AlertDialog;
+import androidx.appcompat.app.AlertDialog;
 import android.view.MenuItem;
 import android.widget.Toast;
 

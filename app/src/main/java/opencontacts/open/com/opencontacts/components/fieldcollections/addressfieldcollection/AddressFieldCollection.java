@@ -4,7 +4,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTyp
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.isEmptyAddress;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.AttributeSet;
 
 import com.github.underscore.U;

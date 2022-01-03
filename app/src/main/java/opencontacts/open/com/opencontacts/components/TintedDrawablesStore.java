@@ -6,9 +6,9 @@ import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColo
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.drawable.Drawable;
-import android.support.annotation.DrawableRes;
-import android.support.design.widget.FloatingActionButton;
-import android.support.v4.content.ContextCompat;
+import androidx.annotation.DrawableRes;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import androidx.core.content.ContextCompat;
 
 import java.util.HashMap;
 import java.util.Map;

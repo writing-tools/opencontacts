@@ -4,7 +4,7 @@ import static opencontacts.open.com.opencontacts.activities.EditContactActivity.
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 import opencontacts.open.com.opencontacts.domain.Contact;
 

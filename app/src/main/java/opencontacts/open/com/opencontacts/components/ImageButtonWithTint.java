@@ -7,7 +7,7 @@ import android.util.AttributeSet;
 
 import opencontacts.open.com.opencontacts.R;
 
-public class ImageButtonWithTint extends android.support.v7.widget.AppCompatImageButton {
+public class ImageButtonWithTint extends androidx.appcompat.widget.AppCompatImageButton {
     public ImageButtonWithTint(Context context) {
         this(context, null);
     }

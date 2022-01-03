@@ -1,6 +1,6 @@
 package opencontacts.open.com.opencontacts.utils;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;

@@ -7,8 +7,8 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ha
 import android.content.Context;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.v4.util.Pair;
+import androidx.annotation.NonNull;
+import androidx.core.util.Pair;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;

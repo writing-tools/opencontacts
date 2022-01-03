@@ -6,7 +6,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getContactCom
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.sortContactsBasedOnName;
 
 import android.content.Context;
-import android.support.v7.widget.AppCompatTextView;
+import androidx.appcompat.widget.AppCompatTextView;
 import android.view.View;
 import android.widget.HeaderViewListAdapter;
 import android.widget.ListView;

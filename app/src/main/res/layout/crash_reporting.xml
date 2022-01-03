@@ -4,18 +4,18 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <android.support.design.widget.AppBarLayout
+    <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
-        <android.support.v7.widget.Toolbar
+        <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
             app:title="@string/report_crash_screen_title" />
-    </android.support.design.widget.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
     <ScrollView
         android:layout_below="@id/app_bar_layout"
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content"
             android:padding="10dp">
 
-            <android.support.v7.widget.AppCompatTextView
+            <androidx.appcompat.widget.AppCompatTextView
                 android:id="@+id/crash_help_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,14 +40,14 @@
                 android:layout_below="@id/crash_help_text"
                 android:layout_marginTop="10dp">
 
-                <android.support.v7.widget.AppCompatTextView
+                <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/crash_log"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="?colorError" />
             </HorizontalScrollView>
 
-            <android.support.v7.widget.AppCompatButton
+            <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/button_copy"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"

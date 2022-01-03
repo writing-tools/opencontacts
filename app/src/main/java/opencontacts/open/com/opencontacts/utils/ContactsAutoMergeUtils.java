@@ -31,7 +31,7 @@ public class ContactsAutoMergeUtils {
             Common.forEachIndex(nonEmptyNameContacts.size() - 1, (index) -> {
                 Contact primaryContact = nonEmptyNameContacts.get(index + 1);
                 Contact currentContact = nonEmptyNameContacts.get(index);
-                if (currentContact.name.equals(primaryContact.name)) {
+                if (currentContact.name.equalsIgnoreCase(primaryContact.name)) {
                     try {
                         mergeContacts(primaryContact, currentContact, context);
                         merged++;

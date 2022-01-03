@@ -2,6 +2,8 @@ package opencontacts.open.com.opencontacts.data.datastore;
 
 import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.computeGroupsAsync;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.markContactAsTemporary;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper.unmarkContactAsTemporary;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADED;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.LOADING;
 import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.NONE;
@@ -37,6 +39,7 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.DataStoreChangeListener;
 import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Favorite;
+import opencontacts.open.com.opencontacts.orm.TemporaryContact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
@@ -73,13 +76,19 @@ public class ContactsDataStore {
         notifyListenersAsync(REFRESH, null);
     }
 
-    public static void addContact(VCard vCard, Context context) {
+    public static long addContact(VCard vCard, Context context) {
         opencontacts.open.com.opencontacts.orm.Contact newContactWithDatabaseId = ContactsDBHelper.addContact(vCard, context);
         Contact addedDomainContact = ContactsDBHelper.getContact(newContactWithDatabaseId.getId());
         contacts.add(addedDomainContact);
         ContactGroupsDataStore.handleNewContactAddition(addedDomainContact);
         notifyListenersAsync(ADDITION, addedDomainContact);
         CallLogDataStore.updateCallLogAsyncForNewContact(addedDomainContact);
+        return newContactWithDatabaseId.getId();
+    }
+
+    public static void addTemporaryContact(VCard vcard, Context context) {
+        long contactId = addContact(vcard, context);
+        updateTemporaryStatus(true, contactId);
     }
 
     public static void removeContact(Contact contact) {
@@ -87,6 +96,7 @@ public class ContactsDataStore {
             ContactsDBHelper.deleteContactInDB(contact.id);
             notifyListenersAsync(DELETION, contact);
             removeFavorite(contact);
+            unmarkContactAsTemporary(contact.id);
             ContactGroupsDataStore.handleContactDeletion(contact);
         }
     }
@@ -320,4 +330,18 @@ public class ContactsDataStore {
         if (contacts == null) return emptyList();
         return DomainUtils.filterContactsBasedOnT9Text(t9Text, contacts);
     }
+
+    public static void updateTemporaryStatus(boolean markAsTemporary, long id) {
+        if(markAsTemporary) markContactAsTemporary(id);
+        else unmarkContactAsTemporary(id);
+    }
+
+    public static List<TemporaryContact> getTemporaryContactDetails() {
+        return ContactsDBHelper.getTemporaryContactDetails();
+    }
+
+    public static boolean isTemporary(long id) {
+        return ContactsDBHelper.isTemporary(id);
+    }
+
 }

@@ -40,6 +40,7 @@ import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.Settings;
 import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.ShareCompat;
 import androidx.core.content.ContextCompat;
@@ -270,11 +271,16 @@ public class AndroidUtils {
 
     }
 
-    public static void wrapInConfirmation(Runnable r, Context context) {
+    public static void wrapInConfirmation(Runnable onYes, Context context) {
+        wrapInConfirmation(onYes, () -> {}, R.string.are_you_sure, context);
+    }
+
+    public static void wrapInConfirmation(Runnable onYes, Runnable onNo, @StringRes int confirmationTextRes, Context context) {
         new AlertDialog.Builder(context)
-            .setMessage(R.string.are_you_sure)
+            .setMessage(confirmationTextRes)
             .setPositiveButton(R.string.okay,
-                (dialogInterface, i) -> r.run())
+                (dialogInterface, i) -> onYes.run())
+            .setNegativeButton(R.string.no, (dialogInterface, i) -> onNo.run())
             .show();
     }
 

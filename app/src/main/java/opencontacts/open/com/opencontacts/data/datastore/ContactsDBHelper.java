@@ -9,7 +9,6 @@ import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getPinyinTextFromChinese;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9PinyinEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getCategories;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getNameFromVCard;
@@ -24,6 +23,7 @@ import com.github.underscore.U;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.UUID;
@@ -34,8 +34,8 @@ import opencontacts.open.com.opencontacts.orm.CallLogEntry;
 import opencontacts.open.com.opencontacts.orm.Contact;
 import opencontacts.open.com.opencontacts.orm.Favorite;
 import opencontacts.open.com.opencontacts.orm.PhoneNumber;
+import opencontacts.open.com.opencontacts.orm.TemporaryContact;
 import opencontacts.open.com.opencontacts.orm.VCardData;
-import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
@@ -234,4 +234,25 @@ public class ContactsDBHelper {
         return contact;
     }
 
+    public static List<TemporaryContact> getTemporaryContactDetails() {
+        return TemporaryContact.listAll(TemporaryContact.class);
+    }
+
+    public static void markContactAsTemporary(long id) {
+        new TemporaryContact(getDBContactWithId(id), new Date()).save();
+    }
+
+    public static void unmarkContactAsTemporary(long id) {
+        U.forEach(TemporaryContact.find(TemporaryContact.class, "contact = ?", "" + id),
+            tempContact -> tempContact.delete()
+        );
+    }
+
+    public static boolean isTemporary(long id){
+        return !TemporaryContact.find(TemporaryContact.class, "contact = ?", "" + id).isEmpty();
+    }
+
+    public static TemporaryContact getTemporaryContactDetails(long id) {
+        return TemporaryContact.find(TemporaryContact.class, "contact = ?", "" + id).get(0);
+    }
 }

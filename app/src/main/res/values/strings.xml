@@ -233,6 +233,9 @@
     <string name="t9_pinyin_summary">Translate chinese to pinyin english to support T9</string>
     <string name="share_as_text">Share as text</string>
     <string name="name">Name</string>
+    <string name="temp_contact">Temporary contact</string>
+    <string name="mark_contact_as_temporary">Mark contact as temporary?</string>
+    <string name="mark_contact_as_temporary_help_text">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

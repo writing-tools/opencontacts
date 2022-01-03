@@ -10,7 +10,7 @@ import androidx.multidex.MultiDexApplication;
 
 import com.orm.SugarContext;
 
-import opencontacts.open.com.opencontacts.actions.AutoContactsExporter;
+import opencontacts.open.com.opencontacts.actions.ContactsHouseKeeping;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
@@ -27,7 +27,7 @@ public class OpenContactsApplication extends MultiDexApplication {
         CallLogDataStore.init(getApplicationContext());
         createNotificationChannels();
         CrashUtils.setUpCrashHandler(getApplicationContext());
-        new AutoContactsExporter(this).exportContactsAsPerPreferences();
+        new ContactsHouseKeeping(this).start();
         addShortcutsIfNotAddedAlreadyAsync(getApplicationContext());
     }
 

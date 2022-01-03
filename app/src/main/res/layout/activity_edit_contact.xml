@@ -31,6 +31,13 @@
             android:padding="@dimen/activity_vertical_margin"
             tools:context="opencontacts.open.com.opencontacts.activities.EditContactActivity">
 
+            <androidx.appcompat.widget.AppCompatCheckBox
+                android:id="@+id/temp_contact_checkbox"
+                android:text="@string/temp_contact"
+                android:gravity="center_vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
+
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/first_name_text_input_layout"
                 android:layout_width="match_parent"
@@ -38,7 +45,8 @@
                 android:layout_alignParentStart="true"
                 android:layout_alignParentLeft="true"
                 android:hint="@string/firstname"
-                android:layout_marginTop="21dp">
+                android:layout_below="@id/temp_contact_checkbox"
+                android:layout_marginTop="12dp">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/editFirstName"

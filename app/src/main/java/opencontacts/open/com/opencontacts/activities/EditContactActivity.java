@@ -4,6 +4,9 @@ import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.*;
+import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addTemporaryContact;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.Common.getCalendarInstanceAt;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.defaultPhoneNumberTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
@@ -13,6 +16,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import com.google.android.material.textfield.TextInputEditText;
+
+import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.util.Pair;
 import android.text.TextUtils;
 import android.view.Menu;
@@ -35,7 +40,6 @@ import ezvcard.io.text.VCardReader;
 import ezvcard.property.Address;
 import ezvcard.property.Birthday;
 import ezvcard.property.Email;
-import ezvcard.property.FormattedName;
 import ezvcard.property.Note;
 import ezvcard.property.StructuredName;
 import ezvcard.property.Telephone;
@@ -54,6 +58,7 @@ import opencontacts.open.com.opencontacts.utils.VCardUtils;
 
 public class EditContactActivity extends AppBaseActivity {
     Contact contact = null;
+    boolean isTemporaryContactBefore = false;
     public static final String INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT = "add_new_contact";
     public static final String INTENT_EXTRA_CONTACT_CONTACT_DETAILS = "contact_details";
     public static final String INTENT_EXTRA_STRING_PHONE_NUMBER = "phone_number";
@@ -67,22 +72,43 @@ public class EditContactActivity extends AppBaseActivity {
     private TextInputEditText notesTextInputEditText;
     private TextInputEditText websiteTextInputEditText;
     private TextInputEditText dateOfBirthTextInputEditText;
+    private AppCompatCheckBox temporaryContactCheckbox;
     private Date selectedBirthDay;
     private MultiSpinner groupsSpinner;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        editText_firstName = findViewById(R.id.editFirstName);
-        editText_lastName = findViewById(R.id.editLastName);
-        phoneNumbersInputCollection = findViewById(R.id.phonenumbers);
-        emailsInputCollection = findViewById(R.id.emails);
-        addressesInputCollection = findViewById(R.id.addresses);
-        notesTextInputEditText = findViewById(R.id.notes);
-        websiteTextInputEditText = findViewById(R.id.website);
-        dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
-        groupsSpinner = findViewById(R.id.groups);
+        attachViewsToInstanceVariables();
+        initializeVCard();
+        fillFieldsFromVCard();
+        addClickListenersToViews();
+    }
 
+    private void initializeVCard() {
+        Intent intent = getIntent();
+        if (intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
+            addingNewContact = true;
+            toolbar.setTitle(R.string.new_contact);
+            vcardBeforeEdit = new VCard();
+        } else {
+            contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
+            if (contact.id == -1) {
+                Toast.makeText(this, R.string.error_while_loading_contact, Toast.LENGTH_LONG).show();
+                setResult(RESULT_CANCELED);
+                finish();
+            }
+            toolbar.setTitle(contact.firstName);
+            isTemporaryContactBefore = ContactsDataStore.isTemporary(contact.id);
+            try {
+                vcardBeforeEdit = new VCardReader(getVCardData(contact.id).vcardDataAsString).readNext();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
+    private void addClickListenersToViews() {
         View.OnClickListener onBirthDayClickListener = v -> {
             Birthday birthday = vcardBeforeEdit.getBirthday();
             Calendar dateOfBirthInstance = Calendar.getInstance();
@@ -97,27 +123,23 @@ public class EditContactActivity extends AppBaseActivity {
             }, dateOfBirthInstance.get(YEAR), dateOfBirthInstance.get(MONTH), dateOfBirthInstance.get(DAY_OF_MONTH)).show();
         };
         findViewById(R.id.date_of_birth).setOnClickListener(onBirthDayClickListener);
+        temporaryContactCheckbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            if(isChecked) wrapInConfirmation(() -> {}, () -> buttonView.setChecked(false), R.string.mark_contact_as_temporary, this);
+        });
 
-        Intent intent = getIntent();
-        if (intent.getBooleanExtra(INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, false)) {
-            addingNewContact = true;
-            toolbar.setTitle(R.string.new_contact);
-            vcardBeforeEdit = new VCard();
-        } else {
-            contact = (Contact) intent.getSerializableExtra(INTENT_EXTRA_CONTACT_CONTACT_DETAILS);
-            if (contact.id == -1) {
-                Toast.makeText(this, R.string.error_while_loading_contact, Toast.LENGTH_LONG).show();
-                setResult(RESULT_CANCELED);
-                finish();
-            }
-            toolbar.setTitle(contact.firstName);
-            try {
-                vcardBeforeEdit = new VCardReader(ContactsDataStore.getVCardData(contact.id).vcardDataAsString).readNext();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        fillFieldsFromContactDetails();
+    }
+
+    private void attachViewsToInstanceVariables() {
+        editText_firstName = findViewById(R.id.editFirstName);
+        editText_lastName = findViewById(R.id.editLastName);
+        phoneNumbersInputCollection = findViewById(R.id.phonenumbers);
+        emailsInputCollection = findViewById(R.id.emails);
+        addressesInputCollection = findViewById(R.id.addresses);
+        notesTextInputEditText = findViewById(R.id.notes);
+        websiteTextInputEditText = findViewById(R.id.website);
+        dateOfBirthTextInputEditText = findViewById(R.id.date_of_birth);
+        groupsSpinner = findViewById(R.id.groups);
+        temporaryContactCheckbox = findViewById(R.id.temp_contact_checkbox);
     }
 
     @Override
@@ -125,7 +147,7 @@ public class EditContactActivity extends AppBaseActivity {
         return R.layout.activity_edit_contact;
     }
 
-    private void fillFieldsFromContactDetails() {
+    private void fillFieldsFromVCard() {
         fillTelephoneNumbers();
         fillEmails();
         fillAddress();
@@ -138,6 +160,7 @@ public class EditContactActivity extends AppBaseActivity {
 
         editText_firstName.setText(contact.firstName);
         editText_lastName.setText(contact.lastName);
+        temporaryContactCheckbox.setChecked(isTemporaryContactBefore);
     }
 
     private void fillGroups() {
@@ -205,10 +228,16 @@ public class EditContactActivity extends AppBaseActivity {
         if (warnIfMandatoryFieldsAreNotFilled(firstName, lastName)) return;
 
         VCard vcardAfterEdit = createVCardFromInputFields(firstName, lastName);
+        boolean markAsTemporary = temporaryContactCheckbox.isChecked();
         if (addingNewContact) {
-            ContactsDataStore.addContact(vcardAfterEdit, this);
+            if (markAsTemporary) addTemporaryContact(vcardAfterEdit, this);
+            else addContact(vcardAfterEdit, this);
         } else {
-            ContactsDataStore.updateContact(contact.id, contact.primaryPhoneNumber.phoneNumber, vcardAfterEdit, this);
+            updateContact(contact.id, contact.primaryPhoneNumber.phoneNumber, vcardAfterEdit, this);
+            updateTemporaryStatus(markAsTemporary, contact.id);
+        }
+        if (temporaryContactCheckbox.isChecked()) {
+
         }
         Toast.makeText(this, R.string.saved, Toast.LENGTH_SHORT).show();
         finish();

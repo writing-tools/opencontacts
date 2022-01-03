@@ -45,6 +45,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
@@ -74,7 +75,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     //android has weakref to this listener and gets garbage collected hence we should have it here.
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
     private SimpleDateFormat timeStampFormat;
-    private HashMap<String, Consumer<GroupedCallLogEntry>> longClickOptionsAndTheirActions;
+    private LinkedHashMap<String, Consumer<GroupedCallLogEntry>> longClickOptionsAndTheirActions;
     private ListView listView;
     private HashSet<GroupedCallLogEntry> selectedEntries;
     private SwipeRefreshLayout swipeRefreshLayout;
@@ -273,7 +274,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     }
 
     private void prepareLongClickActions() {
-        longClickOptionsAndTheirActions = new HashMap<>();
+        longClickOptionsAndTheirActions = new LinkedHashMap<>();
         longClickOptionsAndTheirActions.put(context.getString(R.string.delete_multiple), groupedCallLogEntry -> {
             enterSelectionMode();
             selectedEntries.add(groupedCallLogEntry);

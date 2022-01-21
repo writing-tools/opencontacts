@@ -25,8 +25,6 @@ Also shows the person name upon recieving call
 
 Latest debug app can be found [here](https://gitlab.com/sultanahamer/OpenContacts/-/jobs/artifacts/master/raw/app/build/outputs/apk/debug/app-debug.apk?job=assembleDebug)
 
-In case the above link does not work, you can get it from #113
-
 # Issues management
 
 I am using this app in day to day life and I usually raise issues and fix them as I feel the priority. If anyone feels that an issue needs to be fixed soon,

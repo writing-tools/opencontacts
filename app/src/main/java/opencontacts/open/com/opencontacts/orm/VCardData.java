@@ -4,6 +4,8 @@ import static opencontacts.open.com.opencontacts.utils.VCardUtils.writeVCardToSt
 
 import android.content.Context;
 
+import androidx.annotation.Nullable;
+
 import com.github.underscore.U;
 import com.orm.SugarRecord;
 
@@ -46,6 +48,7 @@ public class VCardData extends SugarRecord {
     public VCardData() {
     }
 
+    @Nullable
     public static VCardData getVCardData(long contactId) {
         return U.firstOrNull(find(VCardData.class, "contact = ?", "" + contactId));
     }

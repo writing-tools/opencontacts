@@ -2,6 +2,7 @@ package opencontacts.open.com.opencontacts.utils;
 
 import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
@@ -11,18 +12,16 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ha
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getVCardFromString;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.markFavoriteInVCard;
-import static opencontacts.open.com.opencontacts.utils.VCardUtils.markPrimaryPhoneNumberInVCard;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Environment;
 import android.provider.CallLog;
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
-import android.text.TextUtils;
 
 import com.github.underscore.U;
 import com.opencsv.CSVWriterBuilder;
@@ -62,6 +61,7 @@ import ezvcard.parameter.EmailType;
 import ezvcard.parameter.TelephoneType;
 import ezvcard.property.Address;
 import ezvcard.property.StructuredName;
+import io.michaelrocks.libphonenumber.android.PhoneNumberUtil;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.domain.Contact;
@@ -88,6 +88,8 @@ public class DomainUtils {
     private static Map<String, EmailType> translatedTextToEmailType;
     private static Map<String, String> stringValueOfCallTypeIntToTextMapping;
     private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
+    private static PhoneNumberUtil phoneNumberUtil;
+    private static String countryCode;
     public static String defaultPhoneNumberTypeTranslatedText;
     public static String defaultAddressTypeTranslatedText;
     public static String defaultEmailTypeTranslatedText;
@@ -99,6 +101,13 @@ public class DomainUtils {
     static {
         initializeT9Mapping();
         initPinyinOutputFormat();
+    }
+
+    public static void init(Context context) {
+        processAsync(() -> {
+            phoneNumberUtil = PhoneNumberUtil.createInstance(context);
+            countryCode = Locale.getDefault().getCountry();
+        });
     }
 
     private static void initPinyinOutputFormat() {
@@ -203,12 +212,22 @@ public class DomainUtils {
         return NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 
+    private static String getPhoneNumberWithoutCountryCodeAndFormatting(String phoneNumber) {
+        try {
+            return String.valueOf(U.first(phoneNumberUtil.findNumbers(phoneNumber, countryCode)).number().getNationalNumber());
+        }
+        catch(Exception e) {
+            System.out.println("fallback to old method of max last digits to match");
+            String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
+            if (allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
+                return null;
+            return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
+        }
+    }
+
     @Nullable
     public static String getSearchablePhoneNumber(String phoneNumber) {
-        String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
-        if (allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
-            return null;
-        return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
+        return getPhoneNumberWithoutCountryCodeAndFormatting(phoneNumber);
     }
 
     public static List<String> cross(List<String> firstSetOfWords, Set<String> secondSetOfWords) {

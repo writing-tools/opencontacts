@@ -14,6 +14,7 @@ import opencontacts.open.com.opencontacts.actions.ContactsHouseKeeping;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.CrashUtils;
+import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
 public class OpenContactsApplication extends MultiDexApplication {
 
@@ -25,6 +26,7 @@ public class OpenContactsApplication extends MultiDexApplication {
         SugarContext.init(this);
         ContactsDataStore.init(getApplicationContext());
         CallLogDataStore.init(getApplicationContext());
+        DomainUtils.init(getApplicationContext());
         createNotificationChannels();
         CrashUtils.setUpCrashHandler(getApplicationContext());
         new ContactsHouseKeeping(this).start();

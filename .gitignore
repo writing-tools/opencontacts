@@ -8,3 +8,6 @@
 .externalNativeBuild
 app/release/
 zanata.xml
+.settings
+.project
+.classpath

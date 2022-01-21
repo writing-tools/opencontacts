@@ -1089,6 +1089,171 @@
         "ideas",
         "bug"
       ]
+    },
+    {
+      "login": "jtpublic",
+      "name": "Joyce  Tang",
+      "avatar_url": "https://secure.gravatar.com/avatar/ada65867d3df4f298850dae88b738b1d?s=80&d=identicon",
+      "profile": "https://gitlab.com/jtpublic",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "pyramid3d",
+      "name": "pyramid3d",
+      "avatar_url": "https://secure.gravatar.com/avatar/312987d3def690db17af18f32f37ae9d?s=80&d=identicon",
+      "profile": "https://gitlab.com/pyramid3d",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "earlgrey-bis",
+      "name": "earlgrey",
+      "avatar_url": "https://secure.gravatar.com/avatar/9ae09bec96839af435dbe4d0014201d6?s=80&d=identicon",
+      "profile": "https://gitlab.com/earlgrey-bis",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "Taart",
+      "name": "Themp Aart",
+      "avatar_url": "https://secure.gravatar.com/avatar/acf7da1170b195d95efce746b3272b17?s=80&d=identicon",
+      "profile": "https://gitlab.com/Taart",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "firepacket",
+      "name": "trustfreemarket",
+      "avatar_url": "https://secure.gravatar.com/avatar/371fd0a40a991807e0a5f02f6c493a66?s=80&d=identicon",
+      "profile": "https://gitlab.com/firepacket",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "Geoliv",
+      "name": "Geoliv",
+      "avatar_url": "https://secure.gravatar.com/avatar/d076805de940085baf3495c86898e945?s=80&d=identicon",
+      "profile": "https://gitlab.com/Geoliv",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "XurrencyFX",
+      "name": "Jaxx_Rex",
+      "avatar_url": "https://gitlab.com/uploads/-/system/user/avatar/9926338/avatar.png",
+      "profile": "https://gitlab.com/XurrencyFX",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "RenegadeApprentice",
+      "name": "Dennis VW",
+      "avatar_url": "https://secure.gravatar.com/avatar/70236614552418deb89be83d7d074c86?s=80&d=identicon",
+      "profile": "https://gitlab.com/RenegadeApprentice",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "MrMonk",
+      "name": "Jack Steger",
+      "avatar_url": "https://secure.gravatar.com/avatar/fb35b5e337166c5f5f6b7655f8fe3d46?s=80&d=identicon",
+      "profile": "https://gitlab.com/MrMonk",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "PandaCoderPL",
+      "name": "PandaCoderPL",
+      "avatar_url": "https://secure.gravatar.com/avatar/36e78103ef08ee5089eb3bd8f3bd884c?s=80&d=identicon",
+      "profile": "https://gitlab.com/PandaCoderPL",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "MikeCheque",
+      "name": "Mike",
+      "avatar_url": "https://gitlab.com/uploads/-/system/user/avatar/3244761/avatar.png",
+      "profile": "https://gitlab.com/MikeCheque",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "caadar",
+      "name": "caadar",
+      "avatar_url": "https://secure.gravatar.com/avatar/70396017cc69f70395a7bcb4925d3e13?s=80&d=identicon",
+      "profile": "https://gitlab.com/caadar",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "chimkentus",
+      "name": "Владимир Малобродский",
+      "avatar_url": "https://secure.gravatar.com/avatar/1a04069cfc2dc261d75cfee7a6c7e54e?s=80&d=identicon",
+      "profile": "https://gitlab.com/chimkentus",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "ivysrono",
+      "name": "ivysrono",
+      "avatar_url": "https://secure.gravatar.com/avatar/272c1d58519719a3c4ce2b5cbf413c94?s=80&d=identicon",
+      "profile": "https://gitlab.com/ivysrono",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "mahaveerkilak",
+      "name": "Mahaveer",
+      "avatar_url": "https://secure.gravatar.com/avatar/b5e0802a02697d331c7939ef572a1660?s=80&d=identicon",
+      "profile": "https://gitlab.com/mahaveerkilak",
+      "contributions": [
+        "ideas",
+        "bug"
+      ]
+    },
+    {
+      "login": "gloomy-ghost",
+      "name": "ghost",
+      "avatar_url": "https://secure.gravatar.com/avatar/37bd868197018c0dc9acd5d6a95e4b55?s=80&d=identicon",
+      "profile": "https://gitlab.com/gloomy-ghost",
+      "contributions": [
+        "ideas",
+        "code",
+        "example",
+        "mentoring",
+        "question",
+        "review",
+        "userTesting"
+      ]
     }
   ],
   "contributorsPerLine": 7

@@ -109,6 +109,22 @@
         <item>Gabor Haden</item>
         <item>Coffee</item>
         <item>Licaon_Kter</item>
+        <item>Joyce  Tang</item>
+        <item>pyramid3d</item>
+        <item>earlgrey</item>
+        <item>Themp Aart</item>
+        <item>trustfreemarket</item>
+        <item>Geoliv</item>
+        <item>Jaxx_Rex</item>
+        <item>Dennis VW</item>
+        <item>Jack Steger</item>
+        <item>PandaCoderPL</item>
+        <item>Mike</item>
+        <item>caadar</item>
+        <item>Владимир Малобродский</item>
+        <item>ivysrono</item>
+        <item>Mahaveer</item>
+        <item>gloomy-ghost</item>
     </string-array>
     <string-array name="contributor_urls">
         <item>https://gitlab.com/abusr</item>
@@ -220,6 +236,22 @@
         <item>https://gitlab.com/Matrixcoffee</item>
         <item>https://gitlab.com/licaon-kter</item>
         <item>https://gitlab.com/NeverMine17</item>
+        <item>https://gitlab.com/gloomy-ghost</item>
+        <item>https://gitlab.com/jtpublic</item>
+        <item>https://gitlab.com/pyramid3d</item>
+        <item>https://gitlab.com/earlgrey-bis</item>
+        <item>https://gitlab.com/Taart</item>
+        <item>https://gitlab.com/firepacket</item>
+        <item>https://gitlab.com/Geoliv</item>
+        <item>https://gitlab.com/XurrencyFX</item>
+        <item>https://gitlab.com/RenegadeApprentice</item>
+        <item>https://gitlab.com/MrMonk</item>
+        <item>https://gitlab.com/PandaCoderPL</item>
+        <item>https://gitlab.com/MikeCheque</item>
+        <item>https://gitlab.com/caadar</item>
+        <item>https://gitlab.com/chimkentus</item>
+        <item>https://gitlab.com/ivysrono</item>
+        <item>https://gitlab.com/mahaveerkilak</item>
         <item>https://gitlab.com/gloomy-ghost</item>
     </string-array>
 </resources>

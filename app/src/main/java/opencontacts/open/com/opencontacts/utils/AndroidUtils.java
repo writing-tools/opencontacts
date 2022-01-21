@@ -21,7 +21,6 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.sh
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.KeyguardManager;
 import android.content.ComponentName;
 import android.content.ContentValues;
@@ -57,6 +56,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Space;
 import android.widget.Toast;
 
+import com.github.underscore.Consumer;
 import com.github.underscore.U;
 
 import java.io.File;
@@ -67,6 +67,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
+import java.util.LinkedHashMap;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.activities.AddToContactActivity;
@@ -554,5 +555,18 @@ public class AndroidUtils {
         space.setMinimumHeight(dpToPixelsClosestInt(widthInDP));
         space.setMinimumHeight(dpToPixelsClosestInt(heightInDP));
         return space;
+    }
+
+    public static <T> void handleLongClickWith(LinkedHashMap<String, Consumer<T>> longClickOptionsAndListeners, String[] options, T data, Context context) {
+        new AlertDialog.Builder(context)
+            .setItems(options, (dialog, which) -> {
+                longClickOptionsAndListeners.get(options[which]).accept(data);
+            }).show();
+
+    }
+
+    public static <T> void handleLongClickWith(LinkedHashMap<String, Consumer<T>> longClickOptionsAndListeners, T data, Context context) {
+        String[] longClickOptions = longClickOptionsAndListeners.keySet().toArray(new String[0]);
+        handleLongClickWith(longClickOptionsAndListeners, longClickOptions, data, context);
     }
 }

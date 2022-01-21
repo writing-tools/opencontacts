@@ -7,12 +7,13 @@ import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.getContactsMatchingT9;
 import static opencontacts.open.com.opencontacts.domain.Contact.createDummyContact;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToAddContact;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.handleLongClickWith;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 
 import android.content.Context;
 import android.os.Bundle;
-import androidx.annotation.Nullable;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
@@ -22,11 +23,14 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import androidx.annotation.Nullable;
+
 import com.github.underscore.Consumer;
 import com.github.underscore.U;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
@@ -110,10 +114,19 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         enableMultiSimDialingButtonsIfHavingMutipleSims();
     }
 
+    private LinkedHashMap<String, Consumer<String>> longClickOptionsAndListeners() {
+        LinkedHashMap<String, Consumer<String>> longClickListenersMap = new LinkedHashMap<>();
+        longClickListenersMap.put(context.getString(R.string.add_contact), number -> startActivity(getIntentToAddContact(number, context)));
+        longClickListenersMap.put(context.getString(R.string.copy_to_clipboard), number -> AndroidUtils.copyToClipboard(number, true, context));
+        longClickListenersMap.put(context.getString(R.string.edit_before_call), number -> this.dialPadEditText.setText(number));
+        return longClickListenersMap;
+    }
+
     private void setupSearchList(View view) {
         searchList = view.findViewById(R.id.search_list);
         searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
+        LinkedHashMap<String, Consumer<String>> longClickOptionsAndListeners = longClickOptionsAndListeners();
         searchListAdapter.setContactsListActionsListener(new DefaultContactsListActions(context) {
             @Override
             public void onShowDetails(Contact contact) {
@@ -124,6 +137,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
             @Override
             public void onLongClick(Contact contact) {
+                if (contact.id != -1) return;
+                handleLongClickWith(longClickOptionsAndListeners, contact.primaryPhoneNumber.phoneNumber, context);
             }
         });
         searchList.setAdapter(searchListAdapter);

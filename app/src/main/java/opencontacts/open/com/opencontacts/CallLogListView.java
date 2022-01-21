@@ -5,6 +5,7 @@ import static android.view.ViewGroup.LayoutParams.WRAP_CONTENT;
 import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsActivity.getIntentToShowCallLogEntries;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.handleLongClickWith;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
@@ -150,10 +151,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 longClickOptions.remove(context.getString(R.string.share_as_text));
             }
             String[] dynamicListOfLongClickActions = longClickOptions.toArray(new String[0]);
-            new AlertDialog.Builder(context)
-                .setItems(dynamicListOfLongClickActions, (dialog, which) -> {
-                    longClickOptionsAndTheirActions.get(dynamicListOfLongClickActions[which]).accept(groupedCallLogEntry);
-                }).show();
+            handleLongClickWith(longClickOptionsAndTheirActions, dynamicListOfLongClickActions, groupedCallLogEntry, context);
             return true;
         };
 

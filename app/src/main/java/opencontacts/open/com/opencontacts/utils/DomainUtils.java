@@ -17,6 +17,7 @@ import android.content.Context;
 import android.os.Environment;
 import android.provider.CallLog;
 import android.text.TextUtils;
+import android.text.format.DateFormat;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,6 +90,7 @@ public class DomainUtils {
     private static Map<String, String> stringValueOfCallTypeIntToTextMapping;
     private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
     private static PhoneNumberUtil phoneNumberUtil;
+    private static String dateFormatOnlyMonthAndDatePerLocale;
     private static String countryCode;
     public static String defaultPhoneNumberTypeTranslatedText;
     public static String defaultAddressTypeTranslatedText;
@@ -101,13 +103,26 @@ public class DomainUtils {
     static {
         initializeT9Mapping();
         initPinyinOutputFormat();
+
     }
+
 
     public static void init(Context context) {
         processAsync(() -> {
             phoneNumberUtil = PhoneNumberUtil.createInstance(context);
             countryCode = Locale.getDefault().getCountry();
+            dateFormatOnlyMonthAndDatePerLocale = computeDateFormat(context);
         });
+    }
+
+    private static String computeDateFormat(Context context) {
+        char[] dateFormatOrder = DateFormat.getDateFormatOrder(context);
+        char dateChar = 'd', monthChar = 'M';
+        for (char c : dateFormatOrder) {
+            if (c == dateChar) return "dd/MM";
+            else if (c == monthChar) return "MM/dd";
+        }
+        return "dd/MM";
     }
 
     private static void initPinyinOutputFormat() {
@@ -357,12 +372,12 @@ public class DomainUtils {
 
     @NonNull
     public static SimpleDateFormat getTimestampPattern(Context context) {
-        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM  hh:mm a" : "dd/MM HH:mm", Locale.getDefault());
+        return new SimpleDateFormat(dateFormatOnlyMonthAndDatePerLocale + (is12HourFormatEnabled(context) ? "  hh:mm a" : " HH:mm"), Locale.getDefault());
     }
 
     @NonNull
     public static SimpleDateFormat getFullDateTimestampPattern(Context context) {
-        return new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
+        return new SimpleDateFormat(dateFormatOnlyMonthAndDatePerLocale + (is12HourFormatEnabled(context) ? "/yyyy  hh:mm a" : "/yyyy HH:mm"), Locale.getDefault());
     }
 
     public static void exportCallLog(Context context) throws Exception {
@@ -380,7 +395,7 @@ public class DomainUtils {
             //below is a crazy hack for java lambda
             ICSVWriter finalCsvWriter = csvWriter = new CSVWriterBuilder(new FileWriter(file))
                 .build();
-            SimpleDateFormat callTimeStampFormat = new SimpleDateFormat(is12HourFormatEnabled(context) ? "dd/MM/yyyy  hh:mm a" : "dd/MM/yyyy HH:mm", Locale.getDefault());
+            SimpleDateFormat callTimeStampFormat = getFullDateTimestampPattern(context);
             List<CallLogEntry> entireCallLog = CallLogEntry.listAll(CallLogEntry.class);
             writeCallLogCSVHeader(csvWriter);
             U.forEach(entireCallLog, callLogEntry -> writeCallLogEntryToFile(callLogEntry, callTimeStampFormat, finalCsvWriter));

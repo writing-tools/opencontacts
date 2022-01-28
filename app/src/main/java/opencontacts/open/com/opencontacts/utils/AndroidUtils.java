@@ -48,6 +48,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
+import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.MenuItem.OnMenuItemClickListener;
@@ -68,6 +69,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
 import java.util.LinkedHashMap;
+import java.util.Locale;
 
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.activities.AddToContactActivity;
@@ -568,5 +570,16 @@ public class AndroidUtils {
     public static <T> void handleLongClickWith(LinkedHashMap<String, Consumer<T>> longClickOptionsAndListeners, T data, Context context) {
         String[] longClickOptions = longClickOptionsAndListeners.keySet().toArray(new String[0]);
         handleLongClickWith(longClickOptionsAndListeners, longClickOptions, data, context);
+    }
+
+    public static String getCountryCode(Context context) {
+        try {
+            TelephonyManager telephonyService = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+            return telephonyService.getNetworkCountryIso();
+        }
+        catch(Exception e) {
+            e.printStackTrace();
+            return Locale.getDefault().getCountry();
+        }
     }
 }

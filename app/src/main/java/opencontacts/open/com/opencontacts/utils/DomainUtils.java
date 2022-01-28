@@ -110,7 +110,7 @@ public class DomainUtils {
     public static void init(Context context) {
         processAsync(() -> {
             phoneNumberUtil = PhoneNumberUtil.createInstance(context);
-            countryCode = Locale.getDefault().getCountry();
+            countryCode = AndroidUtils.getCountryCode(context);
             dateFormatOnlyMonthAndDatePerLocale = computeDateFormat(context);
         });
     }

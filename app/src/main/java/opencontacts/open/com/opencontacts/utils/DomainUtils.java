@@ -1,8 +1,10 @@
 package opencontacts.open.com.opencontacts.utils;
 
 import static android.text.TextUtils.isEmpty;
+import static android.widget.Toast.LENGTH_LONG;
 import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
@@ -91,7 +93,7 @@ public class DomainUtils {
     private static HanyuPinyinOutputFormat hanyuPinyinOutputFormat = new HanyuPinyinOutputFormat();
     private static PhoneNumberUtil phoneNumberUtil;
     private static String dateFormatOnlyMonthAndDatePerLocale;
-    private static String countryCode;
+    private static String countryCodeInUpperCase;
     public static String defaultPhoneNumberTypeTranslatedText;
     public static String defaultAddressTypeTranslatedText;
     public static String defaultEmailTypeTranslatedText;
@@ -110,7 +112,9 @@ public class DomainUtils {
     public static void init(Context context) {
         processAsync(() -> {
             phoneNumberUtil = PhoneNumberUtil.createInstance(context);
-            countryCode = AndroidUtils.getCountryCode(context);
+            countryCodeInUpperCase = AndroidUtils.getCountryCode(context).toUpperCase();
+            int countryCallingCode = phoneNumberUtil.getCountryCodeForRegion(countryCodeInUpperCase);
+            toastFromNonUIThread("country code found is " + countryCodeInUpperCase + "," + countryCallingCode, LENGTH_LONG, context);
             dateFormatOnlyMonthAndDatePerLocale = computeDateFormat(context);
         });
     }
@@ -229,7 +233,7 @@ public class DomainUtils {
 
     private static String getPhoneNumberWithoutCountryCodeAndFormatting(String phoneNumber) {
         try {
-            return String.valueOf(U.first(phoneNumberUtil.findNumbers(phoneNumber, countryCode)).number().getNationalNumber());
+            return String.valueOf(U.first(phoneNumberUtil.findNumbers(phoneNumber, countryCodeInUpperCase)).number().getNationalNumber());
         }
         catch(Exception e) {
             System.out.println("fallback to old method of max last digits to match");

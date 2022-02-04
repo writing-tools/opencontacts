@@ -114,7 +114,6 @@ public class DomainUtils {
             phoneNumberUtil = PhoneNumberUtil.createInstance(context);
             countryCodeInUpperCase = AndroidUtils.getCountryCode(context).toUpperCase();
             int countryCallingCode = phoneNumberUtil.getCountryCodeForRegion(countryCodeInUpperCase);
-            toastFromNonUIThread("country code found is " + countryCodeInUpperCase + "," + countryCallingCode, LENGTH_LONG, context);
             dateFormatOnlyMonthAndDatePerLocale = computeDateFormat(context);
         });
     }

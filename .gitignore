@@ -12,3 +12,4 @@ zanata.xml
 .project
 .classpath
 tags
+/app/bin/

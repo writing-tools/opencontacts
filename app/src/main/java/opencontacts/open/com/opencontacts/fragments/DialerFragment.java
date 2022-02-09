@@ -36,6 +36,7 @@ import java.util.List;
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.DefaultContactsListActions;
+import opencontacts.open.com.opencontacts.components.ImageButtonWithTint;
 import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
@@ -124,6 +125,10 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
     private void setupSearchList(View view) {
         searchList = view.findViewById(R.id.search_list);
+        ImageButtonWithTint closeList = new ImageButtonWithTint(context);
+        closeList.setImageResource(R.drawable.ic_arrow_down_24dp);
+        closeList.setOnClickListener(v -> hideSearchListAndUpdateUIForRest());
+        searchList.addHeaderView(closeList); 
         searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
         LinkedHashMap<String, Consumer<String>> longClickOptionsAndListeners = longClickOptionsAndListeners();

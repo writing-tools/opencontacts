@@ -1,3 +1,20 @@
+V24.0
+Allow http(not https) connection to sync with carddav server
+Miscellaneous bug fixes
+Notifies user about configuring zip password after clearing data than fail silently
+Added support for Pinyin T9
+Fixed annoying caller Id dancing on drag
+Increased size of contributors list to some legible size
+Added support for whatsapp business as well
+Auto merge now does case insensitive checks
+Share contacts as text or vcard
+Temporary contacts
+Recognizes country codes
+Locale based date formats
+Added long click options to call log items in dialer search
+Long click on contact in contacts list has option to see call history
+Can now hide dialer search list
+
 V23.0
 Fixed app crashing during importing contacts
 Fixed app crashing when there is no password in store and importing encrypted contacts

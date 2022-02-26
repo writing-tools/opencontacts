@@ -124,7 +124,7 @@
         <activity android:name=".activities.PreferencesActivity" />
         <provider
             android:name="androidx.core.content.FileProvider"
-            android:authorities="opencontacts.open.com.opencontacts.fileprovider"
+            android:authorities="@string/file_provider_authority"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data

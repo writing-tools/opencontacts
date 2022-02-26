@@ -9,6 +9,7 @@
     <string name="copied_phonenumber_to_clipboard">Copied phone number to clipboard</string>
     <string name="unexpected_error_happened">Unexpected error happened</string>
     <string name="title_activity_contact_details" translatable="false">ContactDetailsActivity</string>
+    <string name="file_provider_authority" translatable="false">opencontacts.open.com.opencontacts.fileprovider</string>
     <string name="grant_read_call_logs_permission">Please grant read call logs permission to this application</string>
     <string name="exporting_contacts_complete">Finished exporting contacts to internal/external storage\'s root directory</string>
     <string name="exporting_contacts_started">Started exporting contacts</string>

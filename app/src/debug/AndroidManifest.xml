@@ -39,7 +39,7 @@
         <provider
             tools:replace="android:authorities"
             android:name="androidx.core.content.FileProvider"
-            android:authorities="opencontacts.open.com.opencontacts.fileprovider.debug"
+            android:authorities="@string/file_provider_authority"
             android:grantUriPermissions="true"
             android:exported="false">
             <meta-data

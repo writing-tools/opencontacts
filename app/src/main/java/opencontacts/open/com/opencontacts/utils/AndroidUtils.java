@@ -508,7 +508,7 @@ public class AndroidUtils {
             return;
         }
         context.startActivity(new ShareCompat.IntentBuilder(context)
-            .addStream(FileProvider.getUriForFile(context, "opencontacts.open.com.opencontacts.fileprovider", tempFile))
+            .addStream(FileProvider.getUriForFile(context, context.getString(R.string.file_provider_authority), tempFile))
             .setType("text/x-vcard")
             .getIntent()
             .addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)

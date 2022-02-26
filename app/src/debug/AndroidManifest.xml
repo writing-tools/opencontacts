@@ -36,6 +36,16 @@
                 <data android:mimeType="application/zip" />
             </intent-filter>
         </activity>
+        <provider
+            tools:replace="android:authorities"
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="opencontacts.open.com.opencontacts.fileprovider.debug"
+            android:grantUriPermissions="true"
+            android:exported="false">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/fileprovider_paths" />
+        </provider>
     </application>
 
 </manifest>

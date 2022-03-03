@@ -4,6 +4,7 @@ import static android.text.TextUtils.isEmpty;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDBHelper.getCallLogEntriesFor;
 import static opencontacts.open.com.opencontacts.domain.Contact.createNewDomainContact;
 import static opencontacts.open.com.opencontacts.domain.Contact.getGroupsNamesCSVString;
+import static opencontacts.open.com.opencontacts.orm.PhoneNumber.getMatchingNumbers;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_CREATED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.STATUS_DELETED;
 import static opencontacts.open.com.opencontacts.orm.VCardData.updateVCardData;
@@ -78,7 +79,7 @@ public class ContactsDBHelper {
     static Contact getContactFromDB(String phoneNumber) {
         String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
         if (searchablePhoneNumber == null) return null;
-        List<PhoneNumber> matchingPhoneNumbers = PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + searchablePhoneNumber);
+        List<PhoneNumber> matchingPhoneNumbers = getMatchingNumbers(searchablePhoneNumber);
         if (matchingPhoneNumbers.isEmpty())
             return null;
         return matchingPhoneNumbers.get(0).contact;

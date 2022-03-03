@@ -9,6 +9,7 @@ import static opencontacts.open.com.opencontacts.data.datastore.DataStoreState.R
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAllNumericPhoneNumber;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getSearchablePhoneNumber;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.matchesNumber;
 
 import android.content.Context;
 import androidx.collection.ArrayMap;
@@ -110,7 +111,7 @@ public class CallLogDataStore {
                         if (callLogEntry.getContactId() != -1)
                             continue;
                         String allNumericPhoneNumberOfCallLogEntry = getAllNumericPhoneNumber(callLogEntry.getPhoneNumber());
-                        if (allNumericPhoneNumberOfCallLogEntry.contains(searchablePhoneNumber)) {
+                        if (matchesNumber(allNumericPhoneNumberOfCallLogEntry, searchablePhoneNumber)) {
                             callLogEntry.setContactId(newContact.id);
                             callLogEntry.setName(newContact.name);
                             callLogEntry.save();

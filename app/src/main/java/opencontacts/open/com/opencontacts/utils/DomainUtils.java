@@ -230,6 +230,12 @@ public class DomainUtils {
         return NON_NUMERIC_EXCEPT_PLUS_MATCHING_PATTERN.matcher(phoneNumber).replaceAll(EMPTY_STRING);
     }
 
+    public static boolean matchesNumber(String numericNumber1, String numericNumber2) {
+      if(numericNumber1 == null || numericNumber2 == null) return false;
+      if(numericNumber1.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS || numericNumber2.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS) return numericNumber1.equals(numericNumber2);
+      return numericNumber1.contains(numericNumber2) || numericNumber2.contains(numericNumber1);
+    }
+
     private static String getPhoneNumberWithoutCountryCodeAndFormatting(String phoneNumber) {
         try {
             return String.valueOf(U.first(phoneNumberUtil.findNumbers(phoneNumber, countryCodeInUpperCase)).number().getNationalNumber());
@@ -237,13 +243,13 @@ public class DomainUtils {
         catch(Exception e) {
             System.out.println("fallback to old method of max last digits to match");
             String allNumericPhoneNumber = getAllNumericPhoneNumber(phoneNumber);
-            if (allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS)
-                return null;
+            if (allNumericPhoneNumber.length() < MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS) {
+              return allNumericPhoneNumber;
+            }
             return allNumericPhoneNumber.length() > NUMBER_8 ? allNumericPhoneNumber.substring(allNumericPhoneNumber.length() - NUMBER_8) : allNumericPhoneNumber;
         }
     }
 
-    @Nullable
     public static String getSearchablePhoneNumber(String phoneNumber) {
         return getPhoneNumberWithoutCountryCodeAndFormatting(phoneNumber);
     }

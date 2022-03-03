@@ -2,7 +2,10 @@ package opencontacts.open.com.opencontacts.orm;
 
 import com.orm.SugarRecord;
 
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.MINIMUM_NUMBER_OF_DIGITS_IN_MOST_COUNTRIES_PHONE_NUMBERS;
+
 import java.io.Serializable;
+import java.util.List;
 
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 
@@ -29,5 +32,9 @@ public class PhoneNumber extends SugarRecord implements Serializable {
 
     public PhoneNumber(String phoneNumber) {
         this.phoneNumber = phoneNumber;
+    }
+
+    public static List<PhoneNumber> getMatchingNumbers(String numericPhoneNumber) {
+        return PhoneNumber.find(PhoneNumber.class, "numeric_Phone_Number like ?", "%" + numericPhoneNumber);
     }
 }

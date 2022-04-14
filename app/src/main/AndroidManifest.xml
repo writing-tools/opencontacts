@@ -124,6 +124,13 @@
                 <action android:name="android.telecom.CallScreeningService" />
             </intent-filter>
         </service>
+        <service
+            android:exported="true"
+            android:name=".services.DataSourceService">
+            <intent-filter>
+                <action android:name="DataSourceService" />
+            </intent-filter>
+        </service>
 
         <activity android:name=".CardDavSyncActivity" />
         <activity android:name=".activities.PreferencesActivity" />

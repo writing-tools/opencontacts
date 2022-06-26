@@ -1,1 +1,4 @@
 include ':app'
+include ':opencontactsdatasourcecontract'
+project(':opencontactsdatasourcecontract').projectDir = new File("/Users/sultanm/Projects/OpenContactsDataSource/OpenContactsDataSourceContract/opencontactsdatasourcecontract")
+

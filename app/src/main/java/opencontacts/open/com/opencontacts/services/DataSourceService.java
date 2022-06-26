@@ -14,8 +14,7 @@ import java.io.StringWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.ContactsDataStoreService;
-import opencontacts.open.com.opencontacts.activities.AboutActivity;
+import open.com.opencontactsdatasourcecontract.ContactsDataStoreService;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.utils.AIDLTranslationUtils;
 
@@ -31,7 +30,6 @@ public class DataSourceService extends Service {
         public String getNameAndPhoneNumbers() throws RemoteException {
             List<String[]> contactsAsCSV = U.map(ContactsDataStore.getAllContacts(), AIDLTranslationUtils::contactToCSV);
             StringWriter stringWriter = new StringWriter();
-            startActivity(new Intent(getBaseContext(), AboutActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
             new CSVWriterBuilder(stringWriter)
                 .build()
                 .writeAll(contactsAsCSV);

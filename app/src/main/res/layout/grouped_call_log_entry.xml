@@ -27,12 +27,11 @@
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
-        style="@style/TransparentImageButton"
+    <opencontacts.open.com.opencontacts.views.SocialAppButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/whatsapp"
-        android:id="@+id/button_whatsapp"
+        android:src="@drawable/ic_whatsapp"
+        android:id="@+id/button_social"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/button_action2"
         android:layout_centerVertical="true"
@@ -49,8 +48,8 @@
         android:layout_marginLeft="10dp"
         android:layout_marginStart="10dp"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/button_whatsapp"
-        android:layout_toStartOf="@id/button_whatsapp"
+        android:layout_toLeftOf="@id/button_social"
+        android:layout_toStartOf="@id/button_social"
         android:layout_toRightOf="@+id/button_action1"
         android:layout_toEndOf="@+id/button_action1" />
 

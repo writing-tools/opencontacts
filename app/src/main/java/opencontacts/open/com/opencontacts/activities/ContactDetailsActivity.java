@@ -15,7 +15,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfir
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.formatAddressToAMultiLineString;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getAddressTypeTranslatedText;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMobileNumberTypeTranslatedText;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getMobileNumber;
 
 import android.content.Intent;
@@ -72,14 +72,15 @@ public class ContactDetailsActivity extends AppBaseActivity {
 
     private View.OnClickListener messageContact = v -> AndroidUtils.message(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
 
-    private View.OnClickListener whatsappContact = v -> AndroidUtils.whatsapp(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
+    private View.OnClickListener openSocialApp = v -> AndroidUtils.openSocialApp(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
+    private View.OnLongClickListener socialLongPress = v -> AndroidUtils.onSocialLongPress(getSelectedMobileNumber((View) v.getParent()), ContactDetailsActivity.this);
 
     private View.OnLongClickListener copyPhoneNumberToClipboard = v -> {
         copyToClipboard(getSelectedMobileNumber(v), ContactDetailsActivity.this);
         Toast.makeText(ContactDetailsActivity.this, R.string.copied_phonenumber_to_clipboard, Toast.LENGTH_SHORT).show();
         return true;
     };
-    private boolean shouldShowWhatsappIcon;
+    private boolean shouldShowSocialAppIcon;
 
     private String getSelectedMobileNumber(View v) {
         return v.getTag().toString();
@@ -92,7 +93,7 @@ public class ContactDetailsActivity extends AppBaseActivity {
         contactId = intent.getLongExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, -1);
         if (contactId == -1) showInvalidContactErrorAndExit();
         contact = ContactsDataStore.getContactWithId(contactId);
-        shouldShowWhatsappIcon = isWhatsappIntegrationEnabled(this);
+        shouldShowSocialAppIcon = isSocialIntegrationEnabled(this);
     }
 
     @Override
@@ -250,10 +251,11 @@ public class ContactDetailsActivity extends AppBaseActivity {
             primaryNumberToggleButton.setImageResource(telephoneText.equals(contact.primaryPhoneNumber.phoneNumber) ? R.drawable.ic_star_filled_24dp : R.drawable.ic_star_empty_24dp);
             primaryNumberToggleButton.setOnClickListener(togglePrimaryNumber);
             inflatedView.findViewById(R.id.button_message).setOnClickListener(messageContact);
-            View whatsappIcon = inflatedView.findViewById(R.id.button_whatsapp);
-            if (shouldShowWhatsappIcon) {
-                whatsappIcon.setOnClickListener(whatsappContact);
-                whatsappIcon.setVisibility(VISIBLE);
+            View socialAppIcon = inflatedView.findViewById(R.id.button_social);
+            if (shouldShowSocialAppIcon) {
+                socialAppIcon.setOnClickListener(openSocialApp);
+                socialAppIcon.setOnLongClickListener(socialLongPress);
+                socialAppIcon.setVisibility(VISIBLE);
             }
             ((AppCompatTextView) inflatedView.findViewById(R.id.phone_number_type)).setText(getMobileNumberTypeTranslatedText(telephone.getTypes(), this));
             inflatedView.setOnClickListener(callContact);

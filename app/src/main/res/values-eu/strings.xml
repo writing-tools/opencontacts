@@ -43,7 +43,6 @@
     <string name="callerid">Dei egilearen identifikazioa</string>
     <string name="callerid_help_text">Dei-identifikatzaileak kontaktuaren izena erakusten du sarrerako dei batean.\n\nDei-identifikatzailea agertzen da eta, lehenetsita, ia pantailaren erdian kokatzen da. Baina nahi duzun pantailako edozein lekutara arrastatu dezakezu eta posizio hori automatikoki gordeko da.\n\n\n Aplikazioa instalatu ondoren, saiatu edozein dei lortzen eta eraman identifikatzailea nahi duzun lekura. Baina kontuan izan deien identifikatzailea arrastatu daitekeela pantaila desblokeatuta duen dei bat jasotzen denean bakarrik. Androidek ezin du sarrerarik hartu telefonoa blokeatuta duten pantailetan. Beraz, ziurtatu pantaila desblokeatzen duzula norbaiti deitzeko eskatu aurretik.</string>
     <string name="whats_new">Zer berri</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Kontaktu guztiak ezabatu</string>
     <string name="delete_all_contacts_question">Kontaktu guztiak ezabatu?</string>

@@ -43,7 +43,6 @@
     <string name="callerid">Beller-id</string>
     <string name="callerid_help_text">Beller-id verwijst naar het tonen van de naam van het contact dat belt.\n\nHet staat standaard bijna midden op het scherm. Maar je kunt het slepen naar elke plaats op het scherm en die positie wordt automatisch opgeslagen.\n\n\nDus na installatie van de app en bij een oproep van een willekeurig nummer is tijdens het gesprek de beller-id te verplaatsen naar een andere positie. Maar let op dat beller-id alleen versleepbaar is tijdens de oproep en wanneer het scherm ontgrendeld is. Android kan geen invoer registreren op schermen die open staan als de telefoon is vergrendeld. Ontgrendel het scherm voordat je iemand vraagt te bellen.</string>
     <string name="whats_new">Wat is er nieuw</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Alle contacten verwijderen</string>
     <string name="delete_all_contacts_question">Alle contacten verwijderen?</string>

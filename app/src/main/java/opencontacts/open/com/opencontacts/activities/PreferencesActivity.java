@@ -5,26 +5,26 @@ import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
 import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_ALWAYS_ASK;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SOCIAL_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableWhatsappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableSocialIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableWhatsappIntegration;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableSocialappIntegration;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultSocialCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 
 import android.app.Activity;
 import android.app.role.RoleManager;
@@ -104,6 +104,7 @@ public class PreferencesActivity extends AppBaseActivity {
             if (hasMultipleSims(getContext())) addSimPreference();
             enablePreferenceIf(SHOULD_USE_SYSTEM_PHONE_APP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N);
             enablePreferenceIf(CALL_FILTERING_PREF_GROUP, () -> android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.Q);
+            enablePreferenceIf(DEFAULT_SOCIAL_APP, () -> isSocialIntegrationEnabled(getContext()));
             handlePreferenceUpdates();
         }
 
@@ -116,7 +117,11 @@ public class PreferencesActivity extends AppBaseActivity {
         }
 
         private void enablePreferenceIf(String preferenceKey, Supplier<Boolean> shouldEnable) {
-            if (shouldEnable.get()) findPreference(preferenceKey).setEnabled(true);
+            if (shouldEnable.get()) setEnabledForPreference(preferenceKey, true);
+        }
+
+        private void setEnabledForPreference(String preferenceKey, boolean enabled) {
+            findPreference(preferenceKey).setEnabled(enabled);
         }
 
         private boolean hasNoPreferredSim() {
@@ -163,7 +168,7 @@ public class PreferencesActivity extends AppBaseActivity {
             HashMap<String, Preference.OnPreferenceChangeListener> onPreferenceChangeHandlersMap = new HashMap<>();
             onPreferenceChangeHandlersMap.put(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, onThemeToggle());
             onPreferenceChangeHandlersMap.put(T9_SEARCH_ENABLED_SHARED_PREF_KEY, onT9SearchToggle());
-            onPreferenceChangeHandlersMap.put(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, onWhatsappToggle());
+            onPreferenceChangeHandlersMap.put(SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY, onSocialIntegrationToggle());
             onPreferenceChangeHandlersMap.put(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, onCallFilteringToggle());
             onPreferenceChangeHandlersMap.put(T9_PINYIN_ENABLED_SHARED_PREF_KEY, onT9PinyinEnabled());
             return onPreferenceChangeHandlersMap;
@@ -198,15 +203,14 @@ public class PreferencesActivity extends AppBaseActivity {
         }
 
         @NonNull
-        private Preference.OnPreferenceChangeListener onWhatsappToggle() {
+        private Preference.OnPreferenceChangeListener onSocialIntegrationToggle() {
             return (preference, newValue) -> {
-                if (newValue.equals(false)) return true;
-                if (!isWhatsappInstalled(activity)) {
-                    Toast.makeText(activity, R.string.whatsapp_not_installed, Toast.LENGTH_LONG).show();
-                    return false;
+                if (newValue.equals(false)){
+                    setEnabledForPreference(DEFAULT_SOCIAL_APP, false);
+                    return true;
                 }
                 showSetDefaultCountryCodeDialog(activity);
-                return true;
+                return false;
             };
         }
 
@@ -233,27 +237,26 @@ public class PreferencesActivity extends AppBaseActivity {
             startActivityForResult(intent, REQUEST_TO_BECOMING_CALL_SCREENER);
         }
 
+
         private void showSetDefaultCountryCodeDialog(Context context) {
             AppCompatEditText countryCodeEditText = new AppCompatEditText(context);
-            countryCodeEditText.setText(getDefaultWhatsAppCountryCode(context));
+            countryCodeEditText.setText(getDefaultSocialCountryCode(context));
             countryCodeEditText.setInputType(InputType.TYPE_CLASS_PHONE);
             new AlertDialog.Builder(context)
                 .setView(countryCodeEditText)
                 .setTitle(R.string.input_country_calling_code_title)
                 .setMessage(R.string.input_country_calling_code_description)
-                .setPositiveButton(R.string.enable_whatsapp_integration, (dialogInterface, i) -> {
-                    if (!isWhatsappInstalled(context)) {
-                        showAlert(context, getString(R.string.whatsapp_not_installed), getString(R.string.enable_only_after_installing_whatsapp));
-                        return;
-                    }
-                    enableWhatsappIntegration(countryCodeEditText.getText().toString(), context);
+                .setPositiveButton(R.string.enable_social_integration, (dialogInterface, i) -> {
+                    enableSocialappIntegration(countryCodeEditText.getText().toString(), context);
+                    getActivity().recreate();// recreating coz preference fragment is not able to read the disabled preference and still shows enable.
                 })
-                .setNegativeButton(R.string.disable_whatsapp_integration, (ignore_x, ignore_y) -> {
-                    disableWhatsappIntegration(context);
+                .setNegativeButton(R.string.disable_social_integration, (ignore_x, ignore_y) -> {
+                    disableSocialIntegration(context);
                     getActivity().recreate();// recreating coz preference fragment is not able to read the disabled preference and still shows enable.
                 })
                 .show();
         }
+
     }
 
     @Override

@@ -43,7 +43,6 @@
     <string name="callerid">Caller Id</string>
     <string name="callerid_help_text">Caller id bezieht sich auf das Anzeigen des Kontaktnamens bei einem eingehenden Anruf.\n\nCaller id taucht auf und befindet sich Standardmäßig etwa in der Mitte des Bildschirmes. Aber du kannst es einfach an einen beliebigen Ort auf dem Bildschirm ziehen und die Position wird automatisch gespeichert.\n\n\nDu kannst nach dem Installieren der App versuchen einen Anruf zu erhalten und Caller id an die gewünschte Position zu ziehen. Bedenke, dass Caller id nur bei einem entsperrten Bildschirm verschoben werden kann. Android hindert Anwendungen daran, Touch Eingaben beim Sperrbildschirm aufzunehmen. Stelle also sicher, dass das Gerät entsperrt ist bevor du den Testanruf machst.</string>
     <string name="whats_new">Was ist neu</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Lösche alle Kontakte</string>
     <string name="delete_all_contacts_question">Alle Kontakte löschen?</string>

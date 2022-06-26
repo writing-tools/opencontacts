@@ -43,7 +43,6 @@
     <string name="callerid">Identificador de llamada</string>
     <string name="callerid_help_text">El identificador de llamada muestra el nombre de contacto en una llamada entrante.\n\nEl identificador de llamadas aparece y, por defecto, se sitúa casi en el medio de la pantalla. Pero puedes arrastrarlo a cualquier lugar de la pantalla que desees y esa posición se guardará automáticamente.\n\n\nDespués de instalar la aplicación, intenta conseguir una llamada cualquiera y arrastra el identificador al lugar que desees. Pero tenga en cuenta que el identificador de llamadas se puede arrastrar solo cuando se recibe una llamada con la pantalla desbloqueada. Android tiene el problema de no poder tomar eventos de entrada en pantallas creadas con el teléfono bloqueado. Por lo tanto, asegúrate de desbloquear su pantalla antes de pedirle a alguien que llame.</string>
     <string name="whats_new">Novedades</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Borrar todos los contactos</string>
     <string name="delete_all_contacts_question">¿Borrar todos los contactos?</string>

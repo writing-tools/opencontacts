@@ -43,7 +43,6 @@
     <string name="callerid">呼叫者ID</string>
     <string name="callerid_help_text">呼叫者ID用来在来电时显示联系人的姓名。\n\n呼叫者ID在默认情况下在屏幕中央显示。但是您可以通过点击显示的信息并拖动将其放置在屏幕其他地方，这个位置会被自动保存。\n\n\n安装开源通讯录后，可以尝试通过其他手机拨打本机，再将呼叫者ID保存在任意一个你喜欢的位置上。但是请留意呼叫者ID只能在屏幕没有上锁的情况下被拖动放置。安卓手机有屏幕锁定状态下不能够从屏幕输入交互的情况，因此请先确认其他人来电前您已解锁您的屏幕之后在拖动放置呼叫者ID信息。</string>
     <string name="whats_new">新的功能</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">删除全部联系人</string>
     <string name="delete_all_contacts_question">删除全部联系人吗？</string>

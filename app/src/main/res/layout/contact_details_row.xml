@@ -12,13 +12,13 @@
         android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true" />
 
-    <androidx.appcompat.widget.AppCompatImageButton
+    <opencontacts.open.com.opencontacts.views.SocialAppButton
         style="@style/TransparentImageButton"
         android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/whatsapp"
-        android:id="@+id/button_whatsapp"
+        android:src="@drawable/ic_whatsapp"
+        android:id="@+id/button_social"
         android:layout_marginRight="10dp"
         android:layout_toLeftOf="@id/button_message"
         android:layout_marginEnd="10dp"
@@ -26,7 +26,7 @@
 
 
     <androidx.appcompat.widget.AppCompatTextView
-        android:layout_toLeftOf="@id/button_whatsapp"
+        android:layout_toLeftOf="@id/button_social"
         android:layout_marginLeft="4dp"
         android:textColor="?android:textColorPrimary"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
@@ -36,7 +36,7 @@
         android:id="@+id/textview_phone_number"
         android:layout_marginStart="4dp"
         android:layout_toEndOf="@id/button_primary_number"
-        android:layout_toStartOf="@id/button_whatsapp" />
+        android:layout_toStartOf="@id/button_social" />
 
     <androidx.appcompat.widget.AppCompatTextView
         android:layout_marginLeft="4dp"

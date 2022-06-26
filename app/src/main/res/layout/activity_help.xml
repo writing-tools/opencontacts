@@ -166,6 +166,19 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
+                android:text="@string/social_app_long_press"
+                android:textAppearance="?android:textAppearanceSearchResultTitle" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="@string/long_press_social_app_help_text" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
                 android:text="@string/mark_contact_as_temporary"
                 android:textAppearance="?android:textAppearanceSearchResultTitle" />
 

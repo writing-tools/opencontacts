@@ -5,7 +5,7 @@ import static android.view.View.OnClickListener;
 import static android.view.View.OnLongClickListener;
 import static android.view.View.VISIBLE;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
 
 import android.content.Context;
@@ -27,7 +27,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
     private ContactsListActionsListener contactsListActionsListener;
     private LayoutInflater layoutInflater;
     public ContactsListFilter contactsListFilter;
-    private boolean whatsappIntegrationEnabled;
+    private boolean socialAppIntegrationEnabled;
 
     public ContactsListViewAdapter(@NonNull Context context, int resource, ContactsListFilter.AllContactsHolder allContactsHolder) {
         super(context, resource, new ArrayList<>(allContactsHolder.getContacts()));
@@ -42,7 +42,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
 
     private void init(@NonNull Context context) {
         layoutInflater = LayoutInflater.from(context);
-        whatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
+        socialAppIntegrationEnabled = isSocialIntegrationEnabled(context);
         shouldToggleContactActions = shouldToggleContactActions(context);
     }
 
@@ -77,11 +77,18 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
         Contact contact = (Contact) v.getTag();
         contactsListActionsListener.onShowDetails(contact);
     };
-    private final OnClickListener whatsappContact = v -> {
+    private final OnClickListener openSocialApp = v -> {
         if (contactsListActionsListener == null)
             return;
         Contact contact = (Contact) ((View) v.getParent()).getTag();
-        contactsListActionsListener.onWhatsappClicked(contact);
+        contactsListActionsListener.onSocialAppClicked(contact);
+    };
+    private final OnLongClickListener socialLongClicked = v -> {
+        if (contactsListActionsListener == null)
+            return false;
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
+        contactsListActionsListener.onSocialLongClicked(contact);
+        return true;
     };
 
     @NonNull
@@ -105,11 +112,12 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
             actionButton2.setOnClickListener(messageContact);
             actionButton2.setImageResource(R.drawable.ic_chat_black_24dp);
         }
-        View whatsappIcon = convertView.findViewById(R.id.button_whatsapp);
-        if (whatsappIntegrationEnabled) {
-            whatsappIcon.setOnClickListener(whatsappContact);
-            whatsappIcon.setVisibility(VISIBLE);
-        } else whatsappIcon.setVisibility(GONE);
+        View socialIcon = convertView.findViewById(R.id.button_social);
+        if (socialAppIntegrationEnabled) {
+            socialIcon.setOnClickListener(openSocialApp);
+            socialIcon.setOnLongClickListener(socialLongClicked);
+            socialIcon.setVisibility(VISIBLE);
+        } else socialIcon.setVisibility(GONE);
         convertView.setTag(contact);
         convertView.setOnClickListener(showContactDetails);
         convertView.setOnLongClickListener(onLongClicked);
@@ -133,7 +141,9 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
 
         void onShowDetails(Contact contact);
 
-        void onWhatsappClicked(Contact contact);
+        void onSocialAppClicked(Contact contact);
+
+        void onSocialLongClicked(Contact contact);
 
         void onLongClick(Contact contact);
     }

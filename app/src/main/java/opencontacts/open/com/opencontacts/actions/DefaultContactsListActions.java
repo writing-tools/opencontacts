@@ -4,12 +4,14 @@ import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsA
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.addFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.isFavorite;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore.removeFavorite;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.onSocialLongPress;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
 
 import android.content.Context;
-import androidx.appcompat.app.AlertDialog;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AlertDialog;
 
 import opencontacts.open.com.opencontacts.ContactsListViewAdapter;
 import opencontacts.open.com.opencontacts.R;
@@ -42,8 +44,13 @@ public class DefaultContactsListActions implements ContactsListViewAdapter.Conta
     }
 
     @Override
-    public void onWhatsappClicked(Contact contact) {
-        AndroidUtils.whatsapp(contact.primaryPhoneNumber.phoneNumber, context);
+    public void onSocialAppClicked(Contact contact) {
+        AndroidUtils.openSocialApp(contact.primaryPhoneNumber.phoneNumber, context);
+    }
+
+    @Override
+    public void onSocialLongClicked(Contact contact) {
+        onSocialLongPress(contact.primaryPhoneNumber.phoneNumber, context);
     }
 
     @Override

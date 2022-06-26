@@ -15,8 +15,10 @@ import static android.provider.CalendarContract.Events.TITLE;
 import static android.text.TextUtils.isEmpty;
 import static java.lang.Math.round;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.TELEGRAM;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.defaultSocialAppEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultWhatsAppCountryCode;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultSocialCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldUseSystemCallingApp;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getPrimaryColor;
 
@@ -143,11 +145,42 @@ public class AndroidUtils {
         context.startActivity(callIntent);
     }
 
+    public static void telegram(String number, Context context) {
+        try {
+            context.startActivity(getTelegramIntent(number, context));
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.could_not_open_social_app), Toast.LENGTH_LONG)
+                .show();
+        }
+    }
+
+    public static void openSocialApp(String number, Context context) {
+        String socialApp = defaultSocialAppEnabled(context);
+        if(socialApp.equals(TELEGRAM)) telegram(number, context);
+        else whatsapp(number, context);
+    }
+
+    // boolean return type for helping long press signature supposed to be returning boolean
+    public static boolean onSocialLongPress(String phoneNumber, Context context) {
+        String[] social_apps = context.getResources().getStringArray(R.array.social_integrations);
+        new AlertDialog.Builder(context)
+            .setItems(social_apps,
+                (dialog, which) -> {
+                    switch (which) {
+                        case 0: telegram(phoneNumber, context);
+                            break;
+                        case 1: whatsapp(phoneNumber, context);
+                            break;
+                    }
+                }).show();
+        return true;
+    }
+
     public static void whatsapp(String number, Context context) {
         try {
             context.startActivity(getWhatsappIntent(number, context));
         } catch (Exception e) {
-            Toast.makeText(context, context.getString(R.string.could_not_open_whatsapp), Toast.LENGTH_LONG)
+            Toast.makeText(context, context.getString(R.string.could_not_open_social_app), Toast.LENGTH_LONG)
                 .show();
         }
     }
@@ -163,8 +196,15 @@ public class AndroidUtils {
     }
 
     @NonNull
+    private static Intent getTelegramIntent(String number, Context context) {
+        String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
+        return new Intent(ACTION_VIEW, Uri.parse(
+            context.getString(R.string.telegram_uri_with_phone_number_placeholder, numberWithCountryCode)
+        ));
+    }
+    @NonNull
     private static Intent getWhatsappIntent(String number, Context context) {
-        String numberWithCountryCode = number.contains("+") ? number : getDefaultWhatsAppCountryCode(context) + number;
+        String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
         return new Intent(ACTION_VIEW, Uri.parse(
             context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, numberWithCountryCode)
         ));

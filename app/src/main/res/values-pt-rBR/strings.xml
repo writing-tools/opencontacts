@@ -43,7 +43,6 @@
     <string name="callerid">ID de Chamada</string>
     <string name="callerid_help_text">ID da chamada refere-se a exibição do nome de contato durante uma chamada recebida.\n\nO ID de chamada aparece e, por padrão, fica quase no meio da tela. Mas você pode arrastá-lo para qualquer lugar na tela que você quiser e essa posição será salva automaticamente.\n\n\nEntão, após a instalação do App, tente receber uma chamada de qualquer número e arraste a identificação de chamada para colocá-la em lugar que você quiser. Porém o ID da chamada é arrastável apenas quando chamada está tocando e a tela está desbloqueada. O Android tem esse problema de não ser capaz de tomar eventos de entrada em telas criados enquanto o telefone está bloqueado. Daí certifique-se de desbloquear a tela antes de pedir a alguém para fazer ligação.</string>
     <string name="whats_new">Novidades</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Excluir todos os contatos</string>
     <string name="delete_all_contacts_question">Excluir todos os contatos?</string>

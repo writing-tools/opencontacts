@@ -7,7 +7,6 @@ import static java.util.Calendar.MINUTE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getLong;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isWhatsappInstalled;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePreference;
 import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 
@@ -22,10 +21,10 @@ import opencontacts.open.com.opencontacts.R;
 
 public class SharedPreferencesUtils {
     public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";//also hard coded in xml
-    public static final String DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_WHATSAPP_COUNTRY_CODE";
+    public static final String DEFAULT_SOCIAL_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_SOCIAL_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
-    public static final String WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY = "WHATSAPP_INTEGRATION_ENABLED";//also hard coded in xml
+    public static final String SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY = "SOCIAL_INTEGRATION_ENABLED";//also hard coded in xml
     public static final String ADDRESSBOOK_URL_SHARED_PREFS_KEY = "ADDRESSBOOK_URL";
     public static final String BASE_SYNC_URL_SHARED_PREFS_KEY = "BASE_SYNC_URL";
     public static final String CARD_DAV_SERVER_TYPE_SHARED_PREFS_KEY = "CARD_DAV_SERVER_TYPE";
@@ -48,22 +47,23 @@ public class SharedPreferencesUtils {
     public static final String TOGGLE_CONTACT_ACTIONS = "TOGGLE_CONTACT_ACTIONS";
     public static final String DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT = "-2";
     public static final String DEFAULT_SIM_SELECTION_ALWAYS_ASK = "-1";
-    public static final String DEFAULT_SIM_SELECTION_SIM_1 = "0";
-    public static final String DEFAULT_SIM_SELECTION_SIM_2 = "1";
     public static final String SHOULD_USE_SYSTEM_PHONE_APP = "SHOULD_USE_SYSTEM_PHONE_APP";
     public static final String SHORTCUTS_ADDED_IN_VERSION_SHARED_PREF_KEY = "SHORTCUTS_ADDED_IN_VERSION";
     public static final String KEYBOARD_RESIZE_VIEWS_SHARED_PREF_KEY = "KEYBOARD_RESIZE_VIEWS";
     public static final String BOTTOM_MENU_OPEN_DEFAULT_SHARED_PREF_KEY = "BOTTOM_MENU_OPEN_DEFAULT";
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
+    public static final String DEFAULT_SOCIAL_APP= "default_social_app";
+    public static final String TELEGRAM = "Telegram";
+    public static final String WHATSAPP = "Whatsapp";
 
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
     public static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
     public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
     public static final String CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY = "rejectCalls";
 
-    public static String getDefaultWhatsAppCountryCode(Context context) {
+    public static String getDefaultSocialCountryCode(Context context) {
         return getAppsSharedPreferences(context)
-            .getString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, "");
+            .getString(DEFAULT_SOCIAL_COUNTRY_CODE_PREFERENCES_KEY, "");
 
     }
 
@@ -91,27 +91,30 @@ public class SharedPreferencesUtils {
         return getAppsSharedPreferences(context).getBoolean(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, false);
     }
 
-    public static void enableWhatsappIntegration(String selectedCountryCodeWithPlus, Context context) {
+    public static void enableSocialappIntegration(String selectedCountryCodeWithPlus, Context context) {
         getAppsSharedPreferences(context)
             .edit()
-            .putString(DEFAULT_WHATSAPP_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
-            .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, true)
+            .putString(DEFAULT_SOCIAL_COUNTRY_CODE_PREFERENCES_KEY, selectedCountryCodeWithPlus)
+            .putBoolean(SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY, true)
             .apply();
     }
 
-    public static void disableWhatsappIntegration(Context context) {
+    public static void disableSocialIntegration(Context context) {
         getAppsSharedPreferences(context)
             .edit()
-            .putBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
+            .putBoolean(SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
             .apply();
     }
 
-    public static boolean isWhatsappIntegrationEnabled(Context context) {
+    public static boolean isSocialIntegrationEnabled(Context context) {
         return getAppsSharedPreferences(context)
-            .getBoolean(WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY, false)
-            && isWhatsappInstalled(context);
+            .getBoolean(SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY, false);
     }
 
+    public static String defaultSocialAppEnabled(Context context) {
+        return getAppsSharedPreferences(context)
+            .getString(DEFAULT_SOCIAL_APP, TELEGRAM);
+    }
     public static void setSharedPreferencesChangeListener(SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener, Context context) {
         getAppsSharedPreferences(context).registerOnSharedPreferenceChangeListener(sharedPreferenceChangeListener);
     }

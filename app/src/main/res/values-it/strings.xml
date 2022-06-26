@@ -43,7 +43,6 @@
     <string name="callerid">Id Chiamante</string>
     <string name="callerid_help_text">L\'id chiamante si riferisce alla visualizzazione del nome del contatto durante una chiamata in arrivo.\n\nL\'id del chiamante viene visualizzato e di default si trova quasi al centro dello schermo. Ma si può facilmente trascinarlo in qualsiasi posizione desiderata sullo schermo e quella posizione verrà salvata automaticamente.\n\n\nQuindi, dopo aver installato l\'app, cercate di ricevere una chiamata da qualsiasi numero e trascinate id chiamante per posizionarlo da qualche parte che vi piace. Tienete presente che l\'id del chiamante è trascinabile solo quando avviene la chiamata e quando lo schermo è sbloccato. Android ha questo problema di non essere in grado di prendere gli eventi di input sulle schermate create mentre il telefono è bloccato. Quindi assicuratevi di sbloccare lo schermo prima di chiedere a qualcuno di chiamare.</string>
     <string name="whats_new">Novità</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Elimina tutti i contatti</string>
     <string name="delete_all_contacts_question">Eliminare tutti i contatti?</string>

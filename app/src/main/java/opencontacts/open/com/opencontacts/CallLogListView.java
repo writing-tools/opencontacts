@@ -10,8 +10,8 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isWhatsappIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getHighlightColor;
@@ -23,7 +23,6 @@ import android.provider.CallLog;
 import androidx.annotation.NonNull;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.widget.AppCompatButton;
 import androidx.appcompat.widget.AppCompatTextView;
 import android.view.LayoutInflater;
@@ -44,7 +43,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -72,7 +70,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
     Context context;
     private EditNumberBeforeCallHandler editNumberBeforeCallHandler;
     ArrayAdapter<GroupedCallLogEntry> adapter;
-    private boolean isWhatsappIntegrationEnabled;
+    private boolean isSocialAppIntegrationEnabled;
     //android has weakref to this listener and gets garbage collected hence we should have it here.
     private final SharedPreferences.OnSharedPreferenceChangeListener sharedPreferenceChangeListener;
     private SimpleDateFormat timeStampFormat;
@@ -95,7 +93,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         addView(getSwipeRefreshLayout(context));
         prepareLongClickActions();
         boolean shouldToggleContactActions = shouldToggleContactActions(context);
-        isWhatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
+        isSocialAppIntegrationEnabled = isSocialIntegrationEnabled(context);
         timeStampFormat = getTimestampPattern(context);
         List<CallLogEntry> callLogEntries = new ArrayList<>();
         inSelectionMode = false;
@@ -106,10 +104,17 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             AndroidUtils.call(callLogEntry.getPhoneNumber(), context);
         };
 
-        final OnClickListener whatsappContact = v -> {
+        final OnClickListener socialAppContact = v -> {
             if (inSelectionMode) return;
             CallLogEntry callLogEntry = getLatestCallLogEntry((View) v.getParent());
-            AndroidUtils.whatsapp(callLogEntry.getPhoneNumber(), context);
+            AndroidUtils.openSocialApp(callLogEntry.getPhoneNumber(), context);
+        };
+
+        final OnLongClickListener socialAppLongClick = v -> {
+            if (inSelectionMode) return false;
+            CallLogEntry callLogEntry = getLatestCallLogEntry((View) v.getParent());
+            AndroidUtils.onSocialLongPress(callLogEntry.getPhoneNumber(), context);
+            return true;
         };
 
         final OnClickListener messageContact = v -> {
@@ -169,11 +174,12 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 ((TextView) reusableView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
                 setCallAndMessageActions(reusableView);
 
-                View whatsappIcon = reusableView.findViewById(R.id.button_whatsapp);
-                if (isWhatsappIntegrationEnabled) {
-                    whatsappIcon.setOnClickListener(whatsappContact);
-                    whatsappIcon.setVisibility(VISIBLE);
-                } else whatsappIcon.setVisibility(GONE);
+                View socialAppIcon = reusableView.findViewById(R.id.button_social);
+                if (isSocialAppIntegrationEnabled) {
+                    socialAppIcon.setOnClickListener(socialAppContact);
+                    socialAppIcon.setOnLongClickListener(socialAppLongClick);
+                    socialAppIcon.setVisibility(VISIBLE);
+                } else socialAppIcon.setVisibility(GONE);
                 if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
                     ((ImageView) reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
                 else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))
@@ -230,10 +236,10 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
         reload();
         //android has weakref to this listener and gets garbage collected hence we should have it here.
         sharedPreferenceChangeListener = (sharedPreferences, key) -> {
-            if (!WHATSAPP_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)
+            if (!SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY.equals(key)
                 && !PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY.equals(key)
             ) return;
-            isWhatsappIntegrationEnabled = isWhatsappIntegrationEnabled(context);
+            isSocialAppIntegrationEnabled = isSocialIntegrationEnabled(context);
             timeStampFormat = getTimestampPattern(context);
             adapter.notifyDataSetChanged();
         };

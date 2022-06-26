@@ -43,7 +43,6 @@
     <string name="callerid">Afficheur</string>
     <string name="callerid_help_text">L\'afficheur vous montrera le nom du contact durant un appel entrant.\n\nL\'afficheur apparaîtra au milieu de l\'écran durant un appel entrant et vous pourrez le faire glisser dans la position désirée; celle-ci sera automatiquement sauvegardée.\n\n\nAprès avoir installé l\'application, faites-en sorte de recevoir un appel et faites glisser l\'afficheur sur l\'écran dans un endroit que vous aimez. Souvenez-vous que vous pouvez seulement faire glisser l\'afficheur lorsque vous recevez un appel et que votre écran est déverrouillé. Le système d\'exploitation Android a cette limite de n\'être capable de recevoir des instruction que lorsque l\'écran est déverrouillé. Alors faites sûr de déverrouiller votre écran avant de demander à quelqu\'un de vous appeler.</string>
     <string name="whats_new">Nouveautés</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Supprimer tous les contacts</string>
     <string name="delete_all_contacts_question">Supprimer tous les contacts?</string>

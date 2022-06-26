@@ -43,7 +43,6 @@
     <string name="callerid">通話人ID</string>
     <string name="callerid_help_text">通話人ID將顯示來電聯絡人信息。\n\n通話人ID默認會顯示在屏幕中央。當然，你也可以將通話人ID拖動至屏幕中任意地方，軟件將自動保存你所選擇的位置。”\n\n\n所以安裝軟件後可以嘗試在接電話的時候拖動通話人ID到一個你喜歡的位置。但記住通話人ID只有在沒有鎖屏時來電才可以拖動，安卓有這樣一個問題在鎖屏時不能獲取屏幕上操作，所以確定你處於屏幕解鎖狀態時接收電話以測試這一功能。</string>
     <string name="whats_new">有什麼新功能</string>
-    <string name="whatsapp_uri_with_phone_number_placeholder">whatsapp://send/?phone=%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">刪除全部聯絡人</string>
     <string name="delete_all_contacts_question">是否確定刪除全部聯絡人?</string>

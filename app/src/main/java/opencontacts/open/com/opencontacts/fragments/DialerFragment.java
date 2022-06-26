@@ -128,7 +128,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         ImageButtonWithTint closeList = new ImageButtonWithTint(context);
         closeList.setImageResource(R.drawable.ic_arrow_down_24dp);
         closeList.setOnClickListener(v -> hideSearchListAndUpdateUIForRest());
-        searchList.addHeaderView(closeList); 
+        searchList.addHeaderView(closeList);
         searchList.addFooterView(getASpaceOfHeight(1, 56, context)); //56 here is height of bottom menu
         searchListAdapter = new ContactsListViewAdapter(context);
         LinkedHashMap<String, Consumer<String>> longClickOptionsAndListeners = longClickOptionsAndListeners();
@@ -157,7 +157,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.call(phoneNumber, context)));
 
-        view.findViewById(R.id.button_whatsapp).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.whatsapp(phoneNumber, context)));
+        view.findViewById(R.id.button_social).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.openSocialApp(phoneNumber, context)));
 
         view.findViewById(R.id.button_message).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.message(phoneNumber, context)));
 

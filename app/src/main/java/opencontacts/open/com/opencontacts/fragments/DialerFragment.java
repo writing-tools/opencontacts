@@ -159,6 +159,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_social).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.openSocialApp(phoneNumber, context)));
 
+        view.findViewById(R.id.button_social).setOnLongClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.onSocialLongPress(phoneNumber, context)));
+
         view.findViewById(R.id.button_message).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.message(phoneNumber, context)));
 
         view.findViewById(R.id.button_add_contact).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.getAlertDialogToAddContact(phoneNumber, context).show()));
@@ -191,12 +193,13 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         setVisibilityOfMultiSimButtons(VISIBLE);
     }
 
-    private void performActionIfPhoneNumberIsValidElseShowError(Consumer<String> action) {
+    private boolean performActionIfPhoneNumberIsValidElseShowError(Consumer<String> action) {
         String phoneNumber = dialPadEditText.getText().toString();
         if (isInvalid(phoneNumber))
             dialPadEditText.setError(getString(R.string.invalid_number));
         else
             action.accept(phoneNumber);
+        return true;
     }
 
     private boolean isInvalid(String phoneNumber) {

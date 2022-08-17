@@ -215,10 +215,10 @@ public class CallLogDataStore {
         });
     }
 
-    public static List<CallLogEntry> getCallLogEntriesForContactWith(String phoneNumber) {
+    public static List<CallLogEntry> getCallLogEntriesForContactWith(String phoneNumber, int offset) {
         opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(phoneNumber);
         if (contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber);
-        return getCallLogEntriesFor(contact.getId());
+        return getCallLogEntriesFor(contact.getId(), offset);
     }
 
 }

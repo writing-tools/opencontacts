@@ -4,6 +4,7 @@ import static android.Manifest.permission.READ_CALL_LOG;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.widget.Toast.LENGTH_LONG;
 import static com.orm.SugarRecord.find;
+import static com.orm.SugarRecord.findWithQuery;
 import static java.util.Collections.emptyList;
 import static opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore.CALL_LOG_ENTRIES_CHUNK_SIZE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.hasPermission;
@@ -164,6 +165,10 @@ class CallLogDBHelper {
 
     static List<CallLogEntry> getCallLogEntriesFor(long contactId) {
         return find(CallLogEntry.class, "contact_Id = ?", new String[]{"" + contactId}, null, "date desc", null);
+    }
+
+    static List<CallLogEntry> getCallLogEntriesFor(long contactId, int offset) {
+        return findWithQuery(CallLogEntry.class, "select * from call_log_entry where contact_id= ? limit ? offset ?", String.valueOf(contactId), String.valueOf(CALL_LOG_ENTRIES_CHUNK_SIZE), String.valueOf(offset));
     }
 
     static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber) {

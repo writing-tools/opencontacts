@@ -44,7 +44,7 @@ public class CallLogGroupingUtil {
     private static boolean canBeGrouped(GroupedCallLogEntryWithCache groupedCallLogEntryWithCache, CallLogEntry callLogEntry) {
         if (callLogEntry.contactId != -1 && groupedCallLogEntryWithCache.groupedCallLogEntry.latestCallLogEntry.contactId != callLogEntry.contactId)
             return false;
-        if (callLogEntry.contactId == -1 && !groupedCallLogEntryWithCache.groupedCallLogEntry.latestCallLogEntry.getPhoneNumber().equals(callLogEntry.getPhoneNumber()))
+        if (callLogEntry.contactId == -1 && !U.isEqual(groupedCallLogEntryWithCache.groupedCallLogEntry.latestCallLogEntry.getPhoneNumber(), callLogEntry.getPhoneNumber()))
             return false;
         return (Common.getCalendarInstanceAt(Long.parseLong(callLogEntry.getDate())).after(groupedCallLogEntryWithCache.groupingTimeOffsetCalendarInstance));
     }

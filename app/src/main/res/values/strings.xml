@@ -46,6 +46,7 @@
     <string name="whats_new">Whats new</string>
     <string name="whatsapp_uri_with_phone_number_placeholder" translatable="false">https://wa.me/%1$s</string>
     <string name="telegram_uri_with_phone_number_placeholder" translatable="false">https://t.me/%1$s</string>
+    <string name="signal_uri_with_phone_number_placeholder" translatable="false">https://signal.me/#p/%1$s</string>
     <string name="gitlab_repo_tags_url">https://gitlab.com/sultanahamer/OpenContacts/blob/master/CHANGELOG</string>
     <string name="delete_all_contacts">Delete all contacts</string>
     <string name="delete_all_contacts_question">Delete all contacts?</string>
@@ -282,5 +283,6 @@
     <string-array name="social_integrations">
         <item>Telegram</item>
         <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

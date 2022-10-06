@@ -15,6 +15,7 @@ import static android.provider.CalendarContract.Events.TITLE;
 import static android.text.TextUtils.isEmpty;
 import static java.lang.Math.round;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIGNAL;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.TELEGRAM;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.defaultSocialAppEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getAppsSharedPreferences;
@@ -145,6 +146,15 @@ public class AndroidUtils {
         context.startActivity(callIntent);
     }
 
+    public static void signal(String number, Context context) {
+        try {
+            context.startActivity(getSignalIntent(number, context));
+        } catch (Exception e) {
+            Toast.makeText(context, context.getString(R.string.could_not_open_social_app), Toast.LENGTH_LONG)
+                .show();
+        }
+    }
+
     public static void telegram(String number, Context context) {
         try {
             context.startActivity(getTelegramIntent(number, context));
@@ -157,6 +167,7 @@ public class AndroidUtils {
     public static void openSocialApp(String number, Context context) {
         String socialApp = defaultSocialAppEnabled(context);
         if(socialApp.equals(TELEGRAM)) telegram(number, context);
+        if(socialApp.equals(SIGNAL)) signal(number, context);
         else whatsapp(number, context);
     }
 
@@ -170,6 +181,8 @@ public class AndroidUtils {
                         case 0: telegram(phoneNumber, context);
                             break;
                         case 1: whatsapp(phoneNumber, context);
+                            break;
+                        case 2: signal(phoneNumber, context);
                             break;
                     }
                 }).show();
@@ -193,6 +206,14 @@ public class AndroidUtils {
         } catch (PackageManager.NameNotFoundException ignored) {
         }
         return false;
+    }
+
+    @NonNull
+    private static Intent getSignalIntent(String number, Context context) {
+        String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
+        return new Intent(ACTION_VIEW, Uri.parse(
+            context.getString(R.string.signal_uri_with_phone_number_placeholder, numberWithCountryCode)
+        ));
     }
 
     @NonNull

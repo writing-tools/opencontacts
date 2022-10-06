@@ -54,6 +54,7 @@ public class SharedPreferencesUtils {
     public static final String LAST_VISITED_GROUP_SHARED_PREF_KEY = "LAST_VISITED_GROUP";
     public static final String DEFAULT_SOCIAL_APP= "default_social_app";
     public static final String TELEGRAM = "Telegram";
+    public static final String SIGNAL = "Signal";
     public static final String WHATSAPP = "Whatsapp";
 
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";

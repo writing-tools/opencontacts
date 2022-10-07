@@ -136,6 +136,7 @@ public class ContactsDataStore {
     }
 
     public static opencontacts.open.com.opencontacts.orm.Contact getContact(String phoneNumber) {
+        if (TextUtils.isEmpty(phoneNumber)) return null;
         return ContactsDBHelper.getContactFromDB(phoneNumber);
     }
 

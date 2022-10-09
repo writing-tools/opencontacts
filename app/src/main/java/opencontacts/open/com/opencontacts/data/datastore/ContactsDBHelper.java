@@ -79,10 +79,9 @@ public class ContactsDBHelper {
     static Contact getContactFromDB(String phoneNumber) {
         if (isEmpty(phoneNumber)) return null;
         String searchablePhoneNumber = getSearchablePhoneNumber(phoneNumber);
-        if (searchablePhoneNumber == null) return null;
+        if (isEmpty(searchablePhoneNumber)) return null;
         List<PhoneNumber> matchingPhoneNumbers = getMatchingNumbers(searchablePhoneNumber);
-        if (matchingPhoneNumbers.isEmpty())
-            return null;
+        if (matchingPhoneNumbers.isEmpty()) return null;
         return matchingPhoneNumbers.get(0).contact;
     }
 

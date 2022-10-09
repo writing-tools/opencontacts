@@ -25,6 +25,8 @@ import android.os.AsyncTask;
 import android.text.TextUtils;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.github.underscore.Function;
 import com.github.underscore.U;
 
@@ -135,8 +137,7 @@ public class ContactsDataStore {
         });
     }
 
-    public static opencontacts.open.com.opencontacts.orm.Contact getContact(String phoneNumber) {
-        if (TextUtils.isEmpty(phoneNumber)) return null;
+    public static opencontacts.open.com.opencontacts.orm.Contact getContact(@NonNull String phoneNumber) {
         return ContactsDBHelper.getContactFromDB(phoneNumber);
     }
 

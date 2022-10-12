@@ -50,6 +50,7 @@ public class CallLogEntry extends SugarRecord implements Serializable {
         this.callType = callType;
         this.date = date;
         this.simId = simId;
+        if(this.phoneNumber == null) this.phoneNumber = "";
     }
 
     public String getName() {

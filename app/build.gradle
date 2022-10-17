@@ -6,8 +6,8 @@ android {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 14
         targetSdkVersion 29
-        versionCode 24
-        versionName "24.0"
+        versionCode 25
+        versionName "25.0"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }

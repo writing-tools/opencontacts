@@ -1,3 +1,9 @@
+V25.0
+T9 Keypad is disabled by default
+Added Telegram and Signal integration
+Long time to load call log of a contact is fixed
+Fix app crashing in Android 12 for robo calls
+
 V24.0
 Allow http(not https) connection to sync with carddav server
 Miscellaneous bug fixes

@@ -8,7 +8,6 @@
         android:label="DOpenContacts"
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
         tools:replace="android:allowBackup, android:label">
         <activity
             android:name="opencontacts.open.com.opencontacts.activities.ImportVcardActivity"

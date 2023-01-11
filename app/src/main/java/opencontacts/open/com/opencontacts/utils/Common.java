@@ -161,4 +161,8 @@ public class Common {
         return isEmpty(text) ? "" : text + "\n";
     }
 
+    public static String removeSpacesIfAny(String text) {
+        return text.replaceAll(" ", "");
+    }
+
 }

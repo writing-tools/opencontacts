@@ -14,6 +14,7 @@ import static android.provider.CalendarContract.Events.CONTENT_URI;
 import static android.provider.CalendarContract.Events.TITLE;
 import static android.text.TextUtils.isEmpty;
 import static java.lang.Math.round;
+import static opencontacts.open.com.opencontacts.utils.Common.removeSpacesIfAny;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.handleMultiSimCalling;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIGNAL;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.TELEGRAM;
@@ -212,7 +213,7 @@ public class AndroidUtils {
     private static Intent getSignalIntent(String number, Context context) {
         String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
         return new Intent(ACTION_VIEW, Uri.parse(
-            context.getString(R.string.signal_uri_with_phone_number_placeholder, numberWithCountryCode)
+            context.getString(R.string.signal_uri_with_phone_number_placeholder, removeSpacesIfAny(numberWithCountryCode))
         ));
     }
 
@@ -220,14 +221,14 @@ public class AndroidUtils {
     private static Intent getTelegramIntent(String number, Context context) {
         String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
         return new Intent(ACTION_VIEW, Uri.parse(
-            context.getString(R.string.telegram_uri_with_phone_number_placeholder, numberWithCountryCode)
+            context.getString(R.string.telegram_uri_with_phone_number_placeholder, removeSpacesIfAny(numberWithCountryCode))
         ));
     }
     @NonNull
     private static Intent getWhatsappIntent(String number, Context context) {
         String numberWithCountryCode = number.contains("+") ? number : getDefaultSocialCountryCode(context) + number;
         return new Intent(ACTION_VIEW, Uri.parse(
-            context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, numberWithCountryCode)
+            context.getString(R.string.whatsapp_uri_with_phone_number_placeholder, removeSpacesIfAny(numberWithCountryCode))
         ));
     }
 

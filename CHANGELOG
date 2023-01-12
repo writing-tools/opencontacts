@@ -1,3 +1,7 @@
+V26.0
+Change default splash screen to dark for Android 12 dark/light modes
+Fix social network apps not working when phone number has a space in it
+
 V25.0
 T9 Keypad is disabled by default
 Added Telegram and Signal integration

@@ -13,7 +13,8 @@
         android:inputType="phone"
         android:textAlignment="center"
         android:letterSpacing="0.2"
-        android:textAppearance="@style/TextAppearance.AppCompat.Large" />
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:gravity="center_horizontal" />
 
     <View
         android:id="@+id/center"

@@ -69,6 +69,7 @@
         android:id="@+id/call_repeat_count"
         android:visibility="gone"
         android:textAlignment="center"
+        android:gravity="center"
         android:layout_alignBottom="@id/image_view_call_type"
         android:layout_toStartOf="@id/image_view_call_type"
         android:layout_toLeftOf="@id/image_view_call_type"

@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Todos os contatos excluídos</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Mudar tema</string>
-    <string name="could_not_open_whatsapp">Não foi possível abrir o whatsapp</string>
     <string name="default_whatsapp_country_code">Código padrão de país no whatsapp</string>
     <string name="input_country_calling_code_title">Digite o código de chamada do país</string>
     <string name="input_country_calling_code_description">Exemplo: +55 para o Brasil. Não se esqueça de digitar + na frente</string>
@@ -91,9 +90,6 @@
     <string name="storage_not_mounted">Armazenamento não está montado</string>
     <string name="whatsapp_integration">Integração com Whatsapp</string>
     <string name="whatsapp_help_text">O Whatsapp requer um número de telefone que inclui o código de país com símbolo \'+\'. Caso seu número do whatsapp seja 9876543210, você precisa prefixar o código do seu país para que o whatsapp possa reconhecê-lo ao tentar abrir uma conversa via OpenContacts. Caso o código do seu país seja +55, então o número completo deveria ser +559876543210.\n\nNo menu do OpenContacts, há uma nova caixa de entrada para digitar o código padrão de país para o whatsapp. Ao inserir o código do país, não se esqueça de digitar símbolo +. Caso qualquer um dos números presentes no OpenContacts não tivesse o código do país, código padrão predefinido será anexado por padrão. Em caso de contatos internacionais do whatsapp, você precisará editar manualmente esse número para específicar o código do país correto</string>
-    <string name="enable_whatsapp_integration">Habilitar Integração com Whatsapp</string>
-    <string name="disable_whatsapp_integration">Desabilitar integração com whatsapp</string>
-    <string name="whatsapp_preferences">Preferências do Whatsapp</string>
     <string name="do_you_want_to_import">Você deseja importar</string>
     <string name="noname">Sem nome</string>
     <string name="keyboard_adjusts_views">Teclado ajusta a visualização</string>

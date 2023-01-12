@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Todos los contactos eliminados</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Cambiar tema</string>
-    <string name="could_not_open_whatsapp">No se pudo abrir whatsapp</string>
     <string name="default_whatsapp_country_code">Código de país predeterminado de WhatsApp</string>
     <string name="input_country_calling_code_title">Escribe el código de llamada del país</string>
     <string name="input_country_calling_code_description">Ejemplo: +34 para España. No olvides escribir + delante</string>
@@ -91,9 +90,6 @@
     <string name="storage_not_mounted">Almacenamiento no montado</string>
     <string name="whatsapp_integration">Integración con Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp requiere un número de teléfono móvil con el código de país con el signo \'+\'. En caso de que su número de WhatsApp sea 9876543210, debe agregar el código de su país delante para que WhatsApp pueda reconocerlo al intentar abrir una conversación desde OpenContacts. En caso de que tu código de país sea +34, el número completo debería ser +349876543210.\n\nEn el menú de OpenContacts, hay una nueva entrada para registrar el código de país por defecto de whatsapp. Cuando lo registres, no olvides por + en él. En caso de que alguno de los números presentes en OpenContacts no tenga código de país, se agregará este código de país por defecto. En el caso de contactos internacionales de WhatsApp, deberá editar manualmente ese número para incluir el código de país correcto</string>
-    <string name="enable_whatsapp_integration">Habilitar integración con Whatsapp</string>
-    <string name="disable_whatsapp_integration">Deshabilitar integración con Whatsapp</string>
-    <string name="whatsapp_preferences">Preferencias de Whatsapp</string>
     <string name="do_you_want_to_import">¿Quieres importar?</string>
     <string name="noname">NADIE</string>
     <string name="keyboard_adjusts_views">El teclado ajusta las vistas</string>

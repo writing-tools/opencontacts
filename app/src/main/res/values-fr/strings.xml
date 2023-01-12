@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Tous les contacts ont étés supprimés</string>
     <string name="total">Total:</string>
     <string name="switch_theme">Changez l\'apparence</string>
-    <string name="could_not_open_whatsapp">Whatsapp n\'a put être ouvert</string>
     <string name="default_whatsapp_country_code">Code d\'appel du pays Whatsapp par défaut</string>
     <string name="input_country_calling_code_title">Entrer le code d\'appel du pays</string>
     <string name="input_country_calling_code_description">Example: +91 pour l\'Inde. Ne pas oublier de le précéder du signe +</string>
@@ -91,9 +90,6 @@
     <string name="storage_not_mounted">Stockage non configuré</string>
     <string name="whatsapp_integration">Intégration Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp a besoin du numéro de téléphone incluant le code du pays précédé du signe \'+\'. Si votre numéro de téléphone est 9876543210，vous avez besoin d\'ajouter votre code d\'appel du pays avant votre numéro. De cette façon, Whatsapp pourra le reconnaître tout en essayant d\'ouvrir une conversation avec OpenContacts. Si votre code de pays est +91，alors votre numéro de téléphone complet devrait ressembler à +919876543210. \n\nDans le menu d\'Opencontacts, il y a une nouvelle option pour rentrer le code d\'appel du pays par défaut pour Whatsapp. Quand vous entrez le code à être utilisé par défaut, n\'oubliez pas d\'y insérer le signe +. Dans le cas où un numéro dans OpenContacts ne contient pas de code d\'appel du pays, le code d\'appel du pays déterminé par défaut sera utilisé. Dans le cas d\'un contact international que vous desirez utiliser dans Whatsapp, vous aurez besoin d\'ajouter manuellement le code d\'appel du pays au numéro en question.</string>
-    <string name="enable_whatsapp_integration">Permettre l\'intégration de Whatsapp</string>
-    <string name="disable_whatsapp_integration">Refuser l\'intégration de Whatsapp</string>
-    <string name="whatsapp_preferences">Préférences Whatsapp</string>
     <string name="do_you_want_to_import">Voulez-vous importer?</string>
     <string name="noname">SANSNOM</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>

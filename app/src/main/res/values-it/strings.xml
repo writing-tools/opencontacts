@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Tutti i contatti sono stati eliminati</string>
     <string name="total">Totale:</string>
     <string name="switch_theme">Cambia tema</string>
-    <string name="could_not_open_whatsapp">Impossibile aprire whatsapp</string>
     <string name="default_whatsapp_country_code">Codice paese predefinito whatsapp</string>
     <string name="input_country_calling_code_title">Codice di chiamata paese di input</string>
     <string name="input_country_calling_code_description">Esempio: +34 per l\'Italia. Non dimenticare di inserire il + davanti</string>
@@ -91,9 +90,6 @@
     <string name="storage_not_mounted">La scheda SD non è montata</string>
     <string name="whatsapp_integration">Integrazione con Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp richiede un numero di cellulare, incluso il codice paese con \'+\'. Nel caso in cui il tuo numero salvato sia 9876543210, sarà necessario aggiungere il codice del paese prima di esso in modo che whatsapp possa riconoscerlo mentre tenta di aprire una conversazione da OpenContacts. Nel caso in cui il codice del paese sia +91, il numero completo dovrebbe essere simile a +919876543210.\n\nNel menu di OpenContacts, è presente una nuova voce per inserire il codice del paese predefinito. Durante l\'immissione del codice paese, non dimenticare di inserirvi +. Nel caso in cui uno dei numeri presenti in OpenContacts non disponga di un codice paese, per impostazione predefinita questo codice paese viene aggiunto. In caso di contatti whatsapp internazionali, sarà necessario modificare manualmente il numero per includere il codice paese corretto</string>
-    <string name="enable_whatsapp_integration">Abilita Integrazione con Whatsapp</string>
-    <string name="disable_whatsapp_integration">Disabilita integrazione con WhatsApp</string>
-    <string name="whatsapp_preferences">Preferenze Whatsapp</string>
     <string name="do_you_want_to_import">Vuoi importare</string>
     <string name="noname">NONAME</string>
     <string name="keyboard_adjusts_views">Regolazione visualizzazione tastiera</string>

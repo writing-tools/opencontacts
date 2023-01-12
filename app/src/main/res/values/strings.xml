@@ -23,7 +23,7 @@
     <string name="create_new_contact">Create new contact</string>
     <string name="add_to_existing">Add to existing contact</string>
     <string name="about">About</string>
-    <string name="content_about">Brings privacy to your contacts information\n\n\n1.) No other app would be able to access contacts as it saves contacts in its own database seperate from default contacts.\n\n2.) Can be used in place of your default phone(dialer) app.\n\n3.) You can export / import contacts from Android contacts app into this app.\n\n4.) Maintains call log as well coz Android call log app would not be able to show name of contact.\n\n5.) Also shows the person name upon receiving call.\n\n6.) Caller id would show upon call and you can drag to position it.</string>
+    <string name="content_about">Brings privacy to your contacts information\n\n\n1.) No other app would be able to access contacts as it saves contacts in its own database separate from default contacts.\n\n2.) Can be used in place of your default phone(dialer) app.\n\n3.) You can export / import contacts from Android contacts app into this app.\n\n4.) Maintains call log as well coz Android call log app would not be able to show name of contact.\n\n5.) Also shows the person name upon receiving call.\n\n6.) Caller id would show upon call and you can drag to position it.</string>
     <string name="author_label">Author</string>
     <string name="my_name">Sultan Ahamer</string>
     <string name="issues_label">Issues</string>
@@ -53,7 +53,7 @@
     <string name="deleted_all_contacts">Deleted all contacts</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Switch theme</string>
-    <string name="could_not_open_social_app">Could not open Social app</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Default whatsapp country code</string>
     <string name="input_country_calling_code_title">Input country calling code</string>
     <string name="input_country_calling_code_description">Example: +91 for India. Do not forget to input + in front</string>
@@ -98,9 +98,9 @@
     <string name="storage_not_mounted">Storage is not mounted</string>
     <string name="whatsapp_integration">Whatsapp Integration</string>
     <string name="whatsapp_help_text">Whatsapp requires mobile number including country code having \'+\' in it. In case your whatsapp number is 9876543210, you need to add your country code before it so that whatsapp can recognize it while trying to open conversation from OpenContacts. In case your country code is +91, then the complete number should look like +919876543210.\n\nIn menu of OpenContacts, there is a new entry to enter default whatsapp country code. While entering country code, do not forget to enter + in it. In case any of numbers present in OpenContacts is not having country code, this country code would be appended by default. In case of international whatsapp contacts, you would need to manually edit that number to include the correct country code</string>
-    <string name="enable_social_integration">Enable Social network Integration</string>
-    <string name="disable_social_integration">Disable Social network integration</string>
-    <string name="default_social_app">Default social app</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">Do you want to import</string>
     <string name="noname">NONAME</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
@@ -160,8 +160,8 @@
     <string name="dark_theme_preference_summary">Enables dark theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Time Format 12 hours</string>
     <string name="time_format_12hrs_preference_summary">Enables 12 hours clock with AM/PM</string>
-    <string name="social_integration_preference_title">Social integration</string>
-    <string name="social_integration_preference_summary">Enables you to open a telegram/whatsapp conversation right from this app</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Whatsapp integration</string>
     <string name="whatsapp_integration_preference_summary">Enables you to open a whatsapp conversation right from this app</string>
     <string name="t9_preference_title">T9 Search</string>
@@ -232,17 +232,17 @@
     <string name="call_filtering_reject_calls_title">Block calls behavior</string>
     <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
     <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
-    <string name="contributors_title">Contributors</string>
-    <string name="set_password_before_import">Please set password in preferences before import</string>
-    <string name="t9_pinyin_title">T9 for Chinese using Pinyin</string>
-    <string name="t9_pinyin_summary">Translate chinese to pinyin english to support T9</string>
-    <string name="share_as_text">Share as text</string>
-    <string name="name">Name</string>
-    <string name="temp_contact">Temporary contact</string>
-    <string name="mark_contact_as_temporary">Mark contact as temporary?</string>
-    <string name="mark_contact_as_temporary_help_text">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
-    <string name="social_app_long_press">Long press social app icon</string>
-    <string name="long_press_social_app_help_text">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Contributors</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Please set password in preferences before import</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 for Chinese using Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Translate chinese to pinyin english to support T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Share as text</string>
+    <string name="name" tools:ignore="MissingTranslation">Name</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Temporary contact</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Mark contact as temporary?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

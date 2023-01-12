@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Alle contacten verwijderd</string>
     <string name="total">Totaal :</string>
     <string name="switch_theme">Wissel thema</string>
-    <string name="could_not_open_whatsapp">Kan Whatsapp niet openen</string>
     <string name="default_whatsapp_country_code">Standaard Whatsapp landcode</string>
     <string name="input_country_calling_code_title">Landcode invoeren</string>
     <string name="input_country_calling_code_description">Voorbeeld: +91 voor India. Let op, plaats + vooraan</string>
@@ -92,9 +91,6 @@
     <string name="whatsapp_integration">Whatsapp integratie</string>
     <string name="whatsapp_help_text">Whatsapp vereist een mobiel nummer met landcode die begint met \'+\'. Als je Whatsapp-number 9876543210 is, plaats dan de landcode er voor, zodat Whatsapp het herkent als landcode als het wordt aangeroepen door OpenContacts. Het number wordt dan bijvoorbeeld +91 9876543210.\n\nIn het OpenContacts menu is er een ingang om de standaard landcode in de voeren. Vergeet niet de \'+\'.
 In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt deze standaard er voor geplaatst. In geval van internationale contacten moet die zelf aanpassen met de juiste landcode</string>
-    <string name="enable_whatsapp_integration">Whatsapp integratie inschakelen</string>
-    <string name="disable_whatsapp_integration">Whatsapp integratie uitschakelen</string>
-    <string name="whatsapp_preferences">Whatsapp voorkeuren</string>
     <string name="do_you_want_to_import">Wilt u importeren</string>
     <string name="noname">NONAME</string>
     <string name="keyboard_adjusts_views">Toetsenbord past weergave aan</string>

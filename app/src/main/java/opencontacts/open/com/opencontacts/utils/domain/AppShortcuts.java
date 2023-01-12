@@ -44,6 +44,7 @@ public class AppShortcuts {
         markAddedDynamicShortcuts(context);
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     @NonNull
     private static ShortcutInfo getAddContactShortcut(Context context) {
         Intent addContactIntent = new Intent(context, EditContactActivity.class)
@@ -57,6 +58,7 @@ public class AppShortcuts {
             .toShortcutInfo();
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.N_MR1)
     @NonNull
     private static ShortcutInfo getDialerShortcut(Context context) {
         Intent dialerIntent = new Intent(context, MainActivity.class)

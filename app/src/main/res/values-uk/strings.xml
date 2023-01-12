@@ -49,7 +49,6 @@
     <string name="deleted_all_contacts">Видалити всі контакти</string>
     <string name="total">Всього:</string>
     <string name="switch_theme">Переключити тему</string>
-    <string name="could_not_open_whatsapp">Не вдалося відкрити whatsapp</string>
     <string name="default_whatsapp_country_code">Код країни за замовчуванням</string>
     <string name="input_country_calling_code_title">Введіть код країни</string>
     <string name="input_country_calling_code_description">Приклад: +91 для Індії. Не забудьте ввести + попереду</string>
@@ -91,9 +90,6 @@
     <string name="storage_not_mounted">Сховище не встановлено</string>
     <string name="whatsapp_integration">Інтеграція з Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp вимагає мобільний номер, включаючи код країни \"+\" в ній. Номер whatsapp - 9876543210, ви повинні додати код вашої країни перед тим, як він зможе розпізнати його при спробі відкрити розмову з OpenContacts. Якщо код вашої країни +91, то повне число має виглядати як +919876543210.\n\nв меню OpenContacts, є новий запис на типовий код країни. При введенні коду країни не забудьте ввести + в неї. У випадку, якщо будь-який номер, присутній в OpenContacts не має коду країни, цей код країни буде додано за замовчуванням. У разі міжнародних контактів за умовчанням необхідно вручну відредагувати цей номер, щоб вказати правильний код країни</string>
-    <string name="enable_whatsapp_integration">Увімкнення інтеграції з Whatsapp</string>
-    <string name="disable_whatsapp_integration">Вимкнути інтеграцію whatsapp</string>
-    <string name="whatsapp_preferences">Налаштування Whatsapp</string>
     <string name="do_you_want_to_import">Хочете імпортувати</string>
     <string name="noname">БЕЗ ІМЕНІ</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>

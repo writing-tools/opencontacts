@@ -261,8 +261,9 @@ public class PreferencesActivity extends AppBaseActivity {
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_TO_BECOMING_CALL_SCREENER) {
-            if (resultCode != android.app.Activity.RESULT_OK) return;
+            if (resultCode != Activity.RESULT_OK) return;
             enableCallFiltering(this);
             recreate();
         }

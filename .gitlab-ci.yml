@@ -58,7 +58,7 @@ before_script:
 # lint Project
 lint:
   interruptible: true
-  stage: lint
+  stage: test
   script:
     - ./gradlew lint
   rules:
@@ -74,4 +74,3 @@ assembleDebug:
       - app/build/outputs/apk/debug/app-debug.apk
   rules:
     - if: $CI_COMMIT_BRANCH == "master"
-

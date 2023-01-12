@@ -55,19 +55,11 @@ before_script:
 
 # Basic android and gradle stuff
 
-# lint Project
-lint:
-  interruptible: true
-  stage: test
-  script:
-    - ./gradlew lint
-  rules:
-    - if: $CI_COMMIT_BRANCH == "master"
-
 assembleDebug:
   interruptible: true
   stage: build
   script:
+    - ./gradlew lint # to save gitlab ci time. Adding this as other step will start from cloning
     - ./gradlew assembleDebug
   artifacts:
     paths:

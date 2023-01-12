@@ -55,7 +55,15 @@ before_script:
 
 # Basic android and gradle stuff
 
-# Make Project
+# lint Project
+lint:
+  interruptible: true
+  stage: lint
+  script:
+    - ./gradlew lint
+  rules:
+    - if: $CI_COMMIT_BRANCH == "master"
+
 assembleDebug:
   interruptible: true
   stage: build

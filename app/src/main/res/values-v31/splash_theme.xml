@@ -4,5 +4,7 @@
         <item name="android:windowSplashScreenBrandingImage">@android:color/transparent</item>
         <item name="android:windowSplashScreenBackground">@android:color/secondary_text_light</item>
         <item name="android:windowSplashScreenAnimatedIcon">@android:color/transparent</item>
+        <item name="imageButtonWithTint">@style/TransparentImageButton</item>
+        <item name="preferenceTheme">@style/PreferenceThemeOverlay.v14.Material</item>
     </style>
 </resources>

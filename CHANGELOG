@@ -1,3 +1,8 @@
+V27.0
+Fix dark theme broken in v26
+Let user clear earlier entered number in dialer screen
+Add some gap between social and text icon in call log screen
+
 V26.0
 Change default splash screen to dark for Android 12 dark/light modes
 Fix social network apps not working when phone number has a space in it

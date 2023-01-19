@@ -67,7 +67,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
     @Override
     public void onResume() {
         super.onResume();
-        linkDialerButtonsToHandlers();
+        linkButtons();
     }
 
     private void linkEditTextWithSearchList(View view) {
@@ -153,7 +153,7 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         dialPadEditText.setText(number);
     }
 
-    private void linkDialerButtonsToHandlers() {
+    private void linkButtons() {
 
         view.findViewById(R.id.button_call).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.call(phoneNumber, context)));
 
@@ -168,6 +168,8 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
         view.findViewById(R.id.button_call_sim1).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 0, context)));
 
         view.findViewById(R.id.button_call_sim2).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> PhoneCallUtils.callUsingSim(phoneNumber, 1, context)));
+
+        view.findViewById(R.id.button_clear).setOnClickListener(v -> dialPadEditText.setText(""));
 
         if (searchListAdapter != null && !searchListAdapter.isEmpty()) hideMultiSimDialingButtons();
         else enableMultiSimDialingButtonsIfHavingMutipleSims();

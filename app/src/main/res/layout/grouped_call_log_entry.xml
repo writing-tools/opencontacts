@@ -23,6 +23,8 @@
         android:layout_height="wrap_content"
         android:src="@drawable/ic_chat_black_24dp"
         android:id="@+id/button_action2"
+        android:layout_marginEnd="10dp"
+        android:layout_marginRight="10dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
         android:layout_alignParentEnd="true" />

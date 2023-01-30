@@ -109,6 +109,7 @@ class CallLogDBHelper {
                 callType = c.getString(columnIndexForCallType);// for call type, Incoming or out going
                 subscriptionIdForCall = c.getString(columnIndexForSubscriptionId);
 
+                if(mobileNumberInvolvedInCall == null) continue;
                 opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(mobileNumberInvolvedInCall);
                 if (contact == null)
                     callLogEntries.add(new CallLogEntry(null, (long) -1, mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, getSimIdOrDefault(subscriptionIdForCall)));
@@ -132,6 +133,7 @@ class CallLogDBHelper {
                 dateOfCall = c.getString(columnIndexForDate);
                 callType = c.getString(columnIndexForCallType);// for call type, Incoming or out going
 
+                if(mobileNumberInvolvedInCall == null) continue;
                 opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(mobileNumberInvolvedInCall);
                 if (contact == null)
                     callLogEntries.add(new CallLogEntry(null, (long) -1, mobileNumberInvolvedInCall, durationOfCall, callType, dateOfCall, 1));

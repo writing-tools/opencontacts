@@ -20,6 +20,7 @@ import android.os.Environment;
 import android.provider.CallLog;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -155,7 +156,7 @@ public class DomainUtils {
 
     public static void exportAllContacts(Context context) throws Exception {
         if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
+            AndroidUtils.runOnMainDelayed(() -> AndroidUtils.toastFromNonUIThread(R.string.storage_not_mounted, LENGTH_LONG, context), 0);
             return;
         }
 

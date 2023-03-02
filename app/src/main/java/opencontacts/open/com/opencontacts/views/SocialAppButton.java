@@ -24,7 +24,7 @@ public class SocialAppButton extends ImageButtonWithTint {
         super(context, attrs, defStyleAttr);
         String defaultSocialApp = SharedPreferencesUtils.defaultSocialAppEnabled(context);
         if (defaultSocialApp.equalsIgnoreCase(TELEGRAM)) setImageResource(R.drawable.ic_telegram);
-        if (defaultSocialApp.equalsIgnoreCase(SIGNAL)) setImageResource(R.drawable.ic_signal_app);
+        else if (defaultSocialApp.equalsIgnoreCase(SIGNAL)) setImageResource(R.drawable.ic_signal_app);
         else setImageResource(R.drawable.ic_whatsapp);
     }
 

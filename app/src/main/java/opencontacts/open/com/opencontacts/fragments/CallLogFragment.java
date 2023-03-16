@@ -1,5 +1,9 @@
 package opencontacts.open.com.opencontacts.fragments;
 
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.removeAnyMissedCallNotifications;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldAutoCancelMissedCallNotification;
+
 import android.content.Context;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
@@ -32,6 +36,12 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
         LinearLayout linearLayout = new LinearLayout(context);
         linearLayout.addView(callLogListView);
         return linearLayout;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if(shouldAutoCancelMissedCallNotification(getContext())) processAsync(() -> removeAnyMissedCallNotifications(getContext()));
     }
 
     @Override

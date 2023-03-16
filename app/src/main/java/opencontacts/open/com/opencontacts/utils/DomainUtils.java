@@ -1,10 +1,10 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import static android.app.Notification.EXTRA_TITLE;
 import static android.text.TextUtils.isEmpty;
 import static android.widget.Toast.LENGTH_LONG;
 import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
-import static opencontacts.open.com.opencontacts.utils.AndroidUtils.toastFromNonUIThread;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
@@ -15,15 +15,18 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getVCardFromString;
 
+import android.app.NotificationManager;
 import android.content.Context;
+import android.os.Build;
 import android.os.Environment;
 import android.provider.CallLog;
+import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
 
@@ -506,6 +509,23 @@ public class DomainUtils {
 
     public static void shareContact(long contactId, Context context) {
         AndroidUtils.shareContact(ContactsDataStore.getVCardData(contactId).vcardDataAsString, context);
+    }
+
+    public static String getMissedcallNotificationTitle(Context context) {
+        return context.getString(R.string.missed_call);
+    }
+
+    public static void removeAnyMissedCallNotifications(Context context) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) return;
+        NotificationManager notificationManager = (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
+        U.chain(notificationManager.getActiveNotifications())
+            .filter(notification -> isMissedCallNotification(context, notification))
+            .forEach(notification -> notificationManager.cancel(notification.getId()));
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.KITKAT)
+    private static boolean isMissedCallNotification(Context context, StatusBarNotification notification) {
+        return getMissedcallNotificationTitle(context).equals(notification.getNotification().extras.getString(EXTRA_TITLE));
     }
 
     public static void shareContactAsText(long contactId, Context context) {

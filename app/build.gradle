@@ -49,11 +49,11 @@ configurations {
 dependencies {
     implementation 'androidx.multidex:multidex:2.0.1'
     implementation fileTree(dir: 'libs', include: ['*.jar', '*.aar'])
-    testImplementation('androidx.test.espresso:espresso-core:3.1.0', {
+    testImplementation('androidx.test.espresso:espresso-core:3.5.1', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.6.4'
-    implementation group: 'com.opencsv', name: 'opencsv', version: '5.3'
+    implementation group: 'net.lingala.zip4j', name: 'zip4j', version: '2.11.5'
+    implementation group: 'com.opencsv', name: 'opencsv', version: '5.7.1'
     implementation 'androidx.appcompat:appcompat:1.4.0'
     implementation 'androidx.legacy:legacy-preference-v14:1.0.0'
     implementation 'com.google.android.material:material:1.4.0'
@@ -68,7 +68,7 @@ dependencies {
     implementation('com.squareup.okhttp3:logging-interceptor:4.9.0')
     implementation 'com.github.satyan:sugar:1.5'
     implementation 'com.github.javadev:underscore:1.39'
-    implementation 'io.michaelrocks:libphonenumber-android:8.12.41'
-    implementation group: 'com.belerweb', name: 'pinyin4j', version: '2.5.0'
-    testImplementation 'junit:junit:4.13.1'
+    implementation 'io.michaelrocks:libphonenumber-android:8.13.7'
+    implementation group: 'com.belerweb', name: 'pinyin4j', version: '2.5.1'
+    testImplementation 'junit:junit:4.13.2'
 }

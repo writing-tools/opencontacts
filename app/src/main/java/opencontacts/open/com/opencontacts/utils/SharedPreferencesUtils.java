@@ -40,6 +40,7 @@ public class SharedPreferencesUtils {
     public static final int WEEKS_TIME_IN_HOURS = 24 * 7;
     public static final String ENCRYPTING_CONTACTS_EXPORT_KEY = "encryptingContactsExportKey";
     public static final String SORT_USING_FIRST_NAME = "sortUsingFirstName";
+    public static final String KEEP_SCREEN_UPRIGHT = "keepScreenUpright";
     public static final String SINGLE_CONTACT_WIDGET_TO_CONTACT_MAPPING = "singleContactWidgetToContactMapping";
     public static final String SHOULD_ASK_FOR_PERMISSIONS = "SHOULD_ASK_FOR_PERMISSIONS";
     public static final String LAST_DEFAULT_TAB_LAUNCH_TIME_SHARED_PREF_KEY = "LAST_DEFAULT_TAB_LAUNCH_TIME";
@@ -167,6 +168,10 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldSortUsingFirstName(Context context) {
         return getBoolean(SORT_USING_FIRST_NAME, true, context);
+    }
+
+    public static boolean shouldKeepScreenUpright(Context context) {
+        return getBoolean(KEEP_SCREEN_UPRIGHT, true, context);
     }
 
     public static boolean shouldAskForPermissions(Context context) {

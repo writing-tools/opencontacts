@@ -30,6 +30,10 @@
             android:title="@string/sort_using_first_name" />
         <SwitchPreference
             android:defaultValue="true"
+            android:key="keepScreenUpright"
+            android:title="@string/keep_screen_upright" />
+        <SwitchPreference
+            android:defaultValue="true"
             android:key="SHOULD_ASK_FOR_PERMISSIONS"
             android:title="@string/ask_permissions_again" />
         <SwitchPreference

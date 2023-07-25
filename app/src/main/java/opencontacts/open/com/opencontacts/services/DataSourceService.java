@@ -16,6 +16,7 @@ import java.util.List;
 
 import open.com.opencontactsdatasourcecontract.ContactsDataStoreService;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
+import opencontacts.open.com.opencontacts.domain.Contact;
 import opencontacts.open.com.opencontacts.utils.AIDLTranslationUtils;
 
 public class DataSourceService extends Service {
@@ -28,7 +29,15 @@ public class DataSourceService extends Service {
 
         @Override
         public String getNameAndPhoneNumbers() throws RemoteException {
-            List<String[]> contactsAsCSV = U.map(ContactsDataStore.getAllContacts(), AIDLTranslationUtils::contactToCSV);
+            System.out.println("called service yolo");
+            List<Contact> contacts = null;
+            try {
+                contacts = ContactsDataStore.getAllContactsSync();
+            } catch (Exception e) {
+                e.printStackTrace();
+                throw new RemoteException("Error occured loading contacts");
+            }
+            List<String[]> contactsAsCSV = U.map(contacts, AIDLTranslationUtils::contactToCSV);
             StringWriter stringWriter = new StringWriter();
             new CSVWriterBuilder(stringWriter)
                 .build()
@@ -39,6 +48,7 @@ public class DataSourceService extends Service {
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
+        System.out.println("on bind called yolo");
         return service;
     }
 }

@@ -38,6 +38,7 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
@@ -274,6 +275,13 @@ public class AndroidUtils {
     public static Intent getIntentToShowContactDetails(long contactId, Context context) {
         return new Intent(context, ContactDetailsActivity.class)
             .putExtra(MainActivity.INTENT_EXTRA_LONG_CONTACT_ID, contactId);
+    }
+
+    public static Intent getIntentToAddContact(Intent intent, Context context) {
+        Bundle extras = intent.getExtras();
+        return new Intent(context, EditContactActivity.class)
+            .putExtra(EditContactActivity.INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT, true)
+            .putExtras(extras == null ? new Bundle() : extras);
     }
 
     public static Intent getIntentToAddContact(String phoneNumber, Context context) {
@@ -586,6 +594,10 @@ public class AndroidUtils {
 
     public static boolean hasPermission(String permission, Context context) {
         return ActivityCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static boolean isAddContactIntent(Intent intent) {
+        return "vnd.android.cursor.dir/contact".equals(intent.getType());
     }
 
     public static boolean isValidDialIntent(Intent intent) {

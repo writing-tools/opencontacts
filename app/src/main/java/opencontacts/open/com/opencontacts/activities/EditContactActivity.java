@@ -19,6 +19,8 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.appcompat.widget.AppCompatCheckBox;
 import androidx.core.util.Pair;
+
+import android.provider.ContactsContract;
 import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -61,7 +63,7 @@ public class EditContactActivity extends AppBaseActivity {
     boolean isTemporaryContactBefore = false;
     public static final String INTENT_EXTRA_BOOLEAN_ADD_NEW_CONTACT = "add_new_contact";
     public static final String INTENT_EXTRA_CONTACT_CONTACT_DETAILS = "contact_details";
-    public static final String INTENT_EXTRA_STRING_PHONE_NUMBER = "phone_number";
+    public static final String INTENT_EXTRA_STRING_PHONE_NUMBER = ContactsContract.Intents.Insert.PHONE;
     EditText editText_firstName;
     EditText editText_lastName;
     private boolean addingNewContact = false;

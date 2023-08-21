@@ -82,7 +82,7 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
 
     private void addAddMoreButton() {
         AppCompatButton moreButton = new AppCompatButton(this);
-        moreButton.setText(R.string.add_more);
+        moreButton.setText(R.string.view_more);
         moreButton.setOnClickListener(v -> {
             List<CallLogEntry> newEntries = getCallLogEntriesForContactWith(phoneNumber, callLogEntries.size());
             callLogEntries.addAll(newEntries);

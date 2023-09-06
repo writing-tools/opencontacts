@@ -597,7 +597,7 @@ public class AndroidUtils {
     }
 
     public static boolean isAddContactIntent(Intent intent) {
-        return "vnd.android.cursor.dir/contact".equals(intent.getType());
+        return ("vnd.android.cursor.dir/contact".equals(intent.getType()) || intent.getAction() == Intent.ACTION_INSERT) && (intent.getStringExtra(ContactsContract.Intents.Insert.PHONE) != null);
     }
 
     public static boolean isValidDialIntent(Intent intent) {

@@ -169,7 +169,7 @@ public class AndroidUtils {
     public static void openSocialApp(String number, Context context) {
         String socialApp = defaultSocialAppEnabled(context);
         if(socialApp.equals(TELEGRAM)) telegram(number, context);
-        if(socialApp.equals(SIGNAL)) signal(number, context);
+        else if(socialApp.equals(SIGNAL)) signal(number, context);
         else whatsapp(number, context);
     }
 

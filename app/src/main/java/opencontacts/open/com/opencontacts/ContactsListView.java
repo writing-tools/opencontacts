@@ -114,10 +114,12 @@ public class ContactsListView extends ListView implements DataStoreChangeListene
     }
 
     private void moveFavoritesToTop() {
+        List<Contact> tempContacts = U.copyOf(contacts);
         List<Contact> favorites = ContactsDataStore.getFavorites();
         Collections.sort(favorites, getContactComparatorBasedOnName(context));
-        U.forEach(favorites, contacts::remove);
-        contacts.addAll(0, favorites);
+        U.forEach(favorites, tempContacts::remove);
+        tempContacts.addAll(0, favorites);
+        contacts = tempContacts;
     }
 
     public void onDestroy() {

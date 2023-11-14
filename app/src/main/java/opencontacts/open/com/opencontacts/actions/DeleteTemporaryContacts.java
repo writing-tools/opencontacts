@@ -18,8 +18,12 @@ public class DeleteTemporaryContacts implements ContactsHouseKeepingAction{
     public void perform(List<Contact> contacts, Context context) {
         U.forEach(ContactsDataStore.getTemporaryContactDetails(),
             tempContactDetails -> {
+                if(tempContactDetails.contact == null) {
+                    tempContactDetails.delete();
+                    return;
+                }
                 if(hasItBeen(30, DAY_OF_MONTH, tempContactDetails.markedTemporaryOn.getTime()))
-                ContactsDataStore.removeContact(tempContactDetails.contact.getId());
+                    ContactsDataStore.removeContact(tempContactDetails.contact.getId());
             });
     }
 }

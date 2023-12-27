@@ -7,6 +7,7 @@ import static android.widget.Toast.makeText;
 import static java.util.Collections.emptyList;
 
 import static open.com.opencontactsdatasourcecontract.Contract.PermissionsActivity.RESULT_AUTH_CODE;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.savePermissionsGranted;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveAuthCode;
 
@@ -54,7 +55,7 @@ public class DataSourcePermissionsActivity extends AppBaseActivity {
         requestedPermissionsTextView = findViewById(R.id.permissions_list);
         authorizeButton = findViewById(R.id.authorize_button);
 
-        authorizeButton.setOnClickListener(v -> authorize());
+        authorizeButton.setOnClickListener(v -> wrapInConfirmation(this::authorize, this));
     }
 
     private void authorize() {

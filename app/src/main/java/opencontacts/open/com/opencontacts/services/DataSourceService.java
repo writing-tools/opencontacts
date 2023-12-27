@@ -1,50 +1,48 @@
 package opencontacts.open.com.opencontacts.services;
 
+import static open.com.opencontactsdatasourcecontract.Contract.formErrorResponseV1;
+import static opencontacts.open.com.opencontacts.services.ContractMethodImpls.validateAndCall;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isValidAuthCode;
+
 import android.app.Service;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Binder;
 import android.os.IBinder;
-import android.os.RemoteException;
 
 import androidx.annotation.Nullable;
 
-import com.github.underscore.U;
-import com.opencsv.CSVWriterBuilder;
+import com.opencsv.CSVReader;
 
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
+import java.io.StringReader;
 
 import open.com.opencontactsdatasourcecontract.ContactsDataStoreService;
-import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
-import opencontacts.open.com.opencontacts.domain.Contact;
-import opencontacts.open.com.opencontacts.utils.AIDLTranslationUtils;
 
 public class DataSourceService extends Service {
     ContactsDataStoreService.Stub service = new ContactsDataStoreService.Stub() {
-        @Override
-        public List<String> getAllVCards() throws RemoteException {
-//            TODO: implement later
-            return new ArrayList<>();
-        }
 
         @Override
-        public String getNameAndPhoneNumbers() throws RemoteException {
-            System.out.println("called service yolo");
-            List<Contact> contacts = null;
+        public String call(String authCode, String args) {
             try {
-                contacts = ContactsDataStore.getAllContactsSync();
+                PackageManager packageManager = getPackageManager();
+                String callingPackage = packageManager.getNameForUid(Binder.getCallingUid());
+
+                if (!isValidAuthCode(DataSourceService.this, callingPackage, authCode)) {
+                    System.out.println("Invalid auth yolo");
+                    return formErrorResponseV1("Invalid auth");
+                }
+
+                System.out.println("called service yolo");
+                String[] arguments = new CSVReader(new StringReader(args)).readNext();
+                return validateAndCall(callingPackage, arguments, DataSourceService.this);
             } catch (Exception e) {
                 e.printStackTrace();
-                throw new RemoteException("Error occured loading contacts");
+                return formErrorResponseV1("Unexpected error occurred");
             }
-            List<String[]> contactsAsCSV = U.map(contacts, AIDLTranslationUtils::contactToCSV);
-            StringWriter stringWriter = new StringWriter();
-            new CSVWriterBuilder(stringWriter)
-                .build()
-                .writeAll(contactsAsCSV);
-            return stringWriter.toString();
         }
     };
+
+
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {

@@ -14,3 +14,4 @@ zanata.xml
 tags
 /app/bin/
 /Session.vim
+.talismanrc

@@ -72,7 +72,7 @@
         <activity android:name=".activities.CallLogGroupDetailsActivity" />
         <activity android:name=".activities.MergeContactsActivity" />
         <activity
-            android:name=".activities.DataSourcePermissions"
+            android:name=".activities.DataSourcePermissionsActivity"
             android:exported="true" >
             <intent-filter>
                 <action android:name="OPENCONTACTS_DATA_PERMISSION" />

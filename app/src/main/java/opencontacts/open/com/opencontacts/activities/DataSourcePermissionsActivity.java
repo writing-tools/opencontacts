@@ -4,6 +4,12 @@ import static android.text.TextUtils.isEmpty;
 import static android.widget.Toast.LENGTH_LONG;
 import static android.widget.Toast.makeText;
 
+import static java.util.Collections.emptyList;
+
+import static open.com.opencontactsdatasourcecontract.Contract.PermissionsActivity.RESULT_AUTH_CODE;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.savePermissionsGranted;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveAuthCode;
+
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -14,9 +20,13 @@ import android.view.View;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.UUID;
+
 import opencontacts.open.com.opencontacts.R;
 
-public class DataSourcePermissions extends AppBaseActivity {
+public class DataSourcePermissionsActivity extends AppBaseActivity {
 
     private static final String PERMISSIONS_EXTRA = "PERMISSIONS";
     private AppCompatImageView iconImageView;
@@ -48,19 +58,33 @@ public class DataSourcePermissions extends AppBaseActivity {
     }
 
     private void authorize() {
-        setResult(123, new Intent().putExtra("CODE", "yolo"));
+        String authCode = UUID.randomUUID().toString();
+        saveAuthCode(this, getCallingPackageName(), authCode);
+        savePermissionsGranted(this, getCallingPackageName(), requestedPermissions());
+        setResult(RESULT_OK,
+            new Intent().putExtra(RESULT_AUTH_CODE, authCode)
+            .putExtra(PERMISSIONS_EXTRA, requestedPermissions().toArray(new String[]{}))
+        );
         finish();
     }
 
+    private List<String> requestedPermissions() {
+        String[] requiredPermissions = getIntent().getStringArrayExtra(PERMISSIONS_EXTRA);
+        if(requiredPermissions == null) return emptyList();
+        return Arrays.asList(requiredPermissions);
+    }
+
+    private String getCallingPackageName() {
+        return getCallingPackage();
+    }
+
     private boolean hasValidIntent() {
-        Intent intent = getIntent();
-        String[] requiredPermissions = intent.getStringArrayExtra(PERMISSIONS_EXTRA);
-        if(requiredPermissions == null || requiredPermissions.length == 0) {
+        List<String> requiredPermissions = requestedPermissions();
+        if(requiredPermissions.isEmpty()) {
             makeText(this, "No valid permissions requested", LENGTH_LONG).show();
             return false;
         }
-        String callingPackage = this.getCallingPackage();
-        if(isEmpty(callingPackage)) {
+        if(isEmpty(getCallingPackageName())) {
             makeText(this, "Could not retrieve calling app details", LENGTH_LONG).show();
             return false;
         }
@@ -80,7 +104,7 @@ public class DataSourcePermissions extends AppBaseActivity {
         };
         appNameTextView.setText(callingPackageInfo.applicationInfo.name);
         packageNameTextView.setText(callingPackageInfo.packageName);
-        String[] permissions = getIntent().getStringArrayExtra(PERMISSIONS_EXTRA);
+        List<String> permissions = requestedPermissions();
         String permissionsRequestedAsText = TextUtils.join(", ", permissions);
         requestedPermissionsTextView.setText(permissionsRequestedAsText);
     }

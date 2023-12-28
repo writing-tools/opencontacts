@@ -4,6 +4,7 @@ import static android.content.Context.MODE_PRIVATE;
 import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
+import static java.util.Collections.emptySet;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getBoolean;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getLong;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getStringFromPreferences;
@@ -15,6 +16,10 @@ import android.content.SharedPreferences;
 import android.graphics.Point;
 
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 
 import opencontacts.open.com.opencontacts.BuildConfig;
 import opencontacts.open.com.opencontacts.R;
@@ -34,6 +39,7 @@ public class SharedPreferencesUtils {
     public static final String T9_PINYIN_ENABLED_SHARED_PREF_KEY = "T9_PINYIN_ENABLED";//also hard coded in xml
     public static final String LAST_CALL_LOG_READ_TIMESTAMP_SHARED_PREF_KEY = "preference_last_call_log_saved_date";
     public static final String COMMON_SHARED_PREFS_FILE_NAME = "OpenContacts";
+    public static final String DATA_SHARE_SHARED_PREFS_FILE_NAME = "DATASHARE";
     public static final String SIM_PREFERENCE_SHARED_PREF_KEY = "defaultCallingSim";
     public static final String EXPORT_CONTACTS_EVERY_WEEK_SHARED_PREF_KEY = "exportContactsEveryWeek";
     public static final String LAST_EXPORT_TIME_STAMP = "lastExportTimeStamp";
@@ -71,6 +77,10 @@ public class SharedPreferencesUtils {
 
     public static SharedPreferences getAppsSharedPreferences(Context context) {
         return context.getSharedPreferences(COMMON_SHARED_PREFS_FILE_NAME, MODE_PRIVATE);
+    }
+
+    public static SharedPreferences getContactsDataSharePreferences(Context context) {
+        return context.getSharedPreferences(DATA_SHARE_SHARED_PREFS_FILE_NAME, MODE_PRIVATE);
     }
 
     public static void saveCallerIdLocationOnScreen(int x, int y, Context context) {
@@ -246,6 +256,34 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldBlockCalls(Context context) {
         return getBoolean(CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY, false, context);
+    }
+
+    private static String authCodeKey(String packageName) {
+        return packageName + "-auth";
+    }
+
+    private static String permissionsKeyForPackage(String packageName) {
+        return packageName + "-permissions";
+    }
+
+    public static boolean isValidAuthCode(Context context, String packageName, String authCode) {
+        return Objects.equals(getContactsDataSharePreferences(context).getString(authCodeKey(packageName), ""), authCode);
+    }
+
+    public static Set<String> permissions(Context context, String packageName) {
+        return getContactsDataSharePreferences(context).getStringSet(permissionsKeyForPackage(packageName), emptySet());
+    }
+
+    public static void savePermissionsGranted(Context context, String packageName, List<String> permissions) {
+        SharedPreferences contactsDataSharePreferences = getContactsDataSharePreferences(context);
+        String permissionsKeyForPackage = permissionsKeyForPackage(packageName);
+        Set<String> permissionsSet = new HashSet<>(contactsDataSharePreferences.getStringSet(permissionsKeyForPackage, new HashSet<>()));
+        permissionsSet.addAll(permissions);
+        contactsDataSharePreferences.edit().putStringSet(permissionsKeyForPackage, permissionsSet).apply();
+    }
+
+    public static void saveAuthCode(Context context, String packageName, String authCode) {
+        getContactsDataSharePreferences(context).edit().putString(authCodeKey(packageName), authCode).apply();
     }
 
 }

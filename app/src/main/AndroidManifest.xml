@@ -72,6 +72,15 @@
         <activity android:name=".activities.CallLogGroupDetailsActivity" />
         <activity android:name=".activities.MergeContactsActivity" />
         <activity
+            android:name=".activities.DataSourcePermissionsActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="OPENCONTACTS_DATA_PERMISSION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+
+        </activity>
+        <activity
             android:name=".activities.ContactDetailsActivity"
             android:label="@string/title_activity_contact_details" />
         <activity
@@ -122,6 +131,13 @@
             android:permission="android.permission.BIND_SCREENING_SERVICE">
             <intent-filter>
                 <action android:name="android.telecom.CallScreeningService" />
+            </intent-filter>
+        </service>
+        <service
+            android:exported="true"
+            android:name=".services.DataSourceService">
+            <intent-filter>
+                <action android:name="DataSourceService" />
             </intent-filter>
         </service>
 

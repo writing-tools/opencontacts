@@ -13,3 +13,5 @@ zanata.xml
 .classpath
 tags
 /app/bin/
+/Session.vim
+.talismanrc

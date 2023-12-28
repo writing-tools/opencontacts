@@ -56,6 +56,12 @@ public class ContactsDataStore {
     private static Function<Contact, String> defaultName = contact -> contact.name;
     private static Function<Contact, String> t9NameSupplier = defaultName; //will be dealt in init
 
+    public static List<Contact> getAllContactsSync() {
+        if(currentState == LOADED) return contacts;
+        refreshStore();
+        return contacts;
+}
+
     public synchronized static List<Contact> getAllContacts() {
         if (currentState == LOADING) {
             System.out.println("skipping the load yolo");

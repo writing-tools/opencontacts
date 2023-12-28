@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:minHeight="?attr/actionBarSize"
+            app:navigationIcon="@drawable/ic_arrow_back"
+            app:title="@string/permissions_activity_title" />
+    </com.google.android.material.appbar.AppBarLayout>
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:context=".activities.DataSourcePermissionsActivity">
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:id="@+id/calling_app_icon"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:layout_centerHorizontal="true" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/calling_app_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calling_app_icon"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/calling_app_package_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calling_app_name"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/permissions_asking_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/calling_app_package_name"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/datasource_permissions_asking_text" />
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/permissions_list"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/permissions_asking_text"
+                android:layout_marginTop="8dp" />
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/authorize_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/permissions_list"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="8dp"
+                android:text="@string/authorize" />
+        </RelativeLayout>
+    </ScrollView>
+</LinearLayout>

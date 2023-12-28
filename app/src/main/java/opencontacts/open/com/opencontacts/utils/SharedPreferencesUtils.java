@@ -267,7 +267,7 @@ public class SharedPreferencesUtils {
     }
 
     public static boolean isValidAuthCode(Context context, String packageName, String authCode) {
-        return Objects.equals(getContactsDataSharePreferences(context).getString(authCodeKey(packageName), ""), authCode);
+        return getContactsDataSharePreferences(context).getString(authCodeKey(packageName), "").equals(authCode);
     }
 
     public static Set<String> permissions(Context context, String packageName) {

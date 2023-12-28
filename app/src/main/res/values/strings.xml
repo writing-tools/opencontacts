@@ -245,9 +245,9 @@
     <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
     <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
     <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
-    <string name="datasource_permissions_asking_text">App with above details is requesting the following permissions</string>
-    <string name="authorize">Authorize</string>
-    <string name="permissions_activity_title">Permissions request</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

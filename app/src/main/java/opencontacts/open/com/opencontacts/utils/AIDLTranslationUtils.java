@@ -11,12 +11,12 @@ import opencontacts.open.com.opencontacts.domain.Contact;
 
 public class AIDLTranslationUtils {
 
-    public static String[] tempStringArray = new String[]{};
+    public static String[] tempArrayDenotingTypeInfo = new String[]{};
     public static String[] nameAndPhoneNumbersToCSV(Contact contact) {
         List<String> csvRow = new ArrayList<>();
         csvRow.add(contact.name);
         csvRow.addAll(U.map(contact.phoneNumbers, ph -> ph.phoneNumber));
-        return csvRow.toArray(tempStringArray);
+        return csvRow.toArray(tempArrayDenotingTypeInfo);
     }
 
     public static String csvString(List<String[]> contactsAsCSV) {

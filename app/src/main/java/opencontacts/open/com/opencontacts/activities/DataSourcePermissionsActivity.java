@@ -6,6 +6,7 @@ import static android.widget.Toast.makeText;
 
 import static java.util.Collections.emptyList;
 
+import static open.com.opencontactsdatasourcecontract.Contract.PermissionsActivity.PERMISSIONS_EXTRA;
 import static open.com.opencontactsdatasourcecontract.Contract.PermissionsActivity.RESULT_AUTH_CODE;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.wrapInConfirmation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.savePermissionsGranted;
@@ -18,6 +19,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.View;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.widget.AppCompatImageView;
 import androidx.appcompat.widget.AppCompatTextView;
 
@@ -29,7 +31,6 @@ import opencontacts.open.com.opencontacts.R;
 
 public class DataSourcePermissionsActivity extends AppBaseActivity {
 
-    private static final String PERMISSIONS_EXTRA = "PERMISSIONS";
     private AppCompatImageView iconImageView;
     private AppCompatTextView appNameTextView;
     private AppCompatTextView packageNameTextView;
@@ -102,7 +103,7 @@ public class DataSourcePermissionsActivity extends AppBaseActivity {
             iconImageView.setImageDrawable(packageManager.getApplicationIcon(callingPackageInfo.packageName));
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-        };
+        }
         appNameTextView.setText(callingPackageInfo.applicationInfo.name);
         packageNameTextView.setText(callingPackageInfo.packageName);
         List<String> permissions = requestedPermissions();
@@ -110,10 +111,16 @@ public class DataSourcePermissionsActivity extends AppBaseActivity {
         requestedPermissionsTextView.setText(permissionsRequestedAsText);
     }
 
+    @Nullable
     private PackageInfo getCallingPackageInfo() {
         packageManager = getPackageManager();
         try {
-            return packageManager.getPackageInfo(getCallingPackage(), PackageManager.GET_META_DATA);
+            String callingPackage = getCallingPackage();
+            if(callingPackage == null) {
+                finish();
+                return null;
+            }
+            return packageManager.getPackageInfo(callingPackage, PackageManager.GET_META_DATA);
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
             makeText(this, "Could not retrieve the app details", LENGTH_LONG).show();

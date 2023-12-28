@@ -46,19 +46,13 @@ public class ContractMethodImpls {
     }
 
 
-    private static void addContractMethodImpl(ContractMethod contractMethod, Function<List<String>, Function<Context, String>> impl) {
+    public static void addContractMethodImpl(ContractMethod contractMethod, Function<List<String>, Function<Context, String>> impl) {
         contractMethodImpls.put(methodKey(contractMethod), new ContractMethodImpl(contractMethod, impl));
     }
 
     static {
        addContractMethodImpl(fetchAllNamesAndPhoneNumbersV1, argsAsList -> context -> {
-           List<Contact> contacts;
-           try {
-               contacts = ContactsDataStore.getAllContactsSync();
-           } catch (Exception e) {
-               e.printStackTrace();
-               return formErrorResponseV1("Error occurred while reading contacts");
-           }
+           List<Contact> contacts = ContactsDataStore.getAllContactsSync();
            List<String[]> eachContactAsCSV = U.map(contacts, AIDLTranslationUtils::nameAndPhoneNumbersToCSV);
            return csvString(eachContactAsCSV);
        });

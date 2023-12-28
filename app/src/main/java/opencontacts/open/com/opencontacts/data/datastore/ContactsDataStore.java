@@ -56,23 +56,11 @@ public class ContactsDataStore {
     private static Function<Contact, String> defaultName = contact -> contact.name;
     private static Function<Contact, String> t9NameSupplier = defaultName; //will be dealt in init
 
-    public static List<Contact> getAllContactsSync() throws Exception {
-        if (currentState == NONE) {
-            currentState = LOADING;
-            refreshStoreAsync();
-        }
-        int attempts = 0;
-        while (attempts < 30) {
-            attempts++;
-            if(currentState == LOADED) return contacts;
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-        throw new Exception("Could not fetch data yolo");
-    }
+    public static List<Contact> getAllContactsSync() {
+        if(currentState == LOADED) return contacts;
+        refreshStore();
+        return contacts;
+}
 
     public synchronized static List<Contact> getAllContacts() {
         if (currentState == LOADING) {

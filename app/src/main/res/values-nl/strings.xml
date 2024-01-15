@@ -144,8 +144,8 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="report_error_screen_title">Rapporteer fout</string>
     <string name="report_errors">Rapporteer fouten</string>
     <string name="Preferences">Instellingen</string>
-    <string name="dark_theme_preference_title">Donker thema</string>
-    <string name="dark_theme_preference_summary">Schakelt donker app-thema in.</string>
+    <string name="theme_preference_title">Donker thema</string>
+    <string name="theme_preference_summary">Schakelt donker app-thema in.</string>
     <string name="time_format_12hrs_preference_title">Tijd notatie 12 uur</string>
     <string name="time_format_12hrs_preference_summary">Schakelt 12 uur tijdnotatie met AM/PM in</string>
     <string name="whatsapp_integration_preference_title">Whatsapp integratie</string>

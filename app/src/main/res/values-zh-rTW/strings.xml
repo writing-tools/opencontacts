@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">報告錯誤</string>
     <string name="report_errors">報告錯誤</string>
     <string name="Preferences">使用偏好</string>
-    <string name="dark_theme_preference_title">黑暗主題</string>
-    <string name="dark_theme_preference_summary">啓動跨應用黑暗主題</string>
+    <string name="theme_preference_title">黑暗主題</string>
+    <string name="theme_preference_summary">啓動跨應用黑暗主題</string>
     <string name="time_format_12hrs_preference_title">十二小時制時間格式</string>
     <string name="time_format_12hrs_preference_summary">啓用十二小時制鐘錶和AM/PM標註</string>
     <string name="whatsapp_integration_preference_title">與Whatsapp整合</string>

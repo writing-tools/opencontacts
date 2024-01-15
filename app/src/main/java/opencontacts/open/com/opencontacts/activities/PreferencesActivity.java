@@ -13,7 +13,7 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DE
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SOCIAL_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.IS_DARK_THEME_ACTIVE_PREFERENCES_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.THEME_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
@@ -166,7 +166,7 @@ public class PreferencesActivity extends AppBaseActivity {
         @NonNull
         private HashMap<String, Preference.OnPreferenceChangeListener> getIndividualPreferenceHandlersMap() {
             HashMap<String, Preference.OnPreferenceChangeListener> onPreferenceChangeHandlersMap = new HashMap<>();
-            onPreferenceChangeHandlersMap.put(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, onThemeToggle());
+            onPreferenceChangeHandlersMap.put(THEME_PREFERENCES_KEY, onThemeToggle());
             onPreferenceChangeHandlersMap.put(T9_SEARCH_ENABLED_SHARED_PREF_KEY, onT9SearchToggle());
             onPreferenceChangeHandlersMap.put(SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY, onSocialIntegrationToggle());
             onPreferenceChangeHandlersMap.put(ENABLE_CALL_FILTERING_SHARED_PREF_KEY, onCallFilteringToggle());

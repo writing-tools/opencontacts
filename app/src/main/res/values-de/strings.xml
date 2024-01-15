@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">Fehler melden</string>
     <string name="report_errors">Fehler melden</string>
     <string name="Preferences">Einstellungen</string>
-    <string name="dark_theme_preference_title">Dunkles Design</string>
-    <string name="dark_theme_preference_summary">Aktiviert das dunkle Design in der ganzen Anwendung</string>
+    <string name="theme_preference_title">Dunkles Design</string>
+    <string name="theme_preference_summary">Aktiviert das dunkle Design in der ganzen Anwendung</string>
     <string name="time_format_12hrs_preference_title">12 Stunden Zeitformat</string>
     <string name="time_format_12hrs_preference_summary">Aktiviert die 12 Stunden Uhr mit vorm./nachm.</string>
     <string name="whatsapp_integration_preference_title">WhatsApp Integration</string>

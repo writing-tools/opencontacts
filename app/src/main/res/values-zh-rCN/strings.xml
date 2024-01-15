@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">报告错误</string>
     <string name="report_errors">报告错误</string>
     <string name="Preferences">个人偏好设置</string>
-    <string name="dark_theme_preference_title">暗色主题</string>
-    <string name="dark_theme_preference_summary">启用整个应用的暗色主题。</string>
+    <string name="theme_preference_title">暗色主题</string>
+    <string name="theme_preference_summary">启用整个应用的暗色主题。</string>
     <string name="time_format_12hrs_preference_title">时间格式 12 小时制</string>
     <string name="time_format_12hrs_preference_summary">使用 AM/PM 显示 12 小时</string>
     <string name="whatsapp_integration_preference_title">Whatsapp整合</string>

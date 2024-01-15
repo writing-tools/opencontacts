@@ -4,11 +4,12 @@
     <PreferenceCategory
         app:key="General"
         app:title="General">
-        <SwitchPreference
-            android:defaultValue="false"
-            android:key="IS_DARK_THEME_ACTIVE_PREFERENCES_KEY"
-            android:summary="@string/dark_theme_preference_summary"
-            android:title="@string/dark_theme_preference_title" />
+        <DropDownPreference android:defaultValue="Light Theme"
+            android:key="THEME_PREFERENCES_KEY"
+            android:summary="@string/theme_preference_summary"
+            android:title="@string/theme_preference_title" 
+            android:entries="@array/theme_preferences"
+            android:entryValues="@array/theme_preferences"/>
         <SwitchPreference
             android:defaultValue="true"
             android:key="preftimeformat12hours"

@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">Errore baten berri eman</string>
     <string name="report_errors">Erroreen berri eman</string>
     <string name="Preferences">Hobespenak</string>
-    <string name="dark_theme_preference_title">Gai iluna</string>
-    <string name="dark_theme_preference_summary">Gaitu gai iluna aplikazio guztian.</string>
+    <string name="theme_preference_title">Gai iluna</string>
+    <string name="theme_preference_summary">Gaitu gai iluna aplikazio guztian.</string>
     <string name="time_format_12hrs_preference_title">12 ordutako formatua</string>
     <string name="time_format_12hrs_preference_summary">Gaitu AM/PM 12 ordutako erlojua</string>
     <string name="whatsapp_integration_preference_title">Whatsapp integrazioa</string>

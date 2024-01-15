@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">Отчет об ошибке</string>
     <string name="report_errors">Сообщить об ошибках</string>
     <string name="Preferences">Настройки</string>
-    <string name="dark_theme_preference_title">Темная тема</string>
-    <string name="dark_theme_preference_summary">Включает тёмную тему в приложении.</string>
+    <string name="theme_preference_title">Темная тема</string>
+    <string name="theme_preference_summary">Включает тёмную тему в приложении.</string>
     <string name="time_format_12hrs_preference_title">Формат времени 12 часов</string>
     <string name="time_format_12hrs_preference_summary">Включает AM/PM 12 часов</string>
     <string name="whatsapp_integration_preference_title">Интеграция с Whatsapp</string>

@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">Signaler une erreur</string>
     <string name="report_errors">Signaler les erreurs</string>
     <string name="Preferences">Préférences</string>
-    <string name="dark_theme_preference_title">Thème sombre</string>
-    <string name="dark_theme_preference_summary">Activer le thème sombre dans toute l\'application.</string>
+    <string name="theme_preference_title">Thème sombre</string>
+    <string name="theme_preference_summary">Activer le thème sombre dans toute l\'application.</string>
     <string name="time_format_12hrs_preference_title">Utiliser le format 12 heures</string>
     <string name="time_format_12hrs_preference_summary">Activer le format 12 heures (AM/PM)</string>
     <string name="whatsapp_integration_preference_title">Intégration WhatsApp</string>

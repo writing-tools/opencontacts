@@ -12,6 +12,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePrefer
 import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.SharedPreferences;
 import android.graphics.Point;
 
@@ -25,7 +26,10 @@ import opencontacts.open.com.opencontacts.BuildConfig;
 import opencontacts.open.com.opencontacts.R;
 
 public class SharedPreferencesUtils {
-    public static final String IS_DARK_THEME_ACTIVE_PREFERENCES_KEY = "IS_DARK_THEME_ACTIVE_PREFERENCES_KEY";//also hard coded in xml
+    public static final String THEME_PREFERENCES_KEY = "THEME_PREFERENCES_KEY";//also hard coded in xml
+    public static final String SYSTEM_THEME = "System Theme";
+    public static final String LIGHT_THEME = "Light Theme";
+    public static final String DARK_THEME = "Dark Theme";
     public static final String DEFAULT_SOCIAL_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_SOCIAL_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
@@ -96,11 +100,18 @@ public class SharedPreferencesUtils {
     }
 
     public static int getCurrentTheme(Context context) {
-        return isDarkThemeActive(context) ? R.style.Theme_AppCompat_NoActionBar_Customized : R.style.Theme_AppCompat_Light_NoActionBar_Customized;
-    }
-
-    private static boolean isDarkThemeActive(Context context) {
-        return getAppsSharedPreferences(context).getBoolean(IS_DARK_THEME_ACTIVE_PREFERENCES_KEY, false);
+        String themePreference = getAppsSharedPreferences(context).getString(THEME_PREFERENCES_KEY, LIGHT_THEME);
+        if (themePreference.equals(SYSTEM_THEME)) {
+            int IS_NIGHT_MODE_ACTIVE = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+            if (IS_NIGHT_MODE_ACTIVE == Configuration.UI_MODE_NIGHT_YES)
+                return R.style.Theme_AppCompat_NoActionBar_Customized;
+            else
+                return R.style.Theme_AppCompat_Light_NoActionBar_Customized;
+        } else if (themePreference.equals(LIGHT_THEME)) {
+            return R.style.Theme_AppCompat_Light_NoActionBar_Customized;
+        } else {
+            return R.style.Theme_AppCompat_NoActionBar_Customized;
+        }
     }
 
     public static void enableSocialappIntegration(String selectedCountryCodeWithPlus, Context context) {

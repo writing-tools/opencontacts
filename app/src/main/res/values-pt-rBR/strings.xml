@@ -143,8 +143,8 @@
     <string name="report_error_screen_title">Relatar problemas</string>
     <string name="report_errors">Relatar problemas</string>
     <string name="Preferences">Preferências</string>
-    <string name="dark_theme_preference_title">Tema Escuro</string>
-    <string name="dark_theme_preference_summary">Habilite o tema escuro em todo o aplicativo.</string>
+    <string name="theme_preference_title">Tema Escuro</string>
+    <string name="theme_preference_summary">Habilite o tema escuro em todo o aplicativo.</string>
     <string name="time_format_12hrs_preference_title">Formato do Tempo de 12 horas</string>
     <string name="time_format_12hrs_preference_summary">Habilita relógio de 12 horas com AM/PM</string>
     <string name="whatsapp_integration_preference_title">Integração com Whatsapp</string>

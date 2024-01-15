@@ -80,9 +80,9 @@
     <string name="grant_storage_permisson_detail">Grant storage phone permission to be able to export and import contacts</string>
     <string name="caller_id_text">%1$s calling...</string>
     <string name="missed_call">Missed Call</string>
-    <string name="incoming_call" translatable="false">Incoming Call</string>
-    <string name="outgoing_call" translatable="false">Outgoing Call</string>
-    <string name="rejected_call" translatable="false">Rejected Call</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Missed call from %1$s %2$s</string>
     <string name="call">Call</string>
     <string name="message">Message</string>
@@ -156,6 +156,9 @@
     <string name="report_error_screen_title">Report error</string>
     <string name="report_errors">Report errors</string>
     <string name="Preferences">Preferences</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
     <string name="theme_preference_title">App Theme</string>
     <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Time Format 12 hours</string>
@@ -172,7 +175,7 @@
     <string name="export_call_log">Export call log</string>
     <string name="failed_exporting_call_log">Failed exporting call log</string>
     <string name="exported_call_log_successfully">Exported call log successfully</string>
-    <string name="started_exporting_call_log" translatable="false">Started exporting call log</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Sort using first name</string>
     <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
     <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
@@ -286,9 +289,9 @@
     </string-array>
 
     <string-array name="theme_preferences">
-        <item>System Theme</item>
-        <item>Light Theme</item>
-        <item>Dark Theme</item>
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
     </string-array>
 
     <string-array name="social_integrations">

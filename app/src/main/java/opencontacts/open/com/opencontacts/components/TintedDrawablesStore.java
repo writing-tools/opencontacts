@@ -17,6 +17,7 @@ import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 
 public class TintedDrawablesStore {
     public static Map<Integer, Drawable> tintedDrawables = new HashMap<>();
+    private static int drawablesTheme = -1;
 
     public static Drawable getTintedDrawable(@DrawableRes int drawableRes, Context context) {
         Drawable cachedDrawable = tintedDrawables.get(drawableRes);
@@ -36,7 +37,9 @@ public class TintedDrawablesStore {
         fab.setBackgroundTintList(ColorStateList.valueOf(getBackgroundFloatingColor(context)));
     }
 
-    public static void reset() {
+    public static void resetOnThemeMismatch(int theme) {
+        if(drawablesTheme == theme) return;
+        drawablesTheme = theme;
         tintedDrawables.clear();
     }
 }

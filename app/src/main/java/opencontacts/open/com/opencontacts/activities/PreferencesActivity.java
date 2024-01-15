@@ -225,7 +225,6 @@ public class PreferencesActivity extends AppBaseActivity {
         @NonNull
         private Preference.OnPreferenceChangeListener onThemeToggle() {
             return (preference, newValue) -> {
-                TintedDrawablesStore.reset();
                 activity.recreate();
                 return true;
             };

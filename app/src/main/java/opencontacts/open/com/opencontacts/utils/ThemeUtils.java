@@ -8,6 +8,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.os.Build;
 
+import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
+
 public class ThemeUtils {
     public static int getSecondaryColor(Context context) {
         return getThemeAttributeColor(android.R.attr.textColorSecondary, context);
@@ -32,7 +34,9 @@ public class ThemeUtils {
     }
 
     public static void applyOptedTheme(Activity activity) {
-        activity.getTheme().applyStyle(getCurrentTheme(activity), true);
+        int theme = getCurrentTheme(activity);
+        activity.getTheme().applyStyle(theme, true);
+        TintedDrawablesStore.resetOnThemeMismatch(theme);
         setCustomFontSizeOnViewCreated(activity);
     }
 

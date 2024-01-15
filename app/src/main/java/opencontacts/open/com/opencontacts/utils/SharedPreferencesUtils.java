@@ -1,6 +1,8 @@
 package opencontacts.open.com.opencontacts.utils;
 
 import static android.content.Context.MODE_PRIVATE;
+import static android.content.res.Configuration.UI_MODE_NIGHT_MASK;
+import static android.content.res.Configuration.UI_MODE_NIGHT_YES;
 import static android.text.TextUtils.isEmpty;
 import static java.util.Calendar.HOUR;
 import static java.util.Calendar.MINUTE;
@@ -27,9 +29,6 @@ import opencontacts.open.com.opencontacts.R;
 
 public class SharedPreferencesUtils {
     public static final String THEME_PREFERENCES_KEY = "THEME_PREFERENCES_KEY";//also hard coded in xml
-    public static final String SYSTEM_THEME = "System Theme";
-    public static final String LIGHT_THEME = "Light Theme";
-    public static final String DARK_THEME = "Dark Theme";
     public static final String DEFAULT_SOCIAL_COUNTRY_CODE_PREFERENCES_KEY = "DEFAULT_SOCIAL_COUNTRY_CODE";
     public static final String CALLER_ID_X_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_X_POSITION_ON_SCREEN";
     public static final String CALLER_ID_Y_POSITION_ON_SCREEN_PREFERENCE_KEY = "CALLER_ID_Y_POSITION_ON_SCREEN";
@@ -100,14 +99,15 @@ public class SharedPreferencesUtils {
     }
 
     public static int getCurrentTheme(Context context) {
-        String themePreference = getAppsSharedPreferences(context).getString(THEME_PREFERENCES_KEY, LIGHT_THEME);
-        if (themePreference.equals(SYSTEM_THEME)) {
-            int IS_NIGHT_MODE_ACTIVE = context.getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
-            if (IS_NIGHT_MODE_ACTIVE == Configuration.UI_MODE_NIGHT_YES)
+        String lightThemeName = context.getString(R.string.light_theme);
+        String themePreference = getAppsSharedPreferences(context).getString(THEME_PREFERENCES_KEY, lightThemeName);
+        if (themePreference.equals(context.getString(R.string.system_theme))) {
+            int IS_NIGHT_MODE_ACTIVE = context.getResources().getConfiguration().uiMode & UI_MODE_NIGHT_MASK;
+            if (IS_NIGHT_MODE_ACTIVE == UI_MODE_NIGHT_YES)
                 return R.style.Theme_AppCompat_NoActionBar_Customized;
             else
                 return R.style.Theme_AppCompat_Light_NoActionBar_Customized;
-        } else if (themePreference.equals(LIGHT_THEME)) {
+        } else if (themePreference.equals(lightThemeName)) {
             return R.style.Theme_AppCompat_Light_NoActionBar_Customized;
         } else {
             return R.style.Theme_AppCompat_NoActionBar_Customized;

@@ -84,7 +84,9 @@ public class GroupsActivity extends AppBaseActivity {
     }
 
     private void refreshContent() {
-        allGroups = ContactGroupsDataStore.getAllGroups();
+        allGroups = U.chain(ContactGroupsDataStore.getAllGroups())
+            .sortBy(ContactGroup::getName)
+            .value();
         if (allGroups.isEmpty()) showEmptyGroupsMessage();
         else setupAndShowGroups();
     }

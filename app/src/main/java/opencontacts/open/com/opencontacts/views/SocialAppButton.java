@@ -17,7 +17,7 @@ public class SocialAppButton extends ImageButtonWithTint {
     }
 
     public SocialAppButton(Context context, AttributeSet attrs) {
-        this(context, attrs, -1);
+        this(context, attrs, 0);
     }
 
     public SocialAppButton(Context context, AttributeSet attrs, int defStyleAttr) {

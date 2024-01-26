@@ -6,11 +6,12 @@ import static opencontacts.open.com.opencontacts.activities.CallLogGroupDetailsA
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.dpToPixels;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getASpaceOfHeight;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.handleLongClickWith;
-import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.getTimestampPattern;
+import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContact;
 import static opencontacts.open.com.opencontacts.utils.DomainUtils.shareContactAsText;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.PREFTIMEFORMAT_12_HOURS_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.defaultSocialAppEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setSharedPreferencesChangeListener;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
@@ -20,11 +21,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.CallLog;
-import androidx.annotation.NonNull;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.appcompat.widget.AppCompatButton;
-import androidx.appcompat.widget.AppCompatTextView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,8 +32,14 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.widget.AppCompatButton;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
+
 import com.github.underscore.Consumer;
 import com.github.underscore.U;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -172,20 +174,28 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                     reusableView = layoutInflater.inflate(R.layout.grouped_call_log_entry, parent, false);
                 ((TextView) reusableView.findViewById(R.id.textview_full_name)).setText(callLogEntry.getContactId() == -1 ? UNKNOWN : callLogEntry.getName());
                 ((TextView) reusableView.findViewById(R.id.textview_phone_number)).setText(callLogEntry.getPhoneNumber());
-                setCallAndMessageActions(reusableView);
+                setCallAndMessageActions(reusableView, callLogEntry);
 
                 View socialAppIcon = reusableView.findViewById(R.id.button_social);
                 if (isSocialAppIntegrationEnabled) {
                     socialAppIcon.setOnClickListener(socialAppContact);
+                    socialAppIcon.setContentDescription(defaultSocialAppEnabled(context) + " " + callLogEntry.name);
                     socialAppIcon.setOnLongClickListener(socialAppLongClick);
                     socialAppIcon.setVisibility(VISIBLE);
                 } else socialAppIcon.setVisibility(GONE);
-                if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE)))
-                    ((ImageView) reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_received_black_24dp);
-                else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE)))
-                    ((ImageView) reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_made_black_24dp);
-                else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE)))
-                    ((ImageView) reusableView.findViewById(R.id.image_view_call_type)).setImageResource(R.drawable.ic_call_missed_outgoing_black_24dp);
+                ImageView callType = reusableView.findViewById(R.id.image_view_call_type);
+                if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.INCOMING_TYPE))){
+                    callType.setImageResource(R.drawable.ic_call_received_black_24dp);
+                    callType.setContentDescription(context.getString(R.string.incoming_call));
+                }
+                else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.OUTGOING_TYPE))){
+                    callType.setImageResource(R.drawable.ic_call_made_black_24dp);
+                    callType.setContentDescription(context.getString(R.string.outgoing_call));
+                }
+                else if (callLogEntry.getCallType().equals(String.valueOf(CallLog.Calls.MISSED_TYPE))){
+                    callType.setImageResource(R.drawable.ic_call_missed_outgoing_black_24dp);
+                    callType.setContentDescription(context.getString(R.string.missed_call));
+                }
                 ((TextView) reusableView.findViewById(R.id.text_view_duration)).setText(Common.getDurationInMinsAndSecs(Integer.valueOf(callLogEntry.getDuration())));
                 ((TextView) reusableView.findViewById(R.id.text_view_sim)).setText(String.valueOf(callLogEntry.getSimId()));
                 String timeStampOfCall = timeStampFormat.format(new Date(Long.parseLong(callLogEntry.getDate())));
@@ -197,6 +207,7 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 if (groupSize == 1) callRepeatCount.setVisibility(GONE);
                 else {
                     callRepeatCount.setText(context.getString(R.string.call_repeat_text, groupSize));
+                    callRepeatCount.setContentDescription(context.getString(R.string.call_repeat_text_content_description, groupSize));
                     callRepeatCount.setVisibility(VISIBLE);
                 }
 
@@ -215,19 +226,25 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
                 return reusableView;
             }
 
-            private void setCallAndMessageActions(View reusableView) {
+            private void setCallAndMessageActions(View reusableView, CallLogEntry callLogEntry) {
                 ImageButtonWithTint actionButton1 = reusableView.findViewById(R.id.button_action1);
                 ImageButtonWithTint actionButton2 = reusableView.findViewById(R.id.button_action2);
+                String callAction = context.getString(R.string.call) + callLogEntry.name;
+                String messageAction = context.getString(R.string.message) + callLogEntry.name;
                 if (shouldToggleContactActions) {
+                    actionButton1.setContentDescription(messageAction);
                     actionButton1.setOnClickListener(messageContact);
                     actionButton1.setImageResource(R.drawable.ic_chat_black_24dp);
                     actionButton2.setOnClickListener(callContact);
                     actionButton2.setImageResource(R.drawable.ic_call_black_24dp);
+                    actionButton2.setContentDescription(callAction);
                 } else {
+                    actionButton1.setContentDescription(callAction);
                     actionButton1.setOnClickListener(callContact);
                     actionButton1.setImageResource(R.drawable.ic_call_black_24dp);
                     actionButton2.setOnClickListener(messageContact);
                     actionButton2.setImageResource(R.drawable.ic_chat_black_24dp);
+                    actionButton2.setContentDescription(messageAction);
                 }
             }
         };

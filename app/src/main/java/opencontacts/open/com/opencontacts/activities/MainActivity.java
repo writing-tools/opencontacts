@@ -322,6 +322,10 @@ public class MainActivity extends AppBaseActivity {
         viewPager = findViewById(R.id.view_pager);
         List<Fragment> fragmentsList = getSupportFragmentManager().getFragments();
         if (!fragmentsList.isEmpty()) {
+//            TODO: fix this niggle at some point
+//            fragmentsList.get(fragmentsList.indexOf(callLogFragment));
+//            fragmentsList.get(fragmentsList.indexOf(callLogFragment));
+//            fragmentsList.get(fragmentsList.indexOf(callLogFragment));
             callLogFragment = (CallLogFragment) fragmentsList.get(0);
             contactsFragment = (ContactsFragment) fragmentsList.get(1);
             dialerFragment = (DialerFragment) fragmentsList.get(2);
@@ -361,6 +365,7 @@ public class MainActivity extends AppBaseActivity {
 
         Pair<Drawable, Drawable> dialerTabDrawables = getDialerTabDrawables();
         tabLayout.getTabAt(DIALER_TAB_INDEX).setIcon(dialerTabDrawables.first);
+        tabLayout.getTabAt(DIALER_TAB_INDEX).setContentDescription(getString(R.string.dialer));
 
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override

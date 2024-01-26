@@ -144,6 +144,7 @@
     <string name="invalid_url">Invalid url</string>
     <string name="cancel">Cancel</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Show details</string>
     <string name="no_app_found_to_open">No app found that could open this</string>
     <string name="add_to_favorites">Add to Favorites</string>
@@ -251,6 +252,7 @@
     <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
     <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
     <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

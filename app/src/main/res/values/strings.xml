@@ -253,6 +253,10 @@
     <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
     <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
     <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

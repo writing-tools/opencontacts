@@ -11,6 +11,7 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToA
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.getIntentToShowContactDetails;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.handleLongClickWith;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.defaultSocialAppEnabled;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -42,6 +43,7 @@ import opencontacts.open.com.opencontacts.interfaces.SelectableTab;
 import opencontacts.open.com.opencontacts.utils.AndroidUtils;
 import opencontacts.open.com.opencontacts.utils.DomainUtils;
 import opencontacts.open.com.opencontacts.utils.PhoneCallUtils;
+import opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils;
 
 public class DialerFragment extends AppBaseFragment implements SelectableTab {
     private Context context;
@@ -157,9 +159,13 @@ public class DialerFragment extends AppBaseFragment implements SelectableTab {
 
         view.findViewById(R.id.button_call).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.call(phoneNumber, context)));
 
-        view.findViewById(R.id.button_social).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.openSocialApp(phoneNumber, context)));
+        View socialButton = view.findViewById(R.id.button_social);
 
-        view.findViewById(R.id.button_social).setOnLongClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.onSocialLongPress(phoneNumber, context)));
+        socialButton.setContentDescription(defaultSocialAppEnabled(getContext()));
+
+        socialButton.setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.openSocialApp(phoneNumber, context)));
+
+        socialButton.setOnLongClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.onSocialLongPress(phoneNumber, context)));
 
         view.findViewById(R.id.button_message).setOnClickListener(v -> performActionIfPhoneNumberIsValidElseShowError(phoneNumber -> AndroidUtils.message(phoneNumber, context)));
 

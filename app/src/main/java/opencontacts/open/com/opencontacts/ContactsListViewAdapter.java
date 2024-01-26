@@ -4,6 +4,7 @@ import static android.view.View.GONE;
 import static android.view.View.OnClickListener;
 import static android.view.View.OnLongClickListener;
 import static android.view.View.VISIBLE;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.defaultSocialAppEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isT9SearchEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldToggleContactActions;
@@ -101,22 +102,30 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
         ((TextView) convertView.findViewById(R.id.textview_phone_number)).setText(contact.primaryPhoneNumber.phoneNumber);
         ImageButtonWithTint actionButton1 = convertView.findViewById(R.id.button_action1);
         ImageButtonWithTint actionButton2 = convertView.findViewById(R.id.button_action2);
+        Context context = getContext();
+        String messageButtonContentDescription = context.getString(R.string.message) + contact.name;
+        String callButtonContentDescription = context.getString(R.string.call) + contact.name;
         if (shouldToggleContactActions) {
             actionButton1.setOnClickListener(messageContact);
+            actionButton1.setContentDescription(messageButtonContentDescription);
             actionButton1.setImageResource(R.drawable.ic_chat_black_24dp);
             actionButton2.setOnClickListener(callContact);
             actionButton2.setImageResource(R.drawable.ic_call_black_24dp);
+            actionButton2.setContentDescription(callButtonContentDescription);
         } else {
             actionButton1.setOnClickListener(callContact);
+            actionButton1.setContentDescription(callButtonContentDescription);
             actionButton1.setImageResource(R.drawable.ic_call_black_24dp);
             actionButton2.setOnClickListener(messageContact);
             actionButton2.setImageResource(R.drawable.ic_chat_black_24dp);
+            actionButton2.setContentDescription(messageButtonContentDescription);
         }
         View socialIcon = convertView.findViewById(R.id.button_social);
         if (socialAppIntegrationEnabled) {
             socialIcon.setOnClickListener(openSocialApp);
             socialIcon.setOnLongClickListener(socialLongClicked);
             socialIcon.setVisibility(VISIBLE);
+            socialIcon.setContentDescription(defaultSocialAppEnabled(context) + " " + contact.name);
         } else socialIcon.setVisibility(GONE);
         convertView.setTag(contact);
         convertView.setOnClickListener(showContactDetails);

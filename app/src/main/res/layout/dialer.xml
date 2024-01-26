@@ -6,6 +6,7 @@
 
     <androidx.appcompat.widget.AppCompatEditText
         android:id="@+id/editText_dialpad_number"
+        android:contentDescription="@string/input_phone_number_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
@@ -18,6 +19,7 @@
 
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:id="@+id/button_clear"
+        android:contentDescription="@string/clear_phone_number_entered_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toRightOf="@id/editText_dialpad_number"
@@ -35,6 +37,7 @@
 
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:id="@+id/button_call"
+        android:contentDescription="@string/call"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@id/button_message"
@@ -46,6 +49,7 @@
 
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:id="@+id/button_message"
+        android:contentDescription="@string/message"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/editText_dialpad_number"
@@ -66,6 +70,7 @@
 
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:id="@+id/button_add_contact"
+        android:contentDescription="@string/add_contact"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignTop="@+id/button_call"
@@ -78,6 +83,7 @@
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:visibility="invisible"
         android:id="@+id/button_call_sim1"
+        android:contentDescription="@string/call_using_sim1_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_call_black_24dp"
@@ -88,6 +94,7 @@
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:visibility="invisible"
         android:id="@+id/button_call_sim2"
+        android:contentDescription="@string/call_using_sim2_content_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/button_call"

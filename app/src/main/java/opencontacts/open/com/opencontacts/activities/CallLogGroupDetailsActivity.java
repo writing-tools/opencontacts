@@ -45,6 +45,11 @@ public class CallLogGroupDetailsActivity extends AppBaseActivity {
     private String phoneNumber;
 
     @Override
+    int title() {
+        return R.string.call;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_call_log_details;
     }

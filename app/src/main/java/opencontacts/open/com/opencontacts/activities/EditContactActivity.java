@@ -149,6 +149,11 @@ public class EditContactActivity extends AppBaseActivity {
         return R.layout.activity_edit_contact;
     }
 
+    @Override
+    int title() {
+        return R.string.edit_contact;
+    }
+
     private void fillFieldsFromVCard() {
         fillTelephoneNumbers();
         fillEmails();

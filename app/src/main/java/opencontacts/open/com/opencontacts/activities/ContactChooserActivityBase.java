@@ -143,7 +143,7 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         contactsListView.setAdapter(adapter);
         ((RelativeLayout) findViewById(R.id.contacts_list)).addView(contactsListView);
 
-        ((Toolbar) findViewById(R.id.toolbar)).setTitle(getTitleResource());
+        ((Toolbar) findViewById(R.id.toolbar)).setTitle(title());
 
         contactsDataChangeListener = new SampleDataStoreChangeListener<Contact>() {
             @Override
@@ -194,10 +194,6 @@ public abstract class ContactChooserActivityBase extends AppBaseActivity {
         CharSequence query = searchView.getQuery();
         if (TextUtils.isEmpty(query)) return;
         adapter.getFilter().filter(query);
-    }
-
-    public int getTitleResource() {
-        return R.string.choose_a_contact;
     }
 
     public abstract void onContactSelect(Contact selectedContact);

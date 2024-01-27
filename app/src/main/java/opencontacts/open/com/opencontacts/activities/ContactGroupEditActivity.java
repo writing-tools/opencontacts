@@ -39,6 +39,7 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
         LinearLayout aboveContactsListLinearLayout = findViewById(R.id.above_contacts_list);
         aboveContactsListLinearLayout.addView(getEditTextForGroupName());
         if (isEmpty(groupNameFromPrevScreen)) return;
+        setTitle(groupNameFromPrevScreen);
         runOnMainDelayed(this::preselectContactsFromGroup, 300);
     }
 
@@ -90,7 +91,7 @@ public class ContactGroupEditActivity extends ContactChooserActivityBase {
     }
 
     @Override
-    public int getTitleResource() {
+    public int title() {
         return R.string.edit_group;
     }
 

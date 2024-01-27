@@ -24,6 +24,11 @@ public class AboutActivity extends AppBaseActivity {
     }
 
     @Override
+    int title() {
+        return R.string.about;
+    }
+
+    @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         ((AppCompatTextView) findViewById(R.id.version)).setText(BuildConfig.VERSION_NAME);

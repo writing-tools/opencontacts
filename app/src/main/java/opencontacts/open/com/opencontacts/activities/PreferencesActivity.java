@@ -78,6 +78,11 @@ public class PreferencesActivity extends AppBaseActivity {
     }
 
     @Override
+    int title() {
+        return R.string.Preferences;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_preferences;
     }

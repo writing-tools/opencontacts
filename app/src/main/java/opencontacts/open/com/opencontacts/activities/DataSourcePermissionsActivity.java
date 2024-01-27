@@ -130,6 +130,11 @@ public class DataSourcePermissionsActivity extends AppBaseActivity {
 
 
     @Override
+    int title() {
+        return R.string.permissions_activity_title;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_data_source_permissions;
     }

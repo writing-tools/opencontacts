@@ -51,6 +51,11 @@ public class GroupsActivity extends AppBaseActivity {
     private ArrayList<Contact> currentlySelectedGroupContactsSorted;
 
     @Override
+    int title() {
+        return R.string.groups;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_groups;
     }

@@ -51,7 +51,7 @@ public class MergeContactsActivity extends ContactChooserActivityBase {
     }
 
     @Override
-    public int getTitleResource() {
+    public int title() {
         return R.string.merge;
     }
 

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import androidx.annotation.Nullable;
 
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
 public class AddToContactActivity extends ContactChooserActivityBase {
@@ -18,6 +19,11 @@ public class AddToContactActivity extends ContactChooserActivityBase {
         phoneNumber = getIntent().getStringExtra(INTENT_EXTRA_STRING_PHONE_NUMBER);
         if (phoneNumber == null)
             finish();
+    }
+
+    @Override
+    int title() {
+        return R.string.add_to_contact;
     }
 
     @Override

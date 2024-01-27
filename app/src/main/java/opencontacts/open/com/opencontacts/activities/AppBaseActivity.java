@@ -30,6 +30,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
         setContentView(getLayoutResource());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(title());
         toolbar.setOverflowIcon(getResources().getDrawable(R.drawable.more_overflow_menu));
         setColorFilterUsingColor(toolbar.getOverflowIcon(), getSecondaryColor(this));
         AndroidUtils.setBackButtonInToolBar(toolbar, this);
@@ -37,6 +38,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
     }
 
     abstract int getLayoutResource();
+    abstract int title();
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

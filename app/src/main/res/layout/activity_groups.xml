@@ -14,6 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:minHeight="?attr/actionBarSize"
+            app:navigationContentDescription="@string/back_content_description"
             app:navigationIcon="@drawable/ic_arrow_back">
 
             <androidx.appcompat.widget.AppCompatSpinner

@@ -97,6 +97,11 @@ public class ContactDetailsActivity extends AppBaseActivity {
     }
 
     @Override
+    int title() {
+        return R.string.contacts;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_contact_details;
     }

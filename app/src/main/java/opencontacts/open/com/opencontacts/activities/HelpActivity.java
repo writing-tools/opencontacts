@@ -8,4 +8,9 @@ public class HelpActivity extends AppBaseActivity {
     int getLayoutResource() {
         return R.layout.activity_help;
     }
+
+    @Override
+    int title() {
+        return R.string.help;
+    }
 }

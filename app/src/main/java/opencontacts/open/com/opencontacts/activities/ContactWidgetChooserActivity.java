@@ -10,6 +10,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.domain.Contact;
 
 public class ContactWidgetChooserActivity extends ContactChooserActivityBase {
@@ -24,6 +25,11 @@ public class ContactWidgetChooserActivity extends ContactChooserActivityBase {
             Toast.makeText(this, "Widget id is empty", Toast.LENGTH_LONG).show();
             finish();
         }
+    }
+
+    @Override
+    int title() {
+        return R.string.choose_a_contact;
     }
 
     @Override

@@ -199,6 +199,11 @@ public class MainActivity extends AppBaseActivity {
     }
 
     @Override
+    int title() {
+        return R.string.app_name;
+    }
+
+    @Override
     int getLayoutResource() {
         return R.layout.activity_main;
     }
@@ -214,7 +219,10 @@ public class MainActivity extends AppBaseActivity {
         menu.findItem(R.id.button_new).setOnMenuItemClickListener(getMenuItemClickHandlerFor(this::launchAddContact));
         searchItem = menu.findItem(R.id.action_search);
         searchView = (SearchView) searchItem.getActionView();
-        searchView.setOnSearchClickListener(v -> viewPager.setCurrentItem(CONTACTS_TAB_INDEX));
+        searchView.setContentDescription("Search for contact");
+        searchView.setOnSearchClickListener(v -> {
+            viewPager.setCurrentItem(CONTACTS_TAB_INDEX);
+        });
         menu.findItem(R.id.action_sync).setOnMenuItemClickListener(getMenuItemClickHandlerFor(() ->
             startActivity(new Intent(this, CardDavSyncActivity.class))
         ));

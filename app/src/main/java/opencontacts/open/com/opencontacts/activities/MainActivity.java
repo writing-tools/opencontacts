@@ -48,7 +48,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import opencontacts.open.com.opencontacts.CardDavSyncActivity;
 import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.actions.ExportMenuItemClickHandler;
 import opencontacts.open.com.opencontacts.data.datastore.CallLogDataStore;

@@ -1,4 +1,4 @@
-package opencontacts.open.com.opencontacts;
+package opencontacts.open.com.opencontacts.activities;
 
 import static android.widget.Toast.LENGTH_SHORT;
 import static opencontacts.open.com.opencontacts.data.datastore.ContactGroupsDataStore.invalidateGroups;
@@ -25,21 +25,21 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.CA
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SYNC_TOKEN_SHARED_PREF_KEY;
 
 import android.os.Bundle;
-import com.google.android.material.textfield.TextInputEditText;
-import androidx.core.util.Pair;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.AppCompatSpinner;
-import androidx.appcompat.widget.AppCompatTextView;
-import androidx.appcompat.widget.SwitchCompat;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.widget.AppCompatSpinner;
+import androidx.appcompat.widget.AppCompatTextView;
+import androidx.appcompat.widget.SwitchCompat;
+import androidx.core.util.Pair;
+
 import com.github.underscore.Tuple;
 import com.github.underscore.U;
+import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.HashMap;
 import java.util.List;
@@ -47,6 +47,7 @@ import java.util.Map;
 import java.util.Set;
 
 import ezvcard.VCard;
+import opencontacts.open.com.opencontacts.R;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDBHelper;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 import opencontacts.open.com.opencontacts.orm.Contact;
@@ -56,14 +57,13 @@ import opencontacts.open.com.opencontacts.utils.CardDavUtils;
 import opencontacts.open.com.opencontacts.utils.CheekyCarddavServerStuff;
 import opencontacts.open.com.opencontacts.utils.Triplet;
 
-public class CardDavSyncActivity extends AppCompatActivity {
+public class CardDavSyncActivity extends AppBaseActivity {
 
     private String savedBaseUrl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_card_dav_sync);
         savedBaseUrl = getStringFromPreferences(BASE_SYNC_URL_SHARED_PREFS_KEY, this);
         AppCompatSpinner carddavServerTypeSpinner = findViewById(R.id.carddav_server_type);
         TextInputEditText urlTextInputEditTextView = findViewById(R.id.url);
@@ -74,6 +74,16 @@ public class CardDavSyncActivity extends AppCompatActivity {
             .setMessage("Sync is experimental yet, please use this only if you have read the issue status in gitlab")
             .setPositiveButton("Okay", null)
             .show();
+    }
+
+    @Override
+    int getLayoutResource() {
+        return R.layout.activity_card_dav_sync;
+    }
+
+    @Override
+    int title() {
+        return R.string.sync;
     }
 
     private void setupServerTypeDropdown(AppCompatSpinner carddavServerTypeSpinner, TextInputEditText urlTextInputEditTextView) {

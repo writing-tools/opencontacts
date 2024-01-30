@@ -4,9 +4,9 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="10dp"
-    tools:context=".CardDavSyncActivity">
+    tools:context=".activities.CardDavSyncActivity">
 
+    <include layout="@layout/appbar" />
 
     <androidx.appcompat.widget.AppCompatSpinner
         android:id="@+id/carddav_server_type"

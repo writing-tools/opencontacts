@@ -13,7 +13,7 @@
     <application
         android:name=".OpenContactsApplication"
         android:allowBackup="false"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/launcher_icon"
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.NoActionBar.Customized"
@@ -117,7 +117,7 @@
         <receiver
             android:name=".widgets.SingleContactDialerWidgetProvider"
             android:label="@string/app_name"
-            android:icon="@mipmap/ic_launcher">
+            android:icon="@mipmap/launcher_icon">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
             </intent-filter>

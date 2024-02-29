@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">已經刪除全部聯絡人</string>
     <string name="total">全部：</string>
     <string name="switch_theme">更改主題</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Whatsapp默認國家代碼</string>
     <string name="input_country_calling_code_title">輸入國家呼叫號碼</string>
     <string name="input_country_calling_code_description">例如：印度為+91。注意不要忘記前面的+符號</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">請給予存儲權限以導入/導出聯絡人</string>
     <string name="caller_id_text">%1$s 呼叫中...</string>
     <string name="missed_call">錯過呼叫</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">錯過了來自 %1$s %2$s 的呼叫</string>
     <string name="call">呼叫</string>
     <string name="message">訊息</string>
@@ -90,11 +94,14 @@
     <string name="storage_not_mounted">存儲沒有掛載</string>
     <string name="whatsapp_integration">與Whatsapp整合</string>
     <string name="whatsapp_help_text">在Whatsapp中電話號碼前必須包含 \'+\' 和國家代碼。例如你的號碼是9876543210，你必須在號碼之前加入國家代碼，之後Whatsapp才能夠從OpenContacts中正確讀取聯絡人號碼。例如你的國家代碼是+91，那麼你在Opencontats中保存的號碼正確格式應該為+919876543210。\n\n在Opencontacts的菜單中，有一個選項可以設定默認的國家代碼。輸入國家代碼時請不要忘記+符號。萬一OpenContacts當中有號碼沒有國家代碼，設定的默認選項可以為號碼自動設定默認國家代碼。如果是Whatsapp當中的國際聯絡人，你可能需要手動設定該聯絡人的國家代碼為正確的國家。</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">您是否需要導入？</string>
     <string name="noname">沒有名稱</string>
     <string name="keyboard_adjusts_views">键盘可以调节视角</string>
     <string name="open_bottommenu_on_start">啓動時開啓底部菜單</string>
-    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
+    <string name="auto_cancel_missed_call_notifs">應自動取消未接來電通知</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">移動電話</string>
     <string name="work">工作電話</string>
@@ -103,8 +110,8 @@
     <string name="email">Email</string>
     <string name="add_more">添加更多</string>
     <string name="address">地址</string>
-    <string name="firstname">名</string>
-    <string name="lastname">姓</string>
+    <string name="firstname">姓</string>
+    <string name="lastname">名</string>
     <string name="warning">警告</string>
     <string name="still_on_old_db_resolution">請導出聯絡人信息，然後在菜單中選擇刪除應用中的全部聯絡人，之後再完成軟件升級。否則該應用可能會出現錯誤。</string>
     <string name="copied_to_clipboard">已經複製到粘貼板</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">無效的url</string>
     <string name="cancel">取消</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">顯示詳細資訊</string>
     <string name="no_app_found_to_open">未找到可以打開此文件的APP應用程式</string>
     <string name="add_to_favorites">添加到收藏夾</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">報告錯誤</string>
     <string name="report_errors">報告錯誤</string>
     <string name="Preferences">使用偏好</string>
-    <string name="theme_preference_title">黑暗主題</string>
-    <string name="theme_preference_summary">啓動跨應用黑暗主題</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">十二小時制時間格式</string>
     <string name="time_format_12hrs_preference_summary">啓用十二小時制鐘錶和AM/PM標註</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">與Whatsapp整合</string>
     <string name="whatsapp_integration_preference_summary">啓用後允許您在此應用中點擊聯絡人後自動開啓Whatsapp通訊界面</string>
     <string name="t9_preference_title">T9鍵盤搜索</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">Export call log</string>
     <string name="failed_exporting_call_log">Failed exporting call log</string>
     <string name="exported_call_log_successfully">Exported call log successfully</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Sort using first name</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">添加到主畫面</string>
     <string name="added_shortcut">成功添加快捷路徑</string>
     <string name="failed_adding_shortcut">添加快捷路徑失敗</string>
@@ -199,22 +215,41 @@
     <string name="country">國家</string>
     <string name="extended_address">詳細地址</string>
     <string name="no_group_name_error">請輸入有效的分組名稱</string>
-    <string name="should_show_bottom_menu">Should show bottom menu</string>
-    <string name="chat">Chat</string>
-    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
-    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
-    <string name="auto_export_contacts_title">Auto export contacts</string>
-    <string name="auto_export_contacts_summary">Will export contacts every week</string>
-    <string name="encrypt_contacts_export_password_title">Encryption password</string>
-    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
-    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
-    <string name="call_filtering_category_title">Filter calls</string>
-    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
-    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
-    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
-    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
-    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
-    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
+    <string name="should_show_bottom_menu">應顯示底部菜單選項</string>
+    <string name="chat">聊天</string>
+    <string name="no_app_found_for_action_open_document">無法找到可以發現文件的文件管理器</string>
+    <string name="failed_fetching_recent_calllog">無法獲取近期的通話記錄日誌</string>
+    <string name="auto_export_contacts_title">自動匯出聯絡人</string>
+    <string name="auto_export_contacts_summary">每週將會自動匯出聯絡人</string>
+    <string name="encrypt_contacts_export_password_title">加密密鑰</string>
+    <string name="encrypt_contacts_export_password_summary">將會使用這個密鑰匯出聯絡人</string>
+    <string name="call_filtering_category_summary">在 Android 10 和以上版本中啓動功能</string>
+    <string name="call_filtering_category_title">過濾通話</string>
+    <string name="call_filtering_enable_call_filtering_title">啓動通話過濾功能</string>
+    <string name="call_filtering_enable_call_filtering_summary">Will block unknown calls</string>
+    <string name="call_filtering_reject_calls_summary">啓動會自動拒絕通話，關閉會自動靜音通話。</string>
+    <string name="call_filtering_reject_calls_title">被拒絕接通號碼的記錄</string>
+    <string name="device_not_supported_call_filtering">您的設備不支持使用此項通話過濾功能</string>
+    <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Contributors</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Please set password in preferences before import</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 for Chinese using Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Translate chinese to pinyin english to support T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Share as text</string>
+    <string name="name" tools:ignore="MissingTranslation">Name</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Temporary contact</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Mark contact as temporary?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>移動電話</item>
         <item>工作電話</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

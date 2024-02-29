@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">Видалити всі контакти</string>
     <string name="total">Всього:</string>
     <string name="switch_theme">Переключити тему</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Код країни за замовчуванням</string>
     <string name="input_country_calling_code_title">Введіть код країни</string>
     <string name="input_country_calling_code_description">Приклад: +91 для Індії. Не забудьте ввести + попереду</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">Надайте дозвіл на зберігання телефону, щоб мати можливість експортувати та імпортувати контакти</string>
     <string name="caller_id_text">%1$s виклик...</string>
     <string name="missed_call">Пропущений виклик</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Пропущений дзвінок від %1$s %2$s</string>
     <string name="call">Виклик</string>
     <string name="message">Повідомлення</string>
@@ -90,6 +94,9 @@
     <string name="storage_not_mounted">Сховище не встановлено</string>
     <string name="whatsapp_integration">Інтеграція з Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp вимагає мобільний номер, включаючи код країни \"+\" в ній. Номер whatsapp - 9876543210, ви повинні додати код вашої країни перед тим, як він зможе розпізнати його при спробі відкрити розмову з OpenContacts. Якщо код вашої країни +91, то повне число має виглядати як +919876543210.\n\nв меню OpenContacts, є новий запис на типовий код країни. При введенні коду країни не забудьте ввести + в неї. У випадку, якщо будь-який номер, присутній в OpenContacts не має коду країни, цей код країни буде додано за замовчуванням. У разі міжнародних контактів за умовчанням необхідно вручну відредагувати цей номер, щоб вказати правильний код країни</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">Хочете імпортувати</string>
     <string name="noname">БЕЗ ІМЕНІ</string>
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">Неприпустима url-адреса</string>
     <string name="cancel">Скасувати</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Показати подробиці</string>
     <string name="no_app_found_to_open">Не знайдено жодної програми, яка могла б відкрити це</string>
     <string name="add_to_favorites">Додати в Улюблені</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">Повідомити про помилку</string>
     <string name="report_errors">Повідомити про помилки</string>
     <string name="Preferences">Налаштування</string>
-    <string name="theme_preference_title">Темна тема</string>
-    <string name="theme_preference_summary">Вмикає темну тему в додатку.</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Формат часу 12 годин</string>
     <string name="time_format_12hrs_preference_summary">Вмикає 12 годин з AM/PM</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Інтеграція з Whatsapp</string>
     <string name="whatsapp_integration_preference_summary">Дозволяє відкрити Whatsapp прямо з цього додатку</string>
     <string name="t9_preference_title">T9 Пошук</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">Експорт списку дзвінків</string>
     <string name="failed_exporting_call_log">Не вдалося експортувати журнал викликів</string>
     <string name="exported_call_log_successfully">Журнал викликів експортовано успішно</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Сортувати за іменем</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">Додати на головний екран</string>
     <string name="added_shortcut">Ярлик додано успішно</string>
     <string name="failed_adding_shortcut">Не вдалося додати ярлик</string>
@@ -210,11 +226,30 @@
     <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
     <string name="call_filtering_category_title">Filter calls</string>
     <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
-    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
+    <string name="call_filtering_enable_call_filtering_summary">Will block unknown calls</string>
     <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
     <string name="call_filtering_reject_calls_title">Block calls behavior</string>
     <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
-    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
+    <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Contributors</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Please set password in preferences before import</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 for Chinese using Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Translate chinese to pinyin english to support T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Share as text</string>
+    <string name="name" tools:ignore="MissingTranslation">Name</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Temporary contact</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Mark contact as temporary?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>Мобільний</item>
         <item>Службовий</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

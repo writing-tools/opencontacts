@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">Alle contacten verwijderd</string>
     <string name="total">Totaal :</string>
     <string name="switch_theme">Wissel thema</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Standaard Whatsapp landcode</string>
     <string name="input_country_calling_code_title">Landcode invoeren</string>
     <string name="input_country_calling_code_description">Voorbeeld: +91 voor India. Let op, plaats + vooraan</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">Geef machtiging tot toegang telefoon om contacten te ex- en importeren</string>
     <string name="caller_id_text">%1$s belt...</string>
     <string name="missed_call">Gemiste oproep</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Gemiste oproep van %1$s %2$s</string>
     <string name="call">Oproep</string>
     <string name="message">Bericht</string>
@@ -91,11 +95,14 @@
     <string name="whatsapp_integration">Whatsapp integratie</string>
     <string name="whatsapp_help_text">Whatsapp vereist een mobiel nummer met landcode die begint met \'+\'. Als je Whatsapp-number 9876543210 is, plaats dan de landcode er voor, zodat Whatsapp het herkent als landcode als het wordt aangeroepen door OpenContacts. Het number wordt dan bijvoorbeeld +91 9876543210.\n\nIn het OpenContacts menu is er een ingang om de standaard landcode in de voeren. Vergeet niet de \'+\'.
 In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt deze standaard er voor geplaatst. In geval van internationale contacten moet die zelf aanpassen met de juiste landcode</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">Wilt u importeren</string>
     <string name="noname">NONAME</string>
     <string name="keyboard_adjusts_views">Toetsenbord past weergave aan</string>
     <string name="open_bottommenu_on_start">Open onderste menu bij opstarten</string>
-    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
+    <string name="auto_cancel_missed_call_notifs">Moet meldingen van gemiste oproepen automatisch annuleren</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Mobiel</string>
     <string name="work">Werk</string>
@@ -132,6 +139,7 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="invalid_url">Ongeldige url</string>
     <string name="cancel">Annuleren</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Details tonen</string>
     <string name="no_app_found_to_open">Geen app gevonden die kan openen</string>
     <string name="add_to_favorites">Toevoegen aan Favorieten</string>
@@ -144,10 +152,15 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="report_error_screen_title">Rapporteer fout</string>
     <string name="report_errors">Rapporteer fouten</string>
     <string name="Preferences">Instellingen</string>
-    <string name="theme_preference_title">Donker thema</string>
-    <string name="theme_preference_summary">Schakelt donker app-thema in.</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Tijd notatie 12 uur</string>
     <string name="time_format_12hrs_preference_summary">Schakelt 12 uur tijdnotatie met AM/PM in</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Whatsapp integratie</string>
     <string name="whatsapp_integration_preference_summary">Maakt het mogelijk een Whatsapp gesprek direct vanuit OpenContacts te openen</string>
     <string name="t9_preference_title">T9 zoeken</string>
@@ -158,7 +171,10 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="export_call_log">Belhistorie exporteren</string>
     <string name="failed_exporting_call_log">Kon belhistorie niet exporteren</string>
     <string name="exported_call_log_successfully">Exporteren belhistorie gelukt</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Sorteer met voornaam</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">Toevoegen aan startscherm</string>
     <string name="added_shortcut">Toegevoegen snelkoppeling gelukt</string>
     <string name="failed_adding_shortcut">Toegevoegen snelkoppeling mislukt</string>
@@ -200,22 +216,41 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
     <string name="country">Land</string>
     <string name="extended_address">Uitgebreid adres</string>
     <string name="no_group_name_error">Voer geldige groepsnaam in</string>
-    <string name="should_show_bottom_menu">Should show bottom menu</string>
-    <string name="chat">Chat</string>
-    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
-    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
-    <string name="auto_export_contacts_title">Auto export contacts</string>
-    <string name="auto_export_contacts_summary">Will export contacts every week</string>
-    <string name="encrypt_contacts_export_password_title">Encryption password</string>
-    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
-    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
-    <string name="call_filtering_category_title">Filter calls</string>
-    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
-    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
-    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
-    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
-    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
-    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
+    <string name="should_show_bottom_menu">Moet onderste menu tonen</string>
+    <string name="chat">Gesprek</string>
+    <string name="no_app_found_for_action_open_document">Kon geen bestandsbeheer app vinden die documenten kan zoeken</string>
+    <string name="failed_fetching_recent_calllog">Kon recente oproeplog niet ophalen</string>
+    <string name="auto_export_contacts_title">Automatisch contacten exporteren</string>
+    <string name="auto_export_contacts_summary">Elke week contacten exporteren</string>
+    <string name="encrypt_contacts_export_password_title">Encryptie wachtwoord</string>
+    <string name="encrypt_contacts_export_password_summary">Zal de export van contacten met dit wachtwoord versleutelen</string>
+    <string name="call_filtering_category_summary">Ingeschakeld op Android 10 en hoger</string>
+    <string name="call_filtering_category_title">Oproepen filteren</string>
+    <string name="call_filtering_enable_call_filtering_title">Oproepfilter inschakelen</string>
+    <string name="call_filtering_enable_call_filtering_summary">Will block unknown calls</string>
+    <string name="call_filtering_reject_calls_summary">Aan weigert oproepen, uit doet oproepen zwijgen</string>
+    <string name="call_filtering_reject_calls_title">Blokkeer oproepgedrag</string>
+    <string name="device_not_supported_call_filtering">Je toestel wordt niet ondersteund voor oproepfiltering</string>
+    <string name="call_filtering_help_text">As of now call filtering will mute all the calls that are not present in your contacts. You can also choose to block them and your phone will reject them for you</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Contributors</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Please set password in preferences before import</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 for Chinese using Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Translate chinese to pinyin english to support T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Share as text</string>
+    <string name="name" tools:ignore="MissingTranslation">Name</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Temporary contact</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Mark contact as temporary?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contacts marked as temporary will be deleted in a given amount of time. 1 month by default</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>Mobiel</item>
         <item>Werk</item>
@@ -251,5 +286,15 @@ In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt d
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

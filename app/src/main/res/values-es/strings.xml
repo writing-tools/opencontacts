@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">Todos los contactos eliminados</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Cambiar tema</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Código de país predeterminado de WhatsApp</string>
     <string name="input_country_calling_code_title">Escribe el código de llamada del país</string>
     <string name="input_country_calling_code_description">Ejemplo: +34 para España. No olvides escribir + delante</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">Conceder permiso al teléfono de almacenamiento para poder exportar e importar contactos</string>
     <string name="caller_id_text">%1$s llamando...</string>
     <string name="missed_call">Llamada perdida</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Llamada entrante</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Llamada perdida de %1$s %2$s</string>
     <string name="call">Llamar</string>
     <string name="message">Mensaje</string>
@@ -90,11 +94,14 @@
     <string name="storage_not_mounted">Almacenamiento no montado</string>
     <string name="whatsapp_integration">Integración con Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp requiere un número de teléfono móvil con el código de país con el signo \'+\'. En caso de que su número de WhatsApp sea 9876543210, debe agregar el código de su país delante para que WhatsApp pueda reconocerlo al intentar abrir una conversación desde OpenContacts. En caso de que tu código de país sea +34, el número completo debería ser +349876543210.\n\nEn el menú de OpenContacts, hay una nueva entrada para registrar el código de país por defecto de whatsapp. Cuando lo registres, no olvides por + en él. En caso de que alguno de los números presentes en OpenContacts no tenga código de país, se agregará este código de país por defecto. En el caso de contactos internacionales de WhatsApp, deberá editar manualmente ese número para incluir el código de país correcto</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">¿Quieres importar?</string>
     <string name="noname">NADIE</string>
     <string name="keyboard_adjusts_views">El teclado ajusta las vistas</string>
     <string name="open_bottommenu_on_start">Abrir menú inferior al inicio</string>
-    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
+    <string name="auto_cancel_missed_call_notifs">Cancelar automáticamente los avisos de llamada perdida</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Móvil</string>
     <string name="work">Trabajo</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">Url no válida</string>
     <string name="cancel">Cancelar</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Mostrar detalles</string>
     <string name="no_app_found_to_open">No se ha encontrado ninguna aplicación que pueda abrir esto</string>
     <string name="add_to_favorites">Añadir a favoritos</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">Informe de error</string>
     <string name="report_errors">Informe de errores</string>
     <string name="Preferences">Preferencias</string>
-    <string name="theme_preference_title">Tema oscuro</string>
-    <string name="theme_preference_summary">Habilita el tema oscuro en toda la aplicación.</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Formato de hora 12 horas</string>
     <string name="time_format_12hrs_preference_summary">Habilitar reloj de 12 horas con AM/PM</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Integración con Whatsapp</string>
     <string name="whatsapp_integration_preference_summary">Permite abrir una conversación con whatsapp directamente desde aquí</string>
     <string name="t9_preference_title">Búsqueda T9</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">Exportar registro de llamadas</string>
     <string name="failed_exporting_call_log">Falló la exportación del registro de llamadas</string>
     <string name="exported_call_log_successfully">Registro de llamadas exportado exitosamente</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Ordenar usando el nombre</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">Añadir a la pantalla principal</string>
     <string name="added_shortcut">Atajo añadido con éxito</string>
     <string name="failed_adding_shortcut">Error al agregar atajo</string>
@@ -199,22 +215,41 @@
     <string name="country">País</string>
     <string name="extended_address">Dirección ampliada</string>
     <string name="no_group_name_error">Ingresa un nombre de grupo válido</string>
-    <string name="should_show_bottom_menu">Should show bottom menu</string>
-    <string name="chat">Chat</string>
-    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
-    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
-    <string name="auto_export_contacts_title">Auto export contacts</string>
-    <string name="auto_export_contacts_summary">Will export contacts every week</string>
-    <string name="encrypt_contacts_export_password_title">Encryption password</string>
-    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
-    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
-    <string name="call_filtering_category_title">Filter calls</string>
-    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
-    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
-    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
-    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
-    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
-    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
+    <string name="should_show_bottom_menu">Mostrar menú inferior</string>
+    <string name="chat">Conversación</string>
+    <string name="no_app_found_for_action_open_document">No se pudo encontrar la aplicación de gestor de archivos que pueda buscar documentos</string>
+    <string name="failed_fetching_recent_calllog">No se encontró el registro de llamadas recientes</string>
+    <string name="auto_export_contacts_title">Exportar contactos automáticamente</string>
+    <string name="auto_export_contacts_summary">Exportar contactos cada semana</string>
+    <string name="encrypt_contacts_export_password_title">Encriptar con contraseña</string>
+    <string name="encrypt_contacts_export_password_summary">Encriptar contactos exportados con contraseña</string>
+    <string name="call_filtering_category_summary">Habilitado para Android 10 o superior</string>
+    <string name="call_filtering_category_title">Filtrar llamadas</string>
+    <string name="call_filtering_enable_call_filtering_title">Habilitar filtrado de llamadas</string>
+    <string name="call_filtering_enable_call_filtering_summary">Bloquear llamadas desconocidas</string>
+    <string name="call_filtering_reject_calls_summary">Activado rechazar llamadas, desactivado silenciar llamadas</string>
+    <string name="call_filtering_reject_calls_title">Bloquear comportamiento de llamadas</string>
+    <string name="device_not_supported_call_filtering">Tu dispositivo no es compatible con el filtrado de llamadas</string>
+    <string name="call_filtering_help_text">A partir de ahora, el filtrado de llamadas silenciará todas las llamadas que no están presentes en sus contactos. También puedes elegir bloquearlos y tu teléfono los rechazará por ti</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Colaboradores</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Por favor establezca una contraseña en las preferencias antes de importar</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 para chino usando Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Traducir chino al pinyin inglés para apoyar T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Compartir como texto</string>
+    <string name="name" tools:ignore="MissingTranslation">Nombre</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Contacto temporal</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">¿Marcar contacto como temporal?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Los contactos marcados como temporales serán eliminados en una cantidad determinada de tiempo. 1 mes por defecto</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>Móvil</item>
         <item>Trabajo</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

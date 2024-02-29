@@ -5,8 +5,8 @@
     <string name="button_new">+</string>
     <string name="error_while_saving_contact">Произошла ошибка при сохранении контакта</string>
     <string name="error_while_loading_contact">Произошла ошибка при загрузке контакта</string>
-    <string name="error_while_parsing_vcard_file">Произошла ошибка при разборе файла vcard</string>
-    <string name="error_while_parsing_contact_details">Произошла ошибка при разборе контактных данных</string>
+    <string name="error_while_parsing_vcard_file">Произошла ошибка при обработке файла vcard</string>
+    <string name="error_while_parsing_contact_details">Произошла ошибка при обработке контактных данных</string>
     <string name="copied_phonenumber_to_clipboard">Номер телефона скопирован в буфер обмена</string>
     <string name="unexpected_error_happened">Произошла непредвиденная ошибка</string>
     <string name="grant_read_call_logs_permission">Пожалуйста, предоставьте этому приложению разрешение на чтение журнала вызовов</string>
@@ -22,14 +22,14 @@
     <string name="create_new_contact">Создать новый контакт</string>
     <string name="add_to_existing">Добавить в существующий контакт</string>
     <string name="about">О программе</string>
-    <string name="content_about">Приносит конфиденциальность вашим контактам. Никакое другое приложение не сможет получить доступ к контактам, так как сохраняет контакты в своей базе данных отдельно от контактов по умолчанию. Можно использовать вместо приложения для телефонов (номеронабирателей). Вы можете экспортировать / импортировать контакты из приложения контактов Android в это приложение. Поддерживает журнал вызовов. Также показывает имя пользователя при приеме звонка. Идентификатор абонента будет отображаться при вызове и вы можете перетащить его в любое место.</string>
+    <string name="content_about">Это программа приносит конфиденциальность вашим контактам.\n\n\n1.) Никакое другое приложение не сможет получить доступ к контактам внутри приложения, так как оно сохраняет контакты в своей базе данных отдельно от контактов по умолчанию. \n\n2.) Это приложение можно использовать вместо приложения для телефонов (номеронабирателей).\n\n 3.) Вы можете экспортировать / импортировать контакты из приложения контактов Android в это приложение.\n\n4.) Подживает журнал вызовов, так как Android не смог бы показать имя контакта.\n\n5.) Также показывает имя пользователя при приеме звонка. \n\n6.) Идентифиатор абонента будет отображаться при вызове и вы можете перетащить его в любое место.</string>
     <string name="author_label">Автор</string>
     <string name="my_name">Султан Ахамер</string>
-    <string name="issues_label">Вопросы</string>
+    <string name="issues_label">Баг трекер</string>
     <string name="issues_link">https://gitlab.com/sultanahamer/OpenContacts/issues</string>
     <string name="more_apps">Найти другие приложения</string>
     <string name="more_apps_link">https://gitlab.com/sultanahamer https://github.com/sultanahamer/</string>
-    <string name="primary_number_help_text">Звездочка перед номером означает, что этот контакт будет основным номером и будет использоваться для вызова / Смс при нажатии из списка контактов.\n\nПо умолчанию первый номер в списке будет основным</string>
+    <string name="primary_number_help_text">Звездочка перед номером означает, что этот номер является основным и будет использоваться для звонков/смс при выборе данного контакта из списка.\n\nПо умолчанию первый номер в списке будет основным</string>
     <string name="primary_number">Основной номер (под звездой)</string>
     <string name="learn_more_about_star">Нажмите для дополнительной информации о звезде.</string>
     <string name="invalid_number">Неверный номер</string>
@@ -37,7 +37,7 @@
     <string name="import_contacts_help_text">Чтобы импортировать контакты в это приложение, перейдите в приложение по умолчанию, экспортируйте контакты. Попробуйте открыть проводник файлов и нажмите на экспортируемый файл. В списке открытых приложений нажмите на открытые контакты, открытые контакты импортируют все контакты</string>
     <string name="search_contacts_help_text">Нажмите на значок поиска в меню. T9 Клавиатура будет всплывать только с цифрами, но маленькие буквы по три на каждом будут присутствовать и охватывать все алфавиты. Используйте числовые клавиши для ввода имени.\nПример: Для поиска контакта \'john\', тип 5646 потому что буква j присутствует на номер 5, o на 6 и так далее. Это может выглядеть немного ново, но лучше чем обычный полноэкранный поиск по клавиатуре.\nВы также можете найти номер телефона, введя нужный номер с помощью той же клавиатуры.\nЕсли вы хотите вернуться к традиционному поиску, вы можете сделать это, перейдя в меню и выбрав Переключить поиск T9</string>
     <string name="search_contacts">Поиск контактов</string>
-    <string name="help">Справка</string>
+    <string name="help">Помощь</string>
     <string name="export_contacts_help_text">На главном экране щелкните в верхнем правом меню и затем выберите экспорт. Контакты будут экспортированны с указанием места экспорта</string>
     <string name="resync_call_log_with_contacts">Повторная синхронизация журнала вызовов с контактами</string>
     <string name="callerid">Идентификатор абонента</string>
@@ -49,17 +49,18 @@
     <string name="deleted_all_contacts">Удалены все контакты</string>
     <string name="total">Всего :</string>
     <string name="switch_theme">Переключить тему</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Код страны whatsapp по умолчанию</string>
     <string name="input_country_calling_code_title">Введите код страны вызова</string>
     <string name="input_country_calling_code_description">Пример: +91 для Индии. Не забудьте ввести + спереди</string>
     <string name="okay">Ок</string>
     <string name="copy_to_clipboard">Копировать в буфер обмена</string>
-    <string name="edit_before_call">Редактировать перед звонком</string>
+    <string name="edit_before_call">Редактировать перед вызовом</string>
     <string name="do_you_want_to_export">Вы хотите экспортировать?</string>
-    <string name="failed">Неудачно</string>
+    <string name="failed">Неудача</string>
     <string name="failed_exporting_contacts">Не удалось экспортировать контакты</string>
     <string name="filled_star">Отметить звездой</string>
-    <string name="do_you_want_to_delete">Вы точно хотите удалить?</string>
+    <string name="do_you_want_to_delete">Вы хотите удалить?</string>
     <string name="deleted">Удалено</string>
     <string name="phone_number">Номер телефона</string>
     <string name="new_contact">Новый контакт</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">Предоставить доступ к хранилищу телефона для экспорта и импорта контактов</string>
     <string name="caller_id_text">%1$s звонит...</string>
     <string name="missed_call">Пропущенный вызов</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Пропущенный вызов от %1$s %2$s</string>
     <string name="call">Звонок</string>
     <string name="message">Сообщение</string>
@@ -90,11 +94,14 @@
     <string name="storage_not_mounted">Хранилище не смонтировано</string>
     <string name="whatsapp_integration">Интеграция с Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp требует номер мобильного телефона, включая код страны с кодом \'+\'. В случае если ваш номер whatsapp 9876543210, вы должны добавить код своей страны перед тем, как он будет доступен, чтобы Whatapp смог распознать его при попытке открыть разговор из OpenContacts. Если код страны +91, то полный номер должен выглядеть как +919876543210.\n\nВ меню OpenContacts есть новая запись для ввода кода страны по умолчанию. При вводе кода страны не забудьте ввести + в нем. В случае если любое из чисел, присутствующих в OpenContacts не имеет кода страны, по умолчанию этот код страны будет добавлен. В случае международных контактов вам нужно вручную изменить этот номер, чтобы включить правильный код страны</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">Вы хотите импортировать</string>
     <string name="noname">Без имени</string>
     <string name="keyboard_adjusts_views">Клавиатура регулирует просмотры</string>
     <string name="open_bottommenu_on_start">Открыть нижнее меню при запуске</string>
-    <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
+    <string name="auto_cancel_missed_call_notifs">Автоматически отменять уведомления о пропущенных вызовах</string>
     <!--careful while editing below group. Each item in array should also be present in normal string-->
     <string name="cell">Мобильный</string>
     <string name="work">Рабочий</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">Неправильный url</string>
     <string name="cancel">Отмена</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Показать подробности</string>
     <string name="no_app_found_to_open">Не найдено приложений для использования</string>
     <string name="add_to_favorites">Добавить в избранное</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">Отчет об ошибке</string>
     <string name="report_errors">Сообщить об ошибках</string>
     <string name="Preferences">Настройки</string>
-    <string name="theme_preference_title">Темная тема</string>
-    <string name="theme_preference_summary">Включает тёмную тему в приложении.</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Формат времени 12 часов</string>
     <string name="time_format_12hrs_preference_summary">Включает AM/PM 12 часов</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Интеграция с Whatsapp</string>
     <string name="whatsapp_integration_preference_summary">Позволяет вам открыть диалог whatsapp прямо из этого приложения</string>
     <string name="t9_preference_title">Поиск T9</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">Экспорт журнала вызовов</string>
     <string name="failed_exporting_call_log">Не удалось экспортировать журнал вызовов</string>
     <string name="exported_call_log_successfully">Журнал вызовов успешно экспортирован</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Сортировать по имени</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">Добавить на домашний экран</string>
     <string name="added_shortcut">Ярлык добавлен успешно</string>
     <string name="failed_adding_shortcut">Не удалось добавить ярлык</string>
@@ -176,7 +192,7 @@
     <string name="failed_merging_a_contact">Не удалось объединить один из контактов</string>
     <string name="choose_a_contact">Выберите контакт</string>
     <string name="auto_merge_complete">Автослияние завершено, объединено %1$d</string>
-    <string name="should_use_system_app">Заставить системное приложение для вызова</string>
+    <string name="should_use_system_app">Назначиить для вызова системное приложение телефона</string>
     <string name="should_use_system_app_summary">Вызовы будут совершаться только приложением по умолчанию</string>
     <string name="dialer">Номеронабиратель</string>
     <string name="view_more">Показать больше</string>
@@ -199,22 +215,41 @@
     <string name="country">Страна</string>
     <string name="extended_address">Расширенный адрес</string>
     <string name="no_group_name_error">Введите допустимое имя группы</string>
-    <string name="should_show_bottom_menu">Should show bottom menu</string>
-    <string name="chat">Chat</string>
-    <string name="no_app_found_for_action_open_document">Could not find file manager app that can look for documents</string>
-    <string name="failed_fetching_recent_calllog">Could not fetch recent call log</string>
-    <string name="auto_export_contacts_title">Auto export contacts</string>
-    <string name="auto_export_contacts_summary">Will export contacts every week</string>
-    <string name="encrypt_contacts_export_password_title">Encryption password</string>
-    <string name="encrypt_contacts_export_password_summary">Will encrypt the contacts export using this password</string>
-    <string name="call_filtering_category_summary">Enabled on Android 10 and above</string>
-    <string name="call_filtering_category_title">Filter calls</string>
-    <string name="call_filtering_enable_call_filtering_title">Enable call filtering</string>
-    <string name="call_filtering_enable_call_filtering_summary">Should block calls</string>
-    <string name="call_filtering_reject_calls_summary">On will reject calls, off will silence calls</string>
-    <string name="call_filtering_reject_calls_title">Block calls behavior</string>
-    <string name="device_not_supported_call_filtering">Your device is not supported for call filtering</string>
-    <string name="call_filtering_help_text">Call filtering as of now will mute all the calls that are not present in your contacts. You can also choose to block them and phone will reject them for you</string>
+    <string name="should_show_bottom_menu">Показать нижнее меню</string>
+    <string name="chat">Чат</string>
+    <string name="no_app_found_for_action_open_document">Не удалось найти приложение для файлового менеджера, которое может искать документы</string>
+    <string name="failed_fetching_recent_calllog">Не удалось получить недавний журнал вызовов</string>
+    <string name="auto_export_contacts_title">Автоматический экспорт контактов</string>
+    <string name="auto_export_contacts_summary">Еженедельный экспорт контактов</string>
+    <string name="encrypt_contacts_export_password_title">Пароль для шифрования</string>
+    <string name="encrypt_contacts_export_password_summary">Контакты будут зашифрованы с помощью этого пароля</string>
+    <string name="call_filtering_category_summary">Доступно на Android 10 и выше</string>
+    <string name="call_filtering_category_title">Фильтрация вызовов</string>
+    <string name="call_filtering_enable_call_filtering_title">Включить фильтрацию вызовов</string>
+    <string name="call_filtering_enable_call_filtering_summary">Блокировать неизвестные вызовы</string>
+    <string name="call_filtering_reject_calls_summary">Вкл. отклоняет вызовы, выкл. глушит вызовы</string>
+    <string name="call_filtering_reject_calls_title">Поведение заблокированных вызовов</string>
+    <string name="device_not_supported_call_filtering">Ваше устройство не поддерживает фильтрацию вызовов</string>
+    <string name="call_filtering_help_text">Фильтрация вызовов отключит звонок у всех вызовов, которых нет в ваших контактах. Вы также можете заблокировать их и ваш телефон отклонит их за вас</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Участники</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Пожалуйста, установите пароль перед импортом в настройках</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 для китайского языка с использованием пиньинь</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Переведите китайский на английский пиньинь для поддержки T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Отправить как текст</string>
+    <string name="name" tools:ignore="MissingTranslation">Имя</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Временный контакт</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Пометить контакт как временный?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Контакты, помеченные как временные, будут удалены через определенное время. 1 месяц по-умолчанию</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>Мобильный</item>
         <item>Рабочий</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

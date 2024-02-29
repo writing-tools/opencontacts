@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">Todos os contatos excluídos</string>
     <string name="total">Total :</string>
     <string name="switch_theme">Mudar tema</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">Could not open Social app</string>
     <string name="default_whatsapp_country_code">Código padrão de país no whatsapp</string>
     <string name="input_country_calling_code_title">Digite o código de chamada do país</string>
     <string name="input_country_calling_code_description">Exemplo: +55 para o Brasil. Não se esqueça de digitar + na frente</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">Conceda permissão de armazenamento do telefone para exportar e importar contatos</string>
     <string name="caller_id_text">%1$s ligando...</string>
     <string name="missed_call">Chamada perdida</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">Chamada perdida de %1$s %2$s</string>
     <string name="call">Chamar</string>
     <string name="message">Mensagem</string>
@@ -90,6 +94,9 @@
     <string name="storage_not_mounted">Armazenamento não está montado</string>
     <string name="whatsapp_integration">Integração com Whatsapp</string>
     <string name="whatsapp_help_text">O Whatsapp requer um número de telefone que inclui o código de país com símbolo \'+\'. Caso seu número do whatsapp seja 9876543210, você precisa prefixar o código do seu país para que o whatsapp possa reconhecê-lo ao tentar abrir uma conversa via OpenContacts. Caso o código do seu país seja +55, então o número completo deveria ser +559876543210.\n\nNo menu do OpenContacts, há uma nova caixa de entrada para digitar o código padrão de país para o whatsapp. Ao inserir o código do país, não se esqueça de digitar símbolo +. Caso qualquer um dos números presentes no OpenContacts não tivesse o código do país, código padrão predefinido será anexado por padrão. Em caso de contatos internacionais do whatsapp, você precisará editar manualmente esse número para específicar o código do país correto</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">Disable Social network integration</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">Default social app</string>
     <string name="do_you_want_to_import">Você deseja importar</string>
     <string name="noname">Sem nome</string>
     <string name="keyboard_adjusts_views">Teclado ajusta a visualização</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">URL inválido</string>
     <string name="cancel">Cancelar</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">repeated %1$d times</string>
     <string name="show_details">Mostrar detalhes</string>
     <string name="no_app_found_to_open">Nenhum aplicativo encontrado para abrir isto</string>
     <string name="add_to_favorites">Adicionar aos Favoritos</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">Relatar problemas</string>
     <string name="report_errors">Relatar problemas</string>
     <string name="Preferences">Preferências</string>
-    <string name="theme_preference_title">Tema Escuro</string>
-    <string name="theme_preference_summary">Habilite o tema escuro em todo o aplicativo.</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">System</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">Light</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">Dark</string>
+    <string name="theme_preference_title">App Theme</string>
+    <string name="theme_preference_summary">Select desired theme across the app.</string>
     <string name="time_format_12hrs_preference_title">Formato do Tempo de 12 horas</string>
     <string name="time_format_12hrs_preference_summary">Habilita relógio de 12 horas com AM/PM</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">Social integration</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Integração com Whatsapp</string>
     <string name="whatsapp_integration_preference_summary">Permite que você abra um chat do whatsapp diretamente via este App</string>
     <string name="t9_preference_title">Pesquisa T9</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">Exportar registro de chamadas</string>
     <string name="failed_exporting_call_log">Falha ao exportar registro de chamadas</string>
     <string name="exported_call_log_successfully">Registro de chamadas exportado com sucesso</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
     <string name="sort_using_first_name">Ordenar pelo primeiro nome</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">Keep screen upright</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">Don\'t rotate app when phone\'s rotated</string>
     <string name="add_shortcut">Adicionar à tela inicial</string>
     <string name="added_shortcut">Atalho adicionado com sucesso</string>
     <string name="failed_adding_shortcut">Falha ao adicionar atalho</string>
@@ -210,11 +226,30 @@
     <string name="call_filtering_category_summary">Habilitado em Android 10 e acima</string>
     <string name="call_filtering_category_title">Filtrar chamadas</string>
     <string name="call_filtering_enable_call_filtering_title">Ativar filtro de chamadas</string>
-    <string name="call_filtering_enable_call_filtering_summary">Deve bloquear chamadas</string>
+    <string name="call_filtering_enable_call_filtering_summary">Bloqueará ligações desconhecidas</string>
     <string name="call_filtering_reject_calls_summary">Ativado, recusará as chamadas, desativado, silenciará as chamadas</string>
     <string name="call_filtering_reject_calls_title">Bloquear comportamento de chamadas</string>
     <string name="device_not_supported_call_filtering">Este dispositivo não tem suporte para filtrar as chamadas</string>
-    <string name="call_filtering_help_text">Agora a filtragem de chamadas vai silenciar todas as chamadas que não estão presentes em seus contatos. Você também pode escolher bloqueá-los e o telefone irá rejeitá-los por você</string>
+    <string name="call_filtering_help_text">Agora a filtragem de ligações silenciará todas as chamadas originadas de números que não estão em seus contatos. Você também pode bloqueá-las e o telefone rejeitará elas por você</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">Colaboradores</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">Por favor, defina a senha em preferências antes de importar</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">T9 para chinês usando Pinyin</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">Traduzir chinês para pinyin english para dar suporte ao T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">Compartilhar como texto</string>
+    <string name="name" tools:ignore="MissingTranslation">Nome</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">Contato temporário</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">Marcar o contato como temporário?</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">Contatos marcados como temporários serão excluídos num determinado período de tempo. 1 mês por padrão</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">Long press social app icon</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">Upon long press of social app icon in call log or contacts, we can access all social app integrations available</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">App with above details is requesting the following permissions</string>
+    <string name="authorize" tools:ignore="MissingTranslation">Authorize</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">Permissions request</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim card</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">Input phone number</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">Clear phone number entered</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim2</string>
     <string-array name="phone_number_types">
         <item>Celular</item>
         <item>Trabalho</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

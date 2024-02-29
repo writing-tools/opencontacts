@@ -49,6 +49,7 @@
     <string name="deleted_all_contacts">删除全部联系人</string>
     <string name="total">总计：</string>
     <string name="switch_theme">切换主题</string>
+    <string name="could_not_open_social_app" tools:ignore="MissingTranslation">无法打开社交应用</string>
     <string name="default_whatsapp_country_code">默认Whatsapp国家代码</string>
     <string name="input_country_calling_code_title">输入国家的电话号码前缀</string>
     <string name="input_country_calling_code_description">例如：印度的国家电话号码前缀为+91。在号码前缀前，请不要忘记输入 + 号。</string>
@@ -75,6 +76,9 @@
     <string name="grant_storage_permisson_detail">授予存储权限以便能够导入/导出联系人</string>
     <string name="caller_id_text">%1$s 呼叫中...</string>
     <string name="missed_call">未接来电</string>
+    <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
+    <string name="outgoing_call" tools:ignore="MissingTranslation">Outgoing Call</string>
+    <string name="rejected_call" tools:ignore="MissingTranslation">Rejected Call</string>
     <string name="missed_call_from">来自 %1$s %2$s 的未接电话</string>
     <string name="call">拨叫</string>
     <string name="message">短信</string>
@@ -90,6 +94,9 @@
     <string name="storage_not_mounted">未挂载存储卡</string>
     <string name="whatsapp_integration">Whatsapp整合</string>
     <string name="whatsapp_help_text">使用Whatsapp需要在电话号码前加入号码所在国的前缀代码。您必须在号码前加入国家号码前缀后Whatsapp才能够通过 \'开源通讯录\' 正确读取联系人的电话号码。例如您的电话号码是9876543210，而国家号码前缀是+91，那您应该保存号码时填入+91 9876543210。\n\n如果你在保存号码时没有默认的国家前缀码，在开源通讯录的菜单中有设置默认国家号码前缀的选项。如果是国际联系人那么您将必须手动修改联系人的国家前缀码为其号码所在国的正确格式。设置国家前缀代码时请不要忘记填入 + 号。</string>
+    <string name="enable_social_integration" tools:ignore="MissingTranslation">启用社交网络集成</string>
+    <string name="disable_social_integration" tools:ignore="MissingTranslation">禁用社交网络集成</string>
+    <string name="default_social_app" tools:ignore="MissingTranslation">默认社交应用</string>
     <string name="do_you_want_to_import">您想要导入吗？</string>
     <string name="noname">没有名称</string>
     <string name="keyboard_adjusts_views">键盘调整视图</string>
@@ -103,8 +110,8 @@
     <string name="email">电子邮件地址</string>
     <string name="add_more">添加更多</string>
     <string name="address">地址</string>
-    <string name="firstname">名</string>
-    <string name="lastname">姓</string>
+    <string name="firstname">姓</string>
+    <string name="lastname">名</string>
     <string name="warning">警告</string>
     <string name="still_on_old_db_resolution">请导出联系人，然后使用菜单删除所有联系人，之后再导入以完成应用程序升级。否则该应用运行时将出现错误。</string>
     <string name="copied_to_clipboard">已复制到剪切板</string>
@@ -131,6 +138,7 @@
     <string name="invalid_url">无效的 url 地址</string>
     <string name="cancel">取消</string>
     <string name="call_repeat_text">(%1$d)</string>
+    <string name="call_repeat_text_content_description" tools:ignore="MissingTranslation">重复了 %1$d 次</string>
     <string name="show_details">显示详细信息</string>
     <string name="no_app_found_to_open">没有找到可以打开此文件应用</string>
     <string name="add_to_favorites">添加到收藏</string>
@@ -143,10 +151,15 @@
     <string name="report_error_screen_title">报告错误</string>
     <string name="report_errors">报告错误</string>
     <string name="Preferences">个人偏好设置</string>
-    <string name="theme_preference_title">暗色主题</string>
-    <string name="theme_preference_summary">启用整个应用的暗色主题。</string>
+    <string name="system_theme" tools:ignore="MissingTranslation">系统</string>
+    <string name="light_theme" tools:ignore="MissingTranslation">光</string>
+    <string name="dark_theme" tools:ignore="MissingTranslation">深色</string>
+    <string name="theme_preference_title">主题</string>
+    <string name="theme_preference_summary">在整个应用中选择所需的主题。</string>
     <string name="time_format_12hrs_preference_title">时间格式 12 小时制</string>
     <string name="time_format_12hrs_preference_summary">使用 AM/PM 显示 12 小时</string>
+    <string name="social_integration_preference_title" tools:ignore="MissingTranslation">社交应用集成</string>
+    <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">允许您从这个应用程序中打开一个Whatsapp对话</string>
     <string name="whatsapp_integration_preference_title">Whatsapp整合</string>
     <string name="whatsapp_integration_preference_summary">允许您从这个应用程序中打开一个Whatsapp对话</string>
     <string name="t9_preference_title">T9 搜索</string>
@@ -157,7 +170,10 @@
     <string name="export_call_log">导出通话记录</string>
     <string name="failed_exporting_call_log">导出通话记录失败</string>
     <string name="exported_call_log_successfully">已成功导出通话记录</string>
-    <string name="sort_using_first_name">使用名字排序</string>
+    <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
+    <string name="sort_using_first_name">使用姓排序</string>
+    <string name="lock_to_portrait" tools:ignore="MissingTranslation">保持竖屏</string>
+    <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">手机旋转时不要旋转应用屏幕方向</string>
     <string name="add_shortcut">添加到主屏幕</string>
     <string name="added_shortcut">添加快捷方式成功</string>
     <string name="failed_adding_shortcut">添加快捷方式失败</string>
@@ -210,11 +226,30 @@
     <string name="call_filtering_category_summary">在 Android 10 及以上版本上启用</string>
     <string name="call_filtering_category_title">过滤来电</string>
     <string name="call_filtering_enable_call_filtering_title">启用来电过滤</string>
-    <string name="call_filtering_enable_call_filtering_summary">应该拦截来电</string>
+    <string name="call_filtering_enable_call_filtering_summary">将屏蔽未知来电</string>
     <string name="call_filtering_reject_calls_summary">开启将拒绝来电，关闭将使来电静音</string>
     <string name="call_filtering_reject_calls_title">阻止来电行为</string>
     <string name="device_not_supported_call_filtering">你的设备不支持来电过滤</string>
-    <string name="call_filtering_help_text">从现在起，来电过滤将静音所有不在你的联系人中出现的呼叫。你也可以选择拦截它们，手机会为你拒绝它们</string>
+    <string name="call_filtering_help_text">呼叫过滤将静音所有非联系人打来的电话。你也可以选择屏蔽它们，你的手机会为你拒绝它们</string>
+    <string name="contributors_title" tools:ignore="MissingTranslation">贡献者</string>
+    <string name="set_password_before_import" tools:ignore="MissingTranslation">在导入之前请先在首选项中设置密码</string>
+    <string name="t9_pinyin_title" tools:ignore="MissingTranslation">使用拼音的中文 T9</string>
+    <string name="t9_pinyin_summary" tools:ignore="MissingTranslation">将中文翻译为拼音来支持 T9</string>
+    <string name="share_as_text" tools:ignore="MissingTranslation">以文本形式分享</string>
+    <string name="name" tools:ignore="MissingTranslation">名称</string>
+    <string name="temp_contact" tools:ignore="MissingTranslation">临时联系人</string>
+    <string name="mark_contact_as_temporary" tools:ignore="MissingTranslation">是否标记联系人为临时？</string>
+    <string name="mark_contact_as_temporary_help_text" tools:ignore="MissingTranslation">标记为“临时”的联系人将在给定时间内被删除。默认是 1 个月。</string>
+    <string name="social_app_long_press" tools:ignore="MissingTranslation">长按社交应用程序图标</string>
+    <string name="long_press_social_app_help_text" tools:ignore="MissingTranslation">长按通话记录或联系人中的社交应用图标后，我们可以访问所有可用的社交应用集成。</string>
+    <string name="datasource_permissions_asking_text" tools:ignore="MissingTranslation">具有以上详细信息的应用正在请求以下权限</string>
+    <string name="authorize" tools:ignore="MissingTranslation">授权</string>
+    <string name="permissions_activity_title" tools:ignore="MissingTranslation">权限请求</string>
+    <string name="sim_card" tools:ignore="MissingTranslation">Sim 卡</string>
+    <string name="input_phone_number_content_description" tools:ignore="ExtraTranslation,MissingTranslation">请输入手机号码</string>
+    <string name="clear_phone_number_entered_content_description" tools:ignore="MissingTranslation">清除输入的电话号码</string>
+    <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">使用 sim1 通话</string>
+    <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">使用 sim2 通话</string>
     <string-array name="phone_number_types">
         <item>移动电话</item>
         <item>工作电话</item>
@@ -250,5 +285,15 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+    <string-array name="theme_preferences">
+        <item>@string/system_theme</item>
+        <item>@string/light_theme</item>
+        <item>@string/dark_theme</item>
+    </string-array>
+    <string-array name="social_integrations">
+        <item>Telegram</item>
+        <item>Whatsapp</item>
+        <item>Signal</item>
     </string-array>
 </resources>

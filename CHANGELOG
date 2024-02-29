@@ -1,3 +1,12 @@
+V29.0
+Bug fixes
+Auto cancel missed call notifications after landing on call log
+Landscape support
+Handle add contact intent raised by other apps
+Add support for partner apps
+Change theme based on system's current theme
+Accessibility - call log, contacts and dialer are now accessible
+Localization
 V28.0
 Ignore robo calls to avoid crashes across
 V27.0
@@ -260,7 +269,7 @@ Ability to move contact id which comes during call
 Added 'About' page in app
 
 v2
-Added checking for run time permissions 
+Added checking for run time permissions
 
 v1
 Add license

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string-array name="contributor_names">
+
         <item>Nat</item>
         <item>Sultanahamer</item>
         <item>slim dillen</item>
@@ -58,22 +59,11 @@
         <item>Marcel</item>
         <item>Gerald Söllinger</item>
         <item>temp warp</item>
-        <item>DuMuT6p</item>
         <item>Lukas Bukas</item>
-        <item>Jer Sapin</item>
-        <item>johnnydvc</item>
-        <item>Steve Ashcroft </item>
-        <item>Doug Webb</item>
-        <item>gafarma89</item>
         <item>Manu</item>
-        <item>Nicolas Kauffmann</item>
-        <item>Sultan ahamar</item>
-        <item>Matt Kay</item>
-        <item>Aoi Seaghdha</item>
-        <item>Arthur</item>
-        <item>Filo Roland</item>
         <item>David Babcock</item>
         <item>Intense Red</item>
+        <item>Steve Ashcroft </item>
         <item>Matteo Cossu</item>
         <item>Finn Krein</item>
         <item>VG</item>
@@ -95,20 +85,31 @@
         <item>lil5</item>
         <item>Forza Property</item>
         <item>tacticalDevC</item>
-        <item>tryagain</item>
-        <item>Web Master</item>
-        <item>Booteille</item>
-        <item>Ashraf</item>
-        <item>Ger Carra</item>
+        <item>Aoi Seaghdha</item>
         <item>Rbagman</item>
-        <item>AA</item>
-        <item>Katschibi Ajudu</item>
+        <item>Sultan ahamar</item>
+        <item>Doug Webb</item>
+        <item>gafarma89</item>
+        <item>Nicolas Kauffmann</item>
+        <item>Matt Kay</item>
         <item>LKV</item>
+        <item>Katschibi Ajudu</item>
+        <item>tryagain</item>
+        <item>Ger Carra</item>
+        <item>DuMuT6p</item>
         <item>maxmoon</item>
         <item>Nikhil Warke</item>
         <item>Gabor Haden</item>
+        <item>Jer Sapin</item>
+        <item>johnnydvc</item>
+        <item>Ashraf</item>
+        <item>Arthur</item>
+        <item>AA</item>
         <item>Coffee</item>
         <item>Licaon_Kter</item>
+        <item>Web Master</item>
+        <item>Booteille</item>
+        <item>Filo Roland</item>
         <item>Joyce  Tang</item>
         <item>pyramid3d</item>
         <item>earlgrey</item>
@@ -124,7 +125,11 @@
         <item>Владимир Малобродский</item>
         <item>ivysrono</item>
         <item>Mahaveer</item>
-        <item>gloomy-ghost</item>
+        <item>ghost</item>
+        <item>Matthias Bastron</item>
+        <item>Sheikh Hafijul Ali</item>
+        <item>Osiris-Team</item>
+        <item>12425 12425</item>
         <item>sultanahamer</item>
         <item>itsanogo</item>
         <item>pirujo</item>
@@ -135,12 +140,12 @@
         <item>opencontatcs</item>
         <item>lekol84653</item>
         <item>Acolyte</item>
-        <item>–°.–ö.</item>
+        <item>С.К.</item>
         <item>merkius</item>
         <item>taras3333</item>
         <item>hypnotichemionus</item>
         <item>Antonino</item>
-        <item>Veysel √áelebi</item>
+        <item>Veysel Çelebi</item>
         <item>Bastian W.</item>
         <item>fbd</item>
         <item>Big B</item>
@@ -158,8 +163,61 @@
         <item>00 7</item>
         <item>traube</item>
         <item>hfly</item>
+
+        <item>Docbroke</item>
+        <item>JP95Git</item>
+        <item>Smarty Tex</item>
+        <item>Arnoulfos Arnoulfos</item>
+        <item>vdbhb59</item>
+        <item>Martin Braun</item>
+        <item>n r</item>
+        <item>Ram S</item>
+        <item>Johannes Winter</item>
+        <item>Andy Kolcz</item>
+        <item>Wilhelm Hoegner</item>
+        <item>megitu</item>
+        <item>linsui</item>
+        <item>nidalbrolwinkel</item>
+        <item>Og Oglebee</item>
+        <item>Zandro</item>
+        <item>Alex</item>
+        <item>Jack</item>
+        <item>Luis Guilherme</item>
+        <item>charlesmulder</item>
+        <item>-</item>
+        <item>LFOM</item>
+        <item>Clear Code</item>
+        <item>Nomen Nescio</item>
+        <item>linux-leo</item>
+        <item>B DuBois</item>
+        <item>mike b</item>
+        <item>GitLab User</item>
+        <item>Evgeny K</item>
+        <item>Sylvia van Os</item>
+        <item>Monkesy</item>
+        <item>Simon Heimberg</item>
+        <item>Vladislav</item>
+        <item>🤖 GitLab Bot 🤖</item>
+        <item>Anonymous</item>
+
+        <item>txp_uli</item>
+        <item>Lionel HANNEQUIN</item>
+        <item>SubhamJena</item>
+        <item>Mustafa Alelg</item>
+        <item>danigarau</item>
+        <item>sabattin gurhan</item>
+        <item>A Turcorum</item>
+        <item>Anonimas3</item>
+        <item>Eldan Uver</item>
+        <item>Fabio Pasolini</item>
+        <item>Samuel</item>
+        <item>tiil357</item>
+        <item>inson1</item>
+        <item>hypnotichemionus1</item>
+
     </string-array>
     <string-array name="contributor_urls">
+
         <item>https://gitlab.com/abusr</item>
         <item>https://gitlab.com/sultanahamer</item>
         <item>https://gitlab.com/user0934</item>
@@ -217,22 +275,11 @@
         <item>https://gitlab.com/MarcelTUC</item>
         <item>https://gitlab.com/geraldco</item>
         <item>https://gitlab.com/warpty</item>
-        <item>https://gitlab.com/DuMuT6p</item>
         <item>https://gitlab.com/lukasbukas</item>
-        <item>https://gitlab.com/monbosapin</item>
-        <item>https://gitlab.com/johnnydvc</item>
-        <item>https://gitlab.com/valenman</item>
-        <item>https://gitlab.com/DougInAMug</item>
-        <item>https://gitlab.com/gafarma89</item>
         <item>https://gitlab.com/manulambda</item>
-        <item>https://gitlab.com/j-nicolas</item>
-        <item>https://gitlab.com/sultanahamar</item>
-        <item>https://gitlab.com/kewbey</item>
-        <item>https://gitlab.com/AoiSeaghdha</item>
-        <item>https://gitlab.com/arthurhfli</item>
-        <item>https://gitlab.com/feeleepino</item>
         <item>https://gitlab.com/locuturus</item>
         <item>https://gitlab.com/intnsred</item>
+        <item>https://gitlab.com/valenman</item>
         <item>https://gitlab.com/M_C</item>
         <item>https://gitlab.com/eulenteufel</item>
         <item>https://gitlab.com/visiongaming</item>
@@ -254,20 +301,31 @@
         <item>https://gitlab.com/lil5</item>
         <item>https://gitlab.com/forzapropertygroup</item>
         <item>https://gitlab.com/tacticalDevC</item>
-        <item>https://gitlab.com/tryagain</item>
-        <item>https://gitlab.com/interweb2020</item>
-        <item>https://gitlab.com/Booteille</item>
-        <item>https://gitlab.com/sidd.ashraf</item>
-        <item>https://gitlab.com/sefer</item>
+        <item>https://gitlab.com/AoiSeaghdha</item>
         <item>https://gitlab.com/Rbagman</item>
-        <item>https://gitlab.com/URnown</item>
-        <item>https://gitlab.com/Ajudu</item>
+        <item>https://gitlab.com/sultanahamar</item>
+        <item>https://gitlab.com/DougInAMug</item>
+        <item>https://gitlab.com/gafarma89</item>
+        <item>https://gitlab.com/j-nicolas</item>
+        <item>https://gitlab.com/kewbey</item>
         <item>https://gitlab.com/likivik</item>
+        <item>https://gitlab.com/Ajudu</item>
+        <item>https://gitlab.com/tryagain</item>
+        <item>https://gitlab.com/sefer</item>
+        <item>https://gitlab.com/DuMuT6p</item>
         <item>https://gitlab.com/maxmoon</item>
         <item>https://gitlab.com/nickdex</item>
         <item>https://gitlab.com/ghaden</item>
+        <item>https://gitlab.com/monbosapin</item>
+        <item>https://gitlab.com/johnnydvc</item>
+        <item>https://gitlab.com/sidd.ashraf</item>
+        <item>https://gitlab.com/arthurhfli</item>
+        <item>https://gitlab.com/URnown</item>
         <item>https://gitlab.com/Matrixcoffee</item>
         <item>https://gitlab.com/licaon-kter</item>
+        <item>https://gitlab.com/interweb2020</item>
+        <item>https://gitlab.com/Booteille</item>
+        <item>https://gitlab.com/feeleepino</item>
         <item>https://gitlab.com/jtpublic</item>
         <item>https://gitlab.com/pyramid3d</item>
         <item>https://gitlab.com/earlgrey-bis</item>
@@ -284,6 +342,10 @@
         <item>https://gitlab.com/ivysrono</item>
         <item>https://gitlab.com/mahaveerkilak</item>
         <item>https://gitlab.com/gloomy-ghost</item>
+        <item>https://gitlab.com/nukla</item>
+        <item>https://gitlab.com/hafijulali</item>
+        <item>https://gitlab.com/Osiris-Team</item>
+        <item>https://gitlab.com/12425</item>
         <item>https://crowdin.com/profile/sultanahamer</item>
         <item>https://crowdin.com/profile/itsanogo</item>
         <item>https://crowdin.com/profile/pirujo</item>
@@ -317,5 +379,56 @@
         <item>https://crowdin.com/profile/cygano10630</item>
         <item>https://crowdin.com/profile/traube</item>
         <item>https://crowdin.com/profile/hfly</item>
+
+        <item>https://gitlab.com/Docbroke1</item>
+        <item>https://gitlab.com/JP95Git</item>
+        <item>https://gitlab.com/Moostek</item>
+        <item>https://gitlab.com/Arnoulfos</item>
+        <item>https://gitlab.com/flossboxin</item>
+        <item>https://gitlab.com/martin-braun</item>
+        <item>https://gitlab.com/bico75</item>
+        <item>https://gitlab.com/rams2023</item>
+        <item>https://gitlab.com/y0va</item>
+        <item>https://gitlab.com/tx400az</item>
+        <item>https://gitlab.com/whoegner72</item>
+        <item>https://gitlab.com/megitu</item>
+        <item>https://gitlab.com/linsui</item>
+        <item>https://gitlab.com/nidal-tech</item>
+        <item>https://gitlab.com/Oggggg</item>
+        <item>https://gitlab.com/zandro</item>
+        <item>https://gitlab.com/lustraciimoilustracii</item>
+        <item>https://gitlab.com/jacklinzoho</item>
+        <item>https://gitlab.com/misterAnderson90</item>
+        <item>https://gitlab.com/charlesmulder</item>
+        <item>https://gitlab.com/ZYX-001</item>
+        <item>https://gitlab.com/lfomartins</item>
+        <item>https://gitlab.com/Tchka</item>
+        <item>https://gitlab.com/pohlenius</item>
+        <item>https://gitlab.com/linux-leo1</item>
+        <item>https://gitlab.com/linedry</item>
+        <item>https://gitlab.com/bolsunovskyi</item>
+        <item>https://gitlab.com/gitlabUser9955</item>
+        <item>https://gitlab.com/avyses</item>
+        <item>https://gitlab.com/TheLastProject</item>
+        <item>https://gitlab.com/monkesy</item>
+        <item>https://gitlab.com/SimonHeimberg</item>
+        <item>https://gitlab.com/guardi</item>
+        <item>https://gitlab.com/gitlab-bot</item>
+        <item>https://gitlab.com/bifngAuivrgav</item>
+        <item>https://crowdin.com/profile/txp_uli</item>
+        <item>https://crowdin.com/profile/Lionel-HANNEQUIN</item>
+        <item>https://crowdin.com/profile/SubhamJena</item>
+        <item>https://crowdin.com/profile/mstfelg</item>
+        <item>https://crowdin.com/profile/danigarau</item>
+        <item>https://crowdin.com/profile/ayse0449</item>
+        <item>https://crowdin.com/profile/aturcorum</item>
+        <item>https://crowdin.com/profile/Anonimas3</item>
+        <item>https://crowdin.com/profile/endeco</item>
+        <item>https://crowdin.com/profile/fpasolini14</item>
+        <item>https://crowdin.com/profile/samuelmarc</item>
+        <item>https://crowdin.com/profile/tiil357</item>
+        <item>https://crowdin.com/profile/inson1</item>
+        <item>https://crowdin.com/profile/hypnotichemionus1</item>
+
     </string-array>
 </resources>

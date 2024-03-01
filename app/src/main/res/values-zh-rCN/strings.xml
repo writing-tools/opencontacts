@@ -110,8 +110,8 @@
     <string name="email">电子邮件地址</string>
     <string name="add_more">添加更多</string>
     <string name="address">地址</string>
-    <string name="firstname">姓</string>
-    <string name="lastname">名</string>
+    <string name="firstname">名</string>
+    <string name="lastname">姓</string>
     <string name="warning">警告</string>
     <string name="still_on_old_db_resolution">请导出联系人，然后使用菜单删除所有联系人，之后再导入以完成应用程序升级。否则该应用运行时将出现错误。</string>
     <string name="copied_to_clipboard">已复制到剪切板</string>
@@ -171,7 +171,7 @@
     <string name="failed_exporting_call_log">导出通话记录失败</string>
     <string name="exported_call_log_successfully">已成功导出通话记录</string>
     <string name="started_exporting_call_log" tools:ignore="MissingTranslation">Started exporting call log</string>
-    <string name="sort_using_first_name">使用姓排序</string>
+    <string name="sort_using_first_name">使用名字排序</string>
     <string name="lock_to_portrait" tools:ignore="MissingTranslation">保持竖屏</string>
     <string name="lock_to_portrait_summary" tools:ignore="MissingTranslation">手机旋转时不要旋转应用屏幕方向</string>
     <string name="add_shortcut">添加到主屏幕</string>

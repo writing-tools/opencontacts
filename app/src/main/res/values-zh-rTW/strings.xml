@@ -110,8 +110,8 @@
     <string name="email">Email</string>
     <string name="add_more">添加更多</string>
     <string name="address">地址</string>
-    <string name="firstname">姓</string>
-    <string name="lastname">名</string>
+    <string name="firstname">名</string>
+    <string name="lastname">姓</string>
     <string name="warning">警告</string>
     <string name="still_on_old_db_resolution">請導出聯絡人信息，然後在菜單中選擇刪除應用中的全部聯絡人，之後再完成軟件升級。否則該應用可能會出現錯誤。</string>
     <string name="copied_to_clipboard">已經複製到粘貼板</string>

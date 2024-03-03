@@ -55,7 +55,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
     private final OnLongClickListener onLongClicked = v -> {
         if (contactsListActionsListener == null)
             return false;
-        Contact contact = (Contact) v.getTag();
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
         contactsListActionsListener.onLongClick(contact);
         return true;
     };
@@ -75,7 +75,7 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
     private final OnClickListener showContactDetails = v -> {
         if (contactsListActionsListener == null)
             return;
-        Contact contact = (Contact) v.getTag();
+        Contact contact = (Contact) ((View) v.getParent()).getTag();
         contactsListActionsListener.onShowDetails(contact);
     };
     private final OnClickListener openSocialApp = v -> {
@@ -128,8 +128,9 @@ public class ContactsListViewAdapter extends ArrayAdapter<Contact> {
             socialIcon.setContentDescription(defaultSocialAppEnabled(context) + " " + contact.name);
         } else socialIcon.setVisibility(GONE);
         convertView.setTag(contact);
-        convertView.setOnClickListener(showContactDetails);
-        convertView.setOnLongClickListener(onLongClicked);
+        View contactDetails = convertView.findViewById(R.id.contact_details);
+        contactDetails.setOnClickListener(showContactDetails);
+        contactDetails.setOnLongClickListener(onLongClicked);
         return convertView;
     }
 

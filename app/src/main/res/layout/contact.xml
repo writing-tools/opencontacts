@@ -7,7 +7,32 @@
     android:paddingBottom="10dp"
     android:layout_height="match_parent">
 
+    <RelativeLayout
+        android:id="@+id/contact_details"
+        android:layout_toRightOf="@id/button_action1"
+        android:layout_toEndOf="@id/button_action1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" >
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_full_name"
+            android:text="name"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="?android:textColorPrimary"
+            android:layout_alignParentTop="true"
+            />
+
+        <TextView
+            android:layout_below="@id/textview_full_name"
+            android:text="phone_number"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/textview_phone_number"
+            />
+    </RelativeLayout>
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_marginLeft="5dp"
         android:layout_width="wrap_content"
@@ -19,18 +44,6 @@
         android:layout_marginStart="5dp"
         android:layout_marginEnd="10dp" />
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_full_name"
-        android:text="name"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        android:textColor="?android:textColorPrimary"
-        android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@id/button_social"
-        android:layout_toRightOf="@id/button_action1"
-        android:layout_toEndOf="@id/button_action1"
-        android:layout_toStartOf="@id/button_social" />
 
     <opencontacts.open.com.opencontacts.components.ImageButtonWithTint
         android:layout_width="wrap_content"
@@ -54,13 +67,4 @@
         android:layout_toLeftOf="@id/button_action2"
         android:layout_toStartOf="@id/button_action2" />
 
-    <TextView
-        android:layout_below="@id/textview_full_name"
-        android:text="phone_number"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/textview_phone_number"
-        android:layout_toRightOf="@id/button_action1"
-        android:layout_toEndOf="@id/button_action1" />
 </RelativeLayout>

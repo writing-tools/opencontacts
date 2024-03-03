@@ -44,6 +44,8 @@ In case you want to write a feature, you can follow the steps below
 5. Raise the merge request(pull request)
 
 Our community will test the feature, will have basic code review and voila your merge request will be merged
+## Screenshots
+<img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/1-Call-log.png" alt="screenshot-1" width=400 > <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/2-Editcontact.png" alt="screenshot-1" width=400> <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/3-Preferences.png" alt="screenshot-1" width=400>
 ## Contributors ✨
 
 Thanks goes to these wonderful people ([emoji key](https://allcontributors.org/docs/en/emoji-key)):

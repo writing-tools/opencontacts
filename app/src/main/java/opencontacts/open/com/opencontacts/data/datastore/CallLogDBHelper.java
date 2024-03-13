@@ -174,7 +174,7 @@ class CallLogDBHelper {
         return findWithQuery(CallLogEntry.class, "select * from call_log_entry where contact_id= ? order by date desc limit ? offset ?", String.valueOf(contactId), String.valueOf(CALL_LOG_ENTRIES_CHUNK_SIZE), String.valueOf(offset));
     }
 
-    static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber) {
-        return find(CallLogEntry.class, "phone_Number = ?", new String[]{phoneNumber}, null, "date desc", null);
+    static List<CallLogEntry> getCallLogEntriesFor(String phoneNumber, int offset) {
+        return findWithQuery(CallLogEntry.class, "select * from call_log_entry where phone_Number = ? order by date desc limit ? offset ?", String.valueOf(phoneNumber), String.valueOf(CALL_LOG_ENTRIES_CHUNK_SIZE), String.valueOf(offset));
     }
 }

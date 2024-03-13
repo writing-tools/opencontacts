@@ -217,7 +217,7 @@ public class CallLogDataStore {
 
     public static List<CallLogEntry> getCallLogEntriesForContactWith(String phoneNumber, int offset) {
         opencontacts.open.com.opencontacts.orm.Contact contact = ContactsDataStore.getContact(phoneNumber);
-        if (contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber);
+        if (contact == null) return CallLogDBHelper.getCallLogEntriesFor(phoneNumber, offset);
         return getCallLogEntriesFor(contact.getId(), offset);
     }
 

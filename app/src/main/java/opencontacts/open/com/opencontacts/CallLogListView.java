@@ -143,8 +143,8 @@ public class CallLogListView extends RelativeLayout implements DataStoreChangeLi
             Contact contact = ContactsDataStore.getContactWithId(contactId);
             if (contact == null)
                 return;
-            Intent showContactDetails1 = AndroidUtils.getIntentToShowContactDetails(contactId, CallLogListView.this.context);
-            context.startActivity(showContactDetails1);
+            Intent showContactDetailsIntent = AndroidUtils.getIntentToShowContactDetails(contactId, CallLogListView.this.context);
+            context.startActivity(showContactDetailsIntent);
         };
 
         final OnLongClickListener callLogEntryLongClickListener = v -> {

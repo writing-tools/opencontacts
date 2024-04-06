@@ -11,6 +11,8 @@
         android:id="@+id/contact_details"
         android:layout_toRightOf="@id/button_action1"
         android:layout_toEndOf="@id/button_action1"
+        android:layout_toLeftOf="@id/button_social"
+        android:layout_toStartOf="@id/button_social"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" >
 

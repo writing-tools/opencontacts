@@ -67,6 +67,7 @@ dependencies {
     implementation 'com.googlecode.ez-vcard:ez-vcard:0.11.2'
     implementation 'com.squareup.okhttp3:okhttp:4.9.0'
     implementation('com.squareup.okhttp3:logging-interceptor:4.9.0')
+    implementation 'io.github.rburgst:okhttp-digest:3.1.0'
     implementation 'com.github.satyan:sugar:1.5'
     implementation 'com.github.javadev:underscore:1.39'
     implementation 'io.michaelrocks:libphonenumber-android:8.13.7'

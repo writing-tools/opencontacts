@@ -7,7 +7,7 @@
         <DropDownPreference android:defaultValue="Light Theme"
             android:key="THEME_PREFERENCES_KEY"
             android:summary="@string/theme_preference_summary"
-            android:title="@string/theme_preference_title" 
+            android:title="@string/theme_preference_title"
             android:entries="@array/theme_preferences"
             android:entryValues="@array/theme_preferences"/>
         <SwitchPreference
@@ -124,5 +124,14 @@
             android:key="rejectCalls"
             android:summary="@string/call_filtering_reject_calls_summary"
             android:title="@string/call_filtering_reject_calls_title" />
+    </PreferenceCategory>
+    <PreferenceCategory
+        app:key="Sync"
+        app:title="Sync">
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="SYNC_DEBUG_LOGS"
+        android:title="@string/sync_debug_logs_title"
+        />
     </PreferenceCategory>
 </PreferenceScreen>

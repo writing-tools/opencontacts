@@ -1,19 +1,32 @@
 package opencontacts.open.com.opencontacts.utils;
 
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.debugLogsEnabledForSync;
+
+import android.content.Context;
+
 import androidx.annotation.NonNull;
+
+import com.burgstaller.okhttp.AuthenticationCacheInterceptor;
+import com.burgstaller.okhttp.CachingAuthenticatorDecorator;
+import com.burgstaller.okhttp.DefaultRequestCacheKeyProvider;
+import com.burgstaller.okhttp.DispatchingAuthenticator;
+import com.burgstaller.okhttp.basic.BasicAuthenticator;
+import com.burgstaller.okhttp.digest.CachingAuthenticator;
+import com.burgstaller.okhttp.digest.Credentials;
+import com.burgstaller.okhttp.digest.DigestAuthenticator;
 
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManager;
 import javax.net.ssl.X509TrustManager;
 
-import okhttp3.Credentials;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
-import opencontacts.open.com.opencontacts.BuildConfig;
 
 public class NetworkUtils {
 
@@ -56,23 +69,30 @@ public class NetworkUtils {
     }
 
     @NonNull
-    public static OkHttpClient getHttpClientWithBasicAuth(String username, String password, boolean shouldIgnoreSSL) {
-        boolean isDebugBuild = BuildConfig.BUILD_TYPE.equals("debug");
+    public static OkHttpClient createHttpClientWithAuth(String username, String password, boolean shouldIgnoreSSL, Context context) {
         HttpLoggingInterceptor logger = new HttpLoggingInterceptor();
-        logger.level(isDebugBuild ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
+        logger.level(debugLogsEnabledForSync(context) ? HttpLoggingInterceptor.Level.BODY : HttpLoggingInterceptor.Level.NONE);
         OkHttpClient.Builder okHTTPClientBuilder = shouldIgnoreSSL ? getUnsafeOkHttpClientBuilder() : new OkHttpClient.Builder();
+        final Map<String, CachingAuthenticator> authCache = new ConcurrentHashMap<>();
+
+        final Credentials credentials = new Credentials(username, password);
+        final BasicAuthenticator basicAuthenticator = new BasicAuthenticator(credentials);
+        final DigestAuthenticator digestAuthenticator = new DigestAuthenticator(credentials);
+
+        // note that all auth schemes should be registered as lowercase!
+        DispatchingAuthenticator authenticator = new DispatchingAuthenticator.Builder()
+            .with("digest", digestAuthenticator)
+            .with("basic", basicAuthenticator)
+            .build();
+
         return okHttpClient = okHTTPClientBuilder
             .addInterceptor(logger)
-            .authenticator((route, response) -> {
-                String basicAuthentication = Credentials.basic(username, password);
-                return response.request()
-                    .newBuilder()
-                    .addHeader("Authorization", basicAuthentication)
-                    .build();
-            }).build();
+            .authenticator(new CachingAuthenticatorDecorator(authenticator, authCache))
+            .addInterceptor(new AuthenticationCacheInterceptor(authCache, new DefaultRequestCacheKeyProvider()))
+            .build();
     }
 
-    public static OkHttpClient getHttpClientWithBasicAuth() {
+    public static OkHttpClient getHttpClientWithAuth() {
         if (okHttpClient == null)
             throw new RuntimeException("Initialize okhttp client before requesting for one with creds.");
         return okHttpClient;

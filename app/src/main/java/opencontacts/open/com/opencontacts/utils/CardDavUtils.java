@@ -14,7 +14,6 @@ import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.XML_TAG_
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.XML_TAG_STATUS;
 import static opencontacts.open.com.opencontacts.utils.CARDDAVConstants.XML_TAG_SYNC_TOKEN;
 import static opencontacts.open.com.opencontacts.utils.Common.map;
-import static opencontacts.open.com.opencontacts.utils.NetworkUtils.getHttpClientWithBasicAuth;
 import static opencontacts.open.com.opencontacts.utils.XMLParsingUtils.createXMLDocument;
 import static opencontacts.open.com.opencontacts.utils.XMLParsingUtils.getText;
 
@@ -50,7 +49,7 @@ public class CardDavUtils {
     public static final String HTTP_HEADER_E_TAG = "ETag";
 
     public static String figureOutAddressBookUrl(String baseUrl, String username, CheekyCarddavServerStuff carddavServerType, Context context) {
-        OkHttpClient okHttpClient = getHttpClientWithBasicAuth();
+        OkHttpClient okHttpClient = NetworkUtils.getHttpClientWithAuth();
         Request request = new Request.Builder()
             .method(HTTP_METHOD_PROPFIND, null)
             .addHeader(HTTP_HEADER_DEPTH, String.valueOf(1))
@@ -103,7 +102,7 @@ public class CardDavUtils {
             .header("depth", "1") //failing on nextcloud sabre dav server if depth is 0
             .url(addressBookUrl)
             .build();
-        Response addressBookResponse = getHttpClientWithBasicAuth()
+        Response addressBookResponse = NetworkUtils.getHttpClientWithAuth()
             .newCall(addressBookDownloadRequest)
             .execute();
         if (addressBookResponse.isSuccessful())
@@ -129,7 +128,7 @@ public class CardDavUtils {
     }
 
     public static Pair<String, String> createContactOnServer(VCardData vcardData, String addressBookUrl, String baseUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         String newContactUrl = addressBookUrl + vcardData.uid + ".vcf";
         Request createContactRequest = new Request.Builder()
             .url(baseUrl + newContactUrl)
@@ -149,7 +148,7 @@ public class CardDavUtils {
 
     @Nullable
     private static String getVCardEtag(String baseUrl, String newContactUrl) throws IOException {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         Response getVCardResponse = httpClientWithBasicAuth.newCall(new Request.Builder()
             .url(baseUrl + newContactUrl)
             .get()
@@ -161,7 +160,7 @@ public class CardDavUtils {
     }
 
     public static String updateContactOnServer(VCardData vcardData, String baseUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                 .put(RequestBody.create(null, vcardData.vcardDataAsString))
@@ -178,7 +177,7 @@ public class CardDavUtils {
     }
 
     public static boolean deleteVCardOnServer(VCardData vcardData, String baseUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                 .delete()
@@ -192,10 +191,10 @@ public class CardDavUtils {
         return false;
     }
 
-    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType, String addressBookUrl) {
+    public static boolean areNotValidDetails(String url, String username, String password, boolean shouldIgnoreSSL, CheekyCarddavServerStuff carddavServerType, String addressBookUrl, Context context) {
         String addressBookBasedUrl = addressBookUrl == null ? "" : url + addressBookUrl;
         String urlToTest = getBaseURL(addressBookBasedUrl).equals(url) ? addressBookBasedUrl : carddavServerType.getValidateServerUrl(url, username);
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth(username, password, shouldIgnoreSSL);
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.createHttpClientWithAuth(username, password, shouldIgnoreSSL, context);
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, null)
@@ -221,7 +220,7 @@ public class CardDavUtils {
     }
 
     public static String getSyncToken(String baseUrl, String addressBookUrl) {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                 .method(HTTP_METHOD_PROPFIND, RequestBody.create(null, "<d:propfind xmlns:d=\"DAV:\" xmlns:cs=\"http://calendarserver.org/ns/\">\n" +
@@ -249,7 +248,7 @@ public class CardDavUtils {
     }
 
     public static Pair<List<String>, List<String>> getChangesSinceSyncToken(String synctoken, String baseUrl, String addressBookUrl) throws Exception {
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         List<String> updatedOrAdded = new ArrayList<>(0);
         List<String> deleted = new ArrayList<>(0);
         Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
@@ -280,7 +279,7 @@ public class CardDavUtils {
 
     public static List<Triplet<String, String, VCard>> getVcardsWithHrefs(List<String> hrefs, String baseUrl, String addressBookUrl) {
         if (hrefs.isEmpty()) return new ArrayList<>(0);
-        OkHttpClient httpClientWithBasicAuth = getHttpClientWithBasicAuth();
+        OkHttpClient httpClientWithBasicAuth = NetworkUtils.getHttpClientWithAuth();
         try {
             Response response = httpClientWithBasicAuth.newCall(new Request.Builder()
                 .method(HTTP_METHOD_REPORT, RequestBody.create(null, getRequestBodyToFetchVCardsWithHrefs(hrefs)))

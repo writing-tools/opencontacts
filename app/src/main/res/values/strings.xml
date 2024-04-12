@@ -168,6 +168,7 @@
     <string name="social_integration_preference_summary" tools:ignore="MissingTranslation">Enables you to open a telegram/whatsapp conversation right from this app</string>
     <string name="whatsapp_integration_preference_title">Whatsapp integration</string>
     <string name="whatsapp_integration_preference_summary">Enables you to open a whatsapp conversation right from this app</string>
+    <string name="sync_debug_logs_title" tools:ignore="MissingTranslation">Debug logs</string>
     <string name="t9_preference_title">T9 Search</string>
     <string name="t9_preference_summary">Enables quick search using T9 keyboard</string>
     <string name="default_sim_calls_preference_title">Default Sim for calls</string>

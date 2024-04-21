@@ -453,12 +453,33 @@ public class DomainUtils {
         return contact.lastName == null || isEmpty(contact.lastName.trim()) ? contact.name : contact.lastName;
     }
 
+    public static int comparatorToMoveContactsWithoutPhoneNumbersToTheBottom(Contact cont1, Contact cont2){
+        int phoneNumbersInCont1 = cont1.phoneNumbers.size();
+        int phoneNumbersInCont2 = cont2.phoneNumbers.size();
+//        not easily readable code below for comparator performance, reduce number of checks/lines
+        if(phoneNumbersInCont1 == 0){
+            if(phoneNumbersInCont2 == 0) return 0;
+            else return 1;
+        } else if(phoneNumbersInCont2 == 0) return -1;
+        else return 0;
+//        less performant but readable example below
+//        if(phoneNumbersInCont1 == 0 && phoneNumbersInCont2 == 0) return 0;
+//        if(phoneNumbersInCont1 == 0) return 1;
+//        if(phoneNumbersInCont2 == 0) return -1;
+//        return 0;
+    }
     @NonNull
     public static Comparator<Contact> getContactComparatorBasedOnName(Context context) {
         if (shouldSortUsingFirstName(context))
-            return (contact1, contact2) -> contact1.name.compareToIgnoreCase(contact2.name);
+            return (contact1, contact2) -> {
+                int noPhonenumbersComparisonResult = comparatorToMoveContactsWithoutPhoneNumbersToTheBottom(contact1, contact2);
+                return noPhonenumbersComparisonResult == 0 ? contact1.name.compareToIgnoreCase(contact2.name) : noPhonenumbersComparisonResult;
+            };
         else
-            return (contact1, contact2) -> getLastNameOrFullInCaseEmpty(contact1).compareToIgnoreCase(getLastNameOrFullInCaseEmpty(contact2));
+            return (contact1, contact2) -> {
+                int noContactsComparisonResult = comparatorToMoveContactsWithoutPhoneNumbersToTheBottom(contact1, contact2);
+                return noContactsComparisonResult == 0 ? getLastNameOrFullInCaseEmpty(contact1).compareToIgnoreCase(getLastNameOrFullInCaseEmpty(contact2)) : noContactsComparisonResult;
+            };
     }
 
     @NonNull

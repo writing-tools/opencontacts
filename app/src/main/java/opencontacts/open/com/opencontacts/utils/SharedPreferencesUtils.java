@@ -14,14 +14,13 @@ import static opencontacts.open.com.opencontacts.utils.AndroidUtils.updatePrefer
 import static opencontacts.open.com.opencontacts.utils.Common.hasItBeen;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.content.SharedPreferences;
 import android.graphics.Point;
+import android.text.TextUtils;
 
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Set;
 
 import opencontacts.open.com.opencontacts.BuildConfig;
@@ -72,6 +71,7 @@ public class SharedPreferencesUtils {
     public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
     public static final String CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY = "rejectCalls";
     public static final String SYNC_DEBUG_LOGS = "SYNC_DEBUG_LOGS";
+    public static final String STORAGE_LOCATION = "STORAGE_LOCATION";
 
     public static String getDefaultSocialCountryCode(Context context) {
         return getAppsSharedPreferences(context)
@@ -300,6 +300,17 @@ public class SharedPreferencesUtils {
 
     public static boolean debugLogsEnabledForSync(Context context) {
         return getBoolean(SYNC_DEBUG_LOGS, false, context);
+    }
+
+    public static boolean hasExportLocation(Context context) {
+        return !TextUtils.isEmpty(exportLocation(context));
+    }
+    public static String exportLocation(Context context) {
+        return getStringFromPreferences(STORAGE_LOCATION, "", context);
+    }
+
+    public static void setExportLocation(String uri, Context context) {
+       getAppsSharedPreferences(context).edit().putString(STORAGE_LOCATION, uri).apply();
     }
 
 }

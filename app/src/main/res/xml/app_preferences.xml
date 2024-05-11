@@ -73,8 +73,8 @@
             android:summary="@string/should_use_system_app_summary"
             android:title="@string/should_use_system_app" />
         <Preference
-            android:title="Choose custom font size"
-            android:summary="Increase or decrease the size of text across app"
+            android:title="@string/custom_font_size_title"
+            android:summary="@string/custom_font_size_description"
             android:key="TEXT_SIZE_SCALING" />
 
     </PreferenceCategory>
@@ -98,11 +98,14 @@
         app:key="Export"
         app:title="Export">
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="exportContactsEveryWeek"
             android:summary="@string/auto_export_contacts_summary"
             android:title="@string/auto_export_contacts_title" />
-
+        <Preference
+            android:title="Export directory"
+            android:summary="Used for exporting contacts, call log etc"
+            android:key="STORAGE_LOCATION" />
         <EditTextPreference
             android:key="encryptingContactsExportKey"
             android:summary="@string/encrypt_contacts_export_password_summary"

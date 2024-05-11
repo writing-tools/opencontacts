@@ -3,9 +3,12 @@ package opencontacts.open.com.opencontacts.activities;
 
 import static android.app.role.RoleManager.ROLE_CALL_SCREENING;
 import static android.widget.Toast.LENGTH_SHORT;
+import static android.widget.Toast.makeText;
 import static open.fontscaling.SharePrefUtil.TEXT_SIZE_SCALING_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.STORAGE_LOCATION_CHOOSER_RESULT;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.blockUIUntil;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.runOnMainDelayed;
+import static opencontacts.open.com.opencontacts.utils.Common.safeExec;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.getSimNames;
 import static opencontacts.open.com.opencontacts.utils.PhoneCallUtils.hasMultipleSims;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.COMMON_SHARED_PREFS_FILE_NAME;
@@ -13,40 +16,45 @@ import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DE
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SIM_SELECTION_SYSTEM_DEFAULT;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.DEFAULT_SOCIAL_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.ENABLE_CALL_FILTERING_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.THEME_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SHOULD_USE_SYSTEM_PHONE_APP;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SIM_PREFERENCE_SHARED_PREF_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.STORAGE_LOCATION;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_PINYIN_ENABLED_SHARED_PREF_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.T9_SEARCH_ENABLED_SHARED_PREF_KEY;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.SOCIAL_INTEGRATION_ENABLED_PREFERENCE_KEY;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.THEME_PREFERENCES_KEY;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.disableSocialIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableCallFiltering;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.enableSocialappIntegration;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getDefaultSocialCountryCode;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getPreferredSim;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.isSocialIntegrationEnabled;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.setExportLocation;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.role.RoleManager;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.text.InputType;
+import android.util.TypedValue;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.appcompat.widget.AppCompatEditText;
+import androidx.fragment.app.FragmentManager;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceCategory;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.PreferenceGroup;
-import androidx.appcompat.view.ContextThemeWrapper;
-import androidx.appcompat.widget.AppCompatEditText;
-import android.text.InputType;
-import android.util.TypedValue;
-import android.widget.Toast;
 
 import com.github.underscore.Supplier;
 import com.github.underscore.U;
@@ -56,7 +64,6 @@ import java.util.HashMap;
 
 import open.fontscaling.FontScalePreferenceHandler;
 import opencontacts.open.com.opencontacts.R;
-import opencontacts.open.com.opencontacts.components.TintedDrawablesStore;
 import opencontacts.open.com.opencontacts.data.datastore.ContactsDataStore;
 
 public class PreferencesActivity extends AppBaseActivity {
@@ -64,6 +71,7 @@ public class PreferencesActivity extends AppBaseActivity {
     public static final String PREFERENCE_FRAGMENT_TRANSACTION_TAG = "preference";
     public static final int REQUEST_TO_BECOMING_CALL_SCREENER = 22557;
     public static final String GENERAL_PREF_GROUP = "General";
+    public static final String EXPORT_PREF_GROUP = "Export";
     public static final String CALL_FILTERING_PREF_GROUP = "CallFiltering";
 
     @Override
@@ -103,6 +111,7 @@ public class PreferencesActivity extends AppBaseActivity {
             addPreferencesFromResource(R.xml.app_preferences);
             addConditionalPreferences();
             initFontScalePreference();
+            initExportLocationPreference();
         }
 
         private void addConditionalPreferences() {
@@ -117,6 +126,24 @@ public class PreferencesActivity extends AppBaseActivity {
             Preference fontScalPreference = ((PreferenceCategory) getPreferenceScreen().findPreference(GENERAL_PREF_GROUP)).findPreference(TEXT_SIZE_SCALING_SHARED_PREF_KEY);
             fontScalPreference.setOnPreferenceClickListener(preference -> {
                 new FontScalePreferenceHandler(activity).open();
+                return true;
+            });
+        }
+
+        private void initExportLocationPreference() {
+            Preference exportLocationPreference = ((PreferenceCategory) getPreferenceScreen().findPreference(EXPORT_PREF_GROUP)).findPreference(STORAGE_LOCATION);
+            exportLocationPreference.setOnPreferenceClickListener(preference -> {
+                new AlertDialog.Builder(activity)
+                    .setTitle(R.string.choose_export_location)
+                    .setMessage(R.string.choose_export_location_detail)
+                    .setNeutralButton(R.string.okay, null)
+                    .setOnDismissListener(dialog -> {
+                        Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+                        i.addCategory(Intent.CATEGORY_DEFAULT);
+                        activity.startActivityForResult(Intent.createChooser(i, "Choose directory"), STORAGE_LOCATION_CHOOSER_RESULT);
+                    })
+                    .create()
+                    .show();
                 return true;
             });
         }
@@ -270,6 +297,29 @@ public class PreferencesActivity extends AppBaseActivity {
             if (resultCode != Activity.RESULT_OK) return;
             enableCallFiltering(this);
             recreate();
+            return;
+        }
+        if (requestCode == STORAGE_LOCATION_CHOOSER_RESULT) {
+            safeExec(() -> data.getData(), uri -> {
+                if(uri == null) {
+                    makeText(this, R.string.failure_setting_export_directory, Toast.LENGTH_LONG).show();
+                    return;
+                }
+                takePersistablePermissionsOnUri(data);
+                setExportLocation(uri.toString(), this);
+            }, ignore -> makeText(this, R.string.failure_setting_export_directory, Toast.LENGTH_LONG).show());
+            return;
+        }
+
+    }
+
+    @SuppressLint("WrongConstant")
+    private void takePersistablePermissionsOnUri(Intent data) {
+        final int takeFlags = data.getFlags()
+            & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+            | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            getContentResolver().takePersistableUriPermission(data.getData(), takeFlags);
         }
     }
 }

@@ -165,4 +165,16 @@ public class Common {
         return text.replaceAll(" ", "");
     }
 
+    public static <T> void safeExec(Supplier<T> stuff, Consumer<T> onSuccess, Consumer<Exception> onFailure) {
+        try{
+            onSuccess.accept(stuff.get());
+        }
+        catch (Exception e){
+            onFailure.accept(e);
+        }
+    }
+
+    public interface Supplier<T> {
+        T get() throws Exception;
+    }
 }

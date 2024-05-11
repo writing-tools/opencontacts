@@ -3,22 +3,24 @@ package opencontacts.open.com.opencontacts.utils;
 import static android.app.Notification.EXTRA_TITLE;
 import static android.text.TextUtils.isEmpty;
 import static android.widget.Toast.LENGTH_LONG;
-import static opencontacts.open.com.opencontacts.BuildConfig.DEBUG;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDirectory;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.processAsync;
 import static opencontacts.open.com.opencontacts.utils.Common.appendNewLineIfNotEmpty;
 import static opencontacts.open.com.opencontacts.utils.Common.getOrDefault;
 import static opencontacts.open.com.opencontacts.utils.Common.mapIndexes;
 import static opencontacts.open.com.opencontacts.utils.Common.replaceAccentedCharactersWithEnglish;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.exportLocation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getEncryptingContactsKey;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasEncryptingContactsKey;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasExportLocation;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.is12HourFormatEnabled;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldSortUsingFirstName;
 import static opencontacts.open.com.opencontacts.utils.VCardUtils.getVCardFromString;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.net.Uri;
 import android.os.Build;
-import android.os.Environment;
 import android.provider.CallLog;
 import android.service.notification.StatusBarNotification;
 import android.text.TextUtils;
@@ -29,6 +31,7 @@ import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.core.content.pm.ShortcutInfoCompat;
 import androidx.core.content.pm.ShortcutManagerCompat;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.github.underscore.U;
 import com.opencsv.CSVWriterBuilder;
@@ -41,10 +44,9 @@ import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
 import net.sourceforge.pinyin4j.format.exception.BadHanyuPinyinOutputFormatCombination;
 
 import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -104,7 +106,6 @@ public class DomainUtils {
     public static TelephoneType defaultPhoneNumberType = TelephoneType.CELL;
     public static AddressType defaultAddressType = AddressType.HOME;
     public static EmailType defaultEmailType = EmailType.HOME;
-    public static String STORAGE_DIRECTORY_NAME = DEBUG ? "DOpenContacts" : "OpenContacts";
 
     static {
         initializeT9Mapping();
@@ -158,41 +159,38 @@ public class DomainUtils {
     }
 
     public static void exportAllContacts(Context context) throws Exception {
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            AndroidUtils.runOnMainDelayed(() -> AndroidUtils.toastFromNonUIThread(R.string.storage_not_mounted, LENGTH_LONG, context), 0);
-            return;
+        if (!hasExportLocation(context) || !isValidDirectory(exportLocation(context), context)) {
+            AndroidUtils.runOnMainDelayed(() -> AndroidUtils.toastFromNonUIThread(R.string.no_valid_export_location, LENGTH_LONG, context), 0);
+            throw new Exception("Valid export location not set");
         }
 
         byte[] plainTextExportBytes = getVCFExportBytes(ContactsDataStore.getAllContacts(), ContactsDataStore.getFavorites());
-        createOpenContactsDirectoryIfItDoesNotExist();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
         if (hasEncryptingContactsKey(context))
             exportAsEncryptedZip(context, plainTextExportBytes, simpleDateFormat);
-        else exportAsPlainTextVCFFile(plainTextExportBytes, simpleDateFormat);
+        else exportAsPlainTextVCFFile(plainTextExportBytes, simpleDateFormat, context);
     }
 
-    private static void createOpenContactsDirectoryIfItDoesNotExist() throws Exception {
-        File openContactsDirectory = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME);
-        if (openContactsDirectory.exists()) return;
-        boolean directoryCreated = openContactsDirectory.mkdir();
-        if (!directoryCreated) throw new Exception("Directory creation has failed...");
-    }
-
-    private static void exportAsPlainTextVCFFile(byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat) throws IOException {
-        FileOutputStream fileOutputStream = null;
+    private static void exportAsPlainTextVCFFile(byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat, Context context) throws Exception {
+        OutputStream fileOutputStream = null;
         try {
-            File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME, "/Contacts_" + simpleDateFormat.format(new Date()) + ".vcf");
-            file.createNewFile();
-            fileOutputStream = new FileOutputStream(file);
+            String fileName = "/Contacts_" + simpleDateFormat.format(new Date()) + ".vcf";
+            fileOutputStream = getExportFileOutStream(fileName, context);
             fileOutputStream.write(plainTextExportBytes);
         } finally {
             if (fileOutputStream != null) fileOutputStream.close();
         }
     }
 
-    private static void exportAsEncryptedZip(Context context, byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat) throws IOException {
-        String exportFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME + "/Contacts_" + simpleDateFormat.format(new Date()) + ".zip";
-        ZipUtils.exportZip(getEncryptingContactsKey(context), plainTextExportBytes, exportFilePath);
+    private static void exportAsEncryptedZip(Context context, byte[] plainTextExportBytes, SimpleDateFormat simpleDateFormat) throws Exception {
+        OutputStream exportFileOutStream = getExportFileOutStream("Contacts_" + simpleDateFormat.format(new Date()) + ".zip", context);
+        ZipUtils.exportZip(getEncryptingContactsKey(context), plainTextExportBytes, exportFileOutStream);
+    }
+
+    private static OutputStream getExportFileOutStream(String fileName, Context context) throws Exception {
+        DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(exportLocation(context)));
+        Uri exportFileUri = documentFile.createFile("", fileName).getUri();
+        return context.getContentResolver().openOutputStream(exportFileUri);
     }
 
     private static byte[] getVCFExportBytes(List<Contact> allContacts, List<Contact> favorites) throws IOException {
@@ -394,19 +392,17 @@ public class DomainUtils {
     }
 
     public static void exportCallLog(Context context) throws Exception {
-        if (!Environment.getExternalStorageState().equals(Environment.MEDIA_MOUNTED)) {
-            AndroidUtils.showAlert(context, context.getString(R.string.error), context.getString(R.string.storage_not_mounted));
-            return;
+        if (!hasExportLocation(context) || !isValidDirectory(exportLocation(context), context)) {
+            AndroidUtils.runOnMainDelayed(() -> AndroidUtils.toastFromNonUIThread(R.string.no_valid_export_location, LENGTH_LONG, context), 0);
+            throw new Exception("Valid export location not set");
         }
         createCallTypeIntToTextMapping(context);
-        createOpenContactsDirectoryIfItDoesNotExist();
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yy-MM-dd HH-mm-ss");
-        File file = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/" + STORAGE_DIRECTORY_NAME, "/CallLog_" + simpleDateFormat.format(new Date()) + ".csv");
+        String fileName = "CallLog_" + simpleDateFormat.format(new Date()) + ".csv";
         ICSVWriter csvWriter = null;
         try {
-            file.createNewFile();
             //below is a crazy hack for java lambda
-            ICSVWriter finalCsvWriter = csvWriter = new CSVWriterBuilder(new FileWriter(file))
+            ICSVWriter finalCsvWriter = csvWriter = new CSVWriterBuilder(new OutputStreamWriter(getExportFileOutStream(fileName, context)))
                 .build();
             SimpleDateFormat callTimeStampFormat = getFullDateTimestampPattern(context);
             List<CallLogEntry> entireCallLog = CallLogEntry.listAll(CallLogEntry.class);
@@ -456,7 +452,7 @@ public class DomainUtils {
     public static int comparatorToMoveContactsWithoutPhoneNumbersToTheBottom(Contact cont1, Contact cont2){
         int phoneNumbersInCont1 = cont1.phoneNumbers.size();
         int phoneNumbersInCont2 = cont2.phoneNumbers.size();
-//        not easily readable code below for comparator performance, reduce number of checks/lines
+//        not easily readable code below for comparator performance, reduces number of checks/lines
         if(phoneNumbersInCont1 == 0){
             if(phoneNumbersInCont2 == 0) return 0;
             else return 1;

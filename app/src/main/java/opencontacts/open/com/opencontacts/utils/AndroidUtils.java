@@ -43,16 +43,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.ContactsContract;
 import android.provider.Settings;
-import androidx.annotation.NonNull;
-import androidx.annotation.StringRes;
-import androidx.core.app.ActivityCompat;
-import androidx.core.app.ShareCompat;
-import androidx.core.content.ContextCompat;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.FileProvider;
-
 import android.telephony.TelephonyManager;
 import android.text.TextUtils;
 import android.util.TypedValue;
@@ -61,6 +51,17 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Space;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.app.ShareCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.documentfile.provider.DocumentFile;
 
 import com.github.underscore.Consumer;
 import com.github.underscore.U;
@@ -94,6 +95,7 @@ public class AndroidUtils {
     public static final int DRAW_OVERLAY_PERMISSION_RESULT = 3729;
     public static final String EMAIL_SCHEME = "mailto:";
     public static final String MAP_LOCATION_URI = "geo:0,0?q=";
+    public static final int STORAGE_LOCATION_CHOOSER_RESULT = 786;
     private static Handler mainThreadHandler;
 
     public static float dpToPixels(int dp) {
@@ -655,5 +657,10 @@ public class AndroidUtils {
             e.printStackTrace();
             return Locale.getDefault().getCountry();
         }
+    }
+
+    public static boolean isValidDirectory(String uri, Context context){
+        DocumentFile documentFile = DocumentFile.fromTreeUri(context, Uri.parse(uri));
+        return documentFile.isDirectory() && documentFile.exists();
     }
 }

@@ -1,7 +1,11 @@
 package opencontacts.open.com.opencontacts.actions;
 
+import static android.widget.Toast.LENGTH_LONG;
+import static opencontacts.open.com.opencontacts.utils.AndroidUtils.isValidDirectory;
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.showAlert;
 import static opencontacts.open.com.opencontacts.utils.CrashUtils.reportError;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.exportLocation;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.hasExportLocation;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -26,6 +30,10 @@ public class ExportMenuItemClickHandler implements MenuItem.OnMenuItemClickListe
 
     @Override
     public boolean onMenuItemClick(MenuItem item) {
+        if (!hasExportLocation(context) || !isValidDirectory(exportLocation(context), context)) {
+            Toast.makeText(context, R.string.no_valid_export_location, LENGTH_LONG).show();
+            return true;
+        }
         new AlertDialog.Builder(context)
             .setMessage(R.string.do_you_want_to_export)
             .setPositiveButton(R.string.yes, (dialog, which) -> {

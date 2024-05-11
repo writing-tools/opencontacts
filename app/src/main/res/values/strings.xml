@@ -11,7 +11,7 @@
     <string name="title_activity_contact_details" translatable="false">ContactDetailsActivity</string>
     <string name="file_provider_authority" translatable="false">opencontacts.open.com.opencontacts.fileprovider</string>
     <string name="grant_read_call_logs_permission">Please grant read call logs permission to this application</string>
-    <string name="exporting_contacts_complete">Finished exporting contacts to internal/external storage\'s root directory</string>
+    <string name="exporting_contacts_complete">Finished exporting contacts</string>
     <string name="exporting_contacts_started">Started exporting contacts</string>
     <string name="title_activity_tabbed">TabbedActivity</string>
     <string name="export">Export</string>
@@ -78,6 +78,8 @@
     <string name="could_not_process_import_without_storage_permission">Can not process this import without storage permission, please retry</string>
     <string name="grant_storage_permission">Grant storage permission</string>
     <string name="grant_storage_permisson_detail">Grant storage phone permission to be able to export and import contacts</string>
+    <string name="choose_export_location" tools:ignore="MissingTranslation">Pick/Create a directory</string>
+    <string name="choose_export_location_detail" tools:ignore="MissingTranslation">It will be used mainly for automatic contacts backup</string>
     <string name="caller_id_text">%1$s calling...</string>
     <string name="missed_call">Missed Call</string>
     <string name="incoming_call" tools:ignore="MissingTranslation">Incoming Call</string>
@@ -95,7 +97,7 @@
     <string name="yes">Yes</string>
     <string name="calllog">Call log</string>
     <string name="contacts">Contacts</string>
-    <string name="storage_not_mounted">Storage is not mounted</string>
+    <string name="no_valid_export_location" tools:ignore="MissingTranslation">Valid export directory not set</string>
     <string name="whatsapp_integration">Whatsapp Integration</string>
     <string name="whatsapp_help_text">Whatsapp requires mobile number including country code having \'+\' in it. In case your whatsapp number is 9876543210, you need to add your country code before it so that whatsapp can recognize it while trying to open conversation from OpenContacts. In case your country code is +91, then the complete number should look like +919876543210.\n\nIn menu of OpenContacts, there is a new entry to enter default whatsapp country code. While entering country code, do not forget to enter + in it. In case any of numbers present in OpenContacts is not having country code, this country code would be appended by default. In case of international whatsapp contacts, you would need to manually edit that number to include the correct country code</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>
@@ -259,6 +261,9 @@
     <string name="call_using_sim1_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
     <string name="call_using_sim2_content_description" tools:ignore="MissingTranslation">Call using sim1</string>
     <string name="back_content_description" tools:ignore="MissingTranslation">back</string>
+    <string name="failure_setting_export_directory" tools:ignore="MissingTranslation">Couldn\'t set export directory</string>
+    <string name="custom_font_size_title" tools:ignore="MissingTranslation">Choose custom font size</string>
+    <string name="custom_font_size_description" tools:ignore="MissingTranslation">Increase or decrease the size of text across app</string>
     <string-array name="phone_number_types">
         <item>Mobile</item>
         <item>Work</item>

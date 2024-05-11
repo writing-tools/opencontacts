@@ -91,7 +91,6 @@
     <string name="yes">Sim</string>
     <string name="calllog">Registro de chamadas</string>
     <string name="contacts">Contatos</string>
-    <string name="storage_not_mounted">Armazenamento não está montado</string>
     <string name="whatsapp_integration">Integração com Whatsapp</string>
     <string name="whatsapp_help_text">O Whatsapp requer um número de telefone que inclui o código de país com símbolo \'+\'. Caso seu número do whatsapp seja 9876543210, você precisa prefixar o código do seu país para que o whatsapp possa reconhecê-lo ao tentar abrir uma conversa via OpenContacts. Caso o código do seu país seja +55, então o número completo deveria ser +559876543210.\n\nNo menu do OpenContacts, há uma nova caixa de entrada para digitar o código padrão de país para o whatsapp. Ao inserir o código do país, não se esqueça de digitar símbolo +. Caso qualquer um dos números presentes no OpenContacts não tivesse o código do país, código padrão predefinido será anexado por padrão. Em caso de contatos internacionais do whatsapp, você precisará editar manualmente esse número para específicar o código do país correto</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

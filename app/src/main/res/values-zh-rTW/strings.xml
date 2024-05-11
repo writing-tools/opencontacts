@@ -91,7 +91,6 @@
     <string name="yes">是</string>
     <string name="calllog">通話記錄</string>
     <string name="contacts">聯絡人</string>
-    <string name="storage_not_mounted">存儲沒有掛載</string>
     <string name="whatsapp_integration">與Whatsapp整合</string>
     <string name="whatsapp_help_text">在Whatsapp中電話號碼前必須包含 \'+\' 和國家代碼。例如你的號碼是9876543210，你必須在號碼之前加入國家代碼，之後Whatsapp才能夠從OpenContacts中正確讀取聯絡人號碼。例如你的國家代碼是+91，那麼你在Opencontats中保存的號碼正確格式應該為+919876543210。\n\n在Opencontacts的菜單中，有一個選項可以設定默認的國家代碼。輸入國家代碼時請不要忘記+符號。萬一OpenContacts當中有號碼沒有國家代碼，設定的默認選項可以為號碼自動設定默認國家代碼。如果是Whatsapp當中的國際聯絡人，你可能需要手動設定該聯絡人的國家代碼為正確的國家。</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

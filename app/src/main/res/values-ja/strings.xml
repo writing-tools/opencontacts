@@ -91,7 +91,6 @@
     <string name="yes">はい</string>
     <string name="calllog">通話履歴</string>
     <string name="contacts">連絡先</string>
-    <string name="storage_not_mounted">ストレージがマウントされていません</string>
     <string name="whatsapp_integration">WhatsAppとの統合</string>
     <string name="whatsapp_help_text">Whatsappは、「+」を含む国コードを含む携帯電話番号を必要とします。お使いのwhatsappの番号が09012345678の場合、OpenContactsから会話を開始する際にWhatsappが認識できるように、番号の前に国コードを追加する必要があります。国コードが+81の場合、完全な番号は+819012345678のようになります。\n\nOpenContactsのメニューに、Whatsappのデフォルトの国コードを入力する項目があります。国コードを入力する際には、「+」を忘れずに入力してください。OpenContactsに登録されている電話番号に国コードがない場合、この国コードがデフォルトで付加されます。国際的なwhatsappの連絡先の場合は、その番号を手動で編集して正しい国コードを含める必要があります。</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

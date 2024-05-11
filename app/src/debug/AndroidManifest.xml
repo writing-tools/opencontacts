@@ -9,6 +9,7 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup, android:label">
         <activity
+            android:exported="true"
             android:name="opencontacts.open.com.opencontacts.activities.ImportVcardActivity"
             android:label="DOpen Contacts"
             tools:replace="android:label"

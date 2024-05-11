@@ -91,7 +91,6 @@
     <string name="yes">Ja</string>
     <string name="calllog">Anrufe</string>
     <string name="contacts">Kontakte</string>
-    <string name="storage_not_mounted">Speicher ist nicht eingebunden</string>
     <string name="whatsapp_integration">WhatsApp Integration</string>
     <string name="whatsapp_help_text">WhatsApp benötigt eine Nummer mit einer Ländervorwahl die ein \'+\' enthält. Falls deine WhatsApp Nummer 9876543210 ist, musst du die Ländervorwahl zum Anfang hinzufügen damit WhatsApp sie zum Öffnen der Unterhaltung erkennen kann. Falls deine Ländervorwahl +49 ist, wäre die vollständige Nummer +499876543210.\n\nIn den Anwendungseinstellungen gibt es die Möglichkeit eine Ländervorwahl standardmäßig vorzugeben (vergiss nicht, das + einzugeben). Falls eine eingetragene Nummer keine Ländervorwahl haben sollte, wird die vordefinierte Ländervorwahl automatisch angefügt. Bei internationalen WhatsApp Kontakten muss die Nummer manuell bearbeitet werden um die korrekte Ländervorwahl zu verwenden</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

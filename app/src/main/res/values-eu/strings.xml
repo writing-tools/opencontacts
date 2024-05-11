@@ -91,7 +91,6 @@
     <string name="yes">Bai</string>
     <string name="calllog">Deien erregistroa</string>
     <string name="contacts">Kontaktuak</string>
-    <string name="storage_not_mounted">Biltegiratzea ez dago muntatuta</string>
     <string name="whatsapp_integration">Whatsapp integrazioa</string>
     <string name="whatsapp_help_text">WhatsAppek \'+\' zeinua duen telefono mugikorra behar du. WhatsAppen zenbakia 9876543210 bada, bere herrialdeko kodea aurrean jarri behar du WhatsAppek OpenContactsetik elkarrizketa bat irekitzen saiatzean ezagutu dezan. Zure herrialde-kodea +34 bada, zenbaki osoak +349876543210.\n\nIn izan beharko luke. OpenContacts menuan, beste sarrera bat dago herrialde-kodea erregistratzeko, whatsapp lehenetsita. Erregistratzen duzunean, ez ahaztu +. OpenContactsen dagoen zenbakiren batek ez badu herrialde-koderik, herrialde-kode hori gehituko da lehenespenez. WhatsAppeko nazioarteko kontaktuen kasuan, eskuz editatu beharko duzu zenbaki hori, herrialde-kode zuzena sartzeko</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

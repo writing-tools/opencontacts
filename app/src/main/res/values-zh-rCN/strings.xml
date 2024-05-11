@@ -91,7 +91,6 @@
     <string name="yes">是</string>
     <string name="calllog">通话记录</string>
     <string name="contacts">通讯录</string>
-    <string name="storage_not_mounted">未挂载存储卡</string>
     <string name="whatsapp_integration">Whatsapp整合</string>
     <string name="whatsapp_help_text">使用Whatsapp需要在电话号码前加入号码所在国的前缀代码。您必须在号码前加入国家号码前缀后Whatsapp才能够通过 \'开源通讯录\' 正确读取联系人的电话号码。例如您的电话号码是9876543210，而国家号码前缀是+91，那您应该保存号码时填入+91 9876543210。\n\n如果你在保存号码时没有默认的国家前缀码，在开源通讯录的菜单中有设置默认国家号码前缀的选项。如果是国际联系人那么您将必须手动修改联系人的国家前缀码为其号码所在国的正确格式。设置国家前缀代码时请不要忘记填入 + 号。</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">启用社交网络集成</string>

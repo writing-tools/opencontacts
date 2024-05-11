@@ -91,7 +91,6 @@
     <string name="yes">Taip</string>
     <string name="calllog">Skambučių žurnalas</string>
     <string name="contacts">Kontaktai</string>
-    <string name="storage_not_mounted">Saugykla nėra sumontuota</string>
     <string name="whatsapp_integration">Whatsapp Integracija</string>
     <string name="whatsapp_help_text">\"WhatsApp\" reikia mobiliojo telefono numerio, įskaitant šalies kodą su \"+\". Jei jūsų \"WhatsApp\" numeris yra 9876543210, prieš jį reikia pridėti šalies kodą, kad \"WhatsApp\" galėtų jį atpažinti bandydama atidaryti pokalbį iš \"OpenContacts\". Jei jūsų šalies kodas yra +91, tada visas numeris turėtų atrodyti kaip +919876543210.\n\n\"OpenContacts\" meniu yra naujas įrašas, kuriame galima įvesti numatytąjį whatsapp šalies kodą. Įvesdami šalies kodą, nepamirškite jame įrašyti +. Jei kuris nors iš \"OpenKontaktai\" esančių numerių neturi šalies kodo, šis šalies kodas bus pridėtas pagal nutylėjimą. Jei tai tarptautiniai \"WhatsApp\" kontaktai, turėsite rankiniu būdu redaguoti šį numerį, kad būtų įrašytas teisingas šalies kodas</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

@@ -91,7 +91,6 @@
     <string name="yes">Tak</string>
     <string name="calllog">Rejestr połączeń</string>
     <string name="contacts">Kontakty</string>
-    <string name="storage_not_mounted">Pamięć nie jest zamontowana</string>
     <string name="whatsapp_integration">Integracja z Whatsapp</string>
     <string name="whatsapp_help_text">WhatsApp wymaga numeru komórkowego, w tym kodu kraju zawierający \'+\'. Jeśli 9876543210 jest twoim numerem whatsapp, musisz przed nim dodać swój kod kraju, aby można go było rozpoznać podczas próby otwarcia rozmowy w OpenContact. Gdy kod państwa to +48, pełny numer powinien wyglądać tak: +489876543210.\n\nW menu OpenContacts dodany został nowy wpis, by podać domyślny kod kraju. Wprowadzając kod kraju, nie zapomnij wpisać +. W przypadku gdy numer w OpenContacts nie posiada kodu kraju, zostanie on dodany domyślnie. W przypadku kontaktów międzynarodowych whatsapp, musisz ręcznie edytować ten numer dodając poprawny kod kraju</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

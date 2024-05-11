@@ -91,7 +91,6 @@
     <string name="yes">Ja</string>
     <string name="calllog">Belhistorie</string>
     <string name="contacts">Contacten</string>
-    <string name="storage_not_mounted">Opslagmedium niet gevonden</string>
     <string name="whatsapp_integration">Whatsapp integratie</string>
     <string name="whatsapp_help_text">Whatsapp vereist een mobiel nummer met landcode die begint met \'+\'. Als je Whatsapp-number 9876543210 is, plaats dan de landcode er voor, zodat Whatsapp het herkent als landcode als het wordt aangeroepen door OpenContacts. Het number wordt dan bijvoorbeeld +91 9876543210.\n\nIn het OpenContacts menu is er een ingang om de standaard landcode in de voeren. Vergeet niet de \'+\'.
 In geval er numbers in OpenContacts zijn opgeslagen zonder landcode, dan wordt deze standaard er voor geplaatst. In geval van internationale contacten moet die zelf aanpassen met de juiste landcode</string>

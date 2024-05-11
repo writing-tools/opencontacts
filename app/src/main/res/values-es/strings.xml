@@ -91,7 +91,6 @@
     <string name="yes">Sí</string>
     <string name="calllog">Registro de llamadas</string>
     <string name="contacts">Contactos</string>
-    <string name="storage_not_mounted">Almacenamiento no montado</string>
     <string name="whatsapp_integration">Integración con Whatsapp</string>
     <string name="whatsapp_help_text">Whatsapp requiere un número de teléfono móvil con el código de país con el signo \'+\'. En caso de que su número de WhatsApp sea 9876543210, debe agregar el código de su país delante para que WhatsApp pueda reconocerlo al intentar abrir una conversación desde OpenContacts. En caso de que tu código de país sea +34, el número completo debería ser +349876543210.\n\nEn el menú de OpenContacts, hay una nueva entrada para registrar el código de país por defecto de whatsapp. Cuando lo registres, no olvides por + en él. En caso de que alguno de los números presentes en OpenContacts no tenga código de país, se agregará este código de país por defecto. En el caso de contactos internacionales de WhatsApp, deberá editar manualmente ese número para incluir el código de país correcto</string>
     <string name="enable_social_integration" tools:ignore="MissingTranslation">Enable Social network Integration</string>

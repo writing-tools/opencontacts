@@ -58,10 +58,7 @@ public class CrashUtils {
     private static void scheduleCrashReporting(Throwable e, Context context) {
         AlarmManager alarmManager = (AlarmManager) context.getSystemService(ALARM_SERVICE);
         if (alarmManager == null) return;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            alarmManager.setExact(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, PendingIntent.getActivity(context, 123, getIntentToReportCrash(e, context), 0));
-        } else
-            alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, PendingIntent.getActivity(context, 123, getIntentToReportCrash(e, context), 0));
+        alarmManager.set(AlarmManager.ELAPSED_REALTIME_WAKEUP, 0, PendingIntent.getActivity(context, 123, getIntentToReportCrash(e, context), PendingIntent.FLAG_IMMUTABLE));
     }
 
 }

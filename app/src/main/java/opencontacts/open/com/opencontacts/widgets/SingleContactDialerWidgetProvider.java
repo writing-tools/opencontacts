@@ -53,7 +53,7 @@ public class SingleContactDialerWidgetProvider extends AppWidgetProvider {
         widgetView.setOnClickPendingIntent(R.id.entire_single_contact_widget,
             PendingIntent.getActivity(context, 0,
                 getIntentToCall(contact.primaryPhoneNumber.phoneNumber, context),
-                0));
+                PendingIntent.FLAG_IMMUTABLE));
         appWidgetManager.updateAppWidget(widgetId, widgetView);
 
     }

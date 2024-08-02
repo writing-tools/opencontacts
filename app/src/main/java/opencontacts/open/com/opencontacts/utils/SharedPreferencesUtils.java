@@ -67,6 +67,7 @@ public class SharedPreferencesUtils {
     public static final String WHATSAPP = "Whatsapp";
 
     public static final String SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF";
+    public static final String SHOULD_SHOW_UNKNOWN_MISSED_CALL_NOTIF_SHARED_PREF_KEY = "SHOULD_SHOW_UNKNOWN_MISSED_CALL_NOTIF";
     public static final String SHOULD_SHOW_BOTTOM_MENU_SHARED_PREF_KEY = "SHOULD_SHOW_BOTTOM_MENU";
     public static final String ENABLE_CALL_FILTERING_SHARED_PREF_KEY = "enableCallFiltering";
     public static final String CALL_FILTER_REJECT_CALLS_SHARED_PREF_KEY = "rejectCalls";
@@ -248,6 +249,10 @@ public class SharedPreferencesUtils {
 
     public static boolean shouldAutoCancelMissedCallNotification(Context context) {
         return getBoolean(SHOULD_AUTO_CANCEL_MISSED_CALL_NOTIF_SHARED_PREF_KEY, false, context);
+    }
+
+    public static boolean shouldShowUnknownMissedCallNotification(Context context) {
+        return getBoolean(SHOULD_SHOW_UNKNOWN_MISSED_CALL_NOTIF_SHARED_PREF_KEY, true, context);
     }
 
     public static boolean shouldShowBottomMenu(Context context) {

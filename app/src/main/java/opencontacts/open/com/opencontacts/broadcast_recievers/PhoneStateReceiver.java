@@ -8,6 +8,7 @@ import static opencontacts.open.com.opencontacts.utils.DomainUtils.getMissedcall
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.getCallerIdLocationOnScreen;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.saveCallerIdLocationOnScreen;
 import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldAutoCancelMissedCallNotification;
+import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldShowUnknownMissedCallNotification;
 
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -27,6 +28,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
+import android.util.Log;
 
 import java.util.Random;
 
@@ -91,6 +93,7 @@ public class PhoneStateReceiver extends BroadcastReceiver {
         PendingIntent pendingIntentToLaunchApp = PendingIntent.getActivity(context, 0, new Intent(context, MainActivity.class), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         PendingIntent pendingIntentToCall = PendingIntent.getActivity(context, 0, AndroidUtils.getIntentToCall(incomingNumber, context), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
         PendingIntent pendingIntentToMessage = PendingIntent.getActivity(context, 0, AndroidUtils.getIntentToMessage(incomingNumber), PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+        if(callingContact.firstName.equals(context.getString(R.string.unknown)) && !shouldShowUnknownMissedCallNotification(context)) return;
         NotificationCompat.Builder mBuilder =
             new NotificationCompat.Builder(context, MISSED_CALLS_CHANEL_ID)
                 .setSmallIcon(R.drawable.ic_phone_missed_black_24dp)

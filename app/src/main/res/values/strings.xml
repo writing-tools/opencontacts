@@ -108,6 +108,7 @@
     <string name="keyboard_adjusts_views">Keyboard adjusts views</string>
     <string name="open_bottommenu_on_start">Open bottom menu on start</string>
     <string name="auto_cancel_missed_call_notifs">Should auto cancel missed call notifications</string>
+    <string name="show_unknown_missed_call_notifs" tools:ignore="MissingTranslation">Should show unknown missed call notifications</string>
 
 
     <!--careful while editing below group. Each item in array should also be present in normal string-->

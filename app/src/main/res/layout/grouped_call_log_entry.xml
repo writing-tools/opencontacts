@@ -47,7 +47,6 @@
             android:layout_alignLeft="@id/textview_phone_number"
             android:layout_marginTop="5dp"
             android:src="@drawable/ic_call_made_black_24dp"
-            app:srcCompat="@drawable/ic_call_made_black_24dp"
             app:tint="?colorControlNormal" />
 
 
@@ -96,7 +95,6 @@
             android:layout_toRightOf="@id/image_view_call_type"
             android:contentDescription="@string/sim_card"
             android:src="@drawable/ic_sim_card_black_24dp"
-            app:srcCompat="@drawable/ic_sim_card_black_24dp"
             app:tint="?colorControlNormal" />
 
         <TextView

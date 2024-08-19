@@ -5,9 +5,10 @@ android {
     defaultConfig {
         applicationId "opencontacts.open.com.opencontacts"
         minSdkVersion 16
+        //noinspection ExpiredTargetSdkVersion
         targetSdkVersion 32
-        versionCode 29
-        versionName "29.0"
+        versionCode 30
+        versionName "30.0"
         multiDexEnabled true
         testInstrumentationRunner 'androidx.test.runner.AndroidJUnitRunner'
     }
@@ -37,6 +38,7 @@ android {
         targetCompatibility 1.8
         sourceCompatibility 1.8
     }
+    namespace 'opencontacts.open.com.opencontacts'
 }
 
 configurations {
@@ -59,7 +61,7 @@ dependencies {
     implementation 'com.google.android.material:material:1.4.0'
     implementation "androidx.swiperefreshlayout:swiperefreshlayout:1.1.0"
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'com.reginald:editspinner:1.1.0'
+    implementation 'com.github.xyxyLiu:Edit-Spinner:1.1.0'
     implementation 'com.thomashaertel:multispinner:0.1.1@aar'
     implementation 'com.github.sultanahamer:ExpandedMenuView:d57acc9096212a9fb0b9a593781d5d54354273fc'
     implementation 'com.gitlab.sultanahamer:FontScalingAndroid:-SNAPSHOT'

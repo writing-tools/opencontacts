@@ -55,7 +55,6 @@
         android:layout_marginTop="5dp"
         android:layout_alignStart="@id/textview_phone_number"
         android:layout_alignLeft="@id/textview_phone_number"
-        app:srcCompat="@drawable/ic_sim_card_black_24dp"
         android:src="@drawable/ic_sim_card_black_24dp"
         app:tint="?colorControlNormal" />
 

@@ -2,12 +2,6 @@
 
 Privacy to your contacts.
 
-# Translation
-
-Do you want to see this app in your own language, contribute the translations
-
-[![Crowdin](https://badges.crowdin.net/opencontacts/localized.svg)](https://crowdin.com/project/opencontacts)
-
 # About
 This app saves contacts in its own database seperate from android contacts. This way no other app would be able to access contacts. Can be used in place of your default phone(dialer) app.
 
@@ -38,7 +32,6 @@ In case you want to write a feature, you can follow the steps below
 5. Raise the merge request(pull request)
 
 Our community will test the feature, will have basic code review and voila your merge request will be merged
+
 ## Screenshots
 <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/1-Call-log.png" alt="screenshot-1" width=350 > <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/2-Editcontact.png" alt="screenshot-1" width=350> <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/3-Preferences.png" alt="screenshot-1" width=350>
-## Contributors ✨
-This project follows the [all-contributors](https://github.com/all-contributors/all-contributors) specification. Contributions of any kind welcome!

@@ -35,3 +35,6 @@ Our community will test the feature, will have basic code review and voila your 
 
 ## Screenshots
 <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/1-Call-log.png" alt="screenshot-1" width=350 > <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/2-Editcontact.png" alt="screenshot-1" width=350> <img src="https://gitlab.com/sultanahamer/OpenContacts/-/raw/master/screenshots/3-Preferences.png" alt="screenshot-1" width=350>
+
+# TODO:
+- Remove floating button, make the bar on top a bottom bar, put groups in it.

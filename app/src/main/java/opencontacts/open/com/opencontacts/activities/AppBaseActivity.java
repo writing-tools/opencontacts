@@ -1,7 +1,6 @@
 package opencontacts.open.com.opencontacts.activities;
 
 import static opencontacts.open.com.opencontacts.utils.AndroidUtils.setColorFilterUsingColor;
-import static opencontacts.open.com.opencontacts.utils.SharedPreferencesUtils.shouldLockToPortrait;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.applyOptedTheme;
 import static opencontacts.open.com.opencontacts.utils.ThemeUtils.getSecondaryColor;
 
@@ -23,10 +22,7 @@ public abstract class AppBaseActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         applyOptedTheme(this);
-        if(shouldLockToPortrait(this))
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-        else
-            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_FULL_SENSOR);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(getLayoutResource());
         toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);

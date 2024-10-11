@@ -43,13 +43,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 
-    <pro.midev.expandedmenulibrary.ExpandedMenuView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/bottom_menu"
-        app:em_menu_icon="@drawable/more_overflow_menu"
-        app:em_background_color="?colorBackgroundFloating"
-        app:em_text_color="?android:textColorSecondary"
-        android:layout_alignParentBottom="true" />
+<!--    <pro.midev.expandedmenulibrary.ExpandedMenuView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:id="@+id/bottom_menu"-->
+<!--        app:em_menu_icon="@drawable/more_overflow_menu"-->
+<!--        app:em_background_color="?colorBackgroundFloating"-->
+<!--        app:em_text_color="?android:textColorSecondary"-->
+<!--        android:layout_alignParentBottom="true" />-->
 
 </RelativeLayout>

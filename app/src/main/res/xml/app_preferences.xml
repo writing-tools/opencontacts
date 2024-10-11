@@ -44,7 +44,7 @@
             android:title="@string/toggle_contact_actions"
             android:summary="@string/toggle_contact_actions_summary" />
         <SwitchPreference
-            android:defaultValue="true"
+            android:defaultValue="false"
             android:key="SHOULD_SHOW_BOTTOM_MENU"
             android:title="@string/should_show_bottom_menu" />
         <SwitchPreference

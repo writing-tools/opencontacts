@@ -25,8 +25,8 @@ public class CallLogFragment extends AppBaseFragment implements SelectableTab {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         callLogListView = new CallLogListView(getContext(), editNumberBeforeCallHandler);
-        callLogListView.setOnEnteringMultiSelectMode(() -> ((MainActivity) getActivity()).hideBottomMenu());
-        callLogListView.setOnExitingMultiSelectMode(() -> ((MainActivity) getActivity()).showBottomMenu());
+        //callLogListView.setOnEnteringMultiSelectMode(() -> ((MainActivity) getActivity()).hideBottomMenu());
+        //callLogListView.setOnExitingMultiSelectMode(() -> ((MainActivity) getActivity()).showBottomMenu());
     }
 
     @Nullable
